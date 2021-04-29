@@ -1,0 +1,91 @@
+Adressen und Device Adressen:
+
+0000-000F : -Reserved-
+  0000 0000 : -Reserved-
+  0001 0000 : Non Session Mode
+  0007 xxxx : PC
+  0008 xxxx : Clock Master
+0010-FFFF : Free
+  0010 xxxx : e.g. First free one
+
+BH = 7 Byte: BN Msg Protocol Message with 6Byte BN Header => Ganze Nachricht 18 Byte
+     Wird 1mal in der Minute gesendet, wenn keine Session aktiv ist.
+
+     BN Dest: 0.0.0.0
+
+     Msg Idx: Radio_Info (0x11): fixed DataLength 8 Byte:
+      Device ID: 2 Byte        DH.DL
+      SubID: 0: Session Info   KH.KL.XX.XX.XX.XX.XX.XX : K = Kanal; X = beliebig
+            16: Clock          YH.YL.MM.DD.HH.MM.SS.00
+                                    
+                                         0  1  2  3  4  5     6    7  8    9   10 11 12 13 14 15 16 17
+      Session 
+          - Info:  Chnl 0: 00.01.00.00: 80 12 00 00 SA SA || 11 | DH DL | 00 | KH.KL.XX.XX.XX.XX.XX.XX
+          - Start: Chnl x: xx.xx.xx.xx: 80 12 00 00 SA SA || 11 | DH DL | 01 | XX.XX.XX.XX.XX.XX.XX.XX
+          - Stop:  Chnl x: xx.xx.xx.xx: 80 12 00 00 SA SA || 11 | DH DL | 02 | XX.XX.XX.XX.XX.XX.XX.XX
+      Clock:       Chnl 0: 00.01.00.00: 80 12 00 00 SA SA || 11 | DH DL | 10 | YH.YL.MM.DD.HH.MM.SS.00
+     
+               Chnl KH.KL: DH.DL.SA.SA: Sync
+
+
+
+Beispiel:
+
+Slave Knoten sendet 1mal die Minute
+
+SPI: 00 6C 0C 44 12 12 00 00 00 00 DB
+        : 6C: Channel: 108
+        : 0C: Power Lvl 3
+        : 44: Adress Width Tx: 4Byte Rx:4Byte
+        : 12: Payload Width Rx: 18Byte
+        : 12: Payload Width Tx: 18Byte
+        : 00.00.00.00: RxAdress
+        : DB: 16Bit CRC, 16Mhz Osc, No Output Clock, 500khz Output Clock
+     22 00 01 00 00 
+        : Tx Adress
+
+     Tx_En: On
+
+     20 80 12 01 10 00 00 11 00 10 00 00 7B 00 00 00 00 00 00
+              : S 0.1.1.0
+                    : D 0.0.0.0
+                             : DevAdr. 0010
+                                : Session Info 
+                                         : Channel: 123 0x7B
+
+     TRx_CE: On -> Off
+
+     00 7B 0C 44 12 12 10 01 01 00 98
+        : 7B: Channel: 123
+        : 0C: Power Lvl 3
+        : 44: Adress Width Tx: 4Byte Rx:4Byte
+        : 12: Payload Width Rx: 18Byte
+        : 12: Payload Width Tx: 18Byte
+        : 10.01.01.00: RxAdress
+        : 98: No CRC, 16Mhz Osc, No Output Clock, 4Mhz Output Clock
+     22 00 07 00 00 : 00 07 PC Adresse
+
+
+Non-Session Mode: (mit CRC)
+Slave sendet 1x die Minute auf Adresse 00010000: Kanal 0 eine Session Info
+Er sendet seine Adresse (DH:DL SA:SA) und auf welchen Kanal KH.KL er ereichbar ist für 1s 
+  Session Info:  Chnl 0: 00.01.00.00: 80 12 00 00 SA SA || 11 | DH DL | 00 | KH.KL.XX.XX.XX.XX.XX.XX
+
+Master PC sendet an Adresse (DH:DL SA:SA) Kanal [KH.KL] ein Session Start mit seiner Adresse (DH:DL SA:SA). 
+  Session Start: Chnl KH.KL: xx.xx.xx.xx: 80 12 00 00 SA SA || 11 | DH DL | 01 | XX.XX.XX.XX.XX.XX.XX.XX
+
+Slave merkt sich die Adresse (DH:DL)
+Beide Seiten kennen sich nun gegeneinander.
+Slave und Master gehen von Non-Session in den Session-Betrieb
+Ab dann normale Master-Slave Botnet-Kommunikation (Sync-Data-Ack, periodisch)
+
+Session Mode: (ohne CRC)
+Master kann Session beenden mit Session Stop oder einfach aufhören zu sync'en
+oder
+Slave nach Timeout (60s)
+
+
+Dann gehen beide wieder in den Non-Session Mode
+
+
+

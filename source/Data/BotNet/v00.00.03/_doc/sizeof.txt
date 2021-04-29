@@ -1,0 +1,35 @@
+23:52 08.01.2020
+
+sizeof(cBotNet)	1240
+sizeof(cBotNetStreamSystem)	1008
+sizeof(cBotNetMsg_RxBase)	16
+sizeof(cBotNetMsg_RxBaseDyn)	12
+sizeof(cBotNetMsg_TxBase)	24
+sizeof(cBotNetMsg_TxBaseDyn)	12
+sizeof(cBotNetAdress)	2
+sizeof(cBotNet_I2c_MaSl_Master_Master)	4
+sizeof(cBotNet_I2c_MaSl_Slave_Slave)	92
+sizeof(cBotNet_I2c_MaSl_Master_Slave)	164
+sizeof(cI2cSlave)	28
+sizeof(cI2cMaster)	72
+sizeof(cI2cSlave_ComNode)	40
+sizeof(cComDatMsg)	32
+sizeof(cComBuf)	16
+sizeof(cBotNetMsg_RxStream)	32
+sizeof(cBotNetMsg_TxStream)	36
+sizeof(cBotNetStreamPort_BotNetCmdPort)	816
+sizeof(cBotNetStreamPort)	216
+sizeof(cBotNetStreamPort_CmdPrinter)	524
+sizeof(cBotNetStreamPort_BotNetMemPort)	8524
+sizeof(cBotNet_MasterMsgProcess)	4
+
+
+cbArrayT<uint16>           6 (Packed)  8 (Not packed) + Data
+cbArrayExtT<uint16>       +2 (Packed) +4 (Not packed) + Data
+                           8          12 
+
+cRingBufT<uint8><uint16>  12 (Packed) 12 (Not packed) + Data
+cComBuf                   14 (Packed) 16 (Not packed) + Data
+
+23724
+24128

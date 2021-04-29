@@ -1,0 +1,2 @@
+[Common]
+PackageName=24cxx

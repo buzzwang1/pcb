@@ -1,0 +1,2 @@
+[Common]
+PackageName=stm32F4discovery_board

@@ -1,0 +1,32 @@
+RF_PWR  B4    PWR_UP Power up chip
+RF_TXEN B5    TX_EN TX_EN=”1”TX mode, TX_EN=”0”RX mode
+RF_CE   C14   TRX_CE Enables chip for receive and transmit
+
+
+33Byte = 264 Bit
+140us @ 2Mhz
+
+IDLE-> Tx
+
+Startup: 650us 
++Preamble(10bit): 200us
+
+Sync:
+4Byte Adr + 2Byte ChkS + 3Byte = 72 Bit
+50khz -> 1,44ms
+--> 2290 (gemessen 1,9ms)
+
+
+Daten:
+4Byte Adr + 2Byte ChkS + 32Byte = 304 Bit
+50khz -> 6,08ms
+--> 6930 (gemessen 6,6ms)
+
+
+
+
+Auch wenn nur 3Byte empfangen wurden, muss der gesante RxPayload(32Byte) gelesen werden, damit DR zurückgesetzt wird.
+Stimmt doch nict.
+
+Es muss die eingestellte Menge Daten gelesen werden, aber 32 Geht immer
+

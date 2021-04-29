@@ -1,0 +1,2 @@
+[Common]
+PackageName=ResGfxIcons1BPP_1G

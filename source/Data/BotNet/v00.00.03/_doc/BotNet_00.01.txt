@@ -1,0 +1,69 @@
+18:31 08.02.2019
+Ver. 00.01.00
+
+- Wenn 250ms nach Init keine Kommunikation, dann Watchdog starten und Sprung zur Applikation
+- Wenn 500ms nichts empfangen wurde, dann Reset der internen Statemaschine
+
+
+1PTT.LLLL DA DA SA SA CS
+
+P = PingPong-Modus 1Bit
+    Nachricht wird solange gesendet, bis ein Ack-Empfangen wurde
+0: Aus
+1: Ein
+
+
+TT = Subprotokoll 3 Bit
+
+0: Acknowledge für PingPong-Modus
+   Erbegnis im ersten Antwortbyte: 0 = Ack; !=0 = Nack
+1: Datenstrom
+2: Transport Protokoll
+3: Erweitertes Protokoll: Kennung im 1. Datenbyte
+
+
+LLLL = Länge mit Protokoll und Daten
+0:  8
+1:  16
+2:  24
+3:  32
+15: 128
+
+
+CS: Prüfsumme
+  Alles Bytes Protokoll und Daten aufaddiert + 1
+
+
+Transport Protokoll:
+
+Header:
+KK   = Kennung:       4 Bit: 0: Start; 14: Daten normal; 15: Letzte Daten
+PN   = Paket Nummer:  4 Bit
+PNS  = Paketgröße  : 16 Bit
+CSCS = Checksumme über all Daten: 16 Bit
+SPS  = SubPaket Größe: 8Bit
+
+Daten:
+KK   = Kennung:       4 Bit: 0: Start; 14: Daten normal; 15: Letzte Daten
+PN   = Paket Nummer:  4 Bit
+SPI  = SubPaket Index: 8Bit
+
+
+Datenstrom Protokoll:
+
+SN   = Stromnummer    4 Bit
+SF   = StromFlags:    2 Bit: 0: Reset; 1: Execute
+DI   = Daten Index    2 Bit
+PNS  = Datenanzahl    8 Bit
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+Protokoll V1.4
+==============
+
+Datenübertragung -> "CCCD DDDD"
+===============================
+
+DDDDD = Datenbits
+CCC   = Commandbits
+|||__
+||__ |
+|__ ||
+   |||
+   000 : Übertragung Ende: Checksumme in den unteren 5 Bits
+   001 : Daten Start: Start Daten. Die unteren 5 Bits
+   010 : Daten Zusatz: Die oberen  3 Bits 
+           - kommt nur nach einer 001 oder 111 kommen, falls der Wert >31 ist
+   011 : NC
+   100 : NC
+   101 : NC
+   110 : NC
+   111 : Übertragung Start: Anzahl Daten (Low 5-Bit) in den unteren 5 Bits
+
+
+
+
+Protokoll V1.3
+==============
+
+Datenübertragung -> "AAAX DDDD"
+===============================
+
+DDDD = Datenbits
+X    = Extrabit
+AAA  = Commandbits
+|||__
+||__ |
+|__ ||
+   |||
+   000 : Übertragung Ende: Checksumme in den unteren 5 Bits
+   001 : Daten High 4-Bit = High Nibbel
+   010 : Daten Low  4-Bit = Low  Nibbel
+   011 : Daten 5-Bit
+   100 : NC
+   101 : NC
+   110 : Anzahl Daten High 4-Bit = High Nibbel
+   111 : Übertragung Start: Anzahl Daten (Low  4-Bit = Low  Nibbel) in den unteren 4 Bits
+
+Wichtig: - bei Daten zuerst High Nibbel, dann Low Nibbel übertragen
+
