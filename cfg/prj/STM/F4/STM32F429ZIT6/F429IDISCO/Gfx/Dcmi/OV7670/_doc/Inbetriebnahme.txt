@@ -1,0 +1,2 @@
+Kabel musten einzel verbunden werden. Bei verbundenen Flachband gab es Störungen.
+2 10k Widerstände an der Kamera für I2C dazugefügt

@@ -1,0 +1,27 @@
+8x4Byte = 32 Byte Header
+
+Img Adr.
+
+ 0. Magic Pattern:
+      - 0x12345678: New Block, neededs to be flashed
+      - 0x87654321: Block, already flashed
+ 4. 0xFFFFFFFF: Reserved
+ 8. Checksum Image: Starting from Img. Adress 12
+12. Checksum Data
+16. Size Image von Adress 0: Note: Auf die nächste Flashgrenze aufrunden
+20. Size Data
+24. Destination Adress, to be programmed
+28. Execution Adress, Null = no execution
+32. Start of Image
+
+
+32 + x. Image auffüllen bis zum Flash Blockgrenze mit 0xFF
+
+
+
+  MM:   16Bit Speicherart
+           0: RAM
+          16: Flash
+          32: EEPROM
+      0xFFFF: Unknown
+
