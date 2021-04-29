@@ -4231,236 +4231,236 @@
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v1_Test01",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v1_Test01",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v1_Test02",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v1_Test02",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v1_Test03",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v1_Test04",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_Gui_v1_Test04",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v2_Test01",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test01",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test01.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test01.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test01",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test01",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test01.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test01.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test01\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test01"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test01"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test01\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v2_Test02",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test02",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test02.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test02.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test02",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test02",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test02.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test02.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test02\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test02\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test02"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test02"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test02\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test02\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v2_Test03",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test03",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test03.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test03.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test03",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test03",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test03.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test03.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test03\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test03\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test03\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test03"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test03"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test03\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v2_Test04",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test04",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test04.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test04.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test04",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test04",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test04.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test04.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test04\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test04\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test04\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test04\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test04"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test04"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test04\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test04\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
     {
-      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_v2_Test05",
-      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05",
-      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Debug",
-      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Debug",
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test05",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05"
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     },
