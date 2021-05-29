@@ -3901,6 +3901,36 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mot_Test01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/Mot/Test01.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/Mot/Test01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_LedBlink_PC13",
       "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/LedBlink/PC13",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/LedBlink/PC13.Debug",

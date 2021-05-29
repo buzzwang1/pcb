@@ -176,11 +176,11 @@ class cUiElement_Root: public cUiElement
           }
           if (lcEleCurInOld->mstStatus.Overlapped)
           {
-            vRefesh();
+            vSetRepaint();
           }
           else
           {
-            lcEleCurInOld->vRefesh();
+            lcEleCurInOld->vSetRepaint();
           }
         }
       }
@@ -210,7 +210,7 @@ class cUiElement_Root: public cUiElement
         mstRootStatus.CheckHidden = 1;
         lcEleSelected = lcEleCursorIn;
         lcEleSelected->mstStatus.Selected = 1;
-        vRefesh();
+        vSetRepaint();
         // Und alle Parents selektieren
         if (lcEleSelected->mpcParent)
         {
@@ -250,7 +250,7 @@ class cUiElement_Root: public cUiElement
           {
             // dann muss nur bis zum bisherigen deselektiert werden
             lcElement->mstStatus.Selected = 0;
-            lcElement->vRefesh();
+            lcElement->vSetRepaint();
             cUiElement* lcParent = lcElement->mpcParent;
             while (lcParent)
             {
@@ -259,7 +259,7 @@ class cUiElement_Root: public cUiElement
                 return;
               }
               lcParent->mstStatus.Selected = 0;
-              lcParent->vRefesh();
+              lcParent->vSetRepaint();
 
               lcParent = lcParent->mpcParent;
             }
@@ -269,7 +269,7 @@ class cUiElement_Root: public cUiElement
         if (lcElement)
         {
           lcElement->mstStatus.Selected = 0;
-          vRefesh();
+          vSetRepaint();
           // Und alle Parents deselektieren
           if (lcElement->mpcParent)
           {
@@ -291,7 +291,7 @@ class cUiElement_Root: public cUiElement
       {
         if (lcEleSelected)
         {
-          lcEleSelected->vRefesh();
+          lcEleSelected->vSetRepaint();
         }
       }
     }
@@ -449,7 +449,7 @@ class cUiElement_Root: public cUiElement
 
       if (isVisible())
       {
-        if (mstStatus.Refresh)
+        if (mstStatus.Repaint)
         {
           vPaintBgScreen();
         }
@@ -493,7 +493,7 @@ class cUiElement_Root: public cUiElement
         lcEle->mpcParent = NULL;
         lcEle->vClose();
 
-        vRefesh();
+        vSetRepaint();
         mstRootStatus.CheckHidden = 1;
       }
     }

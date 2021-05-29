@@ -1033,6 +1033,9 @@ namespace Project
     public void ComTrace_vProcess(Queue<cComTrace_Entry> ComTrace_lcQueueRx, Queue<cComTrace_Entry> ComTrace_lcQueueTx)
     {
       String lszText;
+      StringBuilder lcSb = new StringBuilder();
+      uint16 lu16Tick5ms = 0;
+      
       while (true)
       {
         do
@@ -1061,8 +1064,20 @@ namespace Project
           if (lszText != "")
           {
             ComTrace_vAppendTextBox(lszText + "\r\n");
+            lcSb.Append(DateTime.Now.ToString("yyyyMMdd HH:mm:ss") + " " + lszText + "\r\n");
           }
         } while (lszText != "");
+
+        lu16Tick5ms++;
+        if (lu16Tick5ms == 1000)
+        {
+          lu16Tick5ms = 0;
+          if (lcSb.Length > 0)
+          {
+            File.AppendAllText(@"1Com_Log.txt", lcSb.ToString());
+            lcSb.Length = 0;
+          }
+        }
 
         Thread.Sleep(5);
       }
@@ -1144,6 +1159,9 @@ namespace Project
     public void MsgTrace_vProcess(Queue<cMsgTrace_Entry> MsgTrace_lcQueueRx, Queue<cMsgTrace_Entry> MsgTrace_lcQueueTx)
     {
       String lszText;
+      StringBuilder lcSb = new StringBuilder();
+      uint16 lu16Tick5ms = 0;
+      
       while (true)
       {
         do
@@ -1172,9 +1190,21 @@ namespace Project
           if (lszText != "")
           {
             MsgTrace_vAppendTextBox(lszText + "\r\n");
+            lcSb.Append(DateTime.Now.ToString("yyyyMMdd HH:mm:ss") + " " + lszText + "\r\n");
           }
         } while (lszText != "");
 
+        lu16Tick5ms++;
+        if (lu16Tick5ms == 1000)
+        {
+          lu16Tick5ms = 0;
+          if (lcSb.Length > 0)
+          {
+            File.AppendAllText(@"2MsgTrace_Log.txt", lcSb.ToString());
+            lcSb.Length = 0;
+          }
+        }
+        
         Thread.Sleep(5);
       }
     }
@@ -1269,6 +1299,9 @@ namespace Project
     public void Session_vProcess(Queue<cSession_Entry> Session_lcQueueRx)
     {
       String lszText;
+      StringBuilder lcSb = new StringBuilder();
+      uint16 lu16Tick5ms = 0;
+      
       while (true)
       {
         do
@@ -1313,6 +1346,11 @@ namespace Project
                     lszText += li16I_Supply.ToString()+ "mA   ";
                     lszText += "Bat: " + li16U_Bat.ToString()+ "mV ";
                     lszText += li16I_Bat.ToString()+ "mA";
+
+                    if (((u8)lu8Msg[14] & 1) == 1) lszText += " S1";
+                    if (((u8)lu8Msg[14] & 2) == 2) lszText += " S2";
+                    if (((u8)lu8Msg[14] & 4) == 4) lszText += " S3";
+                    
                   }
                 }
                 else if (lu8Msg[3] == 0xFE) // Connection Acknowledge
@@ -1366,8 +1404,20 @@ namespace Project
           if (lszText != "")
           {
             Session_vAppendTextBox(lszText + "\r\n");
+            lcSb.Append(DateTime.Now.ToString("yyyyMMdd HH:mm:ss") + " " + lszText + "\r\n");
           }
         } while (lszText != "");
+
+        lu16Tick5ms++;
+        if (lu16Tick5ms == 1000)
+        {
+          lu16Tick5ms = 0;
+          if (lcSb.Length > 0)
+          {
+            File.AppendAllText(@"3Session_Log.txt", lcSb.ToString());
+            lcSb.Length = 0;
+          }
+        }
 
         Thread.Sleep(5);
       }
@@ -3125,7 +3175,7 @@ namespace Project
                 u32Data2Copy = IAP_Download_mu32FileSize - u32DataIdx;
               }
 
-              IAP_vSet_IAP_TextBox_Donwload_Status("Write " + IAP_TextBox_CommandDl_BlockLen.ToString() + "B Block " + (((u32DataIdx * 100) / IAP_Download_mu32FileSize)).ToString() + "% (3min Timeout)");
+              IAP_vSet_IAP_TextBox_Donwload_Status("Write " + IAP_TextBox_CommandDl_BlockLen.Text + "B Block " + (((u32DataIdx * 100) / IAP_Download_mu32FileSize)).ToString() + "% (3min Timeout)");
 
               IAP_Download_mcQueueRx.Clear();
 

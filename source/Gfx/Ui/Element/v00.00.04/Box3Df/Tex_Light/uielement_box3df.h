@@ -36,9 +36,9 @@ public:
   }
 
 
-  virtual void vDoRefresh() override
+  virtual void vRepaint() override
   {
-    cUiElement::vDoRefresh();
+    cUiElement::vRepaint();
     mcpViewer->World2Viewer();
   }
 
@@ -49,7 +49,7 @@ public:
     {
       mcpViewer->World2Viewer();
     }
-    vDoRefresh();
+    vRepaint();
   }
 
   virtual void OnPaint() override

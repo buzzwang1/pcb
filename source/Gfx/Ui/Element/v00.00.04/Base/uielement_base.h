@@ -78,7 +78,7 @@ class cUiElement
 
       // ird vom Element selbst gesetzt
       u32 Maximized      : 1; // Zeigt an, dass das Element maximiert ist
-      u32 Refresh        : 1; // Fensterinhalt/größe/position hat sich und muss neu gezeichnet werden
+      u32 Repaint        : 1; // Inhalt/größe/position hat sich und muss neu gezeichnet werden
 
       /* Vom Root-Element gesetzt */
       u32 Selected       : 1; // Es wurde ausgewählt
@@ -133,7 +133,7 @@ class cUiElement
       mstStatus.HiddenByChild  = 0;
       mstStatus.Overlapped     = 0;
       mstStatus.Maximized      = 0;
-      mstStatus.Refresh        = 1;
+      mstStatus.Repaint        = 1;
 
       mu32BaseCol  = 0;
       mu32FrameCol = 0x00FFFFFF;
@@ -347,28 +347,33 @@ class cUiElement
       mcPaintArea.vClone(lcPaintArea);
     }
 
-
-    virtual void vDoRefresh() 
+    // Aktualisiert, welche Elemente neu gezeichnet werden müssen
+    virtual void vRepaint() 
     {
+      // Falls diesesn Element von irgendeinem anderen Element überlappt wird
+      // dann alle Element neu Zeichnen
       if (mstStatus.Overlapped)
       {
-        cGetRoot()->vRefesh();
+        cGetRoot()->vSetRepaint();
       }
       else
       {
-        vRefesh();
+        // ..ansonsten nur ab diesem Element
+        vSetRepaint();
       }
     }
 
-    void vRefesh()
+    // Dieses und folgenden Elemente mit (mstStatus.Refresh == 1) werden beim nächtsen
+    // Paint berücksichtigt
+    void vSetRepaint()
     {
-      mstStatus.Refresh = 1;
+      mstStatus.Repaint = 1;
 
       cUiElement* lcChild = mpcFirstChild;
 
       while (lcChild) 
       {
-        lcChild->vRefesh();
+        lcChild->vSetRepaint();
         lcChild = lcChild->mpcNext;
       }
     }
@@ -409,7 +414,7 @@ class cUiElement
           mstStatus.Hidden         = 1;
         }
 
-        mpcParent->vRefesh();
+        mpcParent->vSetRepaint();
       }
       else
       {
@@ -432,7 +437,7 @@ class cUiElement
           mcPaintArea.mbVisible = False;
           mstStatus.Hidden      = 1;
         }
-        vRefesh();
+        vSetRepaint();
       }
       cGetRoot()->OnElementChanged();
       OnUpdateSize();
@@ -523,12 +528,17 @@ class cUiElement
       }
     }
 
+
+    
+    // Zeichnet Rahmen und Hintergrund
+    // Parset rekursiv durch den Elementen-Baum durch
+    // Setzt den Clippingbereich für OnPaint
     virtual void vPaint()
     {
       cScreenArea lcPaintAreaSave;
       if (isVisible())
       {
-        if (mstStatus.Refresh)
+        if (mstStatus.Repaint)
         {
           mcRefScreen->vClone(&lcPaintAreaSave);
 
@@ -545,7 +555,7 @@ class cUiElement
         if (mpcFirstChild) mpcFirstChild->vPaint();
       }
 
-      if (isVisible() && (mstStatus.Refresh))
+      if (isVisible() && (mstStatus.Repaint))
       {
         if (mstStatus.PaintFrame)
         {
@@ -588,7 +598,7 @@ class cUiElement
 
       // Nachfolger malen
       if (mpcNext) mpcNext->vPaint();
-      mstStatus.Refresh = 0;
+      mstStatus.Repaint = 0;
     }
 
     void vClose()
@@ -696,7 +706,7 @@ class cUiElement
           OnElementChanged();
         }
 
-        mstStatus.Refresh = 1;
+        mstStatus.Repaint = 1;
 
         mpcParent->vBringToTop();
       }
@@ -710,14 +720,7 @@ class cUiElement
         if (!mstStatus.CursorIn)
         {
           mstStatus.CursorIn = 1;
-          if (mstStatus.Overlapped)
-          {
-            cGetRoot()->vRefesh();
-          }
-          else
-          {
-            vRefesh();
-          }
+          vRepaint();
         }
 
         if (mpcParent)
@@ -739,14 +742,7 @@ class cUiElement
         if (mstStatus.CursorIn)
         {
           mstStatus.CursorIn = 0;
-          if (mstStatus.Overlapped)
-          {
-            cGetRoot()->vRefesh();
-          }
-          else
-          {
-            vRefesh();
-          }
+          vRepaint();
         }
       }
     }

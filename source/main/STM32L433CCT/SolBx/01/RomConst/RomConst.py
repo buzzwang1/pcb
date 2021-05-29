@@ -120,7 +120,7 @@ def convert_byte_to_ascii(lu8Byte):
     return lszStr
 
 
-SetHeader("SolBox1", "STM32L433CCT6", "Cortex-M4,Rom 256KB,Ram 64KB",   7, 0x1000, 6, 4*1024)
+SetHeader("SolBox1", "STM32L433CCT6", "Cortex-M4,Rom 256KB,Ram 64KB",   8, 0x1000, 6, 4*1024)
 
 SetPartition(0, "Flash Bl",  16, 0, 0x08000000,                            32*1024, 0x0800)
 SetPartition(1, "Flash App", 16, 0, 0x08000000 +  32 * 1024,              144*1024, 0x0800)

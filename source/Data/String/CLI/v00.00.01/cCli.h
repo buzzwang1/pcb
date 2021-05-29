@@ -178,6 +178,9 @@ class cCliCmdList
       mCmdListNext = null;
     }
 
+
+
+
     virtual bool bAddCmd(cCliCmd *mCmd) {UNUSED(mCmd); return False;}
 
     void vAddList(cCliCmdList *lcNextList)
@@ -463,17 +466,11 @@ class cCli
     // Erstes Space suchen
     lui16t = mcStrIn.IndexOf(0, ' ');
 
-    if (lui16t == (uint16)-1)
+    if (lui16t != (uint16)-1)
     {
-      lui16t = 0;
-    }
-
-    lcStrParam.muiSize  = mcStrIn.muiSize - lui16t;
-    lcStrParam.muiLen   = mcStrIn.muiLen - lui16t;
-    lcStrParam.mpu8Data = mcStrIn.mpu8Data + lui16t;
-
-    if (lui16t)
-    {
+      lcStrParam.muiSize  = mcStrIn.muiSize - lui16t;
+      lcStrParam.muiLen   = mcStrIn.muiLen  - lui16t;
+      lcStrParam.mpu8Data = mcStrIn.mpu8Data + lui16t;
       lcStrParam.Trim();
     }
 

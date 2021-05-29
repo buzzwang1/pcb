@@ -172,6 +172,7 @@ projects = {
 
     'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
+    'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/PC13'       : project('STM32L433CCT_LedBlink_PC13',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/All'        : project('STM32L433CCT_LedBlink_All',           True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Test/Usart12'        : project('STM32L433CCT_Tests_Usart12',          True,      '', {'Debug' : 'Config_STM32L4x3'}),

@@ -301,7 +301,7 @@ public:
         // Striche zeichnen
         li16x = li16StartX1 + i32XValuetoPixelRelGraph(li32PosX);
 
-        cStrTools::i8Itoa(li32PosX / mi16LabelXDiv, lszTemp, 10);
+        cStrTools::uixItoa(li32PosX / mi16LabelXDiv, lszTemp, 10);
 
         mpstDest->vLineV(li16x, li32PosY - 2, li32PosY + 2, mi32ColLines);
 
@@ -442,7 +442,7 @@ public:
         // Striche zeichnen
         li16y = li16StartY1 + i32YValuetoPixelRelGraph(li32PosY, lpcChn);
 
-        cStrTools::i8Itoa(li32PosY / lpcChn->mi16LabelYDiv, lszTemp, 10);
+        cStrTools::uixItoa(li32PosY / lpcChn->mi16LabelYDiv, lszTemp, 10);
 
         mpstDest->vLineH(li32PosX - 2, li32PosX + 2, li16y, mi32ColLines);
 

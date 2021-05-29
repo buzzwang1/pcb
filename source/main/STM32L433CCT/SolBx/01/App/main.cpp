@@ -384,22 +384,15 @@ class cBotNetStreamPort_BotNetPowMon_PowMon: public cCliCmd
       UNUSED(lbFirstCall);
       UNUSED(lCallerAdr);
 
-      if (mcOpMode.IsAuto())
-      {
-        lcCli->bPrintLn((const char8*)"Manual mode required");
-      }
-      else
-      {
-        mcPowerMonitor.stGlobals.mClock.toString(mcPowerMonitor.stGlobals.mcStr);
-        lszStr.Setf((const char8*)"Clock: %s", (char8*)mcPowerMonitor.stGlobals.mcStr.ToString());
-        lcCli->bPrintLn(lszStr);
+      mcPowerMonitor.stGlobals.mClock.toString(mcPowerMonitor.stGlobals.mcStr);
+      lszStr.Setf((const char8*)"Clock: %s", (char8*)mcPowerMonitor.stGlobals.mcStr.ToString());
+      lcCli->bPrintLn(lszStr);
 
-        lszStr.Setf((const char8*)"U_Sup: %4d", mcPowerMonitor.stGlobals.i32U_Supply); lcCli->bPrintLn(lszStr);
-        lszStr.Setf((const char8*)"I_Sup: %4d", mcPowerMonitor.stGlobals.i32I_Supply); lcCli->bPrintLn(lszStr);
-        lszStr.Setf((const char8*)"U_Bat: %4d", mcPowerMonitor.stGlobals.i32I_Bat); lcCli->bPrintLn(lszStr);
-        lszStr.Setf((const char8*)"I_Bat: %4d", mcPowerMonitor.stGlobals.i32I_Bat); lcCli->bPrintLn(lszStr);
-        lszStr.Setf((const char8*)"\nI_SysMin: %4d", mcPowerMonitor.stGlobals.i32I_Sys_NoRadio_NoDisplay); lcCli->bPrintLn(lszStr);
-      }
+      lszStr.Setf((const char8*)"U_Sup: %4d", mcPowerMonitor.stGlobals.i32U_Supply); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"I_Sup: %4d", mcPowerMonitor.stGlobals.i32I_Supply); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"U_Bat: %4d", mcPowerMonitor.stGlobals.i32U_Bat); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"I_Bat: %4d", mcPowerMonitor.stGlobals.i32I_Bat); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"\nI_SysMin: %4d", mcPowerMonitor.stGlobals.i32I_Sys_NoRadio_NoDisplay); lcCli->bPrintLn(lszStr);
       
       return True;
     }
@@ -766,7 +759,17 @@ void MAIN_vTick50msLp(void)
   mcPowerMonitor.stGlobals.i32I_Bat    = mcINA219_Bat.i32CalcIShunt_uA() / 1000;
 
   mcPowerMonitor.stGlobals.fU_BatAvg += (float)((float)mcPowerMonitor.stGlobals.i32U_Bat - mcPowerMonitor.stGlobals.fU_BatAvg) / (20.0f * 60.0f); /* 1min Dämpfung */
-  mcPowerMonitor.stGlobals.fI_BatAvg += (float)((float)mcPowerMonitor.stGlobals.i32I_Bat - mcPowerMonitor.stGlobals.fI_BatAvg) / (20.0f * 60.0f); /* 1min Dämpfung */
+
+
+  if (mcPowerMonitor.stGlobals.i32I_Supply > 15)
+  {
+    //kleinere Dämpfung bei Aufladung
+    mcPowerMonitor.stGlobals.fI_BatAvg += (float)((float)mcPowerMonitor.stGlobals.i32I_Bat - mcPowerMonitor.stGlobals.fI_BatAvg) / (20.0f); /* 1s Dämpfung */
+  }
+  else
+  {
+    mcPowerMonitor.stGlobals.fI_BatAvg += (float)((float)mcPowerMonitor.stGlobals.i32I_Bat - mcPowerMonitor.stGlobals.fI_BatAvg) / (20.0f * 60.0f); /* 1min Dämpfung */
+  }
 
   if ((menSmMain_Display == cPowerMonitor::MAIN_nSmDisplayIdle) ||
       (menSmMain_Display == cPowerMonitor::MAIN_nSmDisplayPowerSave))

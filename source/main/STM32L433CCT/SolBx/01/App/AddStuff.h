@@ -280,15 +280,15 @@ class cPowerMonitor
     uint8             aui8Switches[3];
     uint8             aui8Buttons[4];
     uint8             ui8PowerTimer;
-    int32             i32U_Supply;
-    int32             i32I_Supply;
+    int32             i32U_Supply;   // Direkt vom Sensor
+    int32             i32I_Supply;   // Direkt vom Sensor
     
-    float             fU_BatAvg;
-    float             fI_BatAvg;
+    float             fU_BatAvg;     // i32U_Bat mit 1min Dämpfung
+    float             fI_BatAvg;     // i32I_Bat mit 1min Dämpfung
 
-    int32             i32U_Bat;
-    int32             i32I_Bat;
-    int32             i32I_Sys_NoRadio_NoDisplay;
+    int32             i32U_Bat;  //  Direkt vom Sensor
+    int32             i32I_Bat;  //  Direkt vom Sensor
+    int32             i32I_Sys_NoRadio_NoDisplay; // i32I_Bat, wenn Funk und Display aus
     uint8             ui8DimValue;
 
     uint8             ui8AdcIdx;

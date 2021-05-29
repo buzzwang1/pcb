@@ -81,12 +81,12 @@ public:
     mi16SkalYMax = li16SkalYMax;
     mi16SkalYMin = li16SkalYMin;
 
-    cStrTools::i8Itoa(li16SkalYMax, lszTemp, 10);
+    cStrTools::uixItoa(li16SkalYMax, lszTemp, 10);
     mpstRFont->mcText.From(lszTemp);
     mpstRFont->i8StringLen(&stStrLen);
     miGfxSkalY_MaxStrWidth = stStrLen.x;
 
-    cStrTools::i8Itoa(mi16SkalYMin, lszTemp, 10);
+    cStrTools::uixItoa(mi16SkalYMin, lszTemp, 10);
     mpstRFont->mcText.From(lszTemp);
     mpstRFont->i8StringLen(&stStrLen);
 

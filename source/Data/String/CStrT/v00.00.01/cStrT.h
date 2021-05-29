@@ -21,7 +21,7 @@
 
   #define CSTRT_UINTMAX        ((1 << (sizeof(tyCStrT) * 8)) - 1)
   #define CSTRT_DATA_UINT      tyCStrT
-  
+
   #define cStrT_isspace cChr8Tools::IsSpace
 
   #define cStrT_strcpy  cStrTools::szStrCpy
@@ -34,14 +34,17 @@
   #define cStrT_txtcmp  cStrTools::i8TextCmp
   #define cStrT_txtncmp cStrTools::i8TextnCmp
   #define cStrT_strlen  cStrTools::uixStrLen
-  #define cStrT_Itoan   cStrTools::i8Itoan
+  #define cStrT_Iton    cStrTools::uixIton
+  #define cStrT_Itoan   cStrTools::uixItoan_open
+  #define cStrT_Fton    cStrTools::uixFton
+  #define cStrT_Ftoan   cStrTools::uixFtoan_open
   #define cStrT_Atoin   cStrTools::atoin
 
   #define cStr  cStrBaseT<u16>
   #define cSStr cStr(lu16Size)
   #define cDStr cStrDynT<u16>
 
-  #define cStr_Create(Name, lu16Size)  char8 Name##_Buf[lu16Size];cStrBaseT<u16> Name(Name##_Buf, lu16Size); 
+  #define cStr_Create(Name, lu16Size)  char8 Name##_Buf[lu16Size];cStrBaseT<u16> Name(Name##_Buf, lu16Size);
   #define cSStr_Create(Name, lu16Size) cStr(Name, lu16Size)
 
 
@@ -115,7 +118,7 @@
 
     char8* ToString()
     {
-      // Falls hinten schon eine Null dranhängt 
+      // Falls hinten schon eine Null dranhängt
       // dann kann der String direkt benutzt werden.
       if (cbArrayExtT<tyCStrT>::muiLen > 0)
       {
@@ -265,7 +268,7 @@
     /****************************************************************************************/
     /*! \fn FRet CStrStaticT<tyCStrT>::Set(pcStr8 lpstStr, char8* lpszStr)
      *  \brief Schreibt einen formatierten String (vgl.bar zu printf) in den DString8. DString8 wird bei Bedarf vergrößert aber nicht verkleinert
-     *         Übernommen aus ChaN's xprintf.lc8Zeichen
+     *         Basiert ursprünglich auf ChaN's xprintf
      *  \param lpstStr DString8*: DString8, der geschrieben werden soll. Muss vorher mit Create angelegt worden sein
      *  \param lpszStr char8*: '0'-terminierte formatierte Zeichenkette die geschrieben weden soll.
      *  \param lParList va_list: Parameterliste.
@@ -285,57 +288,62 @@
       /*----------------------------------------------*/
       /* Formatted string output                      */
       /*----------------------------------------------*/
-      /*  lstTest = lstTest.Setf("%d",   1234);          "1234"
-          lstTest = lstTest.Setf("%6d,%3d%%", -200, 5);  "  -200,  5%"
-          lstTest = lstTest.Setf("%-6u",  100);          "100   "
-          lstTest = lstTest.Setf("%ld",   12345678L);    "12345678"
-          lstTest = lstTest.Setf("%04x",  0xA3);         "00a3"
-          lstTest = lstTest.Setf("%08LX", 0x123ABC);     "00123ABC"
-          lstTest = lstTest.Setf("%016b", 0x550F);       "0101010100001111"
-          lstTest = lstTest.Setf("%s",    "String");     "String"
-          lstTest = lstTest.Setf("%-4s",  "abc");        "abc "
-          lstTest = lstTest.Setf("%4s",   "abc");        " abc"
-          lstTest = lstTest.Setf("%c",    'a');          "a"
-          lstTest = lstTest.Setf("%f",    10.0);         <xprintf lacks floating point support>
+      /*    lszStr.Setf("%d",   1234);         // "1234"
+            lszStr.Setf("%6d,%3d%%", -200, 5); // "  -200,  5%"
+            lszStr.Setf("%-6u",  100);         // "100   "
+            lszStr.Setf("%ld",   12345678L);   // "12345678"
+            lszStr.Setf("%04x",  0xA3);        // "00a3"
+            lszStr.Setf("%08LX", 0x123ABC);    // "00123ABC"
+            lszStr.Setf("%016b", 0x550F);      // "0101010100001111"
+            lszStr.Setf("%s",    "String");    // "String"
+            lszStr.Setf("%-4s",  "abc");       // "abc "
+            lszStr.Setf("%4s",   "abc");       // " abc"
+            lszStr.Setf("%c",    'a');         // "a"
+            lszStr.Setf("%f",    10.0);        // "10"
+            lszStr.Setf("%.2f",  10.01);       // "10.01"
+            lszStr.Setf("%8.3f", -1.123);      // " -1.123"
       */
 
       /* %[flags][width][.precision][length]specifier */
 
-      uint8 lui8Flags; /* Flag */
-                /* 1: '0'     => '0' padded   */
-                /* 2: '-'     => left justified   */
-                /* 4: 'l','L' => Prefix: Size is long int */
-      int16  li16Width;
-      int8   li8Spec;
+      u8 lui8Flags; /* Flag */
+                    /* 1: '0'     => '0' padded   */
+                    /* 2: '-'     => left justified   */
+                    /* 4: 'l','L' => Prefix: Size is long int, not supported anymore */
+                    /* 8: '-'     => signed */
+                    /*16: 'X'     => hex charaters in upper case */
+      i16    li16Size;
+      i16    li16Width;
+      i16    li16Prec;
+      i8     li8Spec;
 
-      int8   li8Pos;
+      i16    li16Pos;
       char8* lszStr;
 
-      uint8  lui8Radix;
-      int8   li8Idx;
+      u8     lui8Radix;
 
-      uint64 lui64Value;
-      char8  lszValue[16];
+      i32    li32Value;
+      float  lfValue;
 
       char8  lc8Zeichen;
 
       va_list lParList;
       va_start(lParList, lpszfStr);
 
-      *this = "";
+      cbArrayExtT<tyCStrT>::muiLen = 0; // *this = "";
 
       while (1)
       {
         lc8Zeichen = *lpszfStr++;       /* Get a char */
         if (!lc8Zeichen) break;         /* End of format? */
-        if (lc8Zeichen != '%')
-        {                                   /* Pass through it if not a % sequense */
+        if (lc8Zeichen != '%')          /* Pass through it if not a % sequence */
+        {
           *this += lc8Zeichen; continue;
         }
 
 
         lui8Flags = 0;
-        lc8Zeichen = *lpszfStr++;          /* Get first char of the sequense */
+        lc8Zeichen = *lpszfStr++;       /* Get first char of the sequence */
         /* Flag: '0' padded */
         if (lc8Zeichen == '0')
         {
@@ -352,7 +360,22 @@
 
         /* Minimum width */
         for (li16Width = 0; (lc8Zeichen >= '0') && (lc8Zeichen <= '9'); lc8Zeichen = *lpszfStr++)
+        {
           li16Width = li16Width * 10 + lc8Zeichen - '0';
+        }
+
+        /* Precision */
+        li16Prec = 0;
+        if (lc8Zeichen == '.') 
+        {
+          lc8Zeichen = *lpszfStr++;
+          
+          while (lc8Zeichen >= '0' && lc8Zeichen <= '9') 
+          {
+            li16Prec = li16Prec * 10 + lc8Zeichen - '0';
+            lc8Zeichen = *lpszfStr++;
+          }
+        }
 
         if (lc8Zeichen == 'l' || lc8Zeichen == 'L')
         {  /* Prefix: Size is long int */
@@ -363,99 +386,125 @@
         if (!lc8Zeichen) break;
 
         li8Spec = lc8Zeichen;
-        if (li8Spec >= 'a') li8Spec -= 0x20;
+        if (li8Spec >= 'a') li8Spec -= 0x20; /* convert to upper case */
 
         /* Specifier is... */
         switch (li8Spec)
         {
-        case 'S':          /* String */
-          lszStr = va_arg(lParList, char8*);
+          case 'S':          /* String */
+            lszStr = va_arg(lParList, char8*);
 
-          li8Pos = CheckStrlen(0, (CSTRT_UINT)cStrT_strlen(lszStr));
-          if (!(lui8Flags & 2))
-            while (li8Pos++ < li16Width) *this += ' ';
+            li16Pos = CheckStrlen(0, (CSTRT_UINT)cStrT_strlen(lszStr));
+            if (!(lui8Flags & 2)) /* right justified, add padding */
+            {
+              while (li16Pos++ < li16Width) *this += ' ';
+            }
 
-          *this += lszStr;
+            *this += lszStr;
 
-          while (li8Pos++ < li16Width) *this += ' ';
+            while (li16Pos++ < li16Width) *this += ' ';
+            continue;
 
-          continue;
+          case 'C':          /* Character */
+            li16Pos = 1;
+            if (!(lui8Flags & 2)) /* right justified, add padding */
+            {
+              while (li16Pos++ < li16Width) *this += ' ';
+            }
+
+            lc8Zeichen = (int8)va_arg(lParList, int);
+            *this += lc8Zeichen;
+            while (li16Pos++ < li16Width) *this += ' ';
+            continue;
+
+          case 'B':          /* Binary */
+            lui8Radix = 2; break;
+
+          case 'O':          /* Octal */
+            lui8Radix = 8; break;
+
+          case 'D':          /* Signed decimal */
+          case 'U':          /* Unsigned decimal */
+            lui8Radix = 10; break;
+
+          case 'X':          /* Hexdecimal */
+            lui8Radix = 16;
+            if (lc8Zeichen == 'X') lui8Flags |= 16;
+            break;
+
+          case 'F':          /* Hexdecimal */
+            lui8Radix = 128;
+            break;
 
 
-        case 'C':          /* Character */
-          lc8Zeichen = (int8)va_arg(lParList, int);
-          *this += lc8Zeichen;
-          continue;
-
-        case 'B':          /* Binary */
-          lui8Radix = 2; break;
-
-        case 'O':          /* Octal */
-          lui8Radix = 8; break;
-
-        case 'D':          /* Signed decimal */
-        case 'U':          /* Unsigned decimal */
-          lui8Radix = 10; break;
-
-        case 'X':          /* Hexdecimal */
-          lui8Radix = 16; break;
-
-        default:            /* Unknown type (passthrough) */
-          *this += lc8Zeichen;
-          continue;
+          default:            /* Unknown type (passthrough) */
+            *this += lc8Zeichen;
+            continue;
         }
 
-        /* Get an argument and put it in numeral */
-        if (lui8Flags & 4)       lui64Value = va_arg(lParList, long);
-        else if (li8Spec == 'D') lui64Value = (long)va_arg(lParList, int);
-        else                     lui64Value = (long)va_arg(lParList, unsigned int);
-
-        if (li8Spec == 'D' && (lui64Value & 0x80000000))
+        li16Pos = 0;
+      
+        if (cbArrayExtT<tyCStrT>::muiLen < cbArrayExtT<tyCStrT>::muiSize)
         {
-          lui64Value = 0 - lui64Value;
-          lui8Flags |= 8;
-        }
-
-        //Build value inverse
-        li8Idx = 0;
-        do
-        {
-          li8Spec = (char)(lui64Value % lui8Radix);
-          lui64Value /= lui8Radix;
-
-          if (li8Spec > 9)
+          if (lui8Radix & 128)
           {
-            if (lc8Zeichen == 'x')
-              li8Spec += 0x27;
-            else
-              li8Spec += 0x07;
+            lfValue = (float)va_arg(lParList, double);   // float
+
+            if (li16Width)
+            {
+              if (lui8Flags & 1) /* leading '0' */
+              {
+                u8 lu8Dummy;
+                li16Size = cStrT_Fton(lfValue, li16Prec, lu8Dummy);
+              }
+              else
+              if (!(lui8Flags & 2)) /* right justified, add padding */
+              {
+                u8 lu8Dummy;
+                li16Size = cStrT_Fton(lfValue, li16Prec, lu8Dummy);
+                while (li16Size++ < li16Width) {*this += ' ';li16Pos++;}
+              }
+            }
+
+            lszStr = (char8*)(cbArrayExtT<tyCStrT>::mpu8Data + cbArrayExtT<tyCStrT>::muiLen);
+            li16Size = cStrT_Ftoan(lfValue, lszStr, cbArrayExtT<tyCStrT>::muiSize - cbArrayExtT<tyCStrT>::muiLen, li16Prec);
           }
+          else
+          {
+            /* Get an argument and put it in numeral */
+            if (lui8Flags & 4)       li32Value = (u32)va_arg(lParList, u64);   // 64 Bit -> 32 Bit
+            else if (li8Spec == 'D') li32Value = (u32)va_arg(lParList, i32);   // 32 Bit
+            else                     li32Value = (u32)va_arg(lParList, u32);   // 32 Bit
 
-          lszValue[li8Idx++] = li8Spec + '0';
-        } while (lui64Value && (li8Idx < (i8)sizeof(lszValue)));
+            if (li16Width)
+            {
+              if (lui8Flags & 1) /* leading '0' */
+              {
+                li16Size = cStrT_Iton(li32Value, lui8Radix);
+                while (li16Size++ < li16Width) {*this += '0';li16Pos++;}
+              }
+              else
+              if (!(lui8Flags & 2)) /* right justified, add padding */
+              {
+                li16Size = cStrT_Iton(li32Value, lui8Radix);
+                while (li16Size++ < li16Width) {*this += ' ';li16Pos++;}
+              }
+            }
 
-        if (lui8Flags & 8)
-          lszValue[li8Idx++] = '-';
+            lszStr = (char8*)(cbArrayExtT<tyCStrT>::mpu8Data + cbArrayExtT<tyCStrT>::muiLen);
+            li16Size = cStrT_Itoan(li32Value, lszStr, cbArrayExtT<tyCStrT>::muiSize - cbArrayExtT<tyCStrT>::muiLen, lui8Radix, lui8Flags & 16);
+          }
+          
+          cbArrayExtT<tyCStrT>::muiLen += (CSTRT_UINT)(li16Size);
 
-        lszValue[li8Idx] = 0;
-
-
-        if (lui8Flags & 1)
-          lc8Zeichen = '0';
+          /* right justified, add padding */
+          li16Pos += li16Size;
+          while (li16Pos++ < li16Width) *this += ' ';
+        }
         else
-          lc8Zeichen = ' ';
-
-        li8Pos = li8Idx;
-        if (!(lui8Flags & 2))
-          while (li8Pos++ < li16Width) *this += lc8Zeichen;
-
-        //Add value inverse
-        do
         {
-          *this += lszValue[--li8Idx];
-        } while (li8Idx);
-
-        while (li8Pos++ < li16Width) *this += ' ';
+          break;
+        }
       }
 
       return *this;
@@ -724,7 +773,7 @@
               luiPos++;
               luiPos2++;
             }
-            cbArrayExtT<tyCStrT>::muiLen = luiPos - 1;
+            cbArrayExtT<tyCStrT>::muiLen = luiPos2;
           }
           else
           {
@@ -926,17 +975,35 @@
       return cStrT_Atoin((char8*)this->cbArrayT<tyCStrT>::mpu8Data, this->cbArrayExtT<tyCStrT>::muiLen);
     };
 
-    cStrBaseT& Itoa(int num, int base)
+    CSTRT_INT Atoi(CSTRT_INT offset)
     {
-      cStrT_Itoan(num, (char8*)cbArrayT<tyCStrT>::mpu8Data, cbArrayT<tyCStrT>::muiSize, base);
-      cbArrayExtT<tyCStrT>::muiLen = (CSTRT_UINT)cStrT_strlen((char8*)cbArrayT<tyCStrT>::mpu8Data);
+      if (offset < this->cbArrayExtT<tyCStrT>::muiLen)
+      {
+        return cStrT_Atoin((char8*)cbArrayT<tyCStrT>::mpu8Data + offset, this->cbArrayExtT<tyCStrT>::muiLen - offset);
+      }
+      else
+      {
+        return CSTRT_UINTMAX;
+      }
+    };
+
+    cStrBaseT& Itoa(CSTRT_INT num, CSTRT_INT base)
+    {
+      u32 lu32Size;
+      lu32Size = cStrT_Itoan(num, (char8*)cbArrayT<tyCStrT>::mpu8Data, cbArrayT<tyCStrT>::muiSize, base);
+      cbArrayExtT<tyCStrT>::muiLen = (CSTRT_UINT)lu32Size;
       return *this;
     };
 
-    cStrBaseT& Itoa(int offset, int num, int base)
+    cStrBaseT& Itoa(CSTRT_INT offset, CSTRT_INT num, CSTRT_INT base)
     {
-      cStrT_Itoan(num, (char8*)cbArrayT<tyCStrT>::mpu8Data + offset, cbArrayT<tyCStrT>::muiSize - offset, base);
-      cbArrayExtT<tyCStrT>::muiLen = (CSTRT_UINT)cStrT_strlen((char8*)cbArrayT<tyCStrT>::mpu8Data);
+      u32 lu32Size;
+      lu32Size = cStrT_Itoan(num, (char8*)cbArrayT<tyCStrT>::mpu8Data + offset, cbArrayT<tyCStrT>::muiSize - offset, base);
+
+      if ((offset + lu32Size) > cbArrayT<tyCStrT>::muiLen)
+      {
+        cbArrayExtT<tyCStrT>::muiLen = (CSTRT_UINT)(offset + lu32Size);
+      }
       return *this;
     };
 

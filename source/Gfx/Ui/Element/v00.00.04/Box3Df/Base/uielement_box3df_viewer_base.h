@@ -43,25 +43,34 @@ class cWorld_3Df_Viewer
     char lszValue[10];
     mszPos[0] = '<';
     mszPos[1] = 0;
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcPos.x, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcPos.x, lszValue, 8, 2); 
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcPos.y, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcPos.y, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcPos.z, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcPos.z, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ">\n<");
 
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcDirA.x, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcDirA.x, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcDirA.y, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcDirA.y, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcDirA.z, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcDirA.z, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ">\n<");
 
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcLookDir.x, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcLookDir.x, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcLookDir.y, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcLookDir.y, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::szStrCat(mszPos, cStrTools::i8Ftoan(mcLookDir.z, lszValue, 8, 2));
+    cStrTools::uixFtoan(mcLookDir.z, lszValue, 8, 2);
+    cStrTools::szStrCat(mszPos, lszValue);
     cStrTools::szStrCat(mszPos, ">");
 
     return mszPos;

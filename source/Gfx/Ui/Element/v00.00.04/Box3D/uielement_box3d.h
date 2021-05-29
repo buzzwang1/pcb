@@ -345,7 +345,7 @@ public:
       if (mesh_rotation.y > 360) mesh_rotation.y -= 360;
       if (mesh_rotation.z > 360) mesh_rotation.z -= 360;
 
-      vDoRefresh();
+      vRepaint();
     }
   }
 

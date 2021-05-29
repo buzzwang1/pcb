@@ -366,7 +366,7 @@ class cMyButton: public cUiElement_Button
         mc16GuiBox3Df.mcpViewer = &mc16GuiBox3Df.mcViewerTexGradZ;
       }
 
-      mc16GuiRoot.vDoRefresh();
+      mc16GuiRoot.vRepaint();
     }
 };
 
@@ -465,7 +465,7 @@ void CycCall_vMain_25ms()
   li16Value  = (li16LValue + (rand() % 100)) / 2;
   li16LValue = li16Value;
   mcChnYA.vAdd(li16Value);
-  mc16GuiGraphY.vDoRefresh();
+  mc16GuiGraphY.vRepaint();
 
   mc16GuiRoot.vPaint();
 

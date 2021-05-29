@@ -209,154 +209,341 @@ class cStrTools
     }
   }
 
-  // https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
-  static int8 i8Itoan(int num, char8* str, int len, int base)
+
+  // Gibt die Länge in Bytes zurück
+  static u32 uixIton(int num, int base)
   {
-    int sum;
+    u32 luSize = 0;
+    if (!num) return 1;
+    switch (base)
+    {
+      case 2:  // Binär
+        while ((u32)num) {num = (u32)num >> 1; luSize++;}; break;
+      case 8:  // Oktal
+        while ((u32)num) {num = (u32)num >> 3; luSize++;}; break;
+      case 16: // Hex
+        while ((u32)num) {num = (u32)num >> 4; luSize++;}; break;
+      default:
+        if (num < 0) // neg. Zahl nur bei dezimal, platz für ein '-' reservieren
+        {
+          luSize++;
+        }
+        while (num) {num /= base; luSize++;}; break;
+    }
+    return luSize;
+  }
+
+  // https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
+  // Gibt die Länge in Bytes zurück
+  // Wenn die Zahl zu lang ist für den string, z.B. Länge Zahl > len, dann gibt es kein korrektes clipping
+  // und das Ergebnis wird eine falsche Zahl sein
+  // Vorsicht: keine null terminierung
+  static u32 uixItoan_open(int num, char8* str, int len, int base, u8 toupper)
+  { 
+    u8  Size;
+    u8  digit;
     int i = 0;
-    int digit;
 
     if (len == 0)
     {
-      return -1;
+      return i;
     }
 
-    if (num < 0)
+    Size = uixIton(num, base);
+
+    if (Size > len) Size = len;
+    str = str + (Size - 1);
+    i = Size;
+
+    switch (base)
     {
-      num = -num;
-      str[i++] = '-';
+      case 2:  // Binär
+        while (i)
+        {
+          *str-- = '0' + (num & 1);
+          num = (u32)num >> 1;
+          i--;
+        }
+        break;
+      case 8:  // Oktal
+        while (i)
+        {
+          *str-- = '0' + (num & 7);
+          num = (u32)num >> 3;
+          i--;
+        }
+        break;
+      case 16: // Hex
+        while (i)
+        {
+          digit = (num & 15);
+          if (digit < 0xA)
+          {
+            *str-- = '0' + digit;
+          }
+          else
+          {
+            if (toupper)
+              *str-- = 'A' + digit - 0xA;
+            else
+              *str-- = 'a' + digit - 0xA;
+          }
+          num = (u32)num >> 4;
+          i--;
+        }
+        break;
+      case 10: // dezimal
+        u8 sign;
+        if (num < 0) // neg. Zahl nur bei dezimal, platz für ein '-' reservieren
+        {
+          i--;
+          num = -num; 
+          sign = 1;
+        }
+        else
+        {
+          sign = 0;
+        }
+
+        while (i)
+        {
+          *str-- = '0' + (num % 10);
+          num /= 10;
+          i--;
+        }
+
+        if (sign)
+        {
+          *str = '-';
+        }
+        break;
     }
-
-    sum = num;
-
-    if (i == (len - 1) && sum)
-    {
-      return -1;
-    }
-
-    do
-    {
-      digit = sum % base;
-
-      if (digit < 0xA)
-      {
-        str[i++] = '0' + digit;
-      }
-      else
-      {
-        str[i++] = 'A' + digit - 0xA;
-      }
-
-      sum /= base;
-
-    }
-    while (sum && (i < (len - 1)));
-
-    if (i == (len - 1) && sum)
-    {
-      return -1;
-    }
-
-    str[i] = '\0';
-    if (str[0] == '-')
-      vStrRev(&str[1], i-1);
-    else
-      vStrRev(str, i);
-
-    return 0;
+    return Size;
+  }
+  
+  static u32 uixItoan_open(int num, char8* str, int len, int base)
+  {
+    return  uixItoan_open(num, str, len, base, 1);
   }
 
-  static int8 i8Itoa(int num, char8* str, int base)
+  static u32 uixItoan(int num, char8* str, int len, int base)
   {
-    return  i8Itoan(num, str, 0xFF, base);
+    u32 Size;
+    
+    if (len > 1)
+    {
+      Size = uixItoan_open(num, str, len - 1, base, 1);
+      str += Size;
+      *str = 0;
+    }
+    else
+    {
+      Size = 0;
+      if (len > 0)
+      {      
+        *str = 0;
+      }
+    }
+
+    return Size;
+  }
+
+  static u32 uixItoa(int num, char8* str, int base)
+  {
+    return  uixItoan(num, str, 0xFF, base);
+  }
+
+  // Gibt die Länge in Bytes zurück
+  static u32 uixFton(float num, int precision, u8 &expon)
+  {
+    expon = 0;
+    if (num != 0)
+    {
+      u32 luSize;
+      int inum = int(num);
+
+      luSize = uixIton(inum, 10);
+
+      if ((inum == 0) && (num < 0)) // z.B. -0.5
+      {
+        luSize++; // für '-'
+      }
+
+      if (precision)
+      {
+        luSize++; // für '.'
+
+        // Nachkommateil
+        num -= inum;
+        if (num < 0) num = -num;
+
+        for (i8 t = 0; t < precision; t++)
+        {
+          num *= 10;
+        }
+
+        inum = int(num);
+
+        // ggf. runden
+        if ((num - inum) > 0.5f)
+        {
+          inum++;
+        }
+
+        if (inum)
+        {
+          while ((inum % 10) == 0) //Nullen entfernen
+          {
+            inum /= 10;
+            precision--;
+          }
+
+          luSize += precision;
+          expon += precision;
+        }
+        else
+        {
+          luSize++; // für '0'
+          expon++;
+        }
+      }
+      return luSize;
+    }
+    else
+    {
+    if (precision)
+    {
+      expon = 1;
+      return 3;
+    }
+    else
+    {
+      return 1;
+    }
+    }
   }
 
   // https://android.googlesource.com/kernel/lk/+/qcom-dima-8x74-fixes/lib/libc/itoa.c
-  static char8* i8Ftoan(float num, char8* str, int len, int precision)
+  // Gibt die Länge in Bytes zurück
+  // Wenn die Zahl zu lang ist für den string, z.B. Länge Zahl > len, dann gibt es kein korrektes clipping
+  // und das Ergebnis wird eine falsche Zahl sein
+  // Vorsicht: keine null terminierung
+  static u32 uixFtoan_open(float num, char8* str, int len, int precision)
   {
-    int i = 0;
+    i16 i;
     int inum;
-    int precisionn;
-    char8* str1 = str;
+    u8 expon;
 
     if (len == 0)
     {
       return 0;
     }
 
+    if (precision > 9) precision = 9;
+
+    uixFton(num, precision, expon);
 
     inum = int(num);
 
-    if (inum == 0)
+    if ((inum == 0) && (num < 0)) // z.B. -0.5
     {
-      *str++ = '0';
-      len -= 2;
-    }
-    else
-    {
-      int point;
-      i8Itoan(inum, str, len, 10);
-      point = uixStrLen(str);
-      len -= (point + 1);
-      str += point;
-      num -= float(inum);
-    }
-
-
-    if (precision)
-    {
-      precisionn = 1;
-      for (i = 0; i < precision; i++)
+      if (len > 1)
       {
-        precisionn *= 10;
-      }
-    }
-    else
-    {
-      precisionn = 0;
-    }
-
-    if ((precisionn) && (len > 0))
-    {
-      *str++  = '.';
-      *str    = 0; // str = "1.\0"
-      len--;
-      num *= precisionn;
-      inum = int(num);
-
-      if (inum > 0)
-      {
-        //Count and insert leading '0'
-        precisionn /= 10;
-        while ((inum < precisionn) && (len > 0))
-        {
-          precisionn /= 10;
-          *str++ = '0';
-          *str = 0; // str = "1.\0"
-          len--;
-        }
-
-        i8Itoan(inum, str, len, 10);
+        *str++ = '-';
+        *str++ = '0';
+        i = 2;
       }
       else
       {
-        *str++ = '0';
-        *str = 0;
-        len--;
-        precision--;
-        if (precision)
+        *str++ = '-';
+        i = 1;
+      }
+    }
+    else
+    {
+      i = uixItoan_open(inum, str, len, 10, 0);
+      str += i;
+    }
+
+    len -= i;
+
+    if ((expon > 0) && (len)) // Nachkommateil
+    {
+      *str++ = '.';
+      len--;
+      i++;
+
+      if (len)
+      {
+        u8 t;
+        i32 expoval = 1;
+        num -= inum;
+        if (num < 0) num = -num;
+
+        for (t = 0; t < expon; t++)
         {
-          for (i = 0; ((i < precision) && (len > 0)); i++)
+          num *= 10;
+        }
+        inum = int(num);
+
+        if (inum)
+        {
+          // ggf. runden
+          if ((num - inum) > 0.5f)
+          {
+            inum++;
+          }
+
+          // Führende nullen
+          for (t = 0; expoval <= inum; t++)
+          {
+            expoval *= 10;
+          }
+
+          for (; t < expon; t++)
           {
             *str++ = '0';
-            *str = 0;
             len--;
+            i++;
+          }
+
+          i += uixItoan_open(inum, str, len, 10, 0);
+        }
+        else
+        {
+          if (len)
+          {
+            *str++ = '0';
+            len--;
+            i++;
           }
         }
       }
     }
 
-    return str1;
+    return i;
+  }
+
+  static u32 uixFtoan(float num, char8* str, int len, int precision)
+  {
+    u32 Size;
+    
+    if (len > 1)
+    {
+      Size = uixFtoan_open(num, str, len - 1, precision);
+      str += Size;
+      *str = 0;
+    }
+    else
+    {
+      Size = 0;
+      if (len > 0)
+      {      
+        *str = 0;
+      }
+    }
+
+    return Size;
   }
 
 
@@ -424,6 +611,7 @@ class cStrTools
       {
         neg = 1;
         num++;
+        len--;
       }
       while ((*num) && (cChr8Tools::IsDigit(*num)) && (len > 0))
       {
