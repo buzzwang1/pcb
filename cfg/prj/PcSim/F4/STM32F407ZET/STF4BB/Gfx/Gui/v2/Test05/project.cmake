@@ -36,8 +36,8 @@ set(PCB_ProjectPackageList
     #Gfx/Paint/Triangle/BrigthGrad/v00.00.01
     #Gfx/Paint/Triangle/ColGrad/v00.00.01
     #Gfx/Paint/Triangle/TextureBrigthGrad/v00.00.01
-    Gfx/Paint/Triangle/BrigthFlat/v00.00.01
-    Gfx/Paint/Triangle/ZTextureBrigthGrad/v00.00.01
+    Gfx/Paint/Triangle/BrigthFlat/v00.00.02
+    Gfx/Paint/Triangle/ZTextureBrigthGrad/v00.00.02
     Gfx/Sprite/Sprite/v00.00.01
     Gfx/Sprite/SEngine/v00.00.01
     Gfx/Font/RFont/v00.00.01

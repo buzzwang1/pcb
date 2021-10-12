@@ -41,7 +41,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3
 
     Driver/STM32/L4/HAL/GPPin/v01.00.02
-    Driver/STM32/Device/Displays/ST7735/SPI/v00.00.01:L433CCT_SPI1_DMA
+    Driver/STM32/Device/Displays/ST7735/SPI/v00.00.01:L433CCT_SPI1_DMA_PWRBX
     Driver/STM32/L4/HAL/cI2C/v01.00.05
 
 

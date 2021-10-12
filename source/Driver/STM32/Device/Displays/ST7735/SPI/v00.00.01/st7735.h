@@ -240,6 +240,17 @@ class cST7735: public cST7735_HW
 
   void vShowScreenDma(u8 *lpui8Bm) 
   {
+    // High und Low Byte order drehen
+    u16 i;
+    u8  d;
+
+    for (i = 0; i < (mu16ScrWidth * mu16ScrHeight * 2); i+=2) 
+    {
+      d = lpui8Bm[i];
+      lpui8Bm[i] = lpui8Bm[i+1];
+      lpui8Bm[i+1] = d;
+    }
+
     vAddrSet2(0,0,mu16ScrWidth - 1,mu16ScrHeight - 1);
     cmd2(0x2c); // Memory write
     mPinCs.vSet0();

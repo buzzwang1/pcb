@@ -291,6 +291,11 @@ class cPowerMonitor
     int32             i32I_Sys_NoRadio_NoDisplay; // i32I_Bat, wenn Funk und Display aus
     uint8             ui8DimValue;
 
+    
+    u32               u32PowerCounterOut; // Summiert den Strom auf, der von der Akku kommt
+    u32               u32PowerCounterIn;  // Summiert den Strom auf, der in der Akku kommt
+                                          // Summiert nur auf bei keiner Netzversorgung (aui8Switches[cPowerMonitor::MAIN_nS1] == 0)
+
     uint8             ui8AdcIdx;
     //Fifo16H           stADC_1h[4];
     //Fifo16H           stADC_1d[4];
@@ -356,6 +361,9 @@ class cPowerMonitor
     stGlobals.i32U_Bat    = 4000;
     stGlobals.i32I_Bat    = 20;
     stGlobals.i32I_Sys_NoRadio_NoDisplay = 0;
+
+    stGlobals.u32PowerCounterOut = 0;
+    stGlobals.u32PowerCounterIn  = 0; 
 
     stGlobals.fU_BatAvg = 4000;
     stGlobals.fI_BatAvg = 10;

@@ -369,10 +369,10 @@ class cBotNetStreamPort_BotNetPowMon_SetDisp: public cCliCmd
 };
 
 
-class cBotNetStreamPort_BotNetPowMon_PowMon: public cCliCmd
+class cBotNetStreamPort_BotNetPowMon_PowMon1: public cCliCmd
 {
   public:
-    cBotNetStreamPort_BotNetPowMon_PowMon():cCliCmd((const char*)"PowMon", (const char*)"Show Power Monitor")
+    cBotNetStreamPort_BotNetPowMon_PowMon1():cCliCmd((const char*)"PowMon1", (const char*)"Show Power Monitor 1")
     {}
 
     bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
@@ -399,6 +399,36 @@ class cBotNetStreamPort_BotNetPowMon_PowMon: public cCliCmd
 };
 
 
+class cBotNetStreamPort_BotNetPowMon_PowMon2: public cCliCmd
+{
+  public:
+    cBotNetStreamPort_BotNetPowMon_PowMon2():cCliCmd((const char*)"PowMon2", (const char*)"Show Power Monitor 2")
+    {}
+
+    bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
+    {
+      char8  lszStrBuf[32];
+      cStr   lszStr(lszStrBuf, 32);
+
+      UNUSED(lcParam);
+      UNUSED(lbFirstCall);
+      UNUSED(lCallerAdr);
+
+      if (lcParam.Len() > 0)
+      {
+        mcPowerMonitor.stGlobals.u32PowerCounterIn  = 0;
+        mcPowerMonitor.stGlobals.u32PowerCounterOut = 0;
+      }
+
+      lszStr.Setf((const char8*)"I_Bat_in:   %10d", mcPowerMonitor.stGlobals.u32PowerCounterIn); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"I_Bat_out:  %10d", mcPowerMonitor.stGlobals.u32PowerCounterOut); lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"I_Bat_diff: %10d", (i32)mcPowerMonitor.stGlobals.u32PowerCounterIn - (i32)mcPowerMonitor.stGlobals.u32PowerCounterOut); lcCli->bPrintLn(lszStr);
+      
+      return True;
+    }
+};
+
+
 
 class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
 {
@@ -407,7 +437,8 @@ class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
   cBotNetStreamPort_BotNetPowMon_SetTim   mcBnCliCmd_SetTim;
   cBotNetStreamPort_BotNetPowMon_SetDim   mcBnCliCmd_SetDim;
   cBotNetStreamPort_BotNetPowMon_SetDisp  mcBnCliCmd_SetDisp;
-  cBotNetStreamPort_BotNetPowMon_PowMon   mcBnCliCmd_PowMon;
+  cBotNetStreamPort_BotNetPowMon_PowMon1  mcBnCliCmd_PowMon1;
+  cBotNetStreamPort_BotNetPowMon_PowMon2  mcBnCliCmd_PowMon2;
 
   cBotNetStreamPort_BotNetPowMon()
   {
@@ -425,7 +456,8 @@ class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_SetTim);
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_SetDim);
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_SetDisp);
-    lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_PowMon);
+    lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_PowMon1);
+    lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_PowMon2);
   }
 
 
@@ -672,6 +704,20 @@ void MAIN_vTick1000msLp(void)
     lu16Counter12Min--;
   }
 
+  // kein 220V Relais ?
+  // Dann Powercounter erhöhen
+  if (mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] == 0)
+  {
+    if (mcPowerMonitor.stGlobals.i32I_Bat > 0)
+    {
+      mcPowerMonitor.stGlobals.u32PowerCounterIn  += mcPowerMonitor.stGlobals.i32I_Bat;
+    }
+    else
+    {
+      mcPowerMonitor.stGlobals.u32PowerCounterOut += (-mcPowerMonitor.stGlobals.i32I_Bat);
+    }
+  }
+
   {
     u8 lszData[14];
     
@@ -857,133 +903,150 @@ void MAIN_Button_vPressed(cPowerMonitor::tenButtons len8Button)
   {
     switch (len8Button)
     {
-    case cPowerMonitor::MAIN_nButton_1:
-
-      mcPowerMonitor.stGuiTabs.enTopTab = (cPowerMonitor::tenGuiTopMenu)((u8)(mcPowerMonitor.stGuiTabs.enTopTab) + 1);
-      if ((u8)mcPowerMonitor.stGuiTabs.enTopTab >= (u8)cPowerMonitor::MAIN_nGuiTopMenu_LastEntry)
-      {
-        mcPowerMonitor.stGuiTabs.enTopTab = cPowerMonitor::MAIN_nGuiTopMenu_FirstEntry;
-      }
-      break;
-    case cPowerMonitor::MAIN_nButton_2:
-      switch (mcPowerMonitor.stGuiTabs.enTopTab)
-      {
-      case cPowerMonitor::MAIN_nGuiTopMenu_Status:
-        mcPowerMonitor.stGuiTabs.enTopSubTab_Status = (cPowerMonitor::tenGuiTopMenuSub_Status)((u8)(mcPowerMonitor.stGuiTabs.enTopSubTab_Status) + 1);
-        if ((u8)mcPowerMonitor.stGuiTabs.enTopSubTab_Status >= (u8)cPowerMonitor::MAIN_nGuiTopMenuSub_Status_LastEntry)
+      // Button1 (links oben) für den Hauptreiter
+      // ...->Status->Konsole->Info->Einstellungen->...
+      case cPowerMonitor::MAIN_nButton_1:
+        mcPowerMonitor.stGuiTabs.enTopTab = (cPowerMonitor::tenGuiTopMenu)((u8)(mcPowerMonitor.stGuiTabs.enTopTab) + 1);
+        if ((u8)mcPowerMonitor.stGuiTabs.enTopTab >= (u8)cPowerMonitor::MAIN_nGuiTopMenu_LastEntry)
         {
-          mcPowerMonitor.stGuiTabs.enTopSubTab_Status = cPowerMonitor::MAIN_nGuiTopMenuSub_Status_FirstEntry;
+          mcPowerMonitor.stGuiTabs.enTopTab = cPowerMonitor::MAIN_nGuiTopMenu_FirstEntry;
         }
         break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
-        mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen = (cPowerMonitor::tenGuiTopMenuSub_Einstellungen)((u8)(mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen) + 1);
-        if ((u8)mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen >= (u8)cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_LastEntry)
+
+      // Button2 (rechts oben) für den Unterreiter      
+      case cPowerMonitor::MAIN_nButton_2:
+        switch (mcPowerMonitor.stGuiTabs.enTopTab)
         {
-          mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen = cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_FirstEntry;
+          // Haupt: Status
+          // ...->Power->ADC1->ADC2->ADC3->ADC4->DCF->Funk->...
+          case cPowerMonitor::MAIN_nGuiTopMenu_Status:
+            mcPowerMonitor.stGuiTabs.enTopSubTab_Status = (cPowerMonitor::tenGuiTopMenuSub_Status)((u8)(mcPowerMonitor.stGuiTabs.enTopSubTab_Status) + 1);
+            if ((u8)mcPowerMonitor.stGuiTabs.enTopSubTab_Status >= (u8)cPowerMonitor::MAIN_nGuiTopMenuSub_Status_LastEntry)
+            {
+              mcPowerMonitor.stGuiTabs.enTopSubTab_Status = cPowerMonitor::MAIN_nGuiTopMenuSub_Status_FirstEntry;
+            }
+            break;
+          // Haupt: Einstellungen
+          // ...->Dimmung->...
+          // Auskommentiert, solange es nur einen Reiter gibt
+          /*case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
+            mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen = (cPowerMonitor::tenGuiTopMenuSub_Einstellungen)((u8)(mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen) + 1);
+            if ((u8)mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen >= (u8)cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_LastEntry)
+            {
+              mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen = cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_FirstEntry;
+            }
+            break;*/
+          default:
+            break;
         }
         break;
-      default:
-        break;
-      }
-      break;
 
-    case cPowerMonitor::MAIN_nButton_3:
-      switch (mcPowerMonitor.stGuiTabs.enTopTab)
-      {
-      case cPowerMonitor::MAIN_nGuiTopMenu_Status:
-        switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Status)
+      // Button3 (links unten) für den Hauptreiter
+      case cPowerMonitor::MAIN_nButton_3:
+        switch (mcPowerMonitor.stGuiTabs.enTopTab)
         {
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:
-          break;
-        default:
-          break;
-        }
+          case cPowerMonitor::MAIN_nGuiTopMenu_Status:
+            switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Status)
+            {
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power: // Status->Power
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:  // Status->ADC1
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:  // Status->ADC2
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:  // Status->ADC3
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:  // Status->ADC4
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:   // Status->DCF
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:  // Status->Funk
+                break;
+              default:
+                break;
+            }
 
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Konsole:
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Info:
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
-        switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen)
-        {
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_Dimmung:
-          if (mcPowerMonitor.stGlobals.ui8DimValue > 5)
-          {
-            mcPowerMonitor.stGlobals.ui8DimValue -= 5;
+          break;
+
+          case cPowerMonitor::MAIN_nGuiTopMenu_Konsole:
+            break;
+          case cPowerMonitor::MAIN_nGuiTopMenu_Info:
+            break;
+          case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
+            switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen)
+            {
+              // Einstellungen->Dimmung
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_Dimmung:
+                // Dimmung verringern
+                if (mcPowerMonitor.stGlobals.ui8DimValue > 5)
+                {
+                  mcPowerMonitor.stGlobals.ui8DimValue -= 5;
+                }
+                else
+                {
+                  mcPowerMonitor.stGlobals.ui8DimValue = 0;
+                }
+                break;
+            default:
+              break;
           }
-          else
-          {
-            mcPowerMonitor.stGlobals.ui8DimValue = 0;
-          }
           break;
-        default:
+          default:
+            break;
+        }
+        break;
+
+      case cPowerMonitor::MAIN_nButton_4:
+        switch (mcPowerMonitor.stGuiTabs.enTopTab)
+        {
+          case cPowerMonitor::MAIN_nGuiTopMenu_Status:
+            switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Status)
+            {
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power: // Status->Power
+                // PowerCounter auf 0 setzen
+                mcPowerMonitor.stGlobals.u32PowerCounterIn  = 0;
+                mcPowerMonitor.stGlobals.u32PowerCounterOut = 0;
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:  // Status->ADC1
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:  // Status->ADC2
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:  // Status->ADC3
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:  // Status->ADC4
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:   // Status->DCF
+                break;
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:  // Status->Funk
+                break;
+              default:
+                break;
+            }
+
+            break;
+          case cPowerMonitor::MAIN_nGuiTopMenu_Konsole:
+            break;
+          case cPowerMonitor::MAIN_nGuiTopMenu_Info:
+            break;
+          case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
+            switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen)
+            {
+              // Einstellungen->Dimmung
+              case cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_Dimmung:
+                // Dimmung erhöhen
+                mcPowerMonitor.stGlobals.ui8DimValue += 5;
+                if (mcPowerMonitor.stGlobals.ui8DimValue > 100) mcPowerMonitor.stGlobals.ui8DimValue = 100;
+                break;
+              default:
+                break;
+            }
           break;
+          default:
+            break;
         }
         break;
       default:
         break;
-      }
-      break;
-
-    case cPowerMonitor::MAIN_nButton_4:
-      switch (mcPowerMonitor.stGuiTabs.enTopTab)
-      {
-      case cPowerMonitor::MAIN_nGuiTopMenu_Status:
-        switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Status)
-        {
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:
-          break;
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:
-          break;
-        default:
-          break;
-        }
-
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Konsole:
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Info:
-        break;
-      case cPowerMonitor::MAIN_nGuiTopMenu_Einstellungen:
-        switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Einstellungen)
-        {
-        case cPowerMonitor::MAIN_nGuiTopMenuSub_Einstellungen_Dimmung:
-          mcPowerMonitor.stGlobals.ui8DimValue += 5;
-          if (mcPowerMonitor.stGlobals.ui8DimValue > 100) mcPowerMonitor.stGlobals.ui8DimValue = 100;
-          break;
-        default:
-          break;
-        }
-        break;
-      default:
-        break;
-      }
-      break;
-    default:
-      break;
     }
   }
 
@@ -1098,152 +1161,158 @@ void MAIN_Paint_vMid_Status(void)
 
   switch (mcPowerMonitor.stGuiTabs.enTopSubTab_Status)
   {
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power:
-  {
-    uint8 lui8BatLvl;
-    uint8 ui8Col;
-    uint8 ui8t;
-    static uint8 ui8Blink500ms = 0;
-
-    mcSpriteEng.i8Set(7, 60, SPRTMST_DATA_MainMidPower);
-
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32U_Bat);
-    cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(25, 106, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32I_Bat);
-    cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(25, 114, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32U_Supply);
-    cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 76, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32I_Supply);
-    cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 84, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-
-    if (mcPowerMonitor.stGlobals.aui8Switches[0]) mcScreen1.vLine(20,67, 30,67,   1);
-                                             else mcScreen1.vLine(20,67, 30,67-5, 1);
-
-    if (mcPowerMonitor.stGlobals.aui8Switches[1]) mcScreen1.vLine(59,90, 69,90,   1);
-                                             else mcScreen1.vLine(59,90, 69,90-5, 1);
-    if (mcPowerMonitor.stGlobals.aui8Switches[2]) mcScreen1.vLine(88,90, 98,90,   1);
-                                             else mcScreen1.vLine(88,90, 98,90-5, 1);
-
-    /*
-      BatLvl: (4200-2400 / 9) = 200mV
-
-      Lvl 0:        < 2400mV: 0 Bars
-      Lvl 1: 2400mV - 2600mV: 1 Bars (blinking)
-      Lvl 2: 2600mV - 2800mV: 1 Bars
-      Lvl 3: 2800mV - 3000mV: 2 Bars (blinking)
-      Lvl 4: 3000mV - 3200mV: 2 Bars
-      Lvl 5: 3200mV - 3400mV: 3 Bars (blinking)
-      Lvl 6: 3400mV - 3600mV: 3 Bars
-      Lvl 7: 3600mV - 3800mV: 4 Bars (blinking)
-      Lvl 8: 3800mV - 4000mV: 4 Bars
-      Lvl 9: >4000mV        : 4 Bars
-    */
-
-    ui8Col = 1;
-
-    if (mcPowerMonitor.stGlobals.i32U_Bat < 2400)
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Power:
     {
-      lui8BatLvl = 0;
-    }
-    else if (mcPowerMonitor.stGlobals.i32U_Bat > 4000)
-    {
-      lui8BatLvl = 9;
-    }
-    else
-    {
-      lui8BatLvl = (mcPowerMonitor.stGlobals.i32U_Bat - 2400) / 200;
-      if (ui8Blink500ms < (500 / 25))
+      uint8 lui8BatLvl;
+      uint8 ui8Col;
+      uint8 ui8t;
+      static uint8 ui8Blink500ms = 0;
+
+      mcSpriteEng.i8Set(7, 60, SPRTMST_DATA_MainMidPower);
+
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"In:  %d", mcPowerMonitor.stGlobals.u32PowerCounterIn/1000);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(5, 37, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Out: %d", mcPowerMonitor.stGlobals.u32PowerCounterOut/1000);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(5, 45, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32U_Bat);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(25, 106, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32I_Bat);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(25, 114, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32U_Supply);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 76, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"%d", mcPowerMonitor.stGlobals.i32I_Supply);
+      cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 84, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+
+      if (mcPowerMonitor.stGlobals.aui8Switches[0]) mcScreen1.vLine(20,67, 30,67,   1);
+                                               else mcScreen1.vLine(20,67, 30,67-5, 1);
+
+      if (mcPowerMonitor.stGlobals.aui8Switches[1]) mcScreen1.vLine(59,90, 69,90,   1);
+                                               else mcScreen1.vLine(59,90, 69,90-5, 1);
+      if (mcPowerMonitor.stGlobals.aui8Switches[2]) mcScreen1.vLine(88,90, 98,90,   1);
+                                               else mcScreen1.vLine(88,90, 98,90-5, 1);
+
+      /*
+        BatLvl: (4200-2400 / 9) = 200mV
+
+        Lvl 0:        < 2400mV: 0 Bars
+        Lvl 1: 2400mV - 2600mV: 1 Bars (blinking)
+        Lvl 2: 2600mV - 2800mV: 1 Bars
+        Lvl 3: 2800mV - 3000mV: 2 Bars (blinking)
+        Lvl 4: 3000mV - 3200mV: 2 Bars
+        Lvl 5: 3200mV - 3400mV: 3 Bars (blinking)
+        Lvl 6: 3400mV - 3600mV: 3 Bars
+        Lvl 7: 3600mV - 3800mV: 4 Bars (blinking)
+        Lvl 8: 3800mV - 4000mV: 4 Bars
+        Lvl 9: >4000mV        : 4 Bars
+      */
+
+      ui8Col = 1;
+
+      if (mcPowerMonitor.stGlobals.i32U_Bat < 2400)
       {
-        ui8Col = 0;
+        lui8BatLvl = 0;
+      }
+      else if (mcPowerMonitor.stGlobals.i32U_Bat > 4000)
+      {
+        lui8BatLvl = 9;
+      }
+      else
+      {
+        lui8BatLvl = (mcPowerMonitor.stGlobals.i32U_Bat - 2400) / 200;
+        if (ui8Blink500ms < (500 / 25))
+        {
+          ui8Col = 0;
+        }
+      }
+
+      for (ui8t = 0; ui8t < lui8BatLvl / 2; ui8t++)
+      {
+        cPaint::vRectFull(46, 60 + 54 - 4 * ui8t, 6, 3, 1, &mcScreen1);
+      }
+
+      // 1, 3, 5, 7
+      if ((lui8BatLvl < 9) && (lui8BatLvl & 1) && (ui8Col == 1))
+      {
+        cPaint::vRectFull(46, 60 + 54 - 4 * ((lui8BatLvl - 1) / 2), 6, 3, 1, &mcScreen1);
+      }
+
+
+      ui8Blink500ms++;
+      if (ui8Blink500ms > (1000 / 25))
+      {
+        ui8Blink500ms = 0;
       }
     }
-
-    for (ui8t = 0; ui8t < lui8BatLvl / 2; ui8t++)
+    break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Spannnung Supply", &mcScreen1);
+      mcGraph.vPaint(&mcGraphChnl_USupply);
+      mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
+      break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Strom Supply", &mcScreen1);
+      mcGraph.vPaint(&mcGraphChnl_ISupply);
+      mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
+      break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Spannnung Bat", &mcScreen1);
+      mcGraph.vPaint(&mcGraphChnl_UBat);
+      mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
+      break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Strom Bat", &mcScreen1);
+      mcGraph.vPaint(&mcGraphChnl_IBat);
+      mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
+      break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:
     {
-      cPaint::vRectFull(46, 60 + 54 - 4 * ui8t, 6, 3, 1, &mcScreen1);
+      GfxInt liY = 40;
+
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"SmDCF77: %d ", mcDcf77.mstRtData.ui8SmDCF77);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Data: %d ", mcDcf77.mstRtData.ui8DCF77_Data);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Parität: %d ", mcDcf77.mstRtData.ui8DCF77_DataPar);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Valid: %d ", mcDcf77.mstRtData.ui8DCF77_DataValid);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Count: %d ", mcDcf77.mstRtData.ui8DCF77_DataCnt);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Pin: %d ", mcDcf77.mstRtData.ui8DCF77_Pin);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Filter: %08b ", mcDcf77.mstRtData.ui8DCF77_Filter);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"OnTicks: %d ", mcDcf77.mstRtData.ui8DCF77_Pin_OnTicks);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
+
+      liY += 10;
+      mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"OffTicks: %d ", mcDcf77.mstRtData.ui8DCF77_Pin_OffTicks);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
     }
-
-    // 1, 3, 5, 7
-    if ((lui8BatLvl < 9) && (lui8BatLvl & 1) && (ui8Col == 1))
-    {
-      cPaint::vRectFull(46, 60 + 54 - 4 * ((lui8BatLvl - 1) / 2), 6, 3, 1, &mcScreen1);
-    }
-
-
-    ui8Blink500ms++;
-    if (ui8Blink500ms > (1000 / 25))
-    {
-      ui8Blink500ms = 0;
-    }
-  }
-  break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC1:
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Spannnung Supply", &mcScreen1);
-    mcGraph.vPaint(&mcGraphChnl_USupply);
-    mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
     break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC2:
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Strom Supply", &mcScreen1);
-    mcGraph.vPaint(&mcGraphChnl_ISupply);
-    mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
-    break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC3:
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Spannnung Bat", &mcScreen1);
-    mcGraph.vPaint(&mcGraphChnl_UBat);
-    mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
-    break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_ADC4:
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(8, 38, (char8*)"Strom Bat", &mcScreen1);
-    mcGraph.vPaint(&mcGraphChnl_IBat);
-    mcSpriteEng.vSetParam(Sprite_nModeOr, &mcScreen1);
-    break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_DCF:
-  {
-    GfxInt liY = 40;
-
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"SmDCF77: %d ", mcDcf77.mstRtData.ui8SmDCF77);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Data: %d ", mcDcf77.mstRtData.ui8DCF77_Data);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Parität: %d ", mcDcf77.mstRtData.ui8DCF77_DataPar);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Valid: %d ", mcDcf77.mstRtData.ui8DCF77_DataValid);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Count: %d ", mcDcf77.mstRtData.ui8DCF77_DataCnt);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Pin: %d ", mcDcf77.mstRtData.ui8DCF77_Pin);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"Filter: %08b ", mcDcf77.mstRtData.ui8DCF77_Filter);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"OnTicks: %d ", mcDcf77.mstRtData.ui8DCF77_Pin_OnTicks);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-
-    liY += 10;
-    mcPowerMonitor.stGlobals.mcStr.Setf((const char8*)"OffTicks: %d ", mcDcf77.mstRtData.ui8DCF77_Pin_OffTicks);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(5, liY, (char8*)mcPowerMonitor.stGlobals.mcStr.ToString(), &mcScreen1);
-  }
-  break;
-  case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:
-    break;
-  default:
-    break;
+    case cPowerMonitor::MAIN_nGuiTopMenuSub_Status_Funk:
+      break;
+    default:
+      break;
   }
 }
 

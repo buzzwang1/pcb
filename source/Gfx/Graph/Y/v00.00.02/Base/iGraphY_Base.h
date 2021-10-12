@@ -305,7 +305,7 @@ public:
 
         mpstDest->vLineV(li16x, li32PosY - 2, li32PosY + 2, mi32ColLines);
 
-        mpstRFont->mui32Col = mi32ColLines;
+        mpstRFont->mui32Col = mpstDest->u32GetCol(mi32ColLines);
         mpstRFont->mcText.From(lszTemp);
         mpstRFont->i8StringLen(&stStrLen);
 

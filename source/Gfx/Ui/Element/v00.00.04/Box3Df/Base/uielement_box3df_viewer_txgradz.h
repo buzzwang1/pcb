@@ -69,9 +69,9 @@ class cWorld_3Df_Viewer_Tex_Grad_Z : public cWorld_3Df_ViewerWorld_Base
 
       //Distanz Punkt zur ClipEbene
       macPoints[li32i].mfDistClip = lcClip_Plane_n.x * macPoints[li32i].x +
-        lcClip_Plane_n.y * macPoints[li32i].y +
-        lcClip_Plane_n.z * macPoints[li32i].z -
-        lcClip_Plane_n.fDotProduct(lcClip_Plane_p);
+                                    lcClip_Plane_n.y * macPoints[li32i].y +
+                                    lcClip_Plane_n.z * macPoints[li32i].z -
+                                    lcClip_Plane_n.fDotProduct(lcClip_Plane_p);
 
       macPoints[li32i].mfDistLight = macPoints[li32i].cSub(lcLight).fLength();
     }

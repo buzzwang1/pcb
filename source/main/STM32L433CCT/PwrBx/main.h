@@ -28,6 +28,7 @@
 #include "TypeDef.h"
 #include "stm32l433xx.h"
 #include "stm32l4xx_hal.h"
+#include "stm32l4xx_ll_dac.h"
 
 
 //Resource

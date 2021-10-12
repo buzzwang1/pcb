@@ -50,10 +50,26 @@ int32 li32IShunt = 0;
 int32 li32VBusAvg   =  0;
 int32 li32VBusMin   =  99999;
 int32 li32VBusMax   =  0;
+int32 li32VPowerCounter   =  0;
 
 int32 li32IShuntAvg =  0;
 int32 li32IShuntMin =  99999;
 int32 li32IShuntMax =  0;
+
+int32 mi32Dac;
+
+typedef enum
+{
+  MAIN_nGuiMode_FirstEntry = 0,
+  MAIN_nGuiMode_VI = MAIN_nGuiMode_FirstEntry,
+  MAIN_nGuiMode_ConstVoltage,
+  MAIN_nGuiMode_ConstCurrent,
+  MAIN_nGuiMode_LastEntry
+}tenGuiMode;
+
+tenGuiMode menGuiMode    = MAIN_nGuiMode_VI;
+uint32     mu32SetVoltage = 0;
+uint32     mu32SetCurrent = 0;
 
 void NMI_Handler(void)
 {
@@ -189,24 +205,121 @@ void MAIN_vTick10msHp(void)
   {
     mcI2C1.vSetReInitTicks(1000);
   }
+
+  mcINA219_A.i8ReadVShunt_digit();
+  mcINA219_A.i8ReadVBus_digit();
+
+  li32IShunt = -mcINA219_A.i32CalcIShunt_uA() / 1000;
+  li32VBus = mcINA219_A.i32CalcVBus_uV() / 1000;
+
+  switch (menGuiMode)
+  {
+    case MAIN_nGuiMode_VI:
+      break;
+
+    case MAIN_nGuiMode_ConstVoltage:
+            
+      if ((u32)li32VBus < mu32SetVoltage)
+      {
+        if (((u32)li32VBus + 500) < mu32SetVoltage)
+        {
+          if (mi32Dac > 10) mi32Dac -= 10;
+          else mi32Dac = 0;
+        }
+        else
+        if (((u32)li32VBus + 250) < mu32SetVoltage)
+        {
+          if (mi32Dac > 5) mi32Dac -= 5;
+          else mi32Dac = 0;
+        }
+        else
+        if ((u32)li32VBus < mu32SetVoltage)
+        {
+          if (mi32Dac > 0) mi32Dac--;        }
+      }
+      else
+      {
+        if ((li32VBus + 500) > mu32SetVoltage)
+        {
+          mi32Dac+=10;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+        else if ((li32VBus + 250) > mu32SetVoltage)
+        {
+          mi32Dac+=5;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+        else
+        {
+          mi32Dac++;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+      }
+      
+      LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, mi32Dac);
+      break;
+    
+    case MAIN_nGuiMode_ConstCurrent:
+      if ((u32)li32IShunt > mu32SetCurrent)
+      {
+        if ((li32IShunt + 50) > mu32SetCurrent)
+        {
+          if (mi32Dac > 50) mi32Dac -= 50;
+          else mi32Dac = 0;
+        }
+        else if ((li32IShunt + 15) > mu32SetCurrent)
+        {
+          if (mi32Dac > 25) mi32Dac -= 25;
+          else mi32Dac = 0;
+        }
+        else
+        {
+          if (mi32Dac > 0) mi32Dac--;
+        }
+      }
+      else
+      {
+        if (((u32)li32IShunt + 50) < mu32SetCurrent)
+        {
+          mi32Dac+=50;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+        else
+        if (((u32)li32IShunt + 15) < mu32SetCurrent)
+        {
+          mi32Dac+=25;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+        else
+        if ((u32)li32IShunt < mu32SetCurrent)
+        {
+          mi32Dac++;
+          if (mi32Dac > 4095) mi32Dac = 4095;
+        }
+      }
+      LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, mi32Dac);
+
+      break;
+    default:
+      break;
+  }
 }
 
 void MAIN_vTick100msLp(void)
 {
 
   static u8 li8Idx = 0;
+  static u8 lu8Btns = 0;
+  static u8 lu8Btns_old = 0;
   char lszValue[16] = "";  
   
-  mcINA219_A.i8ReadVShunt_digit();
-  mcINA219_A.i8ReadVBus_digit();
-
-  li32IShunt = -mcINA219_A.i32CalcIShunt_uA() / 1000;
-  li32VBus   =  mcINA219_A.i32CalcVBus_uV()   / 1000;
   mcLedRed.Toggle();
 
   if (mcST7735.isReady())
   {
     mcScreen1.vFill(BM_BPP16_5R6G5B_BLACK);
+
+    cRFont_Res8b_Bpp1_1G_Full.mpcSpriteEng->menMode = Sprite_nModeCopy;
 
     if (li32VBus < li32VBusMin) li32VBusMin = li32VBus;
     if (li32VBus > li32VBusMax) li32VBusMax = li32VBus;
@@ -221,6 +334,7 @@ void MAIN_vTick100msLp(void)
       li32VBusAvg   =  li32VBus;
       li32VBusMin   =  99999;
       li32VBusMax   =  0;
+      li32VPowerCounter   =  0;
 
       li32IShuntAvg =  li32IShunt;
       li32IShuntMin =  99999;
@@ -257,37 +371,97 @@ void MAIN_vTick100msLp(void)
 
     u8 lu8xOffset = 10;
 
+    cRFont_Res8b_Bpp1_1G_Full.mpcSpriteEng->menMode = Sprite_nModeOr;
+
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0x00FF00);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 30, (char8*)"V [mV]:",  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80 + lu8xOffset, 30, (char8*)"avg:",  &mcScreen1);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 20, (char8*)"max:",  &mcScreen1);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 40, (char8*)"min:",  &mcScreen1);
 
-    cStrTools::i8Itoa(li32VBus,    lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 50 + lu8xOffset, 30, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32VBusAvg, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(105 + lu8xOffset, 30, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32VBusMax, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 20, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32VBusMin, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 40, lszValue,  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0x00FF00);
+    cStrTools::uixItoa(li32VBus,    lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 50 + lu8xOffset, 30, lszValue,  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
+    cStrTools::uixItoa(li32VBusAvg, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(105 + lu8xOffset, 30, lszValue,  &mcScreen1);
+    cStrTools::uixItoa(li32VBusMax, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 20, lszValue,  &mcScreen1);
+    cStrTools::uixItoa(li32VBusMin, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 40, lszValue,  &mcScreen1);
 
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFF0000);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 70, (char8*)"I [mA]:",  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80 + lu8xOffset, 70, (char8*)"avg:",  &mcScreen1);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 60, (char8*)"max:",  &mcScreen1);
     cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 80, (char8*)"min:",  &mcScreen1);
 
-    cStrTools::i8Itoa(li32IShunt,    lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 50 + lu8xOffset, 70, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32IShuntAvg, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(105 + lu8xOffset, 70, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32IShuntMax, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 60, lszValue,  &mcScreen1);
-    cStrTools::i8Itoa(li32IShuntMin, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 80, lszValue,  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFF0000);
+    cStrTools::uixItoa(li32IShunt,    lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 50 + lu8xOffset, 70, lszValue,  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
+    cStrTools::uixItoa(li32IShuntAvg, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(105 + lu8xOffset, 70, lszValue,  &mcScreen1);
+    cStrTools::uixItoa(li32IShuntMax, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 60, lszValue,  &mcScreen1);
+    cStrTools::uixItoa(li32IShuntMin, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY( 75 + lu8xOffset, 80, lszValue,  &mcScreen1);
 
     lszValue[0] = 0;
-    if (lcBtn_1.ui8Get() != 0) cStrTools::szStrCat(lszValue, "1");
+    lu8Btns_old = lu8Btns;
+    lu8Btns = 0;
+    if (lcBtn_1.ui8Get() != 0) { cStrTools::szStrCat(lszValue, "1"); lu8Btns |= 1;}
                           else cStrTools::szStrCat(lszValue, "0");
-    if (lcBtn_2.ui8Get() != 0) cStrTools::szStrCat(lszValue, "1");
+    if (lcBtn_2.ui8Get() != 0) { cStrTools::szStrCat(lszValue, "1"); lu8Btns |= 2;}
                           else cStrTools::szStrCat(lszValue, "0");
-    if (lcBtn_3.ui8Get() != 0) cStrTools::szStrCat(lszValue, "1");
+    if (lcBtn_3.ui8Get() != 0) { cStrTools::szStrCat(lszValue, "1"); lu8Btns |= 4;}
                           else cStrTools::szStrCat(lszValue, "0");
-    if (lcBtn_4.ui8Get() != 0) cStrTools::szStrCat(lszValue, "1");
+    if (lcBtn_4.ui8Get() != 0) { cStrTools::szStrCat(lszValue, "1"); lu8Btns |= 8;}
                           else cStrTools::szStrCat(lszValue, "0");
 
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 100, lszValue,  &mcScreen1);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 100, lszValue, &mcScreen1);
+
+    // Change Mode
+    if (((lu8Btns & 2) == 2) && ((lu8Btns_old & 2) == 0))
+    {
+      if (menGuiMode == MAIN_nGuiMode_VI)           {menGuiMode = MAIN_nGuiMode_ConstVoltage;LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, 0);}
+      else
+      if (menGuiMode == MAIN_nGuiMode_ConstVoltage) {menGuiMode = MAIN_nGuiMode_ConstCurrent;LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, 0);}
+      else
+      if (menGuiMode == MAIN_nGuiMode_ConstCurrent) {menGuiMode = MAIN_nGuiMode_VI;LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, 0);}
+      else menGuiMode = MAIN_nGuiMode_VI;
+    }
+   
+    switch (menGuiMode)
+    {
+      case MAIN_nGuiMode_VI:
+        cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80, 8, (char8*)"Mode VI", &mcScreen1);
+        break;
+
+      case MAIN_nGuiMode_ConstVoltage:
+        cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0x00FF00);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80, 8, (char8*)"Mode V_const", &mcScreen1);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 110, (char8*)"U [mV]:", &mcScreen1);
+        cStrTools::uixItoa(mu32SetVoltage, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 110, lszValue, &mcScreen1);
+        cStrTools::uixItoa(mi32Dac, lszValue, 10);        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(100 + lu8xOffset, 110, lszValue, &mcScreen1);
+        if (lu8Btns & 4) { if (mu32SetVoltage > 100) mu32SetVoltage -= 100; else mu32SetVoltage = 0; }
+        if (lu8Btns & 8) { if (mu32SetVoltage < 20000) mu32SetVoltage += 100; }
+        if ((((u32)li32VBus) > (mu32SetVoltage - 250)) && (((u32)li32VBus) < (mu32SetVoltage + 250)))
+        {
+          li32VPowerCounter += li32IShunt;
+        }
+        cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFF00);
+        cStrTools::uixItoa(li32VPowerCounter / 1000, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 100, lszValue, &mcScreen1);
+        break;
+
+      case MAIN_nGuiMode_ConstCurrent:
+        cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFF0000);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80, 8, (char8*)"Mode I_const", &mcScreen1);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10 + lu8xOffset, 110, (char8*)"I [mA]:", &mcScreen1);
+        cStrTools::uixItoa(mu32SetCurrent, lszValue, 10); cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50 + lu8xOffset, 110, lszValue, &mcScreen1);
+        cStrTools::uixItoa(mi32Dac, lszValue, 10);        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(100 + lu8xOffset, 110, lszValue, &mcScreen1);
+        if (lu8Btns & 4) { if (mu32SetCurrent > 5) mu32SetCurrent -= 5; else mu32SetCurrent = 0; }
+        if (lu8Btns & 8) { if (mu32SetCurrent < 10000) mu32SetCurrent += 5; }
+        break;
+      default:
+        break;
+    }
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
 
     mcST7735.vShowScreenDma(mcScreen1.mpcBm->mpui8Data);
   }
@@ -310,8 +484,23 @@ void MAIN_vInitSystem(void)
      */
   HAL_Init();
 
+  /* DAC */
+  LL_DAC_InitTypeDef DAC_InitStructure;
+
+  tcGpPin<GPIOA_BASE, 4> mGnd1(GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, 0);
+
+  __HAL_RCC_DAC1_CLK_ENABLE();
+
+  /* DAC channel1 Configuration */
+  LL_DAC_StructInit(&DAC_InitStructure);
+  DAC_InitStructure.OutputBuffer = LL_DAC_OUTPUT_BUFFER_DISABLE;
+  LL_DAC_Init(DAC1, LL_DAC_CHANNEL_1, &DAC_InitStructure);
+  mi32Dac = 1023/2;
+  LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, mi32Dac);
+  LL_DAC_Enable(DAC1, LL_DAC_CHANNEL_1);
+
   mcGraphChnlVBus.mi16SkalYMax = 10;
-  mcGraphChnlVBus.mui32Col = 0x000FF00;
+  mcGraphChnlVBus.mui32Col = 0x0FF0000;
   mcGraphChnlVBus.vSet_Y_Label((const char8*)"i [mA]");
   mcGraphChnlVBus.mi16SkalYCnt = 10;
   //mcGraph.vSetSpace(5, 5);

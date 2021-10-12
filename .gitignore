@@ -1,4 +1,8 @@
 .vs/*
 /bin/*
+*/bin/*
 __pycache__
-
+*.bin
+*.gz
+*.exe
+*.pdb

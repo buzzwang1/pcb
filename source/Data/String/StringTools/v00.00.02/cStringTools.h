@@ -354,6 +354,7 @@ class cStrTools
   }
 
   // Gibt die Länge in Bytes zurück
+  // expon: länge des nachkommateils
   static u32 uixFton(float num, int precision, u8 &expon)
   {
     expon = 0;
@@ -411,15 +412,15 @@ class cStrTools
     }
     else
     {
-    if (precision)
-    {
-      expon = 1;
-      return 3;
-    }
-    else
-    {
-      return 1;
-    }
+      if (precision)
+      {
+        expon = 1;
+        return 3;
+      }
+      else
+      {
+        return 1;
+      }
     }
   }
 
