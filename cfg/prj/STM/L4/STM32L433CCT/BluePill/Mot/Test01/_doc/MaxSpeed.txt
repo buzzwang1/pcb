@@ -1,0 +1,6 @@
+2,5V: stop
+2,6V: 1,0 digit/ms 
+3,0V: 3,8 digit/ms 
+4,0V: 5,2 digit/ms
+5,0V: 6,5 digit/ms
+6,0V: 7,5 digit/ms

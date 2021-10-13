@@ -3271,6 +3271,186 @@
       ]
     },
     {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.Og",
+      "name": "STM/L4/HalLib/v01.15.01.Og",
+      "generator": "Ninja",
+      "configurationType": "Og",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.15.01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.O3",
+      "name": "STM/L4/HalLib/v01.15.01.O3",
+      "generator": "Ninja",
+      "configurationType": "O3",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.15.01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.Os",
+      "name": "STM/L4/HalLib/v01.15.01.Os",
+      "generator": "Ninja",
+      "configurationType": "Os",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.15.01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.Og",
+      "name": "STM/L4/HalLib/v01.17.00.Og",
+      "generator": "Ninja",
+      "configurationType": "Og",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.17.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.O3",
+      "name": "STM/L4/HalLib/v01.17.00.O3",
+      "generator": "Ninja",
+      "configurationType": "O3",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.17.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L4_HalLib",
+      "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.Os",
+      "name": "STM/L4/HalLib/v01.17.00.Os",
+      "generator": "Ninja",
+      "configurationType": "Os",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/HalLib/v01.17.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_SolBx_01_App",
       "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/App",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/App.Debug",
