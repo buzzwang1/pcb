@@ -2,7 +2,9 @@
 /bin/*
 */bin/*
 __pycache__
-*.bin
-*.gz
-*.exe
-*.pdb
+**/*.bin
+**/*.gz
+**/*.exe
+**/*.pdb
+/source/Driver/STM32/L4/**/*.a
+/source/Driver/STM32/L5/**/*.a

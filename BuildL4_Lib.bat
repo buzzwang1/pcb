@@ -1,1 +1,0 @@
-build *stm/L4/HalLib* all

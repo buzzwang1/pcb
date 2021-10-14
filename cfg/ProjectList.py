@@ -150,8 +150,8 @@ projects = {
     'STM/F4/STM32F429ZIT6/F429IDISCO/Ex/01/10_MiniOszi'      : project('STM32F429ZIT6_10_MiniOszi',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
 
     # --- STM32L4 -----------------------------------------------
-    'STM/L4/HalLib/v01.15.01'                          : project('STM32L4_HalLib',                     True,     '', {'Og' : 'Config_STM32L4x3', 'O3' : 'Config_STM32L4x3', 'Os'  : 'Config_STM32L4x3'}),
-    'STM/L4/HalLib/v01.17.00'                          : project('STM32L4_HalLib',                     True,     '', {'Og' : 'Config_STM32L4R9', 'O3' : 'Config_STM32L4R9', 'Os'  : 'Config_STM32L4R9'}),
+    'STM/L4/HalLib/v01.15.01'                          : project('STM32L4_HalLib',                     True,     '', {'og' : 'Config_STM32L4x3', 'o3' : 'Config_STM32L4x3', 'os'  : 'Config_STM32L4x3'}),
+    'STM/L4/HalLib/v01.17.00'                          : project('STM32L4_HalLib',                     True,     '', {'og' : 'Config_STM32L4R9', 'o3' : 'Config_STM32L4R9', 'os'  : 'Config_STM32L4R9'}),
 
     # --- STM32L433CCT/SolBx -----------------------------------------------
     'STM/L4/STM32L433CCT/SolBx/01/App'                 : project('STM32L433CCT_SolBx_01_App',          True,     '', {'Debug' : 'Config_STM32L4x3', 'Release' : 'Config_STM32L4x3', 'Debug_App'  : 'Config_STM32L4x3_BlApp', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
