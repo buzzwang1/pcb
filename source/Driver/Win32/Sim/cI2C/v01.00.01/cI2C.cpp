@@ -502,7 +502,7 @@ void cI2cMaster::I2C_EV_IRQHandler()
 
   if (mSm == enStIdle)
   {
-    vStartNext();
+    bStartNext();
   }
 }
 
@@ -521,7 +521,7 @@ void cI2cMaster::I2C_ER_IRQHandler()
 
   if (mSm == enStIdle)
   {
-    vStartNext();
+    bStartNext();
   }
 }
 
@@ -714,7 +714,7 @@ void cI2cMaster::vStartMsg(cComDatMsg *lpcActiveMsg)
   }
 }
 
-bool cI2cMaster::vStartNext()
+bool cI2cMaster::bStartNext()
 {
   if (mSm == enStIdle)
   {

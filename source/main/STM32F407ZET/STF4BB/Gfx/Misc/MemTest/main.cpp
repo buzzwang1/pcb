@@ -481,7 +481,7 @@ void FSMC_SRAM_Init(void)
 
 void MAIN_vTick10msLp(void)
 {
-  //mcI2C1->vStartNext();
+  //mcI2C1->bStartNext();
 }
 
 

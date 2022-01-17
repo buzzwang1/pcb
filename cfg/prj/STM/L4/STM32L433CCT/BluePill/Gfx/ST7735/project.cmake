@@ -36,7 +36,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/Tree/Idx/16Bit/12Byte/v00.00.01

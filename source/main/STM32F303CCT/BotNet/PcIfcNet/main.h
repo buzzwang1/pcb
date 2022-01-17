@@ -6,12 +6,12 @@
 #include "HX8347.h"
 #include "tGPPin.h"
 #include "LED.h"
-#include "cI2c.h"
+//#include "cI2c.h"
 #include "cNrf905.h"
 
 //Data
 #include "cRingBufT.h"
-#include "cBnLinkI2c.h"
+//#include "cBnLinkI2c.h"
 #include "cBnLinkNrf905.h"
 #include "cBnLinkNrf905Net.h"
 #include "cBnLinkBotCom.h"

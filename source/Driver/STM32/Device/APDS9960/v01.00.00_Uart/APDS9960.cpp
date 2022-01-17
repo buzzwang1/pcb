@@ -36,7 +36,7 @@ cAPDS9960::~cAPDS9960()
   mpcMsgWrite.vMemFree();
 }
 
-void cAPDS9960::vComError(tenComNodeError lenError, tenComNodeState lenState)
+void cAPDS9960::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
 {
   UNUSED(lenError);
   UNUSED(lenState);
@@ -46,9 +46,9 @@ void cAPDS9960::vComError(tenComNodeError lenError, tenComNodeState lenState)
   i8Setup();
 }
 
-void cAPDS9960::vComStart(tenComNodeStartState lenState)
+void cAPDS9960::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
   if (menCmd == enCmdIdle)
   {
     if (mbInit)
@@ -621,16 +621,16 @@ bool cAPDS9960::bProcessGestureData()
     lui8R = this->mstGestureData.stValues[lui8t].R;
 
 
-    cStrTools::i8Itoa(lui8U, lszValue, 16);
+    cStrTools::uixItoa(lui8U, lszValue, 16);
     mcUart->vSend(lszValue);
     mcUart->vSend(" ");
-    cStrTools::i8Itoa(lui8D, lszValue, 16);
+    cStrTools::uixItoa(lui8D, lszValue, 16);
     mcUart->vSend(lszValue);
     mcUart->vSend(" ");
-    cStrTools::i8Itoa(lui8L, lszValue, 16);
+    cStrTools::uixItoa(lui8L, lszValue, 16);
     mcUart->vSend(lszValue);
     mcUart->vSend(" ");
-    cStrTools::i8Itoa(lui8R, lszValue, 16);
+    cStrTools::uixItoa(lui8R, lszValue, 16);
     mcUart->vSend(lszValue);
 
 

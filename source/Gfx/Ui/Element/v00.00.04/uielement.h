@@ -6,6 +6,8 @@
 #include "uielement_root.h"
 #include "uielement_textbox.h"
 #include "uielement_button.h"
+#include "uielement_switch.h"
+#include "uielement_split.h"
 
 #include "uielement_box3d.h"
 #include "uielement_box3df.h"

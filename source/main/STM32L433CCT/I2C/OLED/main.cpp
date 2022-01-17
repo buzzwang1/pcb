@@ -130,7 +130,7 @@ void I2C1_ER_IRQHandler(void)
 
 void MAIN_vTick10msHp(void)
 {
-  if (!mcI2C1.vStartNext())
+  if (!mcI2C1.bStartNext())
   {
     mcI2C1.vSetReInitTicks(1000);
   }
@@ -200,7 +200,7 @@ void MAIN_vInitSystem(void)
                 MAIN_vTick100msLp  /*100ms_LP*/,
                 NULL               /*1s_LP*/);
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     Delay(100);
   }

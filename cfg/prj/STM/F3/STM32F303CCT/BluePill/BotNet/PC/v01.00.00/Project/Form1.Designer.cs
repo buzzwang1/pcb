@@ -88,6 +88,17 @@
       this.IAP_TextBox_DiagWorkRAM_Size_Dez = new System.Windows.Forms.TextBox();
       this.IAP_TextBox_DiagWorkRAM_Adr_Dez = new System.Windows.Forms.TextBox();
       this.IAP_TabControl_Command = new System.Windows.Forms.TabControl();
+      this.TabPage_Command_Download = new System.Windows.Forms.TabPage();
+      this.IAP_CheckBox_CommandDl_Reset = new System.Windows.Forms.CheckBox();
+      this.label38 = new System.Windows.Forms.Label();
+      this.label34 = new System.Windows.Forms.Label();
+      this.IAP_TextBox_CommandDl_Status = new System.Windows.Forms.TextBox();
+      this.IAP_TextBox_CommandDl_BlockLen = new System.Windows.Forms.TextBox();
+      this.IAP_TextBox_CommandDl_Adr = new System.Windows.Forms.TextBox();
+      this.IAP_TextBox_CommandDl_Len = new System.Windows.Forms.TextBox();
+      this.label36 = new System.Windows.Forms.Label();
+      this.IAP_TextBox_CommandDl_File = new System.Windows.Forms.TextBox();
+      this.label37 = new System.Windows.Forms.Label();
       this.TabPage_Command_Info1 = new System.Windows.Forms.TabPage();
       this.IAP_TextBox_DiagInfo0 = new System.Windows.Forms.TextBox();
       this.TabPage_Command_Info2 = new System.Windows.Forms.TabPage();
@@ -172,17 +183,6 @@
       this.TextBox_SrcDeviceAdr = new System.Windows.Forms.TextBox();
       this.TextBox_DestDeviceAdr = new System.Windows.Forms.TextBox();
       this.Session_Label_Blink = new System.Windows.Forms.Label();
-      this.TabPage_Command_Download = new System.Windows.Forms.TabPage();
-      this.label34 = new System.Windows.Forms.Label();
-      this.IAP_TextBox_CommandDl_BlockLen = new System.Windows.Forms.TextBox();
-      this.label36 = new System.Windows.Forms.Label();
-      this.label37 = new System.Windows.Forms.Label();
-      this.IAP_TextBox_CommandDl_File = new System.Windows.Forms.TextBox();
-      this.IAP_TextBox_CommandDl_Len = new System.Windows.Forms.TextBox();
-      this.IAP_TextBox_CommandDl_Adr = new System.Windows.Forms.TextBox();
-      this.label38 = new System.Windows.Forms.Label();
-      this.IAP_TextBox_CommandDl_Status = new System.Windows.Forms.TextBox();
-      this.IAP_CheckBox_CommandDl_Reset = new System.Windows.Forms.CheckBox();
       this.Tab_MainBotnet.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.tabPage2.SuspendLayout();
@@ -193,6 +193,7 @@
       this.tabPage5.SuspendLayout();
       this.tabPage6.SuspendLayout();
       this.IAP_TabControl_Command.SuspendLayout();
+      this.TabPage_Command_Download.SuspendLayout();
       this.TabPage_Command_Info1.SuspendLayout();
       this.TabPage_Command_Info2.SuspendLayout();
       this.TabPage_Command_Write.SuspendLayout();
@@ -202,7 +203,6 @@
       this.TabPage_Command_Start.SuspendLayout();
       this.TabPage_Command_Enter.SuspendLayout();
       this.tabPage7.SuspendLayout();
-      this.TabPage_Command_Download.SuspendLayout();
       this.SuspendLayout();
       // 
       // Btn_Ports
@@ -362,6 +362,7 @@
       this.Tab_MainBotnet.SelectedIndex = 0;
       this.Tab_MainBotnet.Size = new System.Drawing.Size(863, 548);
       this.Tab_MainBotnet.TabIndex = 13;
+      this.Tab_MainBotnet.SelectedIndexChanged += new System.EventHandler(this.Tab_MainBotnet_SelectedIndexChanged);
       // 
       // tabPage1
       // 
@@ -863,6 +864,117 @@
       this.IAP_TabControl_Command.Size = new System.Drawing.Size(656, 248);
       this.IAP_TabControl_Command.TabIndex = 23;
       this.IAP_TabControl_Command.SelectedIndexChanged += new System.EventHandler(this.IAP_TabControl_Command_SelectedIndexChanged);
+      // 
+      // TabPage_Command_Download
+      // 
+      this.TabPage_Command_Download.Controls.Add(this.IAP_CheckBox_CommandDl_Reset);
+      this.TabPage_Command_Download.Controls.Add(this.label38);
+      this.TabPage_Command_Download.Controls.Add(this.label34);
+      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Status);
+      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_BlockLen);
+      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Adr);
+      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Len);
+      this.TabPage_Command_Download.Controls.Add(this.label36);
+      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_File);
+      this.TabPage_Command_Download.Controls.Add(this.label37);
+      this.TabPage_Command_Download.Location = new System.Drawing.Point(4, 22);
+      this.TabPage_Command_Download.Name = "TabPage_Command_Download";
+      this.TabPage_Command_Download.Size = new System.Drawing.Size(648, 222);
+      this.TabPage_Command_Download.TabIndex = 9;
+      this.TabPage_Command_Download.Text = "DL";
+      this.TabPage_Command_Download.UseVisualStyleBackColor = true;
+      // 
+      // IAP_CheckBox_CommandDl_Reset
+      // 
+      this.IAP_CheckBox_CommandDl_Reset.AutoSize = true;
+      this.IAP_CheckBox_CommandDl_Reset.Checked = true;
+      this.IAP_CheckBox_CommandDl_Reset.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.IAP_CheckBox_CommandDl_Reset.Location = new System.Drawing.Point(6, 99);
+      this.IAP_CheckBox_CommandDl_Reset.Name = "IAP_CheckBox_CommandDl_Reset";
+      this.IAP_CheckBox_CommandDl_Reset.Size = new System.Drawing.Size(95, 17);
+      this.IAP_CheckBox_CommandDl_Reset.TabIndex = 37;
+      this.IAP_CheckBox_CommandDl_Reset.Text = "Reset after DL";
+      this.IAP_CheckBox_CommandDl_Reset.UseVisualStyleBackColor = true;
+      // 
+      // label38
+      // 
+      this.label38.AutoSize = true;
+      this.label38.Location = new System.Drawing.Point(3, 199);
+      this.label38.Name = "label38";
+      this.label38.Size = new System.Drawing.Size(23, 13);
+      this.label38.TabIndex = 36;
+      this.label38.Text = "File";
+      // 
+      // label34
+      // 
+      this.label34.AutoSize = true;
+      this.label34.Location = new System.Drawing.Point(3, 76);
+      this.label34.Name = "label34";
+      this.label34.Size = new System.Drawing.Size(42, 13);
+      this.label34.TabIndex = 35;
+      this.label34.Text = "Bl. Size";
+      // 
+      // IAP_TextBox_CommandDl_Status
+      // 
+      this.IAP_TextBox_CommandDl_Status.Font = new System.Drawing.Font("Lucida Console", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.IAP_TextBox_CommandDl_Status.Location = new System.Drawing.Point(127, 3);
+      this.IAP_TextBox_CommandDl_Status.Multiline = true;
+      this.IAP_TextBox_CommandDl_Status.Name = "IAP_TextBox_CommandDl_Status";
+      this.IAP_TextBox_CommandDl_Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+      this.IAP_TextBox_CommandDl_Status.Size = new System.Drawing.Size(518, 187);
+      this.IAP_TextBox_CommandDl_Status.TabIndex = 33;
+      // 
+      // IAP_TextBox_CommandDl_BlockLen
+      // 
+      this.IAP_TextBox_CommandDl_BlockLen.Location = new System.Drawing.Point(54, 73);
+      this.IAP_TextBox_CommandDl_BlockLen.Name = "IAP_TextBox_CommandDl_BlockLen";
+      this.IAP_TextBox_CommandDl_BlockLen.Size = new System.Drawing.Size(67, 20);
+      this.IAP_TextBox_CommandDl_BlockLen.TabIndex = 34;
+      this.IAP_TextBox_CommandDl_BlockLen.Text = "1024";
+      // 
+      // IAP_TextBox_CommandDl_Adr
+      // 
+      this.IAP_TextBox_CommandDl_Adr.Location = new System.Drawing.Point(54, 3);
+      this.IAP_TextBox_CommandDl_Adr.Name = "IAP_TextBox_CommandDl_Adr";
+      this.IAP_TextBox_CommandDl_Adr.Size = new System.Drawing.Size(67, 20);
+      this.IAP_TextBox_CommandDl_Adr.TabIndex = 28;
+      this.IAP_TextBox_CommandDl_Adr.Text = "0";
+      // 
+      // IAP_TextBox_CommandDl_Len
+      // 
+      this.IAP_TextBox_CommandDl_Len.Location = new System.Drawing.Point(54, 29);
+      this.IAP_TextBox_CommandDl_Len.Name = "IAP_TextBox_CommandDl_Len";
+      this.IAP_TextBox_CommandDl_Len.Size = new System.Drawing.Size(67, 20);
+      this.IAP_TextBox_CommandDl_Len.TabIndex = 29;
+      this.IAP_TextBox_CommandDl_Len.Text = "0";
+      // 
+      // label36
+      // 
+      this.label36.AutoSize = true;
+      this.label36.Location = new System.Drawing.Point(3, 32);
+      this.label36.Name = "label36";
+      this.label36.Size = new System.Drawing.Size(25, 13);
+      this.label36.TabIndex = 32;
+      this.label36.Text = "Len";
+      // 
+      // IAP_TextBox_CommandDl_File
+      // 
+      this.IAP_TextBox_CommandDl_File.AllowDrop = true;
+      this.IAP_TextBox_CommandDl_File.Location = new System.Drawing.Point(30, 196);
+      this.IAP_TextBox_CommandDl_File.Name = "IAP_TextBox_CommandDl_File";
+      this.IAP_TextBox_CommandDl_File.Size = new System.Drawing.Size(615, 20);
+      this.IAP_TextBox_CommandDl_File.TabIndex = 27;
+      this.IAP_TextBox_CommandDl_File.DragDrop += new System.Windows.Forms.DragEventHandler(this.IAP_TextBox_CommandDl_File_DragDrop);
+      this.IAP_TextBox_CommandDl_File.DragEnter += new System.Windows.Forms.DragEventHandler(this.IAP_TextBox_CommandDl_File_DragEnter);
+      // 
+      // label37
+      // 
+      this.label37.AutoSize = true;
+      this.label37.Location = new System.Drawing.Point(3, 6);
+      this.label37.Name = "label37";
+      this.label37.Size = new System.Drawing.Size(45, 13);
+      this.label37.TabIndex = 30;
+      this.label37.Text = "Adresse";
       // 
       // TabPage_Command_Info1
       // 
@@ -1677,117 +1789,6 @@
       this.Session_Label_Blink.TabIndex = 25;
       this.Session_Label_Blink.Text = "      ";
       // 
-      // TabPage_Command_Download
-      // 
-      this.TabPage_Command_Download.Controls.Add(this.IAP_CheckBox_CommandDl_Reset);
-      this.TabPage_Command_Download.Controls.Add(this.label38);
-      this.TabPage_Command_Download.Controls.Add(this.label34);
-      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Status);
-      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_BlockLen);
-      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Adr);
-      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_Len);
-      this.TabPage_Command_Download.Controls.Add(this.label36);
-      this.TabPage_Command_Download.Controls.Add(this.IAP_TextBox_CommandDl_File);
-      this.TabPage_Command_Download.Controls.Add(this.label37);
-      this.TabPage_Command_Download.Location = new System.Drawing.Point(4, 22);
-      this.TabPage_Command_Download.Name = "TabPage_Command_Download";
-      this.TabPage_Command_Download.Size = new System.Drawing.Size(648, 222);
-      this.TabPage_Command_Download.TabIndex = 9;
-      this.TabPage_Command_Download.Text = "DL";
-      this.TabPage_Command_Download.UseVisualStyleBackColor = true;
-      // 
-      // label34
-      // 
-      this.label34.AutoSize = true;
-      this.label34.Location = new System.Drawing.Point(3, 76);
-      this.label34.Name = "label34";
-      this.label34.Size = new System.Drawing.Size(42, 13);
-      this.label34.TabIndex = 35;
-      this.label34.Text = "Bl. Size";
-      // 
-      // IAP_TextBox_CommandDl_BlockLen
-      // 
-      this.IAP_TextBox_CommandDl_BlockLen.Location = new System.Drawing.Point(54, 73);
-      this.IAP_TextBox_CommandDl_BlockLen.Name = "IAP_TextBox_CommandDl_BlockLen";
-      this.IAP_TextBox_CommandDl_BlockLen.Size = new System.Drawing.Size(67, 20);
-      this.IAP_TextBox_CommandDl_BlockLen.TabIndex = 34;
-      this.IAP_TextBox_CommandDl_BlockLen.Text = "1024";
-      // 
-      // label36
-      // 
-      this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(3, 32);
-      this.label36.Name = "label36";
-      this.label36.Size = new System.Drawing.Size(25, 13);
-      this.label36.TabIndex = 32;
-      this.label36.Text = "Len";
-      // 
-      // label37
-      // 
-      this.label37.AutoSize = true;
-      this.label37.Location = new System.Drawing.Point(3, 6);
-      this.label37.Name = "label37";
-      this.label37.Size = new System.Drawing.Size(45, 13);
-      this.label37.TabIndex = 30;
-      this.label37.Text = "Adresse";
-      // 
-      // IAP_TextBox_CommandDl_File
-      // 
-      this.IAP_TextBox_CommandDl_File.AllowDrop = true;
-      this.IAP_TextBox_CommandDl_File.Location = new System.Drawing.Point(30, 196);
-      this.IAP_TextBox_CommandDl_File.Name = "IAP_TextBox_CommandDl_File";
-      this.IAP_TextBox_CommandDl_File.Size = new System.Drawing.Size(615, 20);
-      this.IAP_TextBox_CommandDl_File.TabIndex = 27;
-      this.IAP_TextBox_CommandDl_File.DragDrop += new System.Windows.Forms.DragEventHandler(this.IAP_TextBox_CommandDl_File_DragDrop);
-      this.IAP_TextBox_CommandDl_File.DragEnter += new System.Windows.Forms.DragEventHandler(this.IAP_TextBox_CommandDl_File_DragEnter);
-      // 
-      // IAP_TextBox_CommandDl_Len
-      // 
-      this.IAP_TextBox_CommandDl_Len.Location = new System.Drawing.Point(54, 29);
-      this.IAP_TextBox_CommandDl_Len.Name = "IAP_TextBox_CommandDl_Len";
-      this.IAP_TextBox_CommandDl_Len.Size = new System.Drawing.Size(67, 20);
-      this.IAP_TextBox_CommandDl_Len.TabIndex = 29;
-      this.IAP_TextBox_CommandDl_Len.Text = "0";
-      // 
-      // IAP_TextBox_CommandDl_Adr
-      // 
-      this.IAP_TextBox_CommandDl_Adr.Location = new System.Drawing.Point(54, 3);
-      this.IAP_TextBox_CommandDl_Adr.Name = "IAP_TextBox_CommandDl_Adr";
-      this.IAP_TextBox_CommandDl_Adr.Size = new System.Drawing.Size(67, 20);
-      this.IAP_TextBox_CommandDl_Adr.TabIndex = 28;
-      this.IAP_TextBox_CommandDl_Adr.Text = "0";
-      // 
-      // label38
-      // 
-      this.label38.AutoSize = true;
-      this.label38.Location = new System.Drawing.Point(3, 199);
-      this.label38.Name = "label38";
-      this.label38.Size = new System.Drawing.Size(23, 13);
-      this.label38.TabIndex = 36;
-      this.label38.Text = "File";
-      // 
-      // IAP_TextBox_CommandDl_Status
-      // 
-      this.IAP_TextBox_CommandDl_Status.Font = new System.Drawing.Font("Lucida Console", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.IAP_TextBox_CommandDl_Status.Location = new System.Drawing.Point(127, 3);
-      this.IAP_TextBox_CommandDl_Status.Multiline = true;
-      this.IAP_TextBox_CommandDl_Status.Name = "IAP_TextBox_CommandDl_Status";
-      this.IAP_TextBox_CommandDl_Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.IAP_TextBox_CommandDl_Status.Size = new System.Drawing.Size(518, 187);
-      this.IAP_TextBox_CommandDl_Status.TabIndex = 33;
-      // 
-      // IAP_CheckBox_CommandDl_Reset
-      // 
-      this.IAP_CheckBox_CommandDl_Reset.AutoSize = true;
-      this.IAP_CheckBox_CommandDl_Reset.Checked = true;
-      this.IAP_CheckBox_CommandDl_Reset.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.IAP_CheckBox_CommandDl_Reset.Location = new System.Drawing.Point(6, 99);
-      this.IAP_CheckBox_CommandDl_Reset.Name = "IAP_CheckBox_CommandDl_Reset";
-      this.IAP_CheckBox_CommandDl_Reset.Size = new System.Drawing.Size(95, 17);
-      this.IAP_CheckBox_CommandDl_Reset.TabIndex = 37;
-      this.IAP_CheckBox_CommandDl_Reset.Text = "Reset after DL";
-      this.IAP_CheckBox_CommandDl_Reset.UseVisualStyleBackColor = true;
-      // 
       // Form1
       // 
       this.AllowDrop = true;
@@ -1849,6 +1850,8 @@
       this.tabPage6.ResumeLayout(false);
       this.tabPage6.PerformLayout();
       this.IAP_TabControl_Command.ResumeLayout(false);
+      this.TabPage_Command_Download.ResumeLayout(false);
+      this.TabPage_Command_Download.PerformLayout();
       this.TabPage_Command_Info1.ResumeLayout(false);
       this.TabPage_Command_Info1.PerformLayout();
       this.TabPage_Command_Info2.ResumeLayout(false);
@@ -1867,8 +1870,6 @@
       this.TabPage_Command_Enter.PerformLayout();
       this.tabPage7.ResumeLayout(false);
       this.tabPage7.PerformLayout();
-      this.TabPage_Command_Download.ResumeLayout(false);
-      this.TabPage_Command_Download.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 

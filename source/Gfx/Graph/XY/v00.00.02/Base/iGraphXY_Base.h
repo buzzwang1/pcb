@@ -478,7 +478,7 @@ public:
 
     //AOI sichern und Festlegen
     cScreenArea cAreaSave(mpstDest);
-    mpstDest->vSetArea(miGfxSpaceX, miGfxSpaceY, this->miGfxGraphWidth + miGfxSpaceX - 1, this->miGfxGraphHeight + miGfxSpaceY - 1, mpstDest);
+    mpstDest->vSetArea(miGfxSpaceX, miGfxSpaceY, this->miGfxGraphWidth + miGfxSpaceX, this->miGfxGraphHeight + miGfxSpaceY, mpstDest);
 
     lui16Pos = lpcChn->mu16Outpos;
 

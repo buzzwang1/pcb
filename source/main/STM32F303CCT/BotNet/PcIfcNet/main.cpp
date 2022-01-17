@@ -381,7 +381,7 @@ void SysTick_Handler(void)
 
 cBotNetSwitch *mcBnSwitch;
 
-tcUart<USART1_BASE, GPIOB_BASE, 6, GPIOB_BASE, 7> mcPcLinkUart(9600, GPIO_AF_7, 128, 128);
+tcUart<USART1_BASE, GPIOB_BASE, 6, GPIOB_BASE, 7> mcPcLinkUart(38400, GPIO_AF_7, 128, 128);
 
 cBotNet_LinkBotCom         mcPcLnk(0xE000, (cUart*)&mcPcLinkUart);
 
@@ -529,7 +529,7 @@ void USART3_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBnSwitch->vSync();
+  mcBnSwitch->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -539,8 +539,7 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcBnSwitch->vProcess();
-  mcBnSwitch->vTick10ms();
+  mcBnSwitch->vTickLp10ms();
 
   // Check Connected Status
   // Überprüfen,obes eine Session Start/Stop Nachricht ist

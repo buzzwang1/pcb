@@ -54,7 +54,6 @@ extern void DMA1_Channel2_IRQHandler(void); // SPI1 RX
 extern void DMA1_Channel3_IRQHandler(void); // SPI1 TX
 
 
-extern void TIM1_BRK_TIM15_IRQHandler(void);
 extern void I2C1_EV_IRQHandler(void);
 extern void I2C1_ER_IRQHandler(void);
 extern void I2C2_EV_IRQHandler(void);

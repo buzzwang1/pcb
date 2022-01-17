@@ -53,7 +53,7 @@ class cDiffTimer
 
   char* toString()
   {
-    cStrTools::i8Itoan(get(), mszString, 10, 10);
+    cStrTools::uixItoan(get(), mszString, 10, 10);
     return mszString;
   };
 

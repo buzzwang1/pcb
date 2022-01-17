@@ -10,6 +10,11 @@ cClockInfo mcClkInfo;
 cGpPin lcSCL(GPIOB_BASE, 8, GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_NOPULL, GPIO_Speed_25MHz, 0);
 cGpPin lcSDA(GPIOB_BASE, 9, GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_NOPULL, GPIO_Speed_25MHz, 0);
 
+LED<GPIOB_BASE, 4> lcLedI2cDmaTxTc;
+LED<GPIOB_BASE, 5> lcLedI2cDmaRxTc;
+LED<GPIOB_BASE, 6> lcLedI2cInt;
+LED<GPIOB_BASE, 7> lcLedI2cErr;
+
 cI2cMaster   mcI2C1(I2C1, &lcSCL, &lcSDA, 8);
 cLSM303DLHC_MAG mcMag(&mcI2C1);
 cLSM303DLHC_ACC mcAcc(&mcI2C1);
@@ -124,90 +129,35 @@ void PendSV_Handler(void)
 }
 
 
-
-void DMA1_Stream0_IRQHandler(void)
-{
-}
-
-void DMA1_Stream1_IRQHandler(void)
-{
-}
-
-void DMA1_Stream2_IRQHandler(void)
-{
-  // I2C2 Rx (Stream2 / Channel7)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC2))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream2, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2);
-  }
-}
-
-void DMA1_Stream3_IRQHandler(void)
-{
-}
-
-void DMA1_Stream4_IRQHandler(void)
-{
-}
-
 void DMA1_Stream5_IRQHandler(void)
 {
-  // I2C1 Rx (Stream5 / Channel1)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC5))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream5, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5);
-
-    mcI2C1.I2C_EV_DMAHandler();
-  }
-}
-
-void DMA1_Stream6_IRQHandler(void)
-{
-  // I2C1 Tx (Stream6 / Channel1)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC6))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream6, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream6, DMA_FLAG_TCIF6);
-
-    mcI2C1.I2C_EV_DMAHandler();
-  }
-}
-
-void DMA1_Stream7_IRQHandler(void)
-{
-  // I2C2 Tx (Stream7 / Channel7)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC7))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream7, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream7, DMA_FLAG_TCIF7);
-  }
+  // I2C1 Rx Transmission Complete
+  lcLedI2cDmaRxTc.vSet1();
+  DMA_Cmd(DMA1_Stream5, DISABLE);
+  DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5);
+  mcI2C1.I2C_EV_DMAHandler(cComNode::tenEvent::enEvDmaRxTc);
+  lcLedI2cDmaRxTc.vSet0();
 }
 
 
 void I2C1_EV_IRQHandler(void)
 {
+  lcLedI2cInt.vSet1();
   mcI2C1.I2C_EV_IRQHandler();
+  lcLedI2cInt.vSet0();
 }
 
 void I2C1_ER_IRQHandler(void)
 {
+  lcLedI2cErr.vSet1();
   mcI2C1.I2C_ER_IRQHandler();
+  lcLedI2cErr.vSet0();
 }
 
 
 void MAIN_vTick10msHp(void)
 {
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
 }
 
 
@@ -676,18 +626,18 @@ void MAIN_vTick10msLp(void)
 
     char8 lszValue[12];
 
-    cStrTools::i8Itoa(mcMag.i16GetMagX(), lszValue, 10);
+    cStrTools::uixItoa(mcMag.i16GetMagX(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 30, lszValue, &mc16GScreen1);
-    cStrTools::i8Itoa(mcMag.i16GetMagY(), lszValue, 10);
+    cStrTools::uixItoa(mcMag.i16GetMagY(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 40, lszValue, &mc16GScreen1);
-    cStrTools::i8Itoa(mcMag.i16GetMagZ(), lszValue, 10);
+    cStrTools::uixItoa(mcMag.i16GetMagZ(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 50, lszValue, &mc16GScreen1);
 
-    cStrTools::i8Itoa(mcAcc.i16GetAccX(), lszValue, 10);
+    cStrTools::uixItoa(mcAcc.i16GetAccX(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(40, 30, lszValue, &mc16GScreen1);
-    cStrTools::i8Itoa(mcAcc.i16GetAccY(), lszValue, 10);
+    cStrTools::uixItoa(mcAcc.i16GetAccY(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(40, 40, lszValue, &mc16GScreen1);
-    cStrTools::i8Itoa(mcAcc.i16GetAccZ(), lszValue, 10);
+    cStrTools::uixItoa(mcAcc.i16GetAccZ(), lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(40, 50, lszValue, &mc16GScreen1);
 
 
@@ -748,12 +698,12 @@ void MAIN_vTick10msLp(void)
       HeadingValue = HeadingValue + 360;
     }
 
-    cStrTools::i8Itoa((int)HeadingValue, lszValue, 10);
+    cStrTools::uixItoa((int)HeadingValue, lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 60, lszValue, &mc16GScreen1);
 
-    cStrTools::i8Itoa((int)RollAng2, lszValue, 10);
+    cStrTools::uixItoa((int)RollAng2, lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 70, lszValue, &mc16GScreen1);
-    cStrTools::i8Itoa((int)PitchAng2, lszValue, 10);
+    cStrTools::uixItoa((int)PitchAng2, lszValue, 10);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 80, lszValue, &mc16GScreen1);
 
     if (RollAng2 < 0)
@@ -852,7 +802,7 @@ void MAIN_vInitSystem(void)
   GPIO_PinAFConfig(GPIOB, GPIO_PinSource9, GPIO_AF_I2C1);
 
   
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
   mcClkInfo.Delay_ms(100);
 
   mcMag.vSetConfig(LSM303DLHC_MAG_TEMPSENSOR_ENABLE, LSM303DLHC_MAG_ODR_15_HZ, LSM303DLHC_MAG_FS_8_1_GA, LSM303DLHC_MAG_CONTINUOS_CONVERSION);
@@ -864,7 +814,7 @@ void MAIN_vInitSystem(void)
                      0
                      );
 
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
   mcClkInfo.Delay_ms(100);
 
   CycCall_Start(NULL /*1ms_HP*/,

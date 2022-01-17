@@ -24,13 +24,14 @@ public:
      mui8Play = 1;
      mcpWorld  = lcWorld;
      mcpViewer = lcViewer;
+     menType = cUiElement::tenType::nBox3Df;
   }
 
   ~cUiElement_Box3Df()
   {
   }
 
-  virtual void OnAddeded() override
+  virtual void OnLoaded() override
   {
     mcpViewer->World2Viewer();
   }

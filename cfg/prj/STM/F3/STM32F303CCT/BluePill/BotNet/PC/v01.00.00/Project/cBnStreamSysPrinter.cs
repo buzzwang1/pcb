@@ -32,9 +32,9 @@ public class cBotNetStreamPort_CmdPrinter
 
   void vLimit()
   {
-    if (mpui8TextBufOut.Length > 512)
+    if (mpui8TextBufOut.Length > 10000)
     {
-      mpui8TextBufOut = mpui8TextBufOut.Substring(mpui8TextBufOut.Length - 512, 512);
+      mpui8TextBufOut = mpui8TextBufOut.Remove(0,1000);
     }
   }
 

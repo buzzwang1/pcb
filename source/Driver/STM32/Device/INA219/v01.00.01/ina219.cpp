@@ -43,9 +43,9 @@ cINA219::~cINA219()
 }
 
 
-void cINA219::vComStart(tenComNodeStartState lenState)
+void cINA219::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
 
   if (IsError())
   {

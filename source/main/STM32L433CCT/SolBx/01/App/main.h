@@ -14,7 +14,7 @@
 #include "cStrT.h"
 #include "cClock.h"
 #include "cRingBufT.h"
-#include "cBnLinkI2c.h"
+//include "cBnLinkI2c.h"
 #include "cBnLinkNrf905.h"
 #include "cBnLinkNrf905Net.h"
 #include "cBnLinkBotCom.h"

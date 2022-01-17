@@ -17,7 +17,7 @@
 #  uart:B19200              # 
 #  driver/uart:var1         # with subfolder 
 
-
+string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
@@ -48,7 +48,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/Tree/Idx/16Bit/12Byte/v00.00.01
@@ -83,7 +83,7 @@ set(PCB_ProjectPackageList
 
 
     APP/LED/v00.00.01:STM32F4_STD
-    main/STM32F429ZIT6/ILI9341/LCD/Basic05
+    main/${Main_Location}
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f429zi_flash.ld")

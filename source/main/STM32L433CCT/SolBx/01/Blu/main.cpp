@@ -195,7 +195,7 @@ void TIM7_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBnNode.vSync();
+  mcBnNode.vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -204,8 +204,7 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcBnNode.vProcess();
-  mcBnNode.vTick10ms();
+  mcBnNode.vTickLp10ms();
 }
 
 void MAIN_vTick100msLp(void)

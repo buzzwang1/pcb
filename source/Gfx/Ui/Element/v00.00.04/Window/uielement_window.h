@@ -11,7 +11,6 @@
 class cUiElement_Window_CmdMax : public cUiElement_Button
 {
   public:
-  cUiElement* mcParent;
 
   cUiElement_Window_CmdMax(cMsgBox *lcMsgBox, cScreen *lpcScreen, 
     uint32 lui32MaxCharacterCount,
@@ -22,15 +21,13 @@ class cUiElement_Window_CmdMax : public cUiElement_Button
 
   virtual void OnPressEnd()
   {
-    mpcParent->vToggleMaximize();
+    cUiElement::vParentCallback(this, cUiElement::tenEvent::nWndSizeToggleMaximize); 
   }
 };
 
 class cUiElement_Window_CmdClose : public cUiElement_Button
 {
   public:
-
-  cUiElement* mcParent;
 
   cUiElement_Window_CmdClose(cMsgBox *lcMsgBox, cScreen *lpcScreen, 
     uint32 lui32MaxCharacterCount,
@@ -50,7 +47,7 @@ class cUiElement_Window_CmdClose : public cUiElement_Button
     lcMsg.mSubID = cUiElement::nWndClose;
 
     u32* lpu32Data = (u32*) lcMsg.mui8Data;
-    lpu32Data[0] = (u32)mcParent;
+    lpu32Data[0] = (u32)mpcParent;
 
     mcMsgBox->vput(&lcMsg);
   }
@@ -102,8 +99,7 @@ class cUiElement_Window: public cUiElement
       mcCmdMax->vSetText("O");
       mcCmdClose->vSetText("X");
 
-      mcCmdMax->mcParent   = this;
-      mcCmdClose->mcParent = this;
+      menType = cUiElement::tenType::nWindow;
     }
 
     ~cUiElement_Window()
@@ -114,7 +110,7 @@ class cUiElement_Window: public cUiElement
       delete []mChTitle;
     }
     
-    virtual void OnAddeded() override
+    virtual void OnLoaded() override
     {
       cUiElement::bAdd(1, miGfxFontHeight + 2, miGfxWidth - 2, miGfxHeight - (miGfxFontHeight + 3), mcEleContainer);
       cUiElement::bAdd(miGfxWidth - 2 * (miGfxFontHeight + 3), 1, miGfxFontHeight, miGfxFontHeight, mcCmdMax);
@@ -141,7 +137,6 @@ class cUiElement_Window: public cUiElement
 
     bool virtual bAdd(GfxInt liGfxRefX, GfxInt liGfxRefY, GfxInt liGfxWidth, GfxInt liGfxHeight, cUiElement *lcEle) override
     {
-      UNUSED(lcEle);
       return mcEleContainer->bAdd(liGfxRefX, liGfxRefY, liGfxWidth, liGfxHeight, lcEle);
     }
 
@@ -170,6 +165,19 @@ class cUiElement_Window: public cUiElement
       {
         mcCmdMax->mcPaintArea.miGfxRefPosx1 = mcPaintArea.miGfxRefPosx1 + miGfxWidth - 2 * (miGfxFontHeight + 3);
         mcCmdClose->mcPaintArea.miGfxRefPosx1 = mcPaintArea.miGfxRefPosx1 + miGfxWidth - 1 * (miGfxFontHeight + 3);
+      }
+    }
+
+    virtual void vParentCallback(cUiElement *lpcChild, tenEvent lenEvent) override
+    {
+      if ((lenEvent == cUiElement::tenEvent::nWndSizeToggleMaximize) &&
+          (lpcChild == this->mcCmdMax))
+      {
+        this->vToggleMaximize();
+      }
+      else
+      {
+        cUiElement::vParentCallback(lpcChild, lenEvent);
       }
     }
 

@@ -5,12 +5,12 @@
 // Driver
 #include "tGPPin.h"
 #include "LED.h"
-#include "cI2c.h"
+//#include "cI2c.h"
 #include "cNrf905.h"
 
 //Data
 #include "cRingBufT.h"
-#include "cBnLinkI2c.h"
+//#include "cBnLinkI2c.h"
 #include "cBnLinkNrf905.h"
 #include "cBnLinkBotCom.h"
 #include "cBnStreamSysPortCom.h"

@@ -67,7 +67,7 @@ class cMyButton: public cUiElement_Button
         case cUiElement_TextBox::nFitSmartRev: mc16GuiText01.menTextFitMode = cUiElement_TextBox::nNoFitRev;break;
         case cUiElement_TextBox::nNoFitRev:    mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFit;break;
       }
-      mc16GuiRoot.vRefesh();
+      mc16GuiRoot.vRepaint();
     }
 };
 

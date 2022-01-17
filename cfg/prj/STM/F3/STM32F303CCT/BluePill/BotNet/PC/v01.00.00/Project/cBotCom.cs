@@ -26,10 +26,12 @@ public class cBotCom
 {
 
   List<u8> llstDecode;
+  u8       mMsgCounterTx;
 
   public cBotCom()
   {
     llstDecode = new List<byte>();
+    mMsgCounterTx = 0;
   }
 
   /*
@@ -55,10 +57,9 @@ public class cBotCom
 
     u8 lu8DataCount = (u8)lui8Data.Length;
     llstOutput.Add((u8)((7 << 5) + (lu8DataCount & 0x1F))); //Start
-    if (lu8DataCount > 31) //GGf obere 3 Bit
-    {
-      llstOutput.Add((u8)((2 << 5) + (lu8DataCount >> 5)));
-    }
+    llstOutput.Add((u8)((2 << 5) + ((mMsgCounterTx & 3) << 3) + (lu8DataCount >> 5)));
+    
+    mMsgCounterTx++;
 
     u8 lu8CheckSum = 1;
     for (int i = 0; i < lu8DataCount; i++)

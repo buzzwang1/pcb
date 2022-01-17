@@ -69,7 +69,7 @@ static const uint16_t LPUART_PRESCALER_TAB[] =
 /** @defgroup LPUART_LL_Private_Constants LPUART Private Constants
   * @{
   */
-/* Defines used in Baud Rate related macros and corresponding register setting computation */
+/* Defines used in Baud Rate related macros and corresponding setting computation */
 #define LPUART_LPUARTDIV_FREQ_MUL     256U
 #define LPUART_BRR_MASK               0x000FFFFFU
 #define LPUART_BRR_MIN_VALUE          0x00000300U
@@ -177,15 +177,15 @@ typedef struct
 #define LL_LPUART_ISR_ORE                  USART_ISR_ORE                 /*!< Overrun error flag */
 #define LL_LPUART_ISR_IDLE                 USART_ISR_IDLE                /*!< Idle line detected flag */
 #if defined(USART_CR1_FIFOEN)
-#define LL_LPUART_ISR_RXNE_RXFNE           USART_ISR_RXNE_RXFNE          /*!< Read data register or RX FIFO not empty flag */
+#define LL_LPUART_ISR_RXNE_RXFNE           USART_ISR_RXNE_RXFNE          /*!< Read data or RX FIFO not empty flag */
 #else
-#define LL_LPUART_ISR_RXNE                 USART_ISR_RXNE                /*!< Read data register not empty flag */
+#define LL_LPUART_ISR_RXNE                 USART_ISR_RXNE                /*!< Read data not empty flag */
 #endif /* USART_CR1_FIFOEN */
 #define LL_LPUART_ISR_TC                   USART_ISR_TC                  /*!< Transmission complete flag */
 #if defined(USART_CR1_FIFOEN)
-#define LL_LPUART_ISR_TXE_TXFNF            USART_ISR_TXE_TXFNF           /*!< Transmit data register empty or TX FIFO Not Full flag*/
+#define LL_LPUART_ISR_TXE_TXFNF            USART_ISR_TXE_TXFNF           /*!< Transmit data empty or TX FIFO Not Full flag*/
 #else
-#define LL_LPUART_ISR_TXE                  USART_ISR_TXE                 /*!< Transmit data register empty flag */
+#define LL_LPUART_ISR_TXE                  USART_ISR_TXE                 /*!< Transmit data empty flag */
 #endif /* USART_CR1_FIFOEN */
 #define LL_LPUART_ISR_CTSIF                USART_ISR_CTSIF               /*!< CTS interrupt flag */
 #define LL_LPUART_ISR_CTS                  USART_ISR_CTS                 /*!< CTS flag */
@@ -212,15 +212,15 @@ typedef struct
   */
 #define LL_LPUART_CR1_IDLEIE               USART_CR1_IDLEIE              /*!< IDLE interrupt enable */
 #if defined(USART_CR1_FIFOEN)
-#define LL_LPUART_CR1_RXNEIE_RXFNEIE       USART_CR1_RXNEIE_RXFNEIE      /*!< Read data register and RXFIFO not empty interrupt enable */
+#define LL_LPUART_CR1_RXNEIE_RXFNEIE       USART_CR1_RXNEIE_RXFNEIE      /*!< Read data and RXFIFO not empty interrupt enable */
 #else
-#define LL_LPUART_CR1_RXNEIE               USART_CR1_RXNEIE              /*!< Read data register not empty interrupt enable */
+#define LL_LPUART_CR1_RXNEIE               USART_CR1_RXNEIE              /*!< Read data not empty interrupt enable */
 #endif /* USART_CR1_FIFOEN */
 #define LL_LPUART_CR1_TCIE                 USART_CR1_TCIE                /*!< Transmission complete interrupt enable */
 #if defined(USART_CR1_FIFOEN)
-#define LL_LPUART_CR1_TXEIE_TXFNFIE        USART_CR1_TXEIE_TXFNFIE       /*!< Transmit data register empty and TX FIFO not full interrupt enable */
+#define LL_LPUART_CR1_TXEIE_TXFNFIE        USART_CR1_TXEIE_TXFNFIE       /*!< Transmit data empty and TX FIFO not full interrupt enable */
 #else
-#define LL_LPUART_CR1_TXEIE                USART_CR1_TXEIE               /*!< Transmit data register empty interrupt enable */
+#define LL_LPUART_CR1_TXEIE                USART_CR1_TXEIE               /*!< Transmit data empty interrupt enable */
 #endif /* USART_CR1_FIFOEN */
 #define LL_LPUART_CR1_PEIE                 USART_CR1_PEIE                /*!< Parity error */
 #define LL_LPUART_CR1_CMIE                 USART_CR1_CMIE                /*!< Character match interrupt enable */
@@ -354,8 +354,8 @@ typedef struct
 /** @defgroup LPUART_LL_EC_BINARY_LOGIC Binary Data Inversion
   * @{
   */
-#define LL_LPUART_BINARY_LOGIC_POSITIVE    0x00000000U                        /*!< Logical data from the data register are send/received in positive/direct logic. (1=H, 0=L) */
-#define LL_LPUART_BINARY_LOGIC_NEGATIVE    USART_CR2_DATAINV                  /*!< Logical data from the data register are send/received in negative/inverse logic. (1=L, 0=H). The parity bit is also inverted. */
+#define LL_LPUART_BINARY_LOGIC_POSITIVE    0x00000000U                        /*!< Logical data from the data are send/received in positive/direct logic. (1=H, 0=L) */
+#define LL_LPUART_BINARY_LOGIC_NEGATIVE    USART_CR2_DATAINV                  /*!< Logical data from the data are send/received in negative/inverse logic. (1=L, 0=H). The parity bit is also inverted. */
 /**
   * @}
   */
@@ -408,11 +408,11 @@ typedef struct
   * @}
   */
 
-/** @defgroup LPUART_LL_EC_DMA_REG_DATA DMA Register Data
+/** @defgroup LPUART_LL_EC_DMA_REG_DATA DMA Data
   * @{
   */
-#define LL_LPUART_DMA_REG_DATA_TRANSMIT    0x00000000U                       /*!< Get address of data register used for transmission */
-#define LL_LPUART_DMA_REG_DATA_RECEIVE     0x00000001U                       /*!< Get address of data register used for reception */
+#define LL_LPUART_DMA_REG_DATA_TRANSMIT    0x00000000U                       /*!< Get address of data used for transmission */
+#define LL_LPUART_DMA_REG_DATA_RECEIVE     0x00000001U                       /*!< Get address of data used for reception */
 /**
   * @}
   */
@@ -433,7 +433,7 @@ typedef struct
 /**
   * @brief  Write a value in LPUART register
   * @param  __INSTANCE__ LPUART Instance
-  * @param  __REG__ Register to be written
+  * @param  __REG__ to be written
   * @param  __VALUE__ Value to be written in the register
   * @retval None
   */
@@ -442,8 +442,8 @@ typedef struct
 /**
   * @brief  Read a value in LPUART register
   * @param  __INSTANCE__ LPUART Instance
-  * @param  __REG__ Register to be read
-  * @retval Register value
+  * @param  __REG__ to be read
+  * @retval value
   */
 #define LL_LPUART_ReadReg(__INSTANCE__, __REG__) READ_REG(__INSTANCE__->__REG__)
 /**
@@ -474,7 +474,7 @@ typedef struct
   *         @arg @ref LL_LPUART_PRESCALER_DIV256
   @endif
   * @param  __BAUDRATE__ Baud Rate value to achieve
-  * @retval LPUARTDIV value to be used for BRR register filling
+  * @retval LPUARTDIV value to be used for BRR filling
   */
 #if defined(USART_PRESC_PRESCALER)
 #define __LL_LPUART_DIV(__PERIPHCLK__, __PRESCALER__, __BAUDRATE__) (uint32_t)((((((uint64_t)(__PERIPHCLK__)/(uint64_t)(LPUART_PRESCALER_TAB[(uint16_t)(__PRESCALER__)])) * LPUART_LPUARTDIV_FREQ_MUL)\
@@ -1139,7 +1139,7 @@ __STATIC_INLINE uint32_t LL_LPUART_GetTXPinLevel(USART_TypeDef *LPUARTx)
 /**
   * @brief  Configure Binary data logic.
   *
-  * @note   Allow to define how Logical data from the data register are send/received :
+  * @note   Allow to define how Logical data from the data are send/received :
   *         either in positive/direct logic (1=H, 0=L) or in negative/inverse logic (1=L, 0=H)
   * @rmtoll CR2          DATAINV       LL_LPUART_SetBinaryDataLogic
   * @param  LPUARTx LPUART Instance
@@ -1394,9 +1394,9 @@ __STATIC_INLINE uint32_t LL_LPUART_GetWKUPType(USART_TypeDef *LPUARTx)
 }
 
 /**
-  * @brief  Configure LPUART BRR register for achieving expected Baud Rate value.
+  * @brief  Configure LPUART BRR for achieving expected Baud Rate value.
   *
-  * @note   Compute and set LPUARTDIV value in BRR Register (full BRR content)
+  * @note   Compute and set LPUARTDIV value in BRR (full BRR content)
   *         according to used Peripheral Clock and expected Baud Rate values
   * @note   Peripheral clock and Baud Rate values provided as function parameters should be valid
   *         (Baud rate value != 0).
@@ -1468,10 +1468,10 @@ __STATIC_INLINE uint32_t LL_LPUART_GetBaudRate(USART_TypeDef *LPUARTx, uint32_t 
 __STATIC_INLINE uint32_t LL_LPUART_GetBaudRate(USART_TypeDef *LPUARTx, uint32_t PeriphClk)
 #endif /* USART_PRESC_PRESCALER */
 {
-  register uint32_t lpuartdiv;
-  register uint32_t brrresult;
+  uint32_t lpuartdiv;
+  uint32_t brrresult;
 #if defined(USART_PRESC_PRESCALER)
-  register uint32_t periphclkpresc = (uint32_t)(PeriphClk / (LPUART_PRESCALER_TAB[(uint16_t)PrescalerValue]));
+  uint32_t periphclkpresc = (uint32_t)(PeriphClk / (LPUART_PRESCALER_TAB[(uint16_t)PrescalerValue]));
 #endif /* USART_PRESC_PRESCALER */
 
   lpuartdiv = LPUARTx->BRR & LPUART_BRR_MASK;
@@ -1715,7 +1715,7 @@ __STATIC_INLINE uint32_t LL_LPUART_IsActiveFlag_IDLE(USART_TypeDef *LPUARTx)
 #define LL_LPUART_IsActiveFlag_RXNE  LL_LPUART_IsActiveFlag_RXNE_RXFNE
 
 /**
-  * @brief  Check if the LPUART Read Data Register or LPUART RX FIFO Not Empty Flag is set or not
+  * @brief  Check if the LPUART Read Data or LPUART RX FIFO Not Empty Flag is set or not
   * @rmtoll ISR          RXNE_RXFNE    LL_LPUART_IsActiveFlag_RXNE_RXFNE
   * @param  LPUARTx LPUART Instance
   * @retval State of bit (1 or 0).
@@ -1726,7 +1726,7 @@ __STATIC_INLINE uint32_t LL_LPUART_IsActiveFlag_RXNE_RXFNE(USART_TypeDef *LPUART
 }
 #else
 /**
-  * @brief  Check if the LPUART Read Data Register Not Empty Flag is set or not
+  * @brief  Check if the LPUART Read Data Not Empty Flag is set or not
   * @rmtoll ISR          RXNE          LL_LPUART_IsActiveFlag_RXNE
   * @param  LPUARTx LPUART Instance
   * @retval State of bit (1 or 0).
@@ -1753,7 +1753,7 @@ __STATIC_INLINE uint32_t LL_LPUART_IsActiveFlag_TC(USART_TypeDef *LPUARTx)
 #define LL_LPUART_IsActiveFlag_TXE  LL_LPUART_IsActiveFlag_TXE_TXFNF
 
 /**
-  * @brief  Check if the LPUART Transmit Data Register Empty or LPUART TX FIFO Not Full Flag is set or not
+  * @brief  Check if the LPUART Transmit Data Empty or LPUART TX FIFO Not Full Flag is set or not
   * @rmtoll ISR          TXE_TXFNF     LL_LPUART_IsActiveFlag_TXE_TXFNF
   * @param  LPUARTx LPUART Instance
   * @retval State of bit (1 or 0).
@@ -1764,7 +1764,7 @@ __STATIC_INLINE uint32_t LL_LPUART_IsActiveFlag_TXE_TXFNF(USART_TypeDef *LPUARTx
 }
 #else
 /**
-  * @brief  Check if the LPUART Transmit Data Register Empty Flag is set or not
+  * @brief  Check if the LPUART Transmit Data Empty Flag is set or not
   * @rmtoll ISR          TXE           LL_LPUART_IsActiveFlag_TXE
   * @param  LPUARTx LPUART Instance
   * @retval State of bit (1 or 0).
@@ -2699,7 +2699,7 @@ __STATIC_INLINE uint32_t LL_LPUART_IsEnabledDMADeactOnRxErr(USART_TypeDef *LPUAR
 }
 
 /**
-  * @brief  Get the LPUART data register address used for DMA transfer
+  * @brief  Get the LPUART data address used for DMA transfer
   * @rmtoll RDR          RDR           LL_LPUART_DMA_GetRegAddr\n
   * @rmtoll TDR          TDR           LL_LPUART_DMA_GetRegAddr
   * @param  LPUARTx LPUART Instance
@@ -2710,16 +2710,16 @@ __STATIC_INLINE uint32_t LL_LPUART_IsEnabledDMADeactOnRxErr(USART_TypeDef *LPUAR
   */
 __STATIC_INLINE uint32_t LL_LPUART_DMA_GetRegAddr(USART_TypeDef *LPUARTx, uint32_t Direction)
 {
-  register uint32_t data_reg_addr;
+  uint32_t data_reg_addr;
 
   if (Direction == LL_LPUART_DMA_REG_DATA_TRANSMIT)
   {
-    /* return address of TDR register */
+    /* return address of TDR */
     data_reg_addr = (uint32_t) &(LPUARTx->TDR);
   }
   else
   {
-    /* return address of RDR register */
+    /* return address of RDR */
     data_reg_addr = (uint32_t) &(LPUARTx->RDR);
   }
 
@@ -2735,7 +2735,7 @@ __STATIC_INLINE uint32_t LL_LPUART_DMA_GetRegAddr(USART_TypeDef *LPUARTx, uint32
   */
 
 /**
-  * @brief  Read Receiver Data register (Receive Data value, 8 bits)
+  * @brief  Read Receiver Data (Receive Data value, 8 bits)
   * @rmtoll RDR          RDR           LL_LPUART_ReceiveData8
   * @param  LPUARTx LPUART Instance
   * @retval Time Value between Min_Data=0x00 and Max_Data=0xFF
@@ -2746,7 +2746,7 @@ __STATIC_INLINE uint8_t LL_LPUART_ReceiveData8(USART_TypeDef *LPUARTx)
 }
 
 /**
-  * @brief  Read Receiver Data register (Receive Data value, 9 bits)
+  * @brief  Read Receiver Data (Receive Data value, 9 bits)
   * @rmtoll RDR          RDR           LL_LPUART_ReceiveData9
   * @param  LPUARTx LPUART Instance
   * @retval Time Value between Min_Data=0x00 and Max_Data=0x1FF
@@ -2757,7 +2757,7 @@ __STATIC_INLINE uint16_t LL_LPUART_ReceiveData9(USART_TypeDef *LPUARTx)
 }
 
 /**
-  * @brief  Write in Transmitter Data Register (Transmit Data value, 8 bits)
+  * @brief  Write in Transmitter Data (Transmit Data value, 8 bits)
   * @rmtoll TDR          TDR           LL_LPUART_TransmitData8
   * @param  LPUARTx LPUART Instance
   * @param  Value between Min_Data=0x00 and Max_Data=0xFF
@@ -2769,7 +2769,7 @@ __STATIC_INLINE void LL_LPUART_TransmitData8(USART_TypeDef *LPUARTx, uint8_t Val
 }
 
 /**
-  * @brief  Write in Transmitter Data Register (Transmit Data value, 9 bits)
+  * @brief  Write in Transmitter Data (Transmit Data value, 9 bits)
   * @rmtoll TDR          TDR           LL_LPUART_TransmitData9
   * @param  LPUARTx LPUART Instance
   * @param  Value between Min_Data=0x00 and Max_Data=0x1FF

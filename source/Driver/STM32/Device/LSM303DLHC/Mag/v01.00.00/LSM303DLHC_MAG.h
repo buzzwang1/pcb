@@ -155,9 +155,9 @@ class cLSM303DLHC_MAG: public cComNode
 
   void  vSetup();
 
-  void vComStart(tenComNodeStartState lenState) override;
+  void vComStart(cComNode::tenEvent lenEvent) override;
   void vComDone() override;
-  void vComError(tenComNodeError lenError, tenComNodeState lenState) override;
+  void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override;
 
   void vSetConfig(uint8 lui8TempEn, uint8 lui8DataOutputRate, uint8 lui8Gain, uint8 lui8Mode);
 

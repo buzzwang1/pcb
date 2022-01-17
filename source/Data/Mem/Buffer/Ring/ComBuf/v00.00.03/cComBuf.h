@@ -65,13 +65,62 @@ class cComBuf : public cRingBufDynT<uint8, uint16>
 
   void put(cbArrayExtT<uint16> *lcEntry)
   {
-    _dai();
-    cRingBufDynT<uint8, uint16>::put_unsafe((uint8*)&lcEntry->muiLen,   sizeof(uint16),  False);
-    cRingBufDynT<uint8, uint16>::put_unsafe((uint8*)lcEntry->mpu8Data , lcEntry->muiLen, False);
-    mui16MsgCnt++;
-    _eai();
+    if (lcEntry->muiLen > 0)
+    {
+      _dai();
+      cRingBufDynT<uint8, uint16>::put_unsafe((uint8*)&lcEntry->muiLen,   sizeof(uint16),  False);
+      cRingBufDynT<uint8, uint16>::put_unsafe((uint8*)lcEntry->mpu8Data , lcEntry->muiLen, False);
+      mui16MsgCnt++;
+      _eai();
+    }
   }
 
+  uint16 readLenght()
+  {
+    _dai();
+    uint16 luLen;
+    cRingBufDynT<uint8, uint16>::get_unsafe((uint8*)&luLen, sizeof(uint16));
+    _eai();
+    return luLen;
+  }
+
+  u32 getwithsum(cbArrayExtT<uint16>* lcEntry)
+  {
+    uint32 luSum = 0;
+    _dai();
+
+    if (isMsgIn())
+    {
+      uint16 luLen;
+
+      cRingBufDynT<uint8, uint16>::get_unsafe((uint8*)&luLen, sizeof(uint16));
+
+      lcEntry->muiLen = luLen;
+      if (lcEntry->muiLen > lcEntry->muiSize)
+      {
+        // Not good! Not enough space for the message
+        lcEntry->muiLen = lcEntry->muiSize;
+        luSum = cRingBufDynT<uint8, uint16>::getwithsum_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+        luLen -= lcEntry->muiLen;
+        while (luLen)
+        {
+          cRingBufDynT<uint8, uint16>::get_unsafe();
+          luLen--;
+        }
+      }
+      else
+      {
+        luSum = cRingBufDynT<uint8, uint16>::getwithsum_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+      }
+      mui16MsgCnt--;
+    }
+    else
+    {
+      lcEntry->muiLen = 0;
+    }
+    _eai();
+    return luSum;
+  }
 
   void get(cbArrayExtT<uint16> *lcEntry)
   {

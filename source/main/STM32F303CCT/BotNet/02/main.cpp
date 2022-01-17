@@ -181,15 +181,6 @@ tcUart<USART2_BASE, GPIOA_BASE,  2, GPIOA_BASE,  3> mcComPort2(9600, GPIO_AF_7, 
 //cBotNetStreamPort_ComPort       mcComPort3(USART3);
 cBotNetStreamPort_BotNetMemPort mcMemPort(IAP_PARTITION_COUNT, stInAppProg_Platform_Partitions);
 
-void TIM1_BRK_TIM15_IRQHandler(void)
-{
-  if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
-  {
-    TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
-    TIM15->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
-    mcI2C2_Master->TIM_EV_IRQHandler();
-  }
-}
 
 void I2C2_EV_IRQHandler(void)
 {
@@ -229,10 +220,8 @@ void USART3_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcI2cBn_0x1000->vSync();
-  mcI2C2_Master->vStartNext();
-
-  mcI2cBn_0x1100->vSync();
+  mcI2cBn_0x1000->vTickHp1ms();
+  mcI2cBn_0x1100->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -241,11 +230,8 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcI2cBn_0x1000->vProcess();
-  mcI2cBn_0x1000->vTick10ms();
-
-  mcI2cBn_0x1100->vProcess();
-  mcI2cBn_0x1100->vTick10ms();
+  mcI2cBn_0x1000->vTickLp10ms();
+  mcI2cBn_0x1100->vTickLp10ms();
 }
 
 void MAIN_vTick100msLp(void)

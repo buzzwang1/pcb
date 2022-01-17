@@ -49,7 +49,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/Tree/Idx/16Bit/10Byte/v00.00.01
@@ -78,7 +78,7 @@ set(PCB_ProjectPackageList
 
 
     #main/STM32F407ZET/STF4BB/Gfx/config:default
-    main/PcSim/STM32F407ZET/STF4BB/Gfx/Gui/v2/Basic02
+    main/PcSim/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test02
 )
 
 #set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f407zet_flash.ld")

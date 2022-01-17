@@ -33,7 +33,7 @@ cLSM303DLHC_MAG::~cLSM303DLHC_MAG()
   mpcMsgWrite.vMemFree();
 }
 
-void cLSM303DLHC_MAG::vComError(tenComNodeError lenError, tenComNodeState lenState)
+void cLSM303DLHC_MAG::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
 {
   UNUSED(lenError);
   UNUSED(lenState);
@@ -47,9 +47,9 @@ void cLSM303DLHC_MAG::vComError(tenComNodeError lenError, tenComNodeState lenSta
   }
 }
 
-void cLSM303DLHC_MAG::vComStart(tenComNodeStartState lenState)
+void cLSM303DLHC_MAG::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
 
   if (IsError())
   {

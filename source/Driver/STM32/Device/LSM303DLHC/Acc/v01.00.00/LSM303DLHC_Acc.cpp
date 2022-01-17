@@ -32,7 +32,7 @@ cLSM303DLHC_ACC::~cLSM303DLHC_ACC()
   mpcMsgWrite.vMemFree();
 }
 
-void cLSM303DLHC_ACC::vComError(tenComNodeError lenError, tenComNodeState lenState)
+void cLSM303DLHC_ACC::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
 {
   UNUSED(lenError);
   UNUSED(lenState);
@@ -46,9 +46,9 @@ void cLSM303DLHC_ACC::vComError(tenComNodeError lenError, tenComNodeState lenSta
   }
 }
 
-void cLSM303DLHC_ACC::vComStart(tenComNodeStartState lenState)
+void cLSM303DLHC_ACC::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
 
   if (IsError())
   {

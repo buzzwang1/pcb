@@ -36,7 +36,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
 
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
@@ -51,12 +51,13 @@ set(PCB_ProjectPackageList
     Data/String/CStrT/v00.00.01
     Data/String/StringTools/v00.00.02
 
-    Data/BotNet/v00.00.03/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/I2c/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/BotCom/v00.00.02
-    #Data/BotNet/v00.00.03/BnLinks/nRf905/v00.00.01
-    #Data/BotNet/v00.00.03/BnLinks/nRf905Net/v00.00.01
+    Data/BotNet/v00.00.03/Base/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/Base/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/I2c/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/BotCom/v00.00.03
+    #Data/BotNet/v00.00.03/BnLinks/nRf905/v00.00.02
+    #Data/BotNet/v00.00.03/BnLinks/nRf905Net/v00.00.02
+
     Data/BotNet/v00.00.03/BnMsgSys/Base/v00.00.01
     Data/BotNet/v00.00.03/BnStreamSys/Base/v00.00.01
     Data/BotNet/v00.00.03/BnStreamSys/Ports/Base/v00.00.01
@@ -71,7 +72,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3
     Driver/STM32/L4/HAL/GPPin/v01.00.02
     Driver/STM32/L4/HAL/cUart/Int/v01.00.01
-    Driver/STM32/L4/HAL/cI2C/v01.00.05_Tim:Tim15
+    Driver/STM32/L4/HAL/cI2C/v01.00.06
 
     Driver/STM32/Device/LSM303DLHC/Acc/v01.00.00
     Driver/STM32/Device/LSM303DLHC/Mag/v01.00.00

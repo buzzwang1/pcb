@@ -18,6 +18,22 @@
 #define SPI_DIRECTION_TX 0
 #define SPI_DIRECTION_RX 1
 
+
+//  A.5  mSCK
+//  A.6  mMISO
+//  A.7  mMOSI
+//
+//  C.14 mTRx_Cn // Chip select
+//  B.5  mTx_En  // TX or RX (1 = Tx Mode, 0 = Rx Mode)
+//  B.4  mPWR    // Power
+//  A.4  mCS_SPI // Chip select SPI
+//
+//
+//  B.3   mCD  // Carrier Detected
+//  C.13  mAM  // Adress Match
+//  C.15  mDR  // Data Ready
+
+
 class cNRF905_SpiPins
 {
   public:
@@ -291,7 +307,7 @@ class cNRF905_Pins
   //Inputs
   tcGpPin<GPIOB_BASE, 3>  mCD;  // Carrier Detected
   tcGpPin<GPIOC_BASE, 13> mAM;  // Adress Match
-  tcGpPin<GPIOC_BASE, 15> mDR;  // Data Ready*/
+  tcGpPin<GPIOC_BASE, 15> mDR;  // Data Ready
 
   cNRF905_Pins()
     : mTRx_Cn(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),

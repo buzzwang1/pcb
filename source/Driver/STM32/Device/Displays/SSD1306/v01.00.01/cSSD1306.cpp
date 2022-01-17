@@ -64,9 +64,9 @@ cSSD1306::~cSSD1306()
 }
 
 
-void cSSD1306::vComStart(tenComNodeStartState lenState)
+void cSSD1306::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
 
   if (IsError())
   {
@@ -160,7 +160,7 @@ void cSSD1306::vComDone()
     case enInit2:
       menMode     = enIdle;
       mbCmdUpdate = true;
-      vComStart(tenComNodeStartState::enStPrepareToSendData);
+      vComStart(cComNode::tenEvent::enEvPrepareToSendData);
       mStatus.IsInit      = true;
       break;
 

@@ -443,7 +443,7 @@ void I2C1_ER_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBn_0x1200->vSync();
+  mcBn_0x1200->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -454,9 +454,8 @@ void MAIN_vTick10msLp(void)
 {
   mcLightControl.vMain_SmAdc(cLightControl::nEvDummy);
 
-  mcI2C1_Disp.vStartNext();
-  mcBn_0x1200->vProcess();
-  mcBn_0x1200->vTick10ms();
+  mcI2C1_Disp.bStartNext();
+  mcBn_0x1200->vTickLp10ms();
 }
 
 
@@ -518,27 +517,27 @@ void MAIN_vPage3(void)
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(6, 4, (const char*)"3-7 Immu", &mcScreen1);
 
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 20, (const char*)"Mag", &mcScreen1);
-  cStrTools::i8Itoa(mcMag.i16GetMagX()*1000/230, lszValue, 10);
+  cStrTools::uixItoa(mcMag.i16GetMagX()*1000/230, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMag.i16GetMagY()*1000/230, lszValue, 10);
+  cStrTools::uixItoa(mcMag.i16GetMagY()*1000/230, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 40, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMag.i16GetMagZ()*1000/205, lszValue, 10);
+  cStrTools::uixItoa(mcMag.i16GetMagZ()*1000/205, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 50, lszValue, &mcScreen1);
 
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 20, (const char*)"Acc", &mcScreen1);
-  cStrTools::i8Itoa(mcAcc.i16GetAccX()/16, lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccX()/16, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcAcc.i16GetAccY()/16, lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccY()/16, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 40, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcAcc.i16GetAccZ()/16, lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccZ()/16, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(50, 50, lszValue, &mcScreen1);
 
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 20, (const char*)"Pointer", &mcScreen1);
-  cStrTools::i8Itoa((i16)HeadingValue, lszValue, 10);
+  cStrTools::uixItoa((i16)HeadingValue, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa((i16)RollAng, lszValue, 10);
+  cStrTools::uixItoa((i16)RollAng, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 40, lszValue, &mcScreen1);
-  cStrTools::i8Itoa((i16)PitchAng, lszValue, 10);
+  cStrTools::uixItoa((i16)PitchAng, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 50, lszValue, &mcScreen1);
 }
 
@@ -908,7 +907,7 @@ void MAIN_vInitSystem(void)
 
   cClockInfo::Delay_ms(50); // Nach Power On warten
   // Warten bis Init ausgefürht ist (Display und Sensor)
-  mcI2C1_Disp.vStartNext();
+  mcI2C1_Disp.bStartNext();
   cClockInfo::Delay_ms(50);
 
   // Config setzen (Display und Sensor)
@@ -921,7 +920,7 @@ void MAIN_vInitSystem(void)
                     0
                     );
   // Warten bis Config gesetzt ist (Display und Sensor)
-  mcI2C1_Disp.vStartNext();
+  mcI2C1_Disp.bStartNext();
   cClockInfo::Delay_ms(10);
 
 

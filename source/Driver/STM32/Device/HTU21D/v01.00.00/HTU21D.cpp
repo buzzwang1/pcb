@@ -39,7 +39,7 @@ cHTU21D::~cHTU21D()
   mpcMsgWrite.vMemFree();
 }
 
-void cHTU21D::vComError(tenComNodeError lenError, tenComNodeState lenState)
+void cHTU21D::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
 {
   UNUSED(lenError);
   UNUSED(lenState);
@@ -61,9 +61,9 @@ void cHTU21D::vComError(tenComNodeError lenError, tenComNodeState lenState)
   }
 }
 
-void cHTU21D::vComStart(tenComNodeStartState lenState)
+void cHTU21D::vComStart(cComNode::tenEvent lenEvent)
 {
-  UNUSED(lenState);
+  UNUSED(lenEvent);
   if (menCmd == enCmdIdle)
   {
     if (mbInit)

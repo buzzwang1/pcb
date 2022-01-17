@@ -190,7 +190,7 @@ void USART3_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBnSwitch->vSync();
+  mcBnSwitch->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -199,8 +199,7 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcBnSwitch->vProcess();
-  mcBnSwitch->vTick10ms();
+  mcBnSwitch->vTickLp10ms();
 }
 
 void MAIN_vTick100msLp(void)

@@ -9,6 +9,11 @@ cClockInfo mcClkInfo;
 cGpPin lcSCL(GPIOB_BASE, 8, GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_NOPULL, GPIO_Speed_25MHz, 0);
 cGpPin lcSDA(GPIOB_BASE, 9, GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_NOPULL, GPIO_Speed_25MHz, 0);
 
+LED<GPIOB_BASE, 4> lcLedI2cDmaTxTc;
+LED<GPIOB_BASE, 5> lcLedI2cDmaRxTc;
+LED<GPIOB_BASE, 6> lcLedI2cInt;
+LED<GPIOB_BASE, 7> lcLedI2cErr;
+
 cI2cMaster   mcI2C1(I2C1, &lcSCL, &lcSDA, 8);
 cAPDS9960    mcAPDS9960(&mcI2C1, nAPDS9960_I2C_ADDR);
 
@@ -122,89 +127,35 @@ void PendSV_Handler(void)
 
 
 
-void DMA1_Stream0_IRQHandler(void)
-{
-}
-
-void DMA1_Stream1_IRQHandler(void)
-{
-}
-
-void DMA1_Stream2_IRQHandler(void)
-{
-  // I2C2 Rx (Stream2 / Channel7)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC2))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream2, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2);
-  }
-}
-
-void DMA1_Stream3_IRQHandler(void)
-{
-}
-
-void DMA1_Stream4_IRQHandler(void)
-{
-}
-
 void DMA1_Stream5_IRQHandler(void)
 {
-  // I2C1 Rx (Stream5 / Channel1)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC5))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream5, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5);
-
-    mcI2C1.I2C_EV_DMAHandler();
-  }
-}
-
-void DMA1_Stream6_IRQHandler(void)
-{
-  // I2C1 Tx (Stream6 / Channel1)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC6))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream6, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream6, DMA_FLAG_TCIF6);
-
-    mcI2C1.I2C_EV_DMAHandler();
-  }
-}
-
-void DMA1_Stream7_IRQHandler(void)
-{
-  // I2C2 Tx (Stream7 / Channel7)
-  //if (DMA_GetFlagStatus(DMA1_FLAG_TC7))
-  {
-    /* Disable the DMA1 Channel 7 */
-    DMA_Cmd(DMA1_Stream7, DISABLE);
-    /* Clear the DMA Transfer complete flag */
-    DMA_ClearFlag(DMA1_Stream7, DMA_FLAG_TCIF7);
-  }
+  // I2C1 Rx Transmission Complete
+  lcLedI2cDmaRxTc.vSet1();
+  DMA_Cmd(DMA1_Stream5, DISABLE);
+  DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5);
+  mcI2C1.I2C_EV_DMAHandler(cComNode::tenEvent::enEvDmaRxTc);
+  lcLedI2cDmaRxTc.vSet0();
 }
 
 
 void I2C1_EV_IRQHandler(void)
 {
+  lcLedI2cInt.vSet1();
   mcI2C1.I2C_EV_IRQHandler();
+  lcLedI2cInt.vSet0();
 }
 
 void I2C1_ER_IRQHandler(void)
 {
+  lcLedI2cErr.vSet1();
   mcI2C1.I2C_ER_IRQHandler();
+  lcLedI2cErr.vSet0();
 }
 
 
 void MAIN_vTick10msHp(void)
 {
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
 }
 
 
@@ -810,7 +761,7 @@ void MAIN_vInitSystem(void)
                 MAIN_vTick100msLp  /*100ms_LP*/,
                 MAIN_vTick1000msLp /*1s_LP*/);
 
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
   mcClkInfo.Delay_ms(100);
 }
 

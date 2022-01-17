@@ -507,7 +507,7 @@ void I2C1_ER_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBn_0x1100->vSync();
+  mcBn_0x1100->vTickHp1ms();
 }
 
 void MAIN_vTick1msLp(void)
@@ -518,8 +518,7 @@ void MAIN_vTick1msLp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcBn_0x1100->vProcess();
-  mcBn_0x1100->vTick10ms();
+  mcBn_0x1100->vTickLp10ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -541,41 +540,41 @@ void MAIN_vPage2(void)
   cPaint::vRectFull(4, 0,  40, 10, 0, &mcScreen1);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(6, 4, (const char*)"2-6 Immu", &mcScreen1);
 
-  /*cStrTools::i8Itoa(mcMag.i16GetMagX(), lszValue, 10);
+  /*cStrTools::uixItoa(mcMag.i16GetMagX(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 20, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMag.i16GetMagY(), lszValue, 10);
+  cStrTools::uixItoa(mcMag.i16GetMagY(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMag.i16GetMagZ(), lszValue, 10);
+  cStrTools::uixItoa(mcMag.i16GetMagZ(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 40, lszValue, &mcScreen1);
 
-  cStrTools::i8Itoa(mcAcc.i16GetAccX(), lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccX(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(60, 20, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcAcc.i16GetAccY(), lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccY(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(60, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcAcc.i16GetAccZ(), lszValue, 10);
+  cStrTools::uixItoa(mcAcc.i16GetAccZ(), lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(60, 40, lszValue, &mcScreen1);*/
 
   if (mcAPDS9960.isEnabledAmbientLigth())
   {
     if (mcAPDS9960.boGetAmbientLight_Valid())
     {
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Clear(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Clear(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 35, (const char8*)"C:", &mcScreen1);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(30, 35, lszValue, &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Red(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Red(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(60, 35, (const char8*)"R:", &mcScreen1);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 35, lszValue, &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Green(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Green(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 45, (const char8*)"G:", &mcScreen1);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(30, 45, lszValue, &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Blue(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Blue(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(60, 45, (const char8*)"B:", &mcScreen1);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(90, 45, lszValue, &mcScreen1);
 
-      cStrTools::i8Itoa(mcMot_TurmDrehung.miSensor, lszValue, 10);
+      cStrTools::uixItoa(mcMot_TurmDrehung.miSensor, lszValue, 10);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 55, (const char8*)"Als:", &mcScreen1);
       cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(30, 55, lszValue, &mcScreen1);
     }
@@ -593,16 +592,16 @@ void MAIN_vPage3(void)
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(6, 4, (const char*)"3-6 Mot", &mcScreen1);
 
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 20, (const char*)"Dreh:       - ", &mcScreen1);
-  cStrTools::i8Itoa(mcMot_TurmDrehung.mi16ActualPos, lszValue, 10);
+  cStrTools::uixItoa(mcMot_TurmDrehung.mi16ActualPos, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(40, 20, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMot_TurmDrehung.mi16TargetPos, lszValue, 10);
+  cStrTools::uixItoa(mcMot_TurmDrehung.mi16TargetPos, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(70, 20, lszValue, &mcScreen1);
 
 
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(10, 30, (const char*)"Neig:       - ", &mcScreen1);
-  cStrTools::i8Itoa(mcMot_TurmNeigung.mi16ActualPos, lszValue, 10);
+  cStrTools::uixItoa(mcMot_TurmNeigung.mi16ActualPos, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(40, 30, lszValue, &mcScreen1);
-  cStrTools::i8Itoa(mcMot_TurmNeigung.mi16TargetPos, lszValue, 10);
+  cStrTools::uixItoa(mcMot_TurmNeigung.mi16TargetPos, lszValue, 10);
   cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(70, 30, lszValue, &mcScreen1);
 
 }
@@ -922,7 +921,7 @@ void MAIN_vTick100msLp(void)
     }
   }
 
-  mcI2C1_LSM303DLHC.vStartNext();
+  mcI2C1_LSM303DLHC.bStartNext();
 }
 
 
@@ -1033,7 +1032,7 @@ void MAIN_vInitSystem(void)
   mcAPDS9960.i8EnableAmbientLight();
 
   cClockInfo::Delay_ms(50);
-  mcI2C1_LSM303DLHC.vStartNext();
+  mcI2C1_LSM303DLHC.bStartNext();
   cClockInfo::Delay_ms(50);
 
   mcBn_0x1100 = new cBotNet(&mcMyBotNetCfg, &mcBn_MsgProcess_0x1100);

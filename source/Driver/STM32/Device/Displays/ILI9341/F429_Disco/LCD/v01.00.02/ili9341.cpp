@@ -286,6 +286,42 @@ void ILI9341_ChipSelect(FunctionalState NewState)
   }
 }
 
+#define  ILI9341_WIDTH    ((uint16_t)240)
+#define  ILI9341_HEIGHT   ((uint16_t)320)
+
+void ILI9341_ClearScreen(u16 u16Col)
+{
+  uint32      lui32t;
+
+  for (lui32t = 0; lui32t < ILI9341_WIDTH*ILI9341_HEIGHT/2; lui32t++)
+  {
+    *(__IO uint16_t*)(ILI9341_FRAME_BUFFER) = u16Col;
+  }
+}
+
+/**
+  * @brief  Displays a mono-color picture.
+  * @param  Pict: pointer to the picture array.
+  * @retval None
+  */
+void ILI9341_Show(cBitmap_Bpp16_5R6G5B* lpstBm)
+{
+  uint32      lui32t;
+  uint16*     lpui16ScreenData;
+
+  //BM_CHK_INIT(*lpstBm);
+
+  lpui16ScreenData = (uint16*)lpstBm->mpui8Data;
+
+  for (lui32t = 0; lui32t < ILI9341_WIDTH*ILI9341_HEIGHT/2; lui32t++)
+  {
+    *(__IO uint16_t*)(ILI9341_FRAME_BUFFER) = *lpui16ScreenData;
+    lpui16ScreenData++;
+  }
+}
+
+
+
 
 /**
   * @brief  Writes command to select the LCD register.
@@ -695,6 +731,5 @@ static void ILI9341_AF_GPIOConfig(void)
                              GPIO_Pin_11 | GPIO_Pin_12;
 
   GPIO_Init(GPIOG, &GPIO_InitStruct);
-
 }
 

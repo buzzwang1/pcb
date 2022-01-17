@@ -81,7 +81,7 @@ class cMyButton: public cUiElement_Button
         case cUiElement_TextBox::nFitSmartRev: mc16GuiText01.menTextFitMode = cUiElement_TextBox::nNoFitRev;break;
         case cUiElement_TextBox::nNoFitRev:    mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFit;break;
       }
-      mc16GuiRoot.vRefesh();
+      mc16GuiRoot.vRepaint();
     }
 };
 
@@ -150,7 +150,7 @@ void CycCall_vMain_25ms()
   li16Value  = (li16LValue + (rand() % 100)) / 2;
   li16LValue = li16Value;
   mcChnYA.vAdd(li16Value);
-  mc16GuiGraphY.vRefesh();
+  mc16GuiRoot.vRepaint();
 
   mc16GuiRoot.vPaint();
 

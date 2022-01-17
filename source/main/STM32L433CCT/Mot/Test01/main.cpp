@@ -458,7 +458,7 @@ void MAIN_vTick1msHp(void)
 {  
   mcIna219.i8ReadVBus_digit();
   mcIna219.i8ReadVShunt_digit();
-  mcI2C1.vStartNext();
+  mcI2C1.bStartNext();
   if (!mcOpMode.IsAuto())
   {
     mcMot1.vSetActualPos(mcAdc.u32GetPoti_mv());
@@ -689,7 +689,7 @@ void MAIN_vInitSystem(void)
   mcAdc.vMain_SmAdc(cAdcControl::nEvReset);
   mcAdc.vMain_SmAdc(cAdcControl::nEvStart);
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(50);
   }

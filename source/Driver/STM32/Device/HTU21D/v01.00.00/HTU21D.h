@@ -87,9 +87,9 @@ class cHTU21D : public cComNode
 
   int8  i8Setup();
 
-  void vComStart(tenComNodeStartState lenState) override;
+  void vComStart(cComNode::tenEvent lenEvent) override;
   void vComDone() override;
-  void vComError(tenComNodeError lenError, tenComNodeState lenState) override;
+  void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override;
 
   int8  i8ReadUser_digit();
   int8  i8ReadTemperatureHold_digit();

@@ -429,6 +429,48 @@ class cBotNetStreamPort_BotNetPowMon_PowMon2: public cCliCmd
 };
 
 
+class cBotNetStreamPort_BotNetPowMon_Charge: public cCliCmd
+{
+  public:
+    cBotNetStreamPort_BotNetPowMon_Charge():cCliCmd((const char*)"Charge", (const char*)"Charge on/off")
+    {}
+
+    bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
+    {
+      char8  lszStrBuf[32];
+      cStr   lszStr(lszStrBuf, 32);
+      bool   bChargeOn = False;
+
+      UNUSED(lcParam);
+      UNUSED(lbFirstCall);
+      UNUSED(lCallerAdr);
+
+      if (lcParam.Len() > 0)
+      {
+        if (lcParam.Instr(0, (const char8*)"on") == 0)
+        {
+          bChargeOn = True;
+        }
+      }
+
+      if (bChargeOn)
+      {
+        mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] = 1;
+        mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS3] = 1;
+        lcCli->bPrintLn((const char8*)"Set charge on");
+      }
+      else
+      {
+        mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] = 0;
+        mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS3] = 0;
+        lcCli->bPrintLn((const char8*)"Set charge off");
+      }
+      
+      return True;
+    }
+};
+
+
 
 class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
 {
@@ -439,6 +481,7 @@ class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
   cBotNetStreamPort_BotNetPowMon_SetDisp  mcBnCliCmd_SetDisp;
   cBotNetStreamPort_BotNetPowMon_PowMon1  mcBnCliCmd_PowMon1;
   cBotNetStreamPort_BotNetPowMon_PowMon2  mcBnCliCmd_PowMon2;
+  cBotNetStreamPort_BotNetPowMon_Charge   mcBnCliCmd_Charge;
 
   cBotNetStreamPort_BotNetPowMon()
   {
@@ -458,6 +501,7 @@ class cBotNetStreamPort_BotNetPowMon: public cBotNetStreamPort
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_SetDisp);
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_PowMon1);
     lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_PowMon2);
+    lcBotNet->mcStreamSys.mcCmdPort.bAddCmd(&mcBnCliCmd_Charge);
   }
 
 
@@ -846,20 +890,17 @@ void MAIN_vTick10msLp(void)
     lui8Tick10msCounter++;
   }
 
-  mcBnNode.vProcess();
-  mcBnNode.vTick10ms();
+  mcBnNode.vTickLp10ms();
 }
 
 
 void MAIN_vTick1msHp(void)
 {
-
+  mcBnNode.vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
 {
-  mcBnNode.vSync();
-
   mcDcf77.vSm(cDcf77::nEvTick);
   if (mcDcf77.IsDataReady())
   {
@@ -876,7 +917,7 @@ void MAIN_vTick10msHp(void)
     MAIN_DCF_vPressed();
   }
 
-  if (!mcI2C1.vStartNext())
+  if (!mcI2C1.bStartNext())
   {
     mcI2C1.vSetReInitTicks(1000);
   }
@@ -1482,8 +1523,9 @@ void MAIN_Switch_DoAction(void)
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] = 1;
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS3] = 1;
   }
-
-  if (mcPowerMonitor.stGlobals.i32U_Bat > 4000)
+  else
+  if ((mcPowerMonitor.stGlobals.i32U_Bat > 4150) || 
+      ((mcPowerMonitor.stGlobals.i32U_Bat > 4000) && (mcPowerMonitor.stGlobals.i32I_Bat <   25)))
   {
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] = 0;
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS3] = 0;
@@ -1701,7 +1743,7 @@ void MAIN_vInitSystem(void)
                        INA219_ShuntADCResolution_12Bit_1S_532uS,
                        INA219_Mode_ShuntAndBusVoltageContinuous);
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(10);
   }
@@ -1711,7 +1753,7 @@ void MAIN_vInitSystem(void)
   mcINA219_Supply.i8ReadVShunt_digit();
   mcINA219_Supply.i8ReadVBus_digit();
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(10);
   }

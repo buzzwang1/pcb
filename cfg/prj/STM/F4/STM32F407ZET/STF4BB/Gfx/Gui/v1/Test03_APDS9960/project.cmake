@@ -49,7 +49,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/Tree/Idx/16Bit/12Byte/v00.00.01
@@ -72,7 +72,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/F4/STD/v01.08.00/Core/stm32f42x:default
     Driver/STM32/F4/STD/v01.08.00/STD:default:f40x:default
     Driver/STM32/F4/STD/GPPin/v01.00.00
-    Driver/STM32/F4/STD/cI2C/v01.00.02
+    Driver/STM32/F4/STD/cI2C/v01.00.03
     Driver/STM32/Device/APDS9960/v01.00.00_Mem
     Driver/STM32/Device/Displays/ILI9341/F407_BB/FSMC/v00.00.03
     #Driver/STM32/Device/F407ZET_BB/hw/sram
@@ -84,7 +84,7 @@ set(PCB_ProjectPackageList
     
     
     APP/LED/v00.00.01:STM32F4_STD
-    main/STM32F407ZET/STF4BB/Gfx/Test03_APDS9960
+    main/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f407zet_flash.ld")

@@ -35,7 +35,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
     
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
     Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01
@@ -51,7 +51,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/F4/STD/v01.08.00/STD:default:f40x:default
     Driver/STM32/F4/STD/GPPin/v01.00.00
     Driver/STM32/Device/Displays/SSD1306/v01.00.01:A_128x64x1BPP
-    Driver/STM32/F4/STD/cI2C/v01.00.02
+    Driver/STM32/F4/STD/cI2C/v01.00.03
 
     System/CyclicCaller/v00.00.01:stm32f4xx_Tim3
     System/STM32/ClockInfo/v00.00.01:stm32f4xx

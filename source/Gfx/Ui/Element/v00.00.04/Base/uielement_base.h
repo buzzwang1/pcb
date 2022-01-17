@@ -19,7 +19,7 @@ class cUiElement
 {
   public:
 
-    enum tenMsgEvent
+    enum tenEvent
     {
       // Button
       nBtnPressStart,
@@ -27,7 +27,30 @@ class cUiElement
 
       // Window
       nWndClose,
-      nWndSizeMax,
+      nWndSizeToggleMaximize,
+
+      // Switch
+      nSwitchStateChanged
+    };
+
+
+    enum tenType
+    {
+      nBase,
+      nBox3D,
+      nBox3Df,
+      nButton,
+      nfGraphYBox,
+      niGraphXYBox,
+      niGraphYBox,
+      nRoot,
+      nVSplit,
+      nHSplit,
+      nTextBox,
+      nWindow,
+      nSwitch,
+      nSwitchPressOnly,
+      nSwitchGroup
     };
 
 
@@ -90,7 +113,6 @@ class cUiElement
                               // Muss nach einer Größenänderungen, Verschiebung, Hinzugefügt oder Entfernt gemacht werden 
       u32 HiddenByChild  : 1; // Zeigt an, dass das Element wird von einem Child komplett verdeckt ist. vom Root gesetzt
                               // Muss nach einer Größenänderungen, Verschiebung, Hinzugefügt oder Entfernt gemacht werden 
-
     };
 
     tstStatus mstStatus;
@@ -98,11 +120,14 @@ class cUiElement
     uint32 mu32BaseCol;
     uint32 mu32FrameCol;
 
+
+    tenType   menType;
+
     cMsgBox *mcMsgBox;
 
     cUiElement(cMsgBox *lcMsgBox, cScreen *lpcScreen)
     {
-      mcMsgBox = lcMsgBox;      
+      mcMsgBox = lcMsgBox;
       mcRefScreen  = lpcScreen;
       vInit();
     }
@@ -135,6 +160,7 @@ class cUiElement
       mstStatus.Maximized      = 0;
       mstStatus.Repaint        = 1;
 
+      menType      = cUiElement::tenType::nBase;
       mu32BaseCol  = 0;
       mu32FrameCol = 0x00FFFFFF;
 
@@ -167,7 +193,7 @@ class cUiElement
     // Wird durch das Timingevent aufgerufen
     virtual void OnTimer(u32 lu32Timediff_ms) { UNUSED(lu32Timediff_ms); }
     virtual void OnPaint() {}          // Wird aufgerufen, um den Inhalt des Element zu zeichnen
-    virtual void OnAddeded() {}        // Wird aufgerufen, nachdem das Element dazugefügt wurde.
+    virtual void OnLoaded() {}         // Wird aufgerufen, nachdem das Element dazugefügt wurde.
     virtual void OnClose() {}          // Wird aufgerufen, nachdem das Element entfernt wurde.
     virtual void OnElementChanged() {} // Wenn sich bei einem Element Größe oder Lage geändert hat.
                                        // Damit der Root den Baum aktualisieren kann. Das sollte nur im Root genutzt werden
@@ -190,7 +216,7 @@ class cUiElement
         mcPaintArea.miGfxRefPosx1 += mpcParent->mcPaintArea.miGfxRefPosx1;
         mcPaintArea.miGfxRefPosy1 += mpcParent->mcPaintArea.miGfxRefPosy1;
       }
-      vUpdatePaintArea();
+      vUpdatePaintAreaMove();
     }
 
     /* Positions Relative zum Parent */
@@ -199,7 +225,7 @@ class cUiElement
       mcPaintArea.miGfxRefPosx1 += liGfxRefX;
       mcPaintArea.miGfxRefPosy1 += liGfxRefY;
 
-      vUpdatePaintArea();
+      vUpdatePaintAreaMove();
 
       // Alle Children auch verschieben
       cUiElement* lcChild = mpcFirstChild;
@@ -242,7 +268,7 @@ class cUiElement
       if (miGfxWidth < 8)  miGfxWidth = 8;
       if (miGfxHeight < 8) miGfxHeight = 8;
 
-      vUpdatePaintArea();
+      vUpdatePaintAreaResize();
 
       // Clippingbereich aller Children auch anpassen
       cUiElement* lcChild = mpcFirstChild;
@@ -327,10 +353,41 @@ class cUiElement
 
           miGfxWidth_Save  = miGfxWidth;
           miGfxHeight_Save = miGfxHeight;
+
+          // Referenzepunkt aller Children anpassen
+          cScreenArea lcPaintArea;
+          if (mpcParent)
+          {
+            mpcParent->vGetMaxArea(&lcPaintArea);
+          }
+          else
+          {
+            lcPaintArea.miGfxRefPosx1 = mcRefScreen->miGfxRefPosx1;
+            lcPaintArea.miGfxRefPosy1 = mcRefScreen->miGfxRefPosy1;
+          }
+
+          cUiElement* lcChild = mpcFirstChild;
+
+          while (lcChild) 
+          {
+            lcChild->vAddPos(lcPaintArea.miGfxRefPosx1 - mcPaintArea.miGfxRefPosx1, 
+                             lcPaintArea.miGfxRefPosy1 - mcPaintArea.miGfxRefPosy1);
+            lcChild = lcChild->mpcNext;
+          }
         }
         else
         {
           mstStatus.Maximized = 0;
+
+          // Referenzepunkt aller Children anpassen
+          cUiElement* lcChild = mpcFirstChild;
+
+          while (lcChild) 
+          {
+            lcChild->vAddPos(miGfxRefX_Save - mcPaintArea.miGfxRefPosx1, 
+                             miGfxRefY_Save - mcPaintArea.miGfxRefPosy1);
+            lcChild = lcChild->mpcNext;
+          }
 
           mcPaintArea.miGfxRefPosx1 = miGfxRefX_Save;
           mcPaintArea.miGfxRefPosy1 = miGfxRefY_Save;
@@ -378,7 +435,7 @@ class cUiElement
       }
     }
 
-    void vUpdatePaintArea()
+    void vUpdatePaintAreaMove()
     {
       // Zeichenbereich setzen
       mcPaintArea.miGfxClipPosx1 = mcPaintArea.miGfxRefPosx1;
@@ -440,6 +497,12 @@ class cUiElement
         vSetRepaint();
       }
       cGetRoot()->OnElementChanged();
+      
+    }
+
+    void vUpdatePaintAreaResize()
+    {
+      vUpdatePaintAreaMove();
       OnUpdateSize();
     }
 
@@ -496,7 +559,7 @@ class cUiElement
 
           //Rechts malen
           cPaint::vRectFull(liGfxX2,     liGfxY1,
-                            mcPaintArea.miGfxClipPosx2 - mcPaintArea.miGfxRefPosx1 - liGfxX2, liGfxY2 - liGfxY1 + 1,
+                            mcPaintArea.miGfxClipPosx2 - mcPaintArea.miGfxRefPosx1 - liGfxX2 + 1, liGfxY2 - liGfxY1 + 1,
                             mu32BaseCol, mcRefScreen);
         }
         else
@@ -652,7 +715,7 @@ class cUiElement
 
         lcEle->vSetPos(liGfxRefX, liGfxRefY);
 
-        lcEle->OnAddeded();
+        lcEle->OnLoaded();
 
         return True;
       }
@@ -798,32 +861,35 @@ class cUiElement
     {
       while (lcEle2Check)
       {
-        // Überprüfnung für Verdeckung
-        if ((lcEle2Check->mcPaintArea.miGfxClipPosx1 <= mcPaintArea.miGfxClipPosx1) &&
-            (lcEle2Check->mcPaintArea.miGfxClipPosy1 <= mcPaintArea.miGfxClipPosy1) &&
-            (lcEle2Check->mcPaintArea.miGfxClipPosx2 >= mcPaintArea.miGfxClipPosx2) &&
-            (lcEle2Check->mcPaintArea.miGfxClipPosy2 >= mcPaintArea.miGfxClipPosy2))
+        if (lcEle2Check->isVisible())
         {
-          mstStatus.Hidden      = 1;
-          mstStatus.Overlapped  = 0;
-          return;
-        }
-        else
-        {
-          if (!mstStatus.Overlapped)
+          // Überprüfnung für Verdeckung
+          if ((lcEle2Check->mcPaintArea.miGfxClipPosx1 <= mcPaintArea.miGfxClipPosx1) &&
+              (lcEle2Check->mcPaintArea.miGfxClipPosy1 <= mcPaintArea.miGfxClipPosy1) &&
+              (lcEle2Check->mcPaintArea.miGfxClipPosx2 >= mcPaintArea.miGfxClipPosx2) &&
+              (lcEle2Check->mcPaintArea.miGfxClipPosy2 >= mcPaintArea.miGfxClipPosy2))
           {
-            // Überprüfnung für Überlappung
-            if ((mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx1, lcEle2Check->mcPaintArea.miGfxClipPosy1)) ||
-                (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx2, lcEle2Check->mcPaintArea.miGfxClipPosy1)) ||
-                (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx1, lcEle2Check->mcPaintArea.miGfxClipPosy2)) ||
-                (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx2, lcEle2Check->mcPaintArea.miGfxClipPosy2)) ||
-                (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx1, mcPaintArea.miGfxClipPosy1)) ||
-                (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx2, mcPaintArea.miGfxClipPosy1)) ||
-                (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx1, mcPaintArea.miGfxClipPosy2)) ||
-                (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx2, mcPaintArea.miGfxClipPosy2))
-               )
+            mstStatus.Hidden      = 1;
+            mstStatus.Overlapped  = 0;
+            return;
+          }
+          else
+          {
+            if (!mstStatus.Overlapped)
             {
-              mstStatus.Overlapped  = 1;
+              // Überprüfnung für Überlappung
+              if ((mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx1, lcEle2Check->mcPaintArea.miGfxClipPosy1)) ||
+                  (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx2, lcEle2Check->mcPaintArea.miGfxClipPosy1)) ||
+                  (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx1, lcEle2Check->mcPaintArea.miGfxClipPosy2)) ||
+                  (mcPaintArea.isInAbs(lcEle2Check->mcPaintArea.miGfxClipPosx2, lcEle2Check->mcPaintArea.miGfxClipPosy2)) ||
+                  (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx1, mcPaintArea.miGfxClipPosy1)) ||
+                  (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx2, mcPaintArea.miGfxClipPosy1)) ||
+                  (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx1, mcPaintArea.miGfxClipPosy2)) ||
+                  (lcEle2Check->mcPaintArea.isInAbs(mcPaintArea.miGfxClipPosx2, mcPaintArea.miGfxClipPosy2))
+                 )
+              {
+                mstStatus.Overlapped  = 1;
+              }
             }
           }
         }
@@ -874,6 +940,12 @@ class cUiElement
 
         lcEleParent = lcEleParent->mpcParent;
       }
+    }
+
+    
+    virtual void vParentCallback(cUiElement *lpcChild, tenEvent lenEvent)
+    {
+      if (mpcParent) mpcParent->vParentCallback(lpcChild, lenEvent);
     }
 
 

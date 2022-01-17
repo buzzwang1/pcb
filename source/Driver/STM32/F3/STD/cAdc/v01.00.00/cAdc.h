@@ -144,7 +144,7 @@ class cAdc
   void vSm(tenADC_Events lenEvent);
 
   void vStartChannel(cADC_Channel *lpcChannel);
-  void vStartNext();
+  void bStartNext();
 };
 
 

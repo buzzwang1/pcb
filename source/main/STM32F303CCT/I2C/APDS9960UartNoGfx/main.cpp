@@ -193,7 +193,7 @@ void I2C1_ER_IRQHandler(void)
 void MAIN_vTick10msHp(void)
 {
   //mcHTU21D->vTick10ms();
-  if (!mcI2C1.vStartNext())
+  if (!mcI2C1.bStartNext())
   {
     mcI2C1.vSetReInitTicks(1000);
   }
@@ -217,16 +217,16 @@ void MAIN_vItoa_HUD21D(int num, char8* str)
   li32Val1 = num / 100;
   li32Val2 = num - (li32Val1 * 100);
 
-  cStrTools::i8Itoa(li32Val1, lszVal1, 10);
+  cStrTools::uixItoa(li32Val1, lszVal1, 10);
 
   if (li32Val2 < 10)
   {
     lszVal2[0] = '0';
-    cStrTools::i8Itoa(li32Val2, (char8*)(&lszVal2[1]), 10);
+    cStrTools::uixItoa(li32Val2, (char8*)(&lszVal2[1]), 10);
   }
   else
   {
-    cStrTools::i8Itoa(li32Val2, lszVal2, 10);
+    cStrTools::uixItoa(li32Val2, lszVal2, 10);
   }
 
   cStrTools::szStrCpy(str, lszVal1);
@@ -288,7 +288,7 @@ void MAIN_vInitSystem(void)
   mcAPDS9960.i8EnableProximitySensor();
   mcAPDS9960.i8EnableGestureSensor();
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(100);
   }

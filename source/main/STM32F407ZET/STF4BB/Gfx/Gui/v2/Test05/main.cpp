@@ -311,17 +311,17 @@ class cMyButton: public cUiElement_Button
 
       if (mc16GuiBox3D_Cube.mboWireFrame)
       {
-        mc16GuiBox3D_Cube.mboWireFrame = False;
+        mc16GuiBox3D_Cube.mboWireFrame   = False;
         mc16GuiBox3D_Monkey.mboWireFrame = False;
         mc16GuiBox3D_Sphere.mboWireFrame = False;
-        mc16GuiBox3D_Torus.mboWireFrame = False;
+        mc16GuiBox3D_Torus.mboWireFrame  = False;
       }
       else
       {
-        mc16GuiBox3D_Cube.mboWireFrame = True;
+        mc16GuiBox3D_Cube.mboWireFrame   = True;
         mc16GuiBox3D_Monkey.mboWireFrame = True;
         mc16GuiBox3D_Sphere.mboWireFrame = True;
-        mc16GuiBox3D_Torus.mboWireFrame = True;
+        mc16GuiBox3D_Torus.mboWireFrame  = True;
       }
 
 
@@ -334,7 +334,7 @@ class cMyButton: public cUiElement_Button
         mc16GuiBox3Df.mcpViewer = &mc16GuiBox3Df.mcViewerTexGradZ;
       }
 
-      mc16GuiRoot.vDoRefresh();
+      mc16GuiRoot.vRepaint();
     }
 };
 
@@ -485,7 +485,6 @@ void Delay(__IO uint32_t nTime)
 
   while(TimingDelay != 0);
 }
-
 #endif
 
 void TimingDelay_Decrement(void)
@@ -907,7 +906,7 @@ void MAIN_vTick10msLp(void)
   static uint8 lui8t = 0;
   TP_Scan(0);
 
-  //mcI2C1->vStartNext();
+  //mcI2C1->bStartNext();
 
   if (lui8t == 4)
   {
@@ -928,7 +927,7 @@ void MAIN_vTick10msLp(void)
     li16Value  = (li16LValue + (rand() % 100)) / 2;
     li16LValue = li16Value;
     mcChnYA.vAdd(li16Value);
-    mc16GuiGraphY.vDoRefresh();
+    mc16GuiGraphY.vRepaint();
 
     mc16GuiRoot.vPaint();
 

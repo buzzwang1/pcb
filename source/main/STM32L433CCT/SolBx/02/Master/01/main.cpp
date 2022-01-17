@@ -505,16 +505,6 @@ void USART1_IRQHandler(void)
 {
 }
 
-void TIM1_BRK_TIM15_IRQHandler(void)
-{
-  if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
-  {
-    TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
-    TIM15->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
-    mcI2C2_BnMaster.TIM_EV_IRQHandler();
-  }
-}
-
 void I2C2_EV_IRQHandler(void)
 {
   mcI2C2_BnMaster.I2C_EV_IRQHandler();
@@ -576,18 +566,14 @@ void TIM7_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcBn_0x1000->vSync();
-  mcI2C2_BnMaster.vStartNext();
+  mcBn_0x1000->vTickHp1ms();
 }
 
 void MAIN_vTick10msLp(void)
 {
   mcLipoMon.vUpdateAll(mcOpMode.IsAuto());
-
-  mcBn_0x1000->vProcess();
-  mcBn_0x1000->vTick10ms();
-
-  mcI2C1_Disp.vStartNext();
+  mcBn_0x1000->vTickLp10ms();
+  mcI2C1_Disp.bStartNext();
 }
 
 
@@ -998,7 +984,7 @@ void MAIN_vInitSystem(void)
 
   InAppProg_Platform_vResetWdog();
 
-  if (mcI2C1_Disp.vStartNext())
+  if (mcI2C1_Disp.bStartNext())
   {
     cClockInfo::Delay_ms(50);
   }

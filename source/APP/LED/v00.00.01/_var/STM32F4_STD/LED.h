@@ -6,7 +6,7 @@
 #include "tGPPin.h"
 
 template <const uintptr_t mpstPort, const uint16 mui16Pin>
-class LED : tcGpPin<mpstPort, mui16Pin>
+class LED : public tcGpPin<mpstPort, mui16Pin>
 {
   public:
 

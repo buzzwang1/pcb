@@ -11,6 +11,7 @@ set (gen_files
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
+	./RFont01_96x96U_1BPP_1G.h
 	./rfont01_05x05u_1bpp_1g.h
 	./rfont01_06x08_1bpp_1g.h
 )

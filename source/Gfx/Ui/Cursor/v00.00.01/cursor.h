@@ -294,10 +294,10 @@ public:
   {
     char mszValue[6];
     mszPos[0] = 0;
-    cStrTools::i8Itoan(mi16Posx, mszValue, 6, 10);
+    cStrTools::uixItoan(mi16Posx, mszValue, 6, 10);
     cStrTools::szStrCat(mszPos, mszValue);
     cStrTools::szStrCat(mszPos, ",");
-    cStrTools::i8Itoan(mi16Posy, mszValue, 6, 10);
+    cStrTools::uixItoan(mi16Posy, mszValue, 6, 10);
     cStrTools::szStrCat(mszPos, mszValue);
 
     switch (mSmState)

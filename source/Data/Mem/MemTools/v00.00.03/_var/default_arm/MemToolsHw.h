@@ -65,6 +65,63 @@ class cMemToolsHw
     }
   }
 
+
+  // Copy longwords, taking advantage of STM ability to read/write unaligned data
+  // and sum up the copied data
+  static u32 vMemCpyAndSum(uint8* lpui8Dest, uint8* lpui8Source, MemTool_uiSize luixSize)
+  {
+    MemTool_uiSize luixCount;
+    u32            u32Sum = 0;
+    //if (((((uint32)lpui8Source) & 3) == 0) && // auf ganzen 32 Bit Adresses ?
+    //    ((((uint32)lpui8Dest) & 3) == 0))
+    {
+      /* Alles auf 32Bit Adresses und Count ist auch 32Bit
+         bzw. alles Werte sind durch 4 teilbar
+         Dann mit 32Bit breite Kopieren
+      */
+
+      uint32* lpui32Source = (uint32*)lpui8Source;
+      uint32* lpui32Dest = (uint32*)lpui8Dest;
+
+      if (luixSize > 15)
+      {
+        luixCount = luixSize >> 4; // 16Byte Blöcke
+        luixSize &= 15;
+
+        while (luixCount > 0) // 4 * 4 Byte = 16Byte
+        {
+          u32Sum += *lpui32Source; *lpui32Dest++ = *lpui32Source++;
+          u32Sum += *lpui32Source; *lpui32Dest++ = *lpui32Source++;
+          u32Sum += *lpui32Source; *lpui32Dest++ = *lpui32Source++;
+          u32Sum += *lpui32Source; *lpui32Dest++ = *lpui32Source++;
+          luixCount--;
+        }
+      }
+
+      if (luixSize > 3)
+      {
+        luixCount = luixSize >> 2; // 4Byte Blöcke
+        luixSize &= 3;
+
+        while (luixCount > 0) // 1 * 4 Byte = 16Byte
+        {
+          u32Sum += *lpui32Source; *lpui32Dest++ = *lpui32Source++;
+          luixCount--;
+        }
+      }
+
+      lpui8Dest = (uint8*)lpui32Dest;
+      lpui8Source = (uint8*)lpui32Source;
+      // Den Rest byteweise
+      while (luixSize > 0)
+      {
+        u32Sum += *lpui8Source; *lpui8Dest++ = *lpui8Source++;
+        luixSize--;
+      }
+    }
+    return u32Sum;
+  }
+
 //#pragma GCC push_options
 //#pragma GCC optimize ("Og")
 

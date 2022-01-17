@@ -202,7 +202,7 @@ void I2C1_ER_IRQHandler(void)
 void MAIN_vTick10msHp(void)
 {
   mcHTU21D.vTick10ms();
-  if (!mcI2C1.vStartNext())
+  if (!mcI2C1.bStartNext())
   {
     mcI2C1.vSetReInitTicks(1000);
   }
@@ -226,16 +226,16 @@ void MAIN_vItoa_HUD21D(int num, char8* str)
   li32Val1 = num / 100;
   li32Val2 = num - (li32Val1 * 100);
 
-  cStrTools::i8Itoa(li32Val1, lszVal1, 10);
+  cStrTools::uixItoa(li32Val1, lszVal1, 10);
 
   if (li32Val2 < 10)
   {
     lszVal2[0] = '0';
-    cStrTools::i8Itoa(li32Val2, (char8*)(&lszVal2[1]), 10);
+    cStrTools::uixItoa(li32Val2, (char8*)(&lszVal2[1]), 10);
   }
   else
   {
-    cStrTools::i8Itoa(li32Val2, lszVal2, 10);
+    cStrTools::uixItoa(li32Val2, lszVal2, 10);
   }
 
   cStrTools::szStrCpy(str, lszVal1);
@@ -280,19 +280,19 @@ void MAIN_vTick1000msLp(void)
     mcAPDS9960.i8ReadAmbientLight();
     if (mcAPDS9960.boGetAmbientLight_Valid())
     {
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Clear(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Clear(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 35, (char8*)"C:",   &mcScreen1);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(30, 35, lszValue,       &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Red(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Red(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60, 35, (char8*)"R:",   &mcScreen1);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(90, 35, lszValue,       &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Green(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Green(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 45, (char8*)"G:",   &mcScreen1);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(30, 45, lszValue,       &mcScreen1);
 
-      cStrTools::i8Itoa(mcAPDS9960.ui16GetAmbientLight_Blue(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui16GetAmbientLight_Blue(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60, 45, (char8*)"B:",   &mcScreen1);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(90, 45, lszValue,       &mcScreen1);
     }
@@ -303,7 +303,7 @@ void MAIN_vTick1000msLp(void)
     mcAPDS9960.i8ReadProximitySensor();
     if (mcAPDS9960.boGetProximitySensor_Valid())
     {
-      cStrTools::i8Itoa(mcAPDS9960.ui8GetProximitySensor(), lszValue, 10);
+      cStrTools::uixItoa(mcAPDS9960.ui8GetProximitySensor(), lszValue, 10);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 55, (char8*)"P:",   &mcScreen1);
       cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(30, 55, lszValue,       &mcScreen1);
     }
@@ -366,7 +366,7 @@ void MAIN_vInitSystem(void)
   //mcAPDS9960.i8EnableProximitySensor();
   //mcAPDS9960.i8EnableGestureSensor();
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(100);
   }

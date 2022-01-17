@@ -1,8 +1,5 @@
 #include "lcd.h"
 
-
-
-
 void ILI9341_WR_REG(vu16 regval)
 {
   LCD->LCD_REG = regval;

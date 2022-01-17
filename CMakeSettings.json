@@ -91,66 +91,6 @@
       ]
     },
     {
-      "ProjectName": "STM32F103C8T_SolBx_02_MotBx_01",
-      "ProjectLabelName": "STM/F1/STM32F103C8T/SolBx/02/MotBx/01",
-      "ProjectFullLabelName": "STM/F1/STM32F103C8T/SolBx/02/MotBx/01.Debug",
-      "name": "STM/F1/STM32F103C8T/SolBx/02/MotBx/01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\MotBx\\01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\MotBx\\01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F1/STM32F103C8T/SolBx/02/MotBx/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\MotBx\\01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32F103C8T_SolBx_02_LightBx_01",
-      "ProjectLabelName": "STM/F1/STM32F103C8T/SolBx/02/LightBx/01",
-      "ProjectFullLabelName": "STM/F1/STM32F103C8T/SolBx/02/LightBx/01.Debug",
-      "name": "STM/F1/STM32F103C8T/SolBx/02/LightBx/01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\LightBx\\01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\LightBx\\01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F1/STM32F103C8T/SolBx/02/LightBx/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\STM32F103C8T\\SolBx\\02\\LightBx\\01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
       "ProjectName": "STM32F303CCT_LedBlink_PE15",
       "ProjectLabelName": "STM/F3/STM32F303VC/STM32F3DISCOVERY/LedBlink/PE15",
       "ProjectFullLabelName": "STM/F3/STM32F303VC/STM32F3DISCOVERY/LedBlink/PE15.Debug",
@@ -2101,28 +2041,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test01",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test01",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test01\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2131,28 +2071,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test02",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test02",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2161,28 +2101,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test02",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Release",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02.Release",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test02",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Release",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02.Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Release\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Release\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test02\\Release\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test02\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2191,28 +2131,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test03",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2221,28 +2161,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test03_APDS9960",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_APDS9960",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_APDS9960.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_APDS9960.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03_APDS9960",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_APDS9960\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_APDS9960\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_APDS9960\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_APDS9960\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_APDS9960"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_APDS9960\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_APDS9960\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2251,28 +2191,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test03_LSM303",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_LSM303",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_LSM303.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_LSM303.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03_LSM303",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_LSM303",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_LSM303.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_LSM303.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_LSM303\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_LSM303\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_LSM303\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_LSM303\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_LSM303"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_LSM303"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test03_LSM303\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test03_LSM303\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2281,28 +2221,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test04",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test04",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2311,28 +2251,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v1_Test04",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Release",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04.Release",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v1_Test04",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Release",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04.Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Release\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Release\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v1\\Test04\\Release\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v1\\Test04\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2341,28 +2281,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v2_Test05",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Debug",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Debug",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v2_Test05",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2371,28 +2311,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F407ZET_STF4BB_Gfx_v2_Test05",
-      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05",
-      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Release",
-      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05.Release",
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_Gui_v2_Test05",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Release",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05.Release",
       "generator": "Ninja",
       "configurationType": "Release",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Release\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Release\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05"
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\v2\\Test05\\Release\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Gui\\v2\\Test05\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -2453,6 +2393,36 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\Misc\\MemTest\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32F407ZET_STF4BB_Gfx_WaveGen",
+      "ProjectLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/WaveGen",
+      "ProjectFullLabelName": "STM/F4/STM32F407ZET/STF4BB/Gfx/WaveGen.Debug",
+      "name": "STM/F4/STM32F407ZET/STF4BB/Gfx/WaveGen.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F4/STM32F407ZET/STF4BB/Gfx/WaveGen"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3031,28 +3001,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Gui_v1_SPI_Test01",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/SPI/Test01",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/SPI/Test01.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/SPI/Test01.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Gui_v1_SPI_Test01",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/SPI/Test01",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/SPI/Test01.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/SPI/Test01.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\SPI\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\SPI\\Test01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\SPI\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\SPI\\Test01\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/SPI/Test01"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/SPI/Test01"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\SPI\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\SPI\\Test01\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3061,28 +3031,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Gui_v1_LCD_Test01",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test01",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test01.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test01.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Gui_v1_LCD_Test01",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test01",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test01.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test01.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test01\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test01"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test01"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test01\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3091,28 +3061,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Gui_v1_LCD_Test02",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test02",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test02.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test02.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Gui_v1_LCD_Test02",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test02",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test02.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test02.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test02\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test02\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test02"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test02"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test02\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test02\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3121,28 +3091,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Gui_v1_LCD_Test03",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test03",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test03.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test03.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Gui_v1_LCD_Test03",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test03",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test03.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test03.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test03\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test03\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test03\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test03"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test03"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v1\\LCD\\Test03\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v1\\LCD\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3151,28 +3121,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Gui_v2_LCD_Test05",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v2/LCD/Test05",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v2/LCD/Test05.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v2/LCD/Test05.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Gui_v2_LCD_Test05",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v2/LCD/Test05",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v2/LCD/Test05.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v2/LCD/Test05.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v2\\LCD\\Test05\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v2\\LCD\\Test05\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v2\\LCD\\Test05\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v2\\LCD\\Test05\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v2/LCD/Test05"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v2/LCD/Test05"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gui\\v2\\LCD\\Test05\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Gui\\v2\\LCD\\Test05\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3181,58 +3151,28 @@
       ]
     },
     {
-      "ProjectName": "STM32F429ZIT6_Misc_OV7670_Test1",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Misc/Dcmi/OV7670/Test1",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Misc/Dcmi/OV7670/Test1.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Misc/Dcmi/OV7670/Test1.Debug",
+      "ProjectName": "STM32F429ZIT6_Gfx_Dcmi_OV7670_Test1",
+      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Dcmi/OV7670/Test1",
+      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Dcmi/OV7670/Test1.Debug",
+      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Dcmi/OV7670/Test1.Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Misc\\Dcmi\\OV7670\\Test1\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Misc\\Dcmi\\OV7670\\Test1\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Dcmi\\OV7670\\Test1\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Dcmi\\OV7670\\Test1\\Debug\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Misc/Dcmi/OV7670/Test1"
+          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Dcmi/OV7670/Test1"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Misc\\Dcmi\\OV7670\\Test1\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32F429ZIT6_ILI9341_LCD_Test3",
-      "ProjectLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/LCD/ILI9341/Test3",
-      "ProjectFullLabelName": "STM/F4/STM32F429ZIT6/F429IDISCO/LCD/ILI9341/Test3.Debug",
-      "name": "STM/F4/STM32F429ZIT6/F429IDISCO/LCD/ILI9341/Test3.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\LCD\\ILI9341\\Test3\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\LCD\\ILI9341\\Test3\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F4/STM32F429ZIT6/F429IDISCO/LCD/ILI9341/Test3"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\LCD\\ILI9341\\Test3\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F4\\STM32F429ZIT6\\F429IDISCO\\Gfx\\Dcmi\\OV7670\\Test1\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3273,15 +3213,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.Og",
-      "name": "STM/L4/HalLib/v01.15.01.Og",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.og",
+      "name": "STM/L4/HalLib/v01.15.01.og",
       "generator": "Ninja",
-      "configurationType": "Og",
+      "configurationType": "og",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\og\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\og\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3292,7 +3232,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Og\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\og\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3303,15 +3243,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.O3",
-      "name": "STM/L4/HalLib/v01.15.01.O3",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.o3",
+      "name": "STM/L4/HalLib/v01.15.01.o3",
       "generator": "Ninja",
-      "configurationType": "O3",
+      "configurationType": "o3",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\o3\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\o3\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3322,7 +3262,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\O3\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\o3\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3333,15 +3273,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.15.01",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.Os",
-      "name": "STM/L4/HalLib/v01.15.01.Os",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.15.01.os",
+      "name": "STM/L4/HalLib/v01.15.01.os",
       "generator": "Ninja",
-      "configurationType": "Os",
+      "configurationType": "os",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\os\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\os\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3352,7 +3292,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\Os\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.15.01\\os\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3363,15 +3303,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.Og",
-      "name": "STM/L4/HalLib/v01.17.00.Og",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.og",
+      "name": "STM/L4/HalLib/v01.17.00.og",
       "generator": "Ninja",
-      "configurationType": "Og",
+      "configurationType": "og",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\og\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\og\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3382,7 +3322,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Og\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\og\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3393,15 +3333,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.O3",
-      "name": "STM/L4/HalLib/v01.17.00.O3",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.o3",
+      "name": "STM/L4/HalLib/v01.17.00.o3",
       "generator": "Ninja",
-      "configurationType": "O3",
+      "configurationType": "o3",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\o3\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\o3\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3412,7 +3352,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\O3\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\o3\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3423,15 +3363,15 @@
     {
       "ProjectName": "STM32L4_HalLib",
       "ProjectLabelName": "STM/L4/HalLib/v01.17.00",
-      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.Os",
-      "name": "STM/L4/HalLib/v01.17.00.Os",
+      "ProjectFullLabelName": "STM/L4/HalLib/v01.17.00.os",
+      "name": "STM/L4/HalLib/v01.17.00.os",
       "generator": "Ninja",
-      "configurationType": "Os",
+      "configurationType": "os",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\os\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\os\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
@@ -3442,7 +3382,7 @@
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\Os\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\HalLib\\v01.17.00\\os\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -4081,6 +4021,36 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_I2C_SW6007",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Mot_Test01",
       "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01.Debug",
@@ -4373,6 +4343,96 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\PwrBx\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Usart_MpHd_T01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test01\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Usart_MpHd_T02",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test02\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\MpHd\\Test02\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Tests_Usart1Echo",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Usart1Echo\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Usart1Echo\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Usart1Echo\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -4675,6 +4735,32 @@
       ]
     },
     {
+      "ProjectName": "PcSim_STM32F407ZET_STF4BB_Gfx_WaveGen",
+      "ProjectLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen",
+      "ProjectFullLabelName": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen.Debug",
+      "name": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\PcSim\\F4\\STM32F407ZET\\STF4BB\\Gfx\\WaveGen\\Debug\\gen\\ProjectCfg.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "PcSim_STM32L433CCT_Bn_Test01",
       "ProjectLabelName": "PcSim/L4/STM32L433CCT/BluePill/Bn/Test01",
       "ProjectFullLabelName": "PcSim/L4/STM32L433CCT/BluePill/Bn/Test01.Debug",
@@ -4749,6 +4835,58 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\PcSim\\L5\\STM32L552ZET\\L552_Nucleo\\Safety\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "Pc_Garmin_Test01",
+      "ProjectLabelName": "Pc/Garmin/Test01",
+      "ProjectFullLabelName": "Pc/Garmin/Test01.Debug",
+      "name": "Pc/Garmin/Test01.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test01\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "Pc/Garmin/Test01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "Pc_Garmin_Test02",
+      "ProjectLabelName": "Pc/Garmin/Test02",
+      "ProjectFullLabelName": "Pc/Garmin/Test02.Debug",
+      "name": "Pc/Garmin/Test02.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test02\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test02\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "Pc/Garmin/Test02"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\Pc\\Garmin\\Test02\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     }

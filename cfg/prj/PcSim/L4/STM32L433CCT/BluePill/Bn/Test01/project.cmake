@@ -23,7 +23,7 @@ set(PCB_ProjectPackageList
 
     General/TypeDef/v00.00.01:Win32
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
 
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02

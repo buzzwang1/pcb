@@ -262,10 +262,8 @@ void TIM4_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcI2cBn_0x1000->vSync();
-  mcI2C2_Master->vStartNext();
-
-  mcI2cBn_0x1100->vSync();
+  mcI2cBn_0x1000->vTickHp1ms();
+  mcI2cBn_0x1100->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -274,11 +272,8 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcI2cBn_0x1000->vProcess();
-  mcI2cBn_0x1000->vTick10ms();
-  
-  mcI2cBn_0x1100->vProcess();
-  mcUpLnk_0x1000->vTick10ms();
+  mcI2cBn_0x1000->vTickLp10ms();
+  mcI2cBn_0x1100->vTickLp10ms();
 }
 
 void MAIN_vTick100msLp(void)

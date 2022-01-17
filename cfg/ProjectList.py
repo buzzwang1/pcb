@@ -1,5 +1,5 @@
 #include the configurations
-from ProjectConfig_Stm32 import   configs_Stm32
+from ProjectConfig_Stm32   import configs_Stm32
 from ProjectConfig_PcMsWin import configs_PcWin
 
 #Set the configurations
@@ -20,9 +20,6 @@ projects = {
     'STM/F1/STM32F103C8T/BluePill/LedBlink/100ms' : project('STM32F103C8T_LedBlink100ms',     True,      '',   {'Debug' : 'Config_STM32F103xx'}),
     'STM/F1/STM32F103C8T/BluePill/SM4PWM/Test01'  : project('STM32F103C8T_SW4PWM_Test01',     True,      '',   {'Debug' : 'Config_STM32F103xx'}),
 
-    'STM/F1/STM32F103C8T/SolBx/02/MotBx/01'       : project('STM32F103C8T_SolBx_02_MotBx_01', True,      '',   {'Debug' : 'Config_STM32F103xx'}),
-    'STM/F1/STM32F103C8T/SolBx/02/LightBx/01'     : project('STM32F103C8T_SolBx_02_LightBx_01', True,    '',   {'Debug' : 'Config_STM32F103xx'}),
-    
     # --- STM32F303VC/Discovery -----------------------------------------------
 
     'STM/F3/STM32F303VC/STM32F3DISCOVERY/LedBlink/PE15'     : project('STM32F303CCT_LedBlink_PE15',   True,  '', {'Debug' : 'Config_STM32F303'}),
@@ -102,14 +99,16 @@ projects = {
     'STM/F4/STM32F407ZET/STF4BB/Ex/39_UCOSII_SemaphoreMailbox' : project('STM32F407ZET_STF4BB_Ex_UCOSII_SemaphoreMailbox', True,     '',   {'Debug' : 'Config_STM32F407x'}),
 
 
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test01'    : project('STM32F407ZET_STF4BB_Gfx_v1_Test01',    True,     '',   {'Debug' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test02'    : project('STM32F407ZET_STF4BB_Gfx_v1_Test02',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03'    : project('STM32F407ZET_STF4BB_Gfx_v1_Test03',    True,     '',   {'Debug' : 'Config_STM32F407x'}),	
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_APDS9960'    : project('STM32F407ZET_STF4BB_Gfx_v1_Test03_APDS9960',    True,     '',   {'Debug' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test03_LSM303'      : project('STM32F407ZET_STF4BB_Gfx_v1_Test03_LSM303',      True,     '',   {'Debug' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v1/Test04'    : project('STM32F407ZET_STF4BB_Gfx_v1_Test04',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/v2/Test05'    : project('STM32F407ZET_STF4BB_Gfx_v2_Test05',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
-    'STM/F4/STM32F407ZET/STF4BB/Gfx/Misc/MemTest' : project('STM32F407ZET_STF4BB_Gfx_Misc_MemTest', True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test01',    True,     '',   {'Debug' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test02'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test02',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03',    True,     '',   {'Debug' : 'Config_STM32F407x'}),	
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_APDS9960'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03_APDS9960',    True,     '',   {'Debug' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test03_LSM303'      : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test03_LSM303',      True,     '',   {'Debug' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test04'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v1_Test04',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05'    : project('STM32F407ZET_STF4BB_Gfx_Gui_v2_Test05',    True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/Misc/MemTest'     : project('STM32F407ZET_STF4BB_Gfx_Misc_MemTest', True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/Gfx/WaveGen'          : project('STM32F407ZET_STF4BB_Gfx_WaveGen',      True,     '',   {'Debug' : 'Config_STM32F407x'}),
+
     'STM/F4/STM32F407ZET/STF4BB/Misc/ConstTest'   : project('STM32F407ZET_STF4BB_Misc_ConstTest',   True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
     'STM/F4/STM32F407ZET/STF4BB/I2C/APDS9960'     : project('STM32F407ZET_STF4BB_I2C_APDS9960',     True,     '',   {'Debug' : 'Config_STM32F407x'}),
     'STM/F4/STM32F407ZET/STF4BB/I2C/OLED'         : project('STM32F407ZET_STF4BB_I2C_OLED',         True,     '',   {'Debug' : 'Config_STM32F407x'}),
@@ -137,17 +136,15 @@ projects = {
     'STM/F4/STM32F413ZHT/F413ZHTDISCO/LedBlink/PC5'                          : project('STM32F413ZHT_LedBlink_PC5',                           True,     '',   {'Debug' : 'Config_STM32F413x'}),
 
     #--- STM32F429ZIT6/STM32F429IDISCOVERY -------------------------------------
-    'STM/F4/STM32F429ZIT6/F429IDISCO/LedBlink/PG13'          : project('STM32F429ZIT6_LedBlink_PG13',       True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/SPI/Test01'      : project('STM32F429ZIT6_Gui_v1_SPI_Test01',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test01'      : project('STM32F429ZIT6_Gui_v1_LCD_Test01',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test02'      : project('STM32F429ZIT6_Gui_v1_LCD_Test02',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v1/LCD/Test03'      : project('STM32F429ZIT6_Gui_v1_LCD_Test03',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Gui/v2/LCD/Test05'      : project('STM32F429ZIT6_Gui_v2_LCD_Test05',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Misc/Dcmi/OV7670/Test1' : project('STM32F429ZIT6_Misc_OV7670_Test1',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/LedBlink/PG13'            : project('STM32F429ZIT6_LedBlink_PG13',           True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/SPI/Test01'    : project('STM32F429ZIT6_Gfx_Gui_v1_SPI_Test01',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test01'    : project('STM32F429ZIT6_Gfx_Gui_v1_LCD_Test01',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test02'    : project('STM32F429ZIT6_Gfx_Gui_v1_LCD_Test02',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v1/LCD/Test03'    : project('STM32F429ZIT6_Gfx_Gui_v1_LCD_Test03',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Gui/v2/LCD/Test05'    : project('STM32F429ZIT6_Gfx_Gui_v2_LCD_Test05',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Gfx/Dcmi/OV7670/Test1'    : project('STM32F429ZIT6_Gfx_Dcmi_OV7670_Test1',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
 
-    'STM/F4/STM32F429ZIT6/F429IDISCO/LCD/ILI9341/Test3'      : project('STM32F429ZIT6_ILI9341_LCD_Test3',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
-
-    'STM/F4/STM32F429ZIT6/F429IDISCO/Ex/01/10_MiniOszi'      : project('STM32F429ZIT6_10_MiniOszi',   True,     '',   {'Debug' : 'Config_STM32F429x'}),
+    'STM/F4/STM32F429ZIT6/F429IDISCO/Ex/01/10_MiniOszi'        : project('STM32F429ZIT6_10_MiniOszi',  True,     '',   {'Debug' : 'Config_STM32F429x'}),
 
     # --- STM32L4 -----------------------------------------------
     'STM/L4/HalLib/v01.15.01'                          : project('STM32L4_HalLib',                     True,     '', {'og' : 'Config_STM32L4x3', 'o3' : 'Config_STM32L4x3', 'os'  : 'Config_STM32L4x3'}),
@@ -175,6 +172,7 @@ projects = {
     'STM/L4/STM32L433CCT/BluePill/I2C/INA219'          : project('STM32L433CCT_I2C_INA219',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/I2C/SW6007'          : project('STM32L433CCT_I2C_SW6007',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/PC13'       : project('STM32L433CCT_LedBlink_PC13',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
@@ -186,6 +184,10 @@ projects = {
     'STM/L4/STM32L433CCT/BluePill/Test/Loop8Mhz'       : project('STM32L433CCT_Tests_Loop8Mhz',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Gfx/ST7735'          : project('STM32L433CCT_Gfx_ST7735',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/PwrBx'               : project('STM32L433CCT_PwrBx',                  True,      '', {'Debug' : 'Config_STM32L4x3'}),
+
+    'STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01'   : project('STM32L433CCT_Usart_MpHd_T01',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02'   : project('STM32L433CCT_Usart_MpHd_T02',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo'    : project('STM32L433CCT_Tests_Usart1Echo',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     #--- STM32L4R9/STM32L4R9IDISCOVERY -------------------------------------
 
@@ -211,6 +213,8 @@ projects = {
     'PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test04'   : project('PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test04',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
     'PcSim/F4/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test05'   : project('PcSim_STM32F407ZET_STF4BB_Gfx_Gui_v2_Test05',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
 
+    'PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen'         : project('PcSim_STM32F407ZET_STF4BB_Gfx_WaveGen',         True,     '',   {'Debug' : 'Config_PcMsWin'}),
+
     #--- STM32L433CCT/BluePill --------------------------------------------------
 
     'PcSim/L4/STM32L433CCT/BluePill/Bn/Test01'            : project('PcSim_STM32L433CCT_Bn_Test01',              True,  '', {'Debug' : 'Config_PcMsWin'}),
@@ -218,7 +222,12 @@ projects = {
 
     #--- STM32L552ZET/NUCLEO --------------------------------------------------
 
-    'PcSim/L5/STM32L552ZET/L552_Nucleo/Safety/Test01'    : project('PcSim_STM32L552ZET_L552_Nucleo_Safety_Test01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
+    'PcSim/L5/STM32L552ZET/L552_Nucleo/Safety/Test01'     : project('PcSim_STM32L552ZET_L552_Nucleo_Safety_Test01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
+
+    #--- Pc -------------------------------------------------------------------
+
+    'Pc/Garmin/Test01'                                    : project('Pc_Garmin_Test01',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
+    'Pc/Garmin/Test02'                                    : project('Pc_Garmin_Test02',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
 }
 
 

@@ -308,7 +308,7 @@ static const uint8 SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp[] SPRTMST_ADD_DEFI
   //Byte Offset: 814 Char Index: 132 (='')
    (uint8)0, (uint8)0, 5, 7, //XOffset, YOffset, Width, Height, 1BPP, RAW
    0xA0, 0x38, 0x27, 0x4B, 0xE0, //5 Bytes 
-  //Byte Offset: 823 Char Index: 133 (='')
+  //Byte Offset: 823 Char Index: 133 (='')
    (uint8)0, (uint8)0, 5, 8, //XOffset, YOffset, Width, Height, 1BPP, RAW
    0x82, 0x01, 0xC1, 0x3A, 0x5F, //5 Bytes 
   //Byte Offset: 832 Char Index: 134 (='')
@@ -666,7 +666,7 @@ static const uint8 SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp[] SPRTMST_ADD_DEFIN
    0x1C, 0x03, //Lut Index: 796 Char Index: 130 (='')
    0x25, 0x03, //Lut Index: 805 Char Index: 131 (='')
    0x2E, 0x03, //Lut Index: 814 Char Index: 132 (='')
-   0x37, 0x03, //Lut Index: 823 Char Index: 133 (='')
+   0x37, 0x03, //Lut Index: 823 Char Index: 133 (='')
    0x40, 0x03, //Lut Index: 832 Char Index: 134 (='')
    0x49, 0x03, //Lut Index: 841 Char Index: 135 (='')
    0x52, 0x03, //Lut Index: 850 Char Index: 136 (='')

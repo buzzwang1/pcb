@@ -864,11 +864,23 @@ namespace Project
     {
       public long mu32TimeStamp;
       public u8[] mData;
+      public bool isAcknowledged;
+      public bool bRepeat;
+
+      public cComPort_Entry()
+      {
+        mu32TimeStamp = 0;
+        bRepeat = false;
+        isAcknowledged = true;
+        mData = null;
+      }
 
       public cComPort_Entry(long lu32TimeStamp, u8[] lData)
       {
         mu32TimeStamp = lu32TimeStamp;
+        isAcknowledged = false;
         mData = lData;
+        bRepeat = false;
       }
     }
 
@@ -909,6 +921,9 @@ namespace Project
       long lRxTimeStamp = 0;
       List<u8> llstRxData = new List<byte>();
       u8[] lu8RxDataDecoded;
+      cComPort_Entry lComTx = new cComPort_Entry();
+      long lTxAckTimeStamp = 0;
+      
 
       while (true)
       {
@@ -940,21 +955,70 @@ namespace Project
                 IAP_Download_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
                 llstRxData.Clear();
               }
+              
+              if ((lu8Data >> 5) == 3) // BotCom Status message
+              {
+                String lszStr = "0x" + lu8Data.ToString("X2");
+                u16  lu16Sleep = 0;
+                if ((lu8Data & 1) == 1) // Acknowledge
+                {
+                  lszStr += "|ACK";
+                  lComTx.isAcknowledged = true; // Nächste Nachricht kann gesendet werden
+                }
+                else
+                {
+                  lszStr += "|NACK";
+                  lComTx.bRepeat=true;
+                  lu16Sleep = 2;
+                }
+                if ((lu8Data & 2) == 2) // Busy
+                {
+                  lszStr += "|Busy";
+                  lu16Sleep = 10;
+                }
+
+                ComTrace_vPutString(lszStr);
+                if (lu16Sleep > 0) Thread.Sleep(lu16Sleep);
+              }
             }
 
             // Data to Send
             if (ComPort.BytesToWrite < 4)
             {
-              if (ComPort_lcQueueTx.Count > 0)
+              if (lComTx.isAcknowledged)
               {
-                lbRepeat = true;
-                cComPort_Entry lCom = ComPort_lcQueueTx.Dequeue();
-                ComPort.Write(lCom.mData, 0, lCom.mData.Length);
+                if (ComPort_lcQueueTx.Count > 0)
+                {
+                  lComTx = ComPort_lcQueueTx.Dequeue();
+                  ComPort.Write(lComTx.mData, 0, lComTx.mData.Length);
+                  lComTx.isAcknowledged = false;
+                  lTxAckTimeStamp = ComPort_mcTimestamp.ElapsedMilliseconds;
+                }
               }
+              else
+              if (lComTx.bRepeat)
+              {
+                lComTx.bRepeat = false;
+                ComPort.Write(lComTx.mData, 0, lComTx.mData.Length);
+                lTxAckTimeStamp = ComPort_mcTimestamp.ElapsedMilliseconds;
+              }
+            }
+            
+            if (!lComTx.isAcknowledged)
+            {
+              // Nach 10s ohne Antwort Ack wieder frei machen
+              if ((ComPort_mcTimestamp.ElapsedMilliseconds - lTxAckTimeStamp) > 10000)
+              {
+                lComTx.isAcknowledged = true;
+                ComTrace_vPutString("!Force Ack!");
+              }
+            }
+            else
+            {
+              Thread.Sleep(2);
             }
 
           } while (lbRepeat);
-          Thread.Sleep(5);
         }
         else
         {
@@ -977,8 +1041,22 @@ namespace Project
       }
     }
 
-    Queue<cComTrace_Entry> ComTrace_mcQueueRx;
-    Queue<cComTrace_Entry> ComTrace_mcQueueTx;
+    public class cComTraceString_Entry
+    {
+      public long mu32TimeStamp;
+      public String mszString;
+
+      public cComTraceString_Entry(long lu32TimeStamp, String lszString)
+      {
+        mu32TimeStamp = lu32TimeStamp;
+        mszString = lszString;
+      }
+    }    
+
+
+    Queue<cComTrace_Entry>       ComTrace_mcQueueRx;
+    Queue<cComTrace_Entry>       ComTrace_mcQueueTx;
+    Queue<cComTraceString_Entry> ComTrace_mcQueueString;
     Thread ComTrace_mcThread;
     Stopwatch ComTrace_mcTimestamp;
 
@@ -986,6 +1064,7 @@ namespace Project
     {
       ComTrace_mcQueueRx = new Queue<cComTrace_Entry>();
       ComTrace_mcQueueTx = new Queue<cComTrace_Entry>();
+      ComTrace_mcQueueString = new Queue<cComTraceString_Entry>();
       ComTrace_mcTimestamp = new Stopwatch();
 
       ComTrace_mcTimestamp.Reset();
@@ -1008,6 +1087,11 @@ namespace Project
       ComTrace_mcQueueRx.Enqueue(new cComTrace_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lData));
     }
 
+    void ComTrace_vPutString(String lszStr)
+    {
+      ComTrace_mcQueueString.Enqueue(new cComTraceString_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lszStr));
+    }
+
     void ComTrace_vPutTx(u8[] lData)
     {
       ComTrace_mcQueueTx.Enqueue(new cComTrace_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lData));
@@ -1020,14 +1104,12 @@ namespace Project
         this.Invoke(new Action<string>(ComTrace_vAppendTextBox), new object[] { lszText });
         return;
       }
-
-      lszText = lszText + Com_Text_ConIO.Text;
-      if (lszText.Length > 10000)
+      
+      if (Com_Text_ConIO.Text.Length > 10000)
       {
-        lszText = lszText.Substring(0, 10000);
+        Com_Text_ConIO.Text.Remove(0, 1000);
       }
-
-      Com_Text_ConIO.Text = lszText;
+      Com_Text_ConIO.AppendText(lszText);
     }
 
     public void ComTrace_vProcess(Queue<cComTrace_Entry> ComTrace_lcQueueRx, Queue<cComTrace_Entry> ComTrace_lcQueueTx)
@@ -1061,6 +1143,13 @@ namespace Project
             }
           }
 
+          if (ComTrace_mcQueueString.Count > 0)
+          {
+            cComTraceString_Entry lCom = ComTrace_mcQueueString.Dequeue();
+            lszText = "-- " + lCom.mu32TimeStamp.ToString("#,###,##0") + " ";
+            lszText += lCom.mszString;
+          }
+
           if (lszText != "")
           {
             ComTrace_vAppendTextBox(lszText + "\r\n");
@@ -1079,7 +1168,7 @@ namespace Project
           }
         }
 
-        Thread.Sleep(5);
+        Thread.Sleep(1);
       }
     }
 
@@ -1148,12 +1237,11 @@ namespace Project
             return;
         }
 
-        lszText = lszText + MsgTrace_Text_ConIO.Text;
-        if (lszText.Length > 10000)
+        if (MsgTrace_Text_ConIO.Text.Length > 10000)
         {
-          lszText = lszText.Substring(0, 10000);
+          MsgTrace_Text_ConIO.Text.Remove(0, 1000);
         }
-        MsgTrace_Text_ConIO.Text = lszText;
+        MsgTrace_Text_ConIO.AppendText(lszText);
     }
 
     public void MsgTrace_vProcess(Queue<cMsgTrace_Entry> MsgTrace_lcQueueRx, Queue<cMsgTrace_Entry> MsgTrace_lcQueueTx)
@@ -1205,7 +1293,7 @@ namespace Project
           }
         }
         
-        Thread.Sleep(5);
+        Thread.Sleep(1);
       }
     }
 
@@ -1274,12 +1362,11 @@ namespace Project
         return;
       }
 
-      lszText = lszText + Session_Text_ConIO.Text;
-      /*if (lszText.Length > 10000)
+      if (Session_Text_ConIO.Text.Length > 20000)
       {
-        lszText = lszText.Substring(0, 10000);
-      }*/
-      Session_Text_ConIO.Text = lszText;
+        Session_Text_ConIO.Text.Remove(0, 1000);
+      }
+      Session_Text_ConIO.AppendText(lszText);
     }
 
     public void Session_vBlink()
@@ -1419,7 +1506,7 @@ namespace Project
           }
         }
 
-        Thread.Sleep(5);
+        Thread.Sleep(1);
       }
     }
 
@@ -1732,6 +1819,8 @@ namespace Project
         return;
       }
       Cmd_Text_ConIo.Text = lszText;
+      Cmd_Text_ConIo.SelectionStart = Cmd_Text_ConIo.TextLength;
+      Cmd_Text_ConIo.ScrollToCaret();
     }
 
     public void BotNet_vProcess()
@@ -1760,7 +1849,7 @@ namespace Project
           BotNet_vSetCmdTextBox(BotNet_mcBn.mcStreamSys.mcCmdPort.mcMyPrinter.mpui8TextBufOut);
         }
 
-        Thread.Sleep(5);
+        Thread.Sleep(1);
       }
     }
 
@@ -2687,7 +2776,7 @@ namespace Project
             }
             else
             {
-              Thread.Sleep(5);
+              Thread.Sleep(1);
             }
           }
         }
@@ -2756,7 +2845,7 @@ namespace Project
           }
         }
 
-        Thread.Sleep(5);
+        Thread.Sleep(1);
       }
     }
 
@@ -3353,6 +3442,33 @@ namespace Project
       else
       {
         e.Effect = DragDropEffects.None;
+      }
+    }
+
+    private void Tab_MainBotnet_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      switch (Tab_MainBotnet.SelectedIndex)
+      {
+        case 0: // Com_Trace
+          Com_Text_ConIO.SelectionStart = Com_Text_ConIO.TextLength;
+          Com_Text_ConIO.ScrollToCaret();
+        break;
+        case 1: // Msg_Trace
+          MsgTrace_Text_ConIO.SelectionStart = MsgTrace_Text_ConIO.TextLength;
+          MsgTrace_Text_ConIO.ScrollToCaret();
+        break;
+        case 2: // Session
+          Session_Text_ConIO.SelectionStart = Session_Text_ConIO.TextLength;
+          Session_Text_ConIO.ScrollToCaret();
+        break; 
+        case 3: // Msg Test
+        break;
+        case 4: // Cmd
+          Cmd_Text_ConIo.SelectionStart = Cmd_Text_ConIo.TextLength;
+          Cmd_Text_ConIo.ScrollToCaret();
+        break;
+        case 5: // Iap
+        break;
       }
     }
   }

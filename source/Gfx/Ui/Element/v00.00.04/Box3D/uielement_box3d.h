@@ -56,6 +56,8 @@ public:
     mboWireFrame = True;
     mMatInit(&m_world);
 
+    menType = cUiElement::tenType::nBox3D;
+
     mObj = lObj;
 
     mcaProjNodes   = new cUiElement_Box3D_Obj_Node[mObj->miNodeCount];
@@ -292,7 +294,7 @@ public:
     } while (i--);
   }
 
-  virtual void OnAddeded() override
+  virtual void OnLoaded() override
   {
     vDoScene(miGfxWidth, miGfxHeight);
   }

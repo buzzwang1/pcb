@@ -87,7 +87,7 @@ public:
       /* Check the Alternate function parameters */
       assert_param(IS_GPIO_AF_INSTANCE(GPIOx));
       assert_param(IS_GPIO_AF(GPIO_Init->Alternate));
-        
+
       /* Configure Alternate function mapped with the current IO */
       temp = this->Port()->AFR[mui16Pin >> 3];
       temp &= ~((uint32)0xF << ((uint32)(mui16Pin & (uint32)0x07) * 4)) ;
@@ -146,12 +146,24 @@ public:
   u32 mu32PortBase;
   u16 mui16Pin;
 
+  cGpPin() {};
+
   cGpPin(u32 lu32PortBase,
          u16 lui16Pin,
          u32 lenMode,
          u32 lenPuPd,
          u32 lenSpeed,
          u8  lui8InitValue)
+  {
+    vInit(lu32PortBase, lui16Pin, lenMode, lenPuPd, lenSpeed, lui8InitValue);
+  }
+
+  void vInit(u32 lu32PortBase,
+             u16 lui16Pin,
+             u32 lenMode,
+             u32 lenPuPd,
+             u32 lenSpeed,
+             u8  lui8InitValue)
   {
     GPIO_InitTypeDef  gpioinitstruct = {};
 
@@ -208,17 +220,17 @@ public:
 
     if((lenMode == GPIO_MODE_AF_PP) || (lenMode == GPIO_MODE_AF_OD))
     {
-      vSetMode(lenMode); // GPIO_MODE_AF_PP, GPIO_MODE_AF_OD
-
       /* Check the Alternate function parameters */
       assert_param(IS_GPIO_AF_INSTANCE(GPIOx));
       assert_param(IS_GPIO_AF(GPIO_Init->Alternate));
-        
+
       /* Configure Alternate function mapped with the current IO */
       temp = ((GPIO_TypeDef*)mu32PortBase)->AFR[mui16Pin >> 3];
       temp &= ~((uint32)0xF << ((uint32)(mui16Pin & (uint32)0x07) * 4)) ;
       temp |= ((uint32)(lui8Af) << (((uint32)mui16Pin & (uint32)0x07) * 4));
       ((GPIO_TypeDef*)mu32PortBase)->AFR[mui16Pin >> 3] = temp;
+
+      vSetMode(lenMode); // GPIO_MODE_AF_PP, GPIO_MODE_AF_OD
     }
   }
 

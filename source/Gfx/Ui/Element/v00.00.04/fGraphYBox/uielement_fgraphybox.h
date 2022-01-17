@@ -25,6 +25,7 @@ class cUiElement_fGraphYBox: public cUiElement, public cfGraphY
 
       mstStatus.PaintBg    = 0;
       mstStatus.PaintFrame = 0;
+      menType = cUiElement::tenType::nfGraphYBox;
     }
 
     virtual void vToggleMaximize() override

@@ -54,6 +54,8 @@ class cUiElement_TextBox: public cUiElement
       vSetText((const char*)"Text");
       mui32TextCol = 0xFFFFFF;
       menTextFitMode = lenTextFitMode;
+
+      menType = cUiElement::tenType::nTextBox;
     }
 
     ~cUiElement_TextBox()
@@ -64,6 +66,7 @@ class cUiElement_TextBox: public cUiElement
     void vSetText(const char *lChText)
     {
       cStrTools::szStrnCpy(mChText, lChText, mui32MaxCharacterCount);
+      vRepaint();
     }
 
     virtual void OnPaint() override

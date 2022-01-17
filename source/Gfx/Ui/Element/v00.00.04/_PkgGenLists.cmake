@@ -18,6 +18,8 @@ set (gen_files
 	./Box3Df/Tex_Light/uielement_box3df.cpp
 	./Button/uielement_button.cpp
 	./Root/uielement_root.cpp
+	./Split/uielement_split.cpp
+	./Switch/uielement_switch.cpp
 	./TextBox/uielement_textbox.cpp
 	./Window/uielement_window.cpp
 	./fGraphYBox/uielement_fgraphybox.cpp
@@ -43,6 +45,8 @@ set (gen_headers
 	./Box3Df/Tex_Light/uielement_box3df.h
 	./Button/uielement_button.h
 	./Root/uielement_root.h
+	./Split/uielement_split.h
+	./Switch/uielement_switch.h
 	./TextBox/uielement_textbox.h
 	./Window/uielement_window.h
 	./fGraphYBox/uielement_fgraphybox.h
@@ -67,6 +71,8 @@ set (gen_include_directories
 	./Box3Df/Tex_Light
 	./Button
 	./Root
+	./Split
+	./Switch
 	./TextBox
 	./Window
 	./fGraphYBox

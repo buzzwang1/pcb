@@ -50,7 +50,7 @@ set(PCB_ProjectPackageList
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
     Resource/Gen/Gfx/Screens/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/Tree/Idx/16Bit/10Byte/v00.00.01
@@ -73,7 +73,7 @@ set(PCB_ProjectPackageList
     Driver/Win32/Display/v00.00.01
 
     #main/STM32F407ZET/STF4BB/Gfx/config:default
-    main/PcSim/STM32F407ZET/STF4BB/Gfx/Gui/v2/Basic01
+    main/PcSim/STM32F407ZET/STF4BB/Gfx/Gui/v2/Test01
 )
 
 message(STATUS "Include buildoptions file: ${CMAKE_CURRENT_LIST_DIR}/Win32_buildoptions.cmake")

@@ -191,7 +191,7 @@ class cI2cMaster : public cI2c
   void vSm(tencI2c_Events lenEvent);
 
   void vStartMsg(cComDatMsg *lpcActiveMsg);
-  bool vStartNext();
+  bool bStartNext();
 };
 
 

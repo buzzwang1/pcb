@@ -613,7 +613,7 @@ void MAIN_vTick10msLp(void)
   //static int8 lui8DirY = 1;
   TP_Scan(0);
 
-  //mcI2C1->vStartNext();
+  //mcI2C1->bStartNext();
 
   if (lui8t == 5)
   {
@@ -732,7 +732,7 @@ void MAIN_vInitSystem(void)
   //mcAPDS9960->i8EnableProximitySensor();
   //mcAPDS9960->i8EnableGestureSensor();
 
-  //mcI2C1->vStartNext();
+  //mcI2C1->bStartNext();
   //CycCall_Waitms(100);
 
   CycCall_Start(NULL /*1ms_HP*/,

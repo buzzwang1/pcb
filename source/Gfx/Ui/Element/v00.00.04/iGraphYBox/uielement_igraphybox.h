@@ -25,6 +25,7 @@ class cUiElement_iGraphYBox: public cUiElement, public ciGraphY
 
       mstStatus.PaintBg    = 0;
       mstStatus.PaintFrame = 0;
+      menType = cUiElement::tenType::niGraphYBox;
     }
 
     virtual void vToggleMaximize()

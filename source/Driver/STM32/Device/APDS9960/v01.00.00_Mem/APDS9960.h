@@ -570,9 +570,9 @@ class cAPDS9960: public cComNode
 
   int8  i8Setup();
 
-  void vComStart(tenComNodeStartState lenState) override;
+  void vComStart(cComNode::tenEvent lenEvent) override;
   void vComDone() override;
-  void vComError(tenComNodeError lenError, tenComNodeState lenState) override;
+  void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override;
 
 
   int8  isEnabledAmbientLigth();

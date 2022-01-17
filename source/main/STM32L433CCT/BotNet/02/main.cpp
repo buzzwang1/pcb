@@ -14,6 +14,18 @@ LED<GPIOC_BASE, 13> lcLedRed;
 cBotNetCfg mcBnCfg_0x1000((const char8*)"Botnet 0x1000 Master", 16, 0x1000);
 cBotNetCfg mcBnCfg_0x1100((const char8*)"Botnet 0x1100 Master", 16, 0x1100);
 
+
+LED<GPIOA_BASE, 5> lcLedMaDone;
+LED<GPIOA_BASE, 6> lcLedMaEvIrq;
+LED<GPIOA_BASE, 7> lcLedMaErIrq;
+
+LED<GPIOA_BASE, 4> lcLedTimer;
+
+LED<GPIOA_BASE, 9> lcLedSlDone;
+LED<GPIOA_BASE, 10> lcLedSlEvIrq;
+LED<GPIOA_BASE, 11> lcLedSlErIrq;
+
+
 void NMI_Handler(void)
 {
   while (1)
@@ -142,8 +154,7 @@ class cBn_MsgProcess_0x1000 : public cBotNet_MsgSysProcess
         lpcMsgData.muiLen = 6;
         cBotNetMsg_MsgProt lcMsg(&lpcMsgData);
 
-        //lcMsg.vPrepare(False, False, True, cBotNetAdress::u16GetAdr(0,1,1,0), cBotNetAdress::u16GetAdr(0,1,1,1), (u16)82, (u8)0);
-        lcMsg.vPrepare(cBotNetAdress::u16GetAdr(0,1,1,0), cBotNetAdress::u16GetAdr(0,1,1,1), (u16)82);
+        lcMsg.vPrepare(cBotNetAdress::u16GetAdr(1,0,0,0), cBotNetAdress::u16GetAdr(1,1,0,0), (u16)82);
         lcMsg.mcPayload.Add(1);
         lcMsg.mcPayload.Add(2);
         lcMsg.mcPayload.Add(3);
@@ -185,20 +196,20 @@ class cBn_MsgProcess_0x1100 : public cBotNet_MsgSysProcess
 cI2cMaster                     *mcI2C2_Master;
 cI2cSlave                      *mcI2C1_Slave;
 
-cBotNet                        *mcI2cBn_0x1000; // Masternode for 011[x] all nodes, e.g. downstream to 0111
-                                                // 0 CmdPort
-                                                // 1 ComPort (PA2: USART2_TX; PA3: USART2_RX; 9600)
-                                                // 2 MemPort
-                                                // Connections:
-                                                //    - CmdPort->Comport
-                                                //    - Comport->Cmdport
+cBotNet                        *mcBn_0x1000; // Masternode for 011[x] all nodes, e.g. downstream to 0111
+                                             // 0 CmdPort
+                                             // 1 ComPort (PA2: USART2_TX; PA3: USART2_RX; 9600)
+                                             // 2 MemPort
+                                             // Connections:
+                                             //    - CmdPort->Comport
+                                             //    - Comport->Cmdport
 // --- 0x0110 UpLink
 cBotNet_LinkBotCom* mcUpLnk_0x1000;
 // --- 0x0110 DownLinks
 cBotNet_DownLinkI2c*  mcDownLinks_0x1000[cBotNet::enCnstSlaveCnt];
 
 
-cBotNet                        *mcI2cBn_0x1100; // Slavenode of 0110, =>upstream to 0110
+cBotNet                        *mcBn_0x1100; // Slavenode of 0110, =>upstream to 0110
                                                 // 0 CmdPort
 // --- 0x0111 UpLink
 cBotNet_UpLinkI2c*    mcUpLnk_0x1100;
@@ -214,66 +225,55 @@ cBn_MsgProcess_0x1100 mcBn_MsgProcess_0x1100;
 // I2C2: PB10: I2C2_SCL; PB11: I2C2_SDA
 // I2C2: PB13: I2C2_SCL; PB14: I2C2_SDA
 // I2C1:
-cGpPin lcSCL_Master(GPIOB_BASE, 6, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSDA_Master(GPIOB_BASE, 7, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cGpPin lcSCL_Master(GPIOB_BASE, 6, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 1);
+cGpPin lcSDA_Master(GPIOB_BASE, 7, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 1);
 
 // I2C2:
-cGpPin lcSCL_Slave(GPIOB_BASE, 10, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSDA_Slave(GPIOB_BASE, 11, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cGpPin lcSCL_Slave(GPIOB_BASE, 10, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 1);
+cGpPin lcSDA_Slave(GPIOB_BASE, 11, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 1);
 
 
-tcUart<USART2_BASE, GPIOA_BASE,  2, GPIOA_BASE,  3> mcComPort2(9600, GPIO_AF7_USART2, 64, 64);
+//Für 1000 BotCom Uplink
+tcUart<USART2_BASE, GPIOA_BASE,  2, GPIOA_BASE,  3> mcComPort2(38400, GPIO_AF7_USART2, 64, 64);
 
-//cBotNetStreamPort_ComPort       mcComPort2(USART2);
-//cBotNetStreamPort_ComPort       mcComPort3(USART3);
 cBotNetStreamPort_BotNetMemPort mcMemPort(IAP_PARTITION_COUNT, stInAppProg_Platform_Partitions);
 
 
 // Für Performance Test
-cGpPin lcSCL_Test1(GPIOB_BASE, 12, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSCL_Test2(GPIOB_BASE, 13, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSCL_Test3(GPIOB_BASE,  9, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSCL_Test4(GPIOB_BASE, 15, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cGpPin lcSCL_Test1(GPIOB_BASE, 12, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin lcSCL_Test2(GPIOB_BASE, 13, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin lcSCL_Test3(GPIOB_BASE,  9, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin lcSCL_Test4(GPIOB_BASE, 15, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
 
-
-void TIM1_BRK_TIM15_IRQHandler(void)
-{
-  GPIOB->BSRR = (1 << 12);
-
-  if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
-  {
-    TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
-    TIM15->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
-    mcI2C2_Master->TIM_EV_IRQHandler();
-  }  
-
-  GPIOB->BRR = (1 << 12);
-}
 
 void I2C1_EV_IRQHandler(void)
 {
-  GPIOB->BSRR = (1 << 9);
+  lcLedMaEvIrq.vSet1();
   mcI2C2_Master->I2C_EV_IRQHandler();
-  GPIOB->BRR = (1 << 9);
+  lcLedMaEvIrq.vSet0();
 }
 
 void I2C1_ER_IRQHandler(void)
 {
+  lcLedMaErIrq.vSet1();
   mcI2C2_Master->I2C_ER_IRQHandler();
+  lcLedMaErIrq.vSet0();
 }
 
 
 
 void I2C2_EV_IRQHandler(void)
 {
-  GPIOB->BSRR = (1 << 15);
+  lcLedSlEvIrq.vSet1();
   mcI2C1_Slave->I2C_EV_IRQHandler();
-  GPIOB->BRR = (1 << 15);
+  lcLedSlEvIrq.vSet0();
 }
 
 void I2C2_ER_IRQHandler(void)
 {
+  lcLedSlErIrq.vSet1();
   mcI2C1_Slave->I2C_ER_IRQHandler();
+  lcLedSlErIrq.vSet0();
 }
 
 
@@ -293,10 +293,8 @@ void USART3_IRQHandler(void)
 
 void MAIN_vTick1msHp(void)
 {
-  mcI2cBn_0x1000->vSync();
-  mcI2C2_Master->vStartNext();
-
-  mcI2cBn_0x1100->vSync();
+  mcBn_0x1000->vTickHp1ms();
+  mcBn_0x1100->vTickHp1ms();
 }
 
 void MAIN_vTick10msHp(void)
@@ -305,11 +303,8 @@ void MAIN_vTick10msHp(void)
 
 void MAIN_vTick10msLp(void)
 {
-  mcI2cBn_0x1000->vProcess();
-  mcI2cBn_0x1000->vTick10ms();
-
-  mcI2cBn_0x1100->vProcess();
-  mcI2cBn_0x1100->vTick10ms();
+  mcBn_0x1000->vTickLp10ms();
+  mcBn_0x1100->vTickLp10ms();
 }
 
 void MAIN_vTick100msLp(void)
@@ -345,46 +340,69 @@ void MAIN_vInitSystem(void)
      */
   HAL_Init();
 
-  // --------------- 0x0111 ------------------
+  // --------------- 0x1000 ------------------
   mcI2C2_Master  = new cI2cMaster(I2C1, &lcSCL_Master, &lcSDA_Master, 16);
-  mcI2cBn_0x1000 = new cBotNet(&mcBnCfg_0x1000, &mcBn_MsgProcess_0x1000);
+  mcBn_0x1000 = new cBotNet(&mcBnCfg_0x1000, &mcBn_MsgProcess_0x1000);
 
-  // --- 0x0110 UpLink
+  // --- 0x1000 UpLink
   mcUpLnk_0x1000 = (cBotNet_LinkBotCom*) new cBotNet_LinkBotCom(0xE000, &mcComPort2);
-  mcI2cBn_0x1000->bAddLink((cBotNet_LinkBase*)mcUpLnk_0x1000);
+  mcBn_0x1000->bAddLink((cBotNet_LinkBase*)mcUpLnk_0x1000);
 
-  // --- 0x0110 DownLinks
+  // --- 0x1000 DownLinks
   cBotNetAdress mcBnAdr_0x1000;
-  mcBnAdr_0x1000.Set(0x0110);
+  mcBnAdr_0x1000.Set(0x1000);
   for (lu8t = 0; lu8t < cBotNet::enCnstSlaveCnt; lu8t++)
   {
     uint16 lui16Adr = mcBnAdr_0x1000.GetSlaveAdr(lu8t + 1);
     mcDownLinks_0x1000[lu8t] = (cBotNet_DownLinkI2c*) new cBotNet_DownLinkI2c(lui16Adr, mcI2C2_Master);
-    mcI2cBn_0x1000->bAddLink((cBotNet_LinkBase*)mcDownLinks_0x1000[lu8t]);
+    mcBn_0x1000->bAddLink((cBotNet_LinkBase*)mcDownLinks_0x1000[lu8t]);
   }
 
   u16 lu16PortIdx;
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
-  mcI2cBn_0x1000->vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
+  mcBn_0x1000->vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
 
   // Add MemPort and connect the MemPort's output to external Port  (to PC CmdPort 0xE000.1)
   // Should be Index 1
-  lu16PortIdx = mcI2cBn_0x1000->u16StreamPortAdd(&mcMemPort);
-  mcI2cBn_0x1000->vStreamPortConnect(lu16PortIdx, 0xE000, 1);
+  lu16PortIdx = mcBn_0x1000->u16StreamPortAdd(&mcMemPort);
+  mcBn_0x1000->vStreamPortConnect(lu16PortIdx, 0xE000, 1);
 
 
-  // --- 0x0111 ----
+  // --- 0x1100 ----
   mcI2C1_Slave    = new cI2cSlave(I2C2,  &lcSCL_Slave,  &lcSDA_Slave,   1 << 1, 0);
-  mcI2cBn_0x1100  = new cBotNet(&mcBnCfg_0x1100, &mcBn_MsgProcess_0x1100);
+  mcBn_0x1100  = new cBotNet(&mcBnCfg_0x1100, &mcBn_MsgProcess_0x1100);
 
-  // --- 0x0111 UpLink
-  mcUpLnk_0x1100 = (cBotNet_UpLinkI2c*) new cBotNet_UpLinkI2c(0x0110, mcI2C1_Slave);
-  mcI2cBn_0x1100->bAddLink((cBotNet_LinkBase*)mcUpLnk_0x1100);
+  // --- 0x1100 UpLink
+  mcUpLnk_0x1100 = (cBotNet_UpLinkI2c*) new cBotNet_UpLinkI2c(0x1100, mcI2C1_Slave);
+  mcBn_0x1100->bAddLink((cBotNet_LinkBase*)mcUpLnk_0x1100);
 
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
-  mcI2cBn_0x1100->vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
+  mcBn_0x1100->vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
+
+  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgTestMsg, 64, 0x1000, 0x1100, 0x50);
+
+  u8 t;
+
+  for (t=0;t<64;t++)
+  {
+    lcMsgTestMsg.mcPayload[t] = t;
+  }
+  lcMsgTestMsg.vEncode();
+
+  mcBn_0x1000->mcDownLinks[0]->mStatus.IsOnline = 1;
+  mcBn_0x1000->bSendMsg(&lcMsgTestMsg);
 
 
+  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgTestMsg2, 64, 0x1100, 0x1000, 0x50);
+
+  for (t=0;t<64;t++)
+  {
+    lcMsgTestMsg2.mcPayload[t] = t | 0x80;
+  }
+  lcMsgTestMsg2.vEncode();
+
+  mcBn_0x1100->mcUpLink->mStatus.IsOnline = 1;
+  mcBn_0x1100->bSendMsg(&lcMsgTestMsg2);
 
   CycCall_Start(MAIN_vTick1msHp /*1ms_HP*/,
                 MAIN_vTick10msHp /*10ms_HP*/,
@@ -410,8 +428,8 @@ void vCleanUp()
 
   delete mcI2C1_Slave;
   delete mcI2C2_Master;
-  delete mcI2cBn_0x1000;
-  delete mcI2cBn_0x1100;
+  delete mcBn_0x1000;
+  delete mcBn_0x1100;
 }
 
 /* Main functions ---------------------------------------------------------*/

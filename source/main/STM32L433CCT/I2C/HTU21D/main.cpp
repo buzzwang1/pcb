@@ -154,7 +154,7 @@ void I2C2_ER_IRQHandler(void)
 void MAIN_vTick10msHp(void)
 {
   mcHTU21D.vTick10ms();
-  if (!mcI2Cx.vStartNext())
+  if (!mcI2Cx.bStartNext())
   {
     mcI2Cx.vSetReInitTicks(1000);
   }
@@ -178,16 +178,16 @@ void MAIN_vItoa_HUD21D(int num, char8* str)
   li32Val1 = num / 100;
   li32Val2 = num - (li32Val1 * 100);
 
-  cStrTools::i8Itoa(li32Val1, lszVal1, 10);
+  cStrTools::uixItoa(li32Val1, lszVal1, 10);
 
   if (li32Val2 < 10)
   {
     lszVal2[0] = '0';
-    cStrTools::i8Itoa(li32Val2, (char8*)(&lszVal2[1]), 10);
+    cStrTools::uixItoa(li32Val2, (char8*)(&lszVal2[1]), 10);
   }
   else
   {
-    cStrTools::i8Itoa(li32Val2, lszVal2, 10);
+    cStrTools::uixItoa(li32Val2, lszVal2, 10);
   }
 
   cStrTools::szStrCpy(str, lszVal1);
@@ -249,7 +249,7 @@ void MAIN_vInitSystem(void)
                 MAIN_vTick100msLp  /*100ms_LP*/,
                 MAIN_vTick1000msLp /*1s_LP*/);
 
-  if (mcI2Cx.vStartNext())
+  if (mcI2Cx.bStartNext())
   {
     cClockInfo::Delay_ms(100);
   }

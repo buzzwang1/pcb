@@ -6,6 +6,7 @@
 #include "typedef.h"
 #include "MemTools.h"
 
+#define cbRingBufT_memcpy_sum     cMemTools::vMemCpyAndSum
 #define cbRingBufT_memcpy         cMemTools::vMemCpy
 #define cbRingBufT_memset         cMemTools::vMemSet
 
@@ -209,20 +210,13 @@ public:
     return ltyZwerg;
   }
 
-  inline tycRingBufT get(void)
-  {
-    tycRingBufT ltyZwerg;
-    _dai();
-    ltyZwerg = get_unsafe();
-    _eai();
-
-    return ltyZwerg;
-  }
-
-  void get_unsafe(tycRingBufT *ltyItem, tycRingBufTIndex lu32Cnt)
+  // Liest nur die, Daten ohne aber den Ringbuffer zu verändern
+  void read_unsafe(tycRingBufT* ltyItem, tycRingBufTIndex lu32Cnt)
   {
     tycRingBufTIndex luRemaining;
 
+    // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+    // später mit '0' auffüllen
     if (lu32Cnt > mtyCnt)
     {
       luRemaining = lu32Cnt - mtyCnt;
@@ -233,32 +227,164 @@ public:
       luRemaining = 0;
     }
 
+    // Überprüfen, ob der gewünschte Block in einem Stück im Ringbuffer liegt ...
+    // ..oder, ob er in 2 Teile geteilt ist.
     if ((mtyTail + lu32Cnt) < mtySize)
     {
+      // Block liegt komplett vor. Dann den kompletten Block lesen
+      cbRingBufT_memcpy((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32Cnt * sizeof(tycRingBufT));
+    }
+    else
+    {
+      // Block ist geteilt
+      u32 lu32SplitCnt;
+      lu32SplitCnt = mtySize - mtyTail;
+
+      // Dann den ersten Teil lesen
+      cbRingBufT_memcpy((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32SplitCnt * sizeof(tycRingBufT));
+      lu32Cnt -= lu32SplitCnt;
+
+      if (lu32Cnt > 0)
+      {
+        // Dann den zweiten Teil lesen
+        cbRingBufT_memcpy((uint8*)&ltyItem[lu32SplitCnt], (uint8*)mtyBuf, lu32Cnt * sizeof(tycRingBufT));
+      }
+    }
+
+    if (luRemaining)
+    {
+      // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+      // mit '0' auffüllen
+      cbRingBufT_memset((uint8*)&ltyItem[mtyCnt], 0, luRemaining);
+    }
+  }
+
+  inline tycRingBufT get(void)
+  {
+    tycRingBufT ltyZwerg;
+    _dai();
+    ltyZwerg = get_unsafe();
+    _eai();
+
+    return ltyZwerg;
+  }
+
+
+  // Liest die Daten aus dem Ringbuffer und erzeugt gleich eine Summe der gelesenen Daten
+  u32 getwithsum_unsafe(tycRingBufT* ltyItem, tycRingBufTIndex lu32Cnt)
+  {
+    tycRingBufTIndex luRemaining;
+    u32 u32Ret = 0;
+
+    // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+    // später mit '0' auffüllen
+    if (lu32Cnt > mtyCnt)
+    {
+      luRemaining = lu32Cnt - mtyCnt;
+      lu32Cnt = mtyCnt;
+    }
+    else
+    {
+      luRemaining = 0;
+    }
+
+    // Überprüfen, ob der gewünschte Block in einem Stück im Ringbuffer liegt ...
+    // ..oder, ob er in 2 Teile geteilt ist.
+    if ((mtyTail + lu32Cnt) < mtySize)
+    {
+      // Block liegt komplett vor. Dann den kompletten Block lesen
+      u32Ret = cbRingBufT_memcpy_sum((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32Cnt * sizeof(tycRingBufT));
+      mtyTail += lu32Cnt;
+      mtyCnt -= lu32Cnt;
+    }
+    else
+    {
+      // Block ist geteilt
+      u32 lu32SplitCnt;
+
+      mtyCnt -= lu32Cnt;
+      lu32SplitCnt = mtySize - mtyTail;
+
+      // Dann den ersten Teil lesen
+      u32Ret = cbRingBufT_memcpy_sum((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32SplitCnt * sizeof(tycRingBufT));
+      lu32Cnt -= lu32SplitCnt;
+
+      if (lu32Cnt > 0)
+      {
+        // Dann den zweiten Teil lesen
+        u32Ret += cbRingBufT_memcpy_sum((uint8*)&ltyItem[lu32SplitCnt], (uint8*)mtyBuf, lu32Cnt * sizeof(tycRingBufT));
+      }
+      mtyTail = lu32Cnt;
+    }
+
+    if (luRemaining)
+    {
+      // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+      // mit '0' auffüllen
+      cbRingBufT_memset((uint8*)&ltyItem[mtyCnt], 0, luRemaining);
+    }
+    
+    return u32Ret;
+  }
+
+  inline u32 getwithsum(tycRingBufT* ltyItem, tycRingBufTIndex lu32Cnt)
+  {
+    u32 u32Ret;
+    _dai();
+    u32Ret = getwithsum_unsafe(ltyItem, lu32Cnt);
+    _eai();
+    return u32Ret;
+  }
+
+  void get_unsafe(tycRingBufT *ltyItem, tycRingBufTIndex lu32Cnt)
+  {
+    tycRingBufTIndex luRemaining;
+
+    // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+    // später mit '0' auffüllen
+    if (lu32Cnt > mtyCnt)
+    {
+      luRemaining = lu32Cnt - mtyCnt;
+      lu32Cnt = mtyCnt;
+    }
+    else
+    {
+      luRemaining = 0;
+    }
+
+    // Überprüfen, ob der gewünschte Block in einem Stück im Ringbuffer liegt ...
+    // ..oder, ob er in 2 Teile geteilt ist.
+    if ((mtyTail + lu32Cnt) < mtySize)
+    {
+      // Block liegt komplett vor. Dann den kompletten Block lesen
       cbRingBufT_memcpy((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32Cnt * sizeof(tycRingBufT));
       mtyTail += lu32Cnt;
       mtyCnt  -= lu32Cnt;
     }
     else
     {
+      // Block ist geteilt
       u32 lu32SplitCnt;
 
       mtyCnt -= lu32Cnt;
       lu32SplitCnt = mtySize - mtyTail;
 
+      // Dann den ersten Teil lesen
       cbRingBufT_memcpy((uint8*)ltyItem, (uint8*)(&mtyBuf[mtyTail]), lu32SplitCnt * sizeof(tycRingBufT));
       lu32Cnt -= lu32SplitCnt;
 
       if (lu32Cnt > 0)
       {
+        // Dann den zweiten Teil lesen
         cbRingBufT_memcpy((uint8*)&ltyItem[lu32SplitCnt], (uint8*)mtyBuf, lu32Cnt * sizeof(tycRingBufT));
       }
-
       mtyTail = lu32Cnt;
     }
 
     if (luRemaining)
     {
+      // Falls der angeforderte Block größer ist, als was im Ringbuffer liegt, dann ...
+      // mit '0' auffüllen
       cbRingBufT_memset((uint8*)&ltyItem[mtyCnt], 0, luRemaining);
     }
   }

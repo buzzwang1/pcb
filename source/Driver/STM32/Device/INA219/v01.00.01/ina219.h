@@ -250,7 +250,7 @@ class cINA219:cComNode
   int8  i8Setup();
 
   uint32 SizeOf() {return 0;};
-  void  vComStart(tenComNodeStartState lenState);
+  void  vComStart(cComNode::tenEvent lenEvent);
   void  vComDone();
 
   int8  i8ReadConfig_digit();

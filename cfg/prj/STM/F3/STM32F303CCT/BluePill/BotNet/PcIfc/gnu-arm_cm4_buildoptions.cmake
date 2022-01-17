@@ -1,5 +1,6 @@
 
-message(STATUS "${PCB_ProjectCfg} configuration")
+
+message(STATUS "Include buildoptions file: ${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm4_buildoptions_${PCB_ProjectCfg}.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm4_buildoptions_${PCB_ProjectCfg}.cmake")
 
 list(APPEND PCB_ListTargetDefinition
@@ -9,7 +10,7 @@ list(APPEND PCB_ListTargetDefinition
   -DEMBEDDED
   
   -DSTM32F303xC
-  #-D__NO_SYSTEM_INIT
+# -D__NO_SYSTEM_INIT
 
 #  -DUSE_HAL_DRIVER
 #  -DUSE_FULL_ASSERT

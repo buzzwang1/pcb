@@ -97,8 +97,8 @@ public:
   tcUart(const u16 mui16TxBufSize,
          const u16 mui16RxBufSize)
     : cUart(mui16TxBufSize, mui16RxBufSize),
-      mPinTx(GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_50MHz, 0),
-      mPinRx(GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_UP, GPIO_Speed_50MHz, 0)
+      mPinTx(GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_50MHz, 1),
+      mPinRx(GPIO_Mode_AF, GPIO_OType_OD, GPIO_PuPd_UP, GPIO_Speed_50MHz, 1)
   {
   }
 

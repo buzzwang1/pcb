@@ -652,7 +652,7 @@ void MAIN_vTick10msLp(void)
   static uint8 lui8t = 0;
   TP_Scan(0);
 
-  //mcI2C1->vStartNext();
+  //mcI2C1->bStartNext();
 
   if (lui8t == 4)
   {

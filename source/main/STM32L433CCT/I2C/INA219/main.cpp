@@ -144,7 +144,7 @@ void USART2_IRQHandler(void)
 
 void MAIN_vTick10msHp(void)
 {
-  if (!mcI2C1.vStartNext())
+  if (!mcI2C1.bStartNext())
   {
     mcI2C1.vSetReInitTicks(1000);
   }
@@ -177,14 +177,14 @@ void MAIN_vTick1000msLp(void)
   li32IShunt = mcINA219_A.i32CalcIShunt_uA() / 1000;
   li32VBus   = mcINA219_A.i32CalcVBus_uV()   / 1000;
 
-  cStrTools::i8Itoa(li32IShunt, lszValue, 10);
+  cStrTools::uixItoa(li32IShunt, lszValue, 10);
   cStrTools::szStrCat(lszValue, lszGrad);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 10, (char8*)"I:",  &mcScreen1);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60 - cStrTools::uixStrLen(lszValue) * 4, 10, lszValue,      &mcScreen1);
 
   mcComPort.vAdd((char8*)"I:");mcComPort.vAdd(lszValue);
 
-  cStrTools::i8Itoa(li32VBus, lszValue, 10);
+  cStrTools::uixItoa(li32VBus, lszValue, 10);
   cStrTools::szStrCat(lszValue, lszProz);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 20, (char8*)"V:",   &mcScreen1);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60 - cStrTools::uixStrLen(lszValue) * 4, 20, lszValue,       &mcScreen1);
@@ -194,14 +194,14 @@ void MAIN_vTick1000msLp(void)
   li32IShunt = mcINA219_B.i32CalcIShunt_uA() / 1000;
   li32VBus   = mcINA219_B.i32CalcVBus_uV()   / 1000;
 
-  cStrTools::i8Itoa(li32IShunt, lszValue, 10);
+  cStrTools::uixItoa(li32IShunt, lszValue, 10);
   cStrTools::szStrCat(lszValue, lszGrad);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 40, (char8*)"I:",  &mcScreen1);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60 - cStrTools::uixStrLen(lszValue) * 4, 40, lszValue,      &mcScreen1);
 
   mcComPort.vAdd((char8*)" | I:");mcComPort.vAdd(lszValue);
 
-  cStrTools::i8Itoa(li32VBus, lszValue, 10);
+  cStrTools::uixItoa(li32VBus, lszValue, 10);
   cStrTools::szStrCat(lszValue, lszProz);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 50, (char8*)"V:",   &mcScreen1);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(60 - cStrTools::uixStrLen(lszValue) * 4, 50, lszValue,       &mcScreen1);
@@ -231,7 +231,7 @@ void MAIN_vInitSystem(void)
                 MAIN_vTick1000msLp /*1s_LP*/);
 
 
-  if (mcI2C1.vStartNext())
+  if (mcI2C1.bStartNext())
   {
     cClockInfo::Delay_ms(100);
   }

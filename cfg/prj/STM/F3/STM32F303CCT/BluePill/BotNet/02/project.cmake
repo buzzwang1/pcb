@@ -23,7 +23,8 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
+
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
     Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01
@@ -36,11 +37,11 @@ set(PCB_ProjectPackageList
     Data/String/CStrT/v00.00.01
     Data/String/StringTools/v00.00.02
 
-    Data/BotNet/v00.00.03/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/I2c/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/BotCom/v00.00.02
-    Data/BotNet/v00.00.03/BnLinks/nRf905/v00.00.01
+    Data/BotNet/v00.00.03/Base/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/Base/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/I2c/v00.00.02
+    Data/BotNet/v00.00.03/BnLinks/BotCom/v00.00.03
+    Data/BotNet/v00.00.03/BnLinks/nRf905/v00.00.02
     Data/BotNet/v00.00.03/BnMsgSys/Base/v00.00.01
     Data/BotNet/v00.00.03/BnStreamSys/Base/v00.00.01
     Data/BotNet/v00.00.03/BnStreamSys/Ports/Base/v00.00.01
@@ -53,9 +54,9 @@ set(PCB_ProjectPackageList
     Driver/STM32/F3/STD/v01.02.03/Core/stm32f30x:72Mhz
     Driver/STM32/F3/STD/v01.02.03/STD:default
 
-   Driver/STM32/F3/STD/GPPin/v01.00.02
+    Driver/STM32/F3/STD/GPPin/v01.00.02
+    Driver/STM32/F3/STD/cI2C/v01.00.06
     Driver/STM32/F3/STD/cUart/Int/v01.00.01
-    Driver/STM32/F3/STD/cI2C/v01.00.05_Tim:Tim15
     Driver/STM32/Device/Com/nRF905/Int/v01.00.00:TB01_STM32F303CCT
 
 

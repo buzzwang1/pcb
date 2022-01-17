@@ -23,7 +23,7 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.05
+    Data/ComDat/ComDat/v00.00.06
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
     Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01
@@ -42,8 +42,8 @@ set(PCB_ProjectPackageList
     Driver/STM32/F3/STD/v01.02.03/Core/stm32f30x:default
     Driver/STM32/F3/STD/v01.02.03/STD:lib
 
-   Driver/STM32/F3/STD/GPPin/v01.00.02
-    Driver/STM32/F3/STD/cI2C/v01.00.05
+    Driver/STM32/F3/STD/GPPin/v01.00.02
+    Driver/STM32/F3/STD/cI2C/v01.00.06
 
 
 

@@ -13,7 +13,7 @@ class cUiElement_Root: public cUiElement
     cUiElement  *lcEleSelected;
     cUiElement  *lcEleSelectedResize;
 
-    GfxInt miGfxCursorX;  
+    GfxInt miGfxCursorX;
     GfxInt miGfxCursorY;
 
     struct tstRootStatus
@@ -23,7 +23,7 @@ class cUiElement_Root: public cUiElement
 
     tstRootStatus mstRootStatus;
 
-    cUiElement_Root(GfxInt liGfxRefX,  GfxInt liGfxRefY, GfxInt liGfxWidth, GfxInt liGfxHeight, cMsgBox *lcMsgBox, 
+    cUiElement_Root(GfxInt liGfxRefX,  GfxInt liGfxRefY, GfxInt liGfxWidth, GfxInt liGfxHeight, cMsgBox *lcMsgBox,
                     cScreen *lpcScreen, uint32 lui32BgCol)
       : cUiElement(lcMsgBox, lpcScreen)
     {
@@ -40,6 +40,7 @@ class cUiElement_Root: public cUiElement
       miGfxWidth  = liGfxWidth;
       miGfxHeight = liGfxHeight;
       vSetPos(liGfxRefX, liGfxRefY);
+      menType = cUiElement::tenType::nRoot;
     }
 
     bool IsAnyFullScreen()
@@ -93,7 +94,8 @@ class cUiElement_Root: public cUiElement
     void vDoCheckHighlighted(GfxInt liGfxCursorX, GfxInt liGfxCursorY, cUiElement* lcElement)
     {
       // Rekursiv den Baum durchsuchen
-      if (lcElement->mcPaintArea.isInAbs(liGfxCursorX, liGfxCursorY))
+      if ((lcElement->mcPaintArea.isInAbs(liGfxCursorX, liGfxCursorY)) &&
+          (lcElement->isVisible()))
       {
         cUiElement* lcElementSave;
         lcElementSave = lcEleCursorIn = lcElement;
@@ -135,7 +137,7 @@ class cUiElement_Root: public cUiElement
       lcEleCursorIn = NULL;
       vDoCheckHighlighted(li16CurX, li16CurY, this);
 
-      if (lcEleCursorIn)  // Cursor isz mindestens im Root
+      if (lcEleCursorIn)  // Cursor ist mindestens im Root
       {
         if (lcEleCurInOld) // Wenn zuvor schnon was selektiert war
                            // dann die Elemente Un-Highlighten
@@ -144,8 +146,8 @@ class cUiElement_Root: public cUiElement
           if (lcEleCursorIn != lcEleCurInOld)
           {
             cUiElement* lcParent = lcEleCurInOld;
-            while (lcParent) 
-            {            
+            while (lcParent)
+            {
               if ((lcEleCursorIn->isChildOf(lcParent)) ||
                    (lcParent == this))
               {
@@ -166,7 +168,7 @@ class cUiElement_Root: public cUiElement
                            // dann alle Elemente Un-Highlighten
         {
           cUiElement* lcParent = lcEleCurInOld;
-          while (lcParent) 
+          while (lcParent)
           {
             if (lcParent->mstStatus.CursorIn)
             {
@@ -190,16 +192,16 @@ class cUiElement_Root: public cUiElement
         lcEleCursorIn->vDoHighlight(True);
       }
     }
-    
-    void vDoCursorPressStart(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY) 
+
+    void vDoCursorPressStart(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY)
     {
       UNUSED(li16CurX);
       UNUSED(li16CurY);
       UNUSED(li16OldX);
       UNUSED(li16OldY);
-      
+
       cUiElement* lcElement = lcEleSelected;
-      
+
       // Im Fall von Touchpad/TouchScreen, gibt es kein CursorMove
       // Von daher nochmals hier aufrufen.
       vDoCursorMove(li16CurX, li16CurY, li16OldX, li16OldY);
@@ -215,7 +217,7 @@ class cUiElement_Root: public cUiElement
         if (lcEleSelected->mpcParent)
         {
           cUiElement* lcParent = lcEleSelected->mpcParent;
-          while (1) 
+          while (1)
           {
             lcParent->mstStatus.Selected = 1;
             if (lcParent->mpcParent == NULL)
@@ -230,11 +232,12 @@ class cUiElement_Root: public cUiElement
       {
         lcEleSelected = NULL;
       }
-      
+
       if (lcElement != lcEleSelected)
       {
         // Überprüfen, ob das neu gewählte Element im gleichen Baum-branch
         // zum bisherigen Element ist
+        // Es müsste nur bis zum ersten gemeinsamen Parent deselektiert werden
         if ((lcEleSelected) && (lcElement))
         {
 
@@ -264,6 +267,22 @@ class cUiElement_Root: public cUiElement
               lcParent = lcParent->mpcParent;
             }
           }
+
+          //Überprüfen, ob es einen gemeinsamen Parent gibt
+          //Spätestens der Root, müsste gemeinsamer Parent sein.
+          cUiElement* lcParent = lcElement->mpcParent;
+          while (lcParent)
+          {
+            if (lcEleSelected->isChildOf(lcParent))
+            {
+              return;
+            }
+            lcParent->mstStatus.Selected = 0;
+            lcParent->vSetRepaint();
+            lcParent = lcParent->mpcParent;
+          }
+
+
         }
 
         if (lcElement)
@@ -274,9 +293,9 @@ class cUiElement_Root: public cUiElement
           if (lcElement->mpcParent)
           {
             cUiElement* lcParent = lcElement->mpcParent;
-            while (1) 
+            while (1)
             {
-              lcParent->mstStatus.Selected = 0; 
+              lcParent->mstStatus.Selected = 0;
               if (lcParent->mpcParent == NULL)
               {
                 return;
@@ -296,7 +315,7 @@ class cUiElement_Root: public cUiElement
       }
     }
 
-    void vDoCursorPressEnd(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY, u8 lu8Duration) 
+    void vDoCursorPressEnd(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY, u8 lu8Duration)
     {
       UNUSED(li16CurX);
       UNUSED(li16CurY);
@@ -309,9 +328,14 @@ class cUiElement_Root: public cUiElement
         lcEleSelectedResize->mstStatus.SelectedDrag   = 0;
         lcEleSelectedResize->mstStatus.SelectedResize = 0;
       }
+
+      if (lcEleSelected)
+      {
+        lcEleSelected->vSetRepaint();
+      }
     }
 
-    void vDoCursorDragStart(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY) 
+    void vDoCursorDragStart(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY)
     {
       if (lcEleSelected)
       {
@@ -324,7 +348,7 @@ class cUiElement_Root: public cUiElement
         lcEleSelectedResize = lcEleSelected;
         if (lcEleSelected->mstStatus.Maximized == 0)
         {
-          if ((lcEleSelectedResize->isOnFrame(li16OldX, li16OldY)) && 
+          if ((lcEleSelectedResize->isOnFrame(li16OldX, li16OldY)) &&
               (lcEleSelectedResize->mstStatus.Sizeable))
           {
             lcEleSelectedResize->mstStatus.SelectedResize = 1;
@@ -338,7 +362,7 @@ class cUiElement_Root: public cUiElement
               lcEleSelectedResize->vAddPos(li16DivX, li16DivY);
               lcEleSelectedResize->vSetSpeed(li16DivX, li16DivY);
             }
-          } 
+          }
         }
         else
         {
@@ -346,7 +370,7 @@ class cUiElement_Root: public cUiElement
           if (lcEleSelectedResize->mpcParent)
           {
             cUiElement* lcParent = lcEleSelectedResize->mpcParent;
-            while (1) 
+            while (1)
             {
               if (!lcParent->mstStatus.Maximized)
               {
@@ -376,7 +400,7 @@ class cUiElement_Root: public cUiElement
     }
 
 
-    void vDoCursorDrag(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY) 
+    void vDoCursorDrag(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY)
     {
       vDoCursorMove(li16CurX, li16CurY, li16OldX, li16OldY);
       if (lcEleSelectedResize)
@@ -405,22 +429,22 @@ class cUiElement_Root: public cUiElement
     {
       if (!IsAnyFullScreen())
       {
-        GfxInt liGfxX1; 
-        GfxInt liGfxY1; 
-        GfxInt liGfxX2; 
+        GfxInt liGfxX1;
+        GfxInt liGfxY1;
+        GfxInt liGfxX2;
         GfxInt liGfxY2;
 
         // Um den Biggest herum zeichnen
-        liGfxX1 = mcPaintArea.miGfxClipPosx1 - mcRefScreen->miGfxRefPosx1; 
-        liGfxY1 = mcPaintArea.miGfxClipPosy1 - mcRefScreen->miGfxRefPosy1; 
-        liGfxX2 = mcPaintArea.miGfxClipPosx2 - mcRefScreen->miGfxRefPosx1; 
+        liGfxX1 = mcPaintArea.miGfxClipPosx1 - mcRefScreen->miGfxRefPosx1;
+        liGfxY1 = mcPaintArea.miGfxClipPosy1 - mcRefScreen->miGfxRefPosy1;
+        liGfxX2 = mcPaintArea.miGfxClipPosx2 - mcRefScreen->miGfxRefPosx1;
         liGfxY2 = mcPaintArea.miGfxClipPosy2 - mcRefScreen->miGfxRefPosy1;
-        
+
         //Oben malen
         cPaint::vRectFull(0,           0,
                           mcRefScreen->iGfxWidth(),  liGfxY1,
                           mui32BgCol,  mcRefScreen);
-          
+
         //Unten malen
         cPaint::vRectFull(0,           liGfxY2 + 1,
                           mcRefScreen->iGfxWidth(),  mcRefScreen->miGfxClipPosy2 - mcRefScreen->miGfxRefPosy1 - liGfxY2,
@@ -551,7 +575,7 @@ class cUiElement_Root: public cUiElement
 
               switch (lenCursorEvent)
               {
-                case cUiElement::tenMsgEvent::nWndClose:
+                case cUiElement::tenEvent::nWndClose:
                   {
                     u32 lu32Data = *((u32*)lpcMsg->mui8Data);
                     vClose((cUiElement*)(lu32Data));

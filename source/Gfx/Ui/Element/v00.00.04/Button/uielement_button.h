@@ -19,8 +19,6 @@ class cUiElement_Button: public cUiElement
     uint32       mui32TextCol;
     uint8        isPressed;
 
-    cScreenArea  mcPaintAreaSave;
-
 
     cUiElement_Button(cMsgBox *lcMsgBox, cScreen *lpcScreen, 
       uint32 lui32MaxCharacterCount,
@@ -38,6 +36,7 @@ class cUiElement_Button: public cUiElement
       mstStatus.DragAble = 0;
       mstStatus.Sizeable = 0;
       mstStatus.Container = 0;
+      menType = cUiElement::tenType::nButton;
     }
 
     ~cUiElement_Button()
@@ -78,8 +77,8 @@ class cUiElement_Button: public cUiElement
       return False; // False, d.h. es können keine Childelemente angelegt werden
     }
 
-    virtual void OnPressStart() {} // Button wurde gedrückt
-    virtual void OnPressEnd()   {} // Button wurde losgelassen
+    virtual void OnPressStart() {cUiElement::vParentCallback(this, cUiElement::tenEvent::nBtnPressStart); } // Button wurde gedrückt
+    virtual void OnPressEnd()   {cUiElement::vParentCallback(this, cUiElement::tenEvent::nBtnPressEnd); } // Button wurde losgelassen
 
     virtual void OnCursorPressStart(int16 li16CurX, int16 li16CurY, int16 li16OldX, int16 li16OldY) override
     {

@@ -85,7 +85,7 @@ class cSSD1306 : public cComNode
   cSSD1306(cI2cMaster* lpcI2C, uint8 lui8Adr);
   ~cSSD1306();
 
-  void vComStart(tenComNodeStartState lenState) override;
+  void vComStart(cComNode::tenEvent lenEvent) override;
   void vComDone() override;
 
   int8 i8Setup();

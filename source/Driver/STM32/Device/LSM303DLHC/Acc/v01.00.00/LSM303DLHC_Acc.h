@@ -238,9 +238,9 @@ class cLSM303DLHC_ACC: public cComNode
 
   void  vSetup();
 
-  void vComStart(tenComNodeStartState lenState) override;
+  void vComStart(cComNode::tenEvent lenEvent) override;
   void vComDone() override;
-  void vComError(tenComNodeError lenError, tenComNodeState lenState) override;
+  void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override;
 
   void vSetControl(uint8 lui8Reg1, uint8 lui8Reg2, uint8 lui8Reg3, 
                    uint8 lui8Reg4, uint8 lui8Reg5, uint8 lui8Reg6);
