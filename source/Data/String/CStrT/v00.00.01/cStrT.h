@@ -34,9 +34,9 @@
   #define cStrT_txtcmp  cStrTools::i8TextCmp
   #define cStrT_txtncmp cStrTools::i8TextnCmp
   #define cStrT_strlen  cStrTools::uixStrLen
-  #define cStrT_Itoa    cStrTools::uixItoa
+  #define cStrT_Iton    cStrTools::uixIton
   #define cStrT_Itoan   cStrTools::uixItoan_open
-  #define cStrT_Ftoa    cStrTools::uixFtoa
+  #define cStrT_Fton    cStrTools::uixFton
   #define cStrT_Ftoan   cStrTools::uixFtoan_open
   #define cStrT_Atoin   cStrTools::atoin
 
@@ -467,7 +467,7 @@
               if (lui8Flags & 1) /* leading '0' */
               {
                 u8 lu8Dummy;
-                li16Size = cStrT_Ftoa(lfValue, li16Prec, lu8Dummy);
+                li16Size = cStrT_Fton(lfValue, li16Prec, lu8Dummy);
 
                 if (lui8Flags & 64) /* reserve space for trailing '0' */
                 {
@@ -481,7 +481,7 @@
               if (!(lui8Flags & 2)) /* right justified, add padding */
               {
                 u8 lu8Dummy;
-                li16Size = cStrT_Ftoa(lfValue, li16Prec, lu8Dummy);
+                li16Size = cStrT_Fton(lfValue, li16Prec, lu8Dummy);
 
                 if (lui8Flags & 64) /* reserve space for trailing '0' */
                 {
@@ -498,7 +498,7 @@
               if (lui8Flags & 64) /* reserve space for trailing '0' */
               {
                 u8 lu8Dummy;
-                li16Size = cStrT_Ftoa(lfValue, li16Prec, lu8Dummy);
+                li16Size = cStrT_Fton(lfValue, li16Prec, lu8Dummy);
                 lu16TrailingZeros = li16Prec - lu8Dummy;
               }
             }
@@ -535,13 +535,13 @@
             {
               if (lui8Flags & 1) /* leading '0' */
               {
-                li16Size = cStrT_Itoa(li32Value, lui8Radix);
+                li16Size = cStrT_Iton(li32Value, lui8Radix);
                 while (li16Size++ < li16Width) {*this += '0';li16Pos++;}
               }
               else
               if (!(lui8Flags & 2)) /* right justified, add padding */
               {
-                li16Size = cStrT_Itoa(li32Value, lui8Radix);
+                li16Size = cStrT_Iton(li32Value, lui8Radix);
                 while (li16Size++ < li16Width) {*this += ' ';li16Pos++;}
               }
             }

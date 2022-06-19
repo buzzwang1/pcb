@@ -24,7 +24,7 @@ class cClockInfo
 
   static void Delay_us(volatile uint32 lui32Delay)
   {
-    lui32Delay *= (mstClocks.HCLK_Frequency / 1000000);
+    lui32Delay *= (u32GetClockCore() / 1000000);
     lui32Delay /= 8;  // ca. 3 für while + 5 Nop
 
     while (lui32Delay > 0)

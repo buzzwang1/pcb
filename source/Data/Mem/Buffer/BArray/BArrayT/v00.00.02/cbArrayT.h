@@ -85,13 +85,11 @@ class cbArrayT
 
     uint8& operator[](tybArrayIdxT luiPos)
     {
-      if (luiPos >= muiSize)
+      if (luiPos < muiSize)
       {
-        luiPos = muiSize-1;
+        return mpu8Data[luiPos];
       }
-      return 0;
-
-      return mpu8Data[luiPos];
+      return mpu8Data[0];
     };
 
     cbArrayT& operator=(cbArrayT const &lpcArray)

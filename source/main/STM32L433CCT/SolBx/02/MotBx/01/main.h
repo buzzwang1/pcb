@@ -13,7 +13,7 @@
 //Data
 #include "cRingBufT.h"
 #include "cBnLinkI2c.h"
-#include "cBnLinkNrf905.h"
+//#include "cBnLinkNrf905.h"
 #include "cBnLinkBotCom.h"
 #include "cBnStreamSysPortCom.h"
 #include "cBnStreamSysPortIap.h"

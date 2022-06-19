@@ -1,0 +1,12 @@
+0,2:  7 nach Doppelclick 6 nach Click
+0,7: 43 nach Doppelclick 3 nach Click
+
+1,1: HB Batteriespannung 4,08V = 0xd71, 3,7 = 0xbfa, 4,00V = d2c digit*1.2
+1,2: LB
+
+7,7 = LB Zähler bis 8000: Zählt hoch wenn aufgeladen wird, Zählt runter wenn entladen wird
+7,8 = HB Zähler bis 8000
+
+
+
+http://www.ismartware.com/details-2-44.html

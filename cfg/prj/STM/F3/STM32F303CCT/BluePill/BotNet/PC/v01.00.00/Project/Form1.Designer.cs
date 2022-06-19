@@ -183,6 +183,7 @@
       this.TextBox_SrcDeviceAdr = new System.Windows.Forms.TextBox();
       this.TextBox_DestDeviceAdr = new System.Windows.Forms.TextBox();
       this.Session_Label_Blink = new System.Windows.Forms.Label();
+      this.IAP_CheckBox_CommandDl_Connect = new System.Windows.Forms.CheckBox();
       this.Tab_MainBotnet.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.tabPage2.SuspendLayout();
@@ -867,6 +868,7 @@
       // 
       // TabPage_Command_Download
       // 
+      this.TabPage_Command_Download.Controls.Add(this.IAP_CheckBox_CommandDl_Connect);
       this.TabPage_Command_Download.Controls.Add(this.IAP_CheckBox_CommandDl_Reset);
       this.TabPage_Command_Download.Controls.Add(this.label38);
       this.TabPage_Command_Download.Controls.Add(this.label34);
@@ -889,7 +891,7 @@
       this.IAP_CheckBox_CommandDl_Reset.AutoSize = true;
       this.IAP_CheckBox_CommandDl_Reset.Checked = true;
       this.IAP_CheckBox_CommandDl_Reset.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.IAP_CheckBox_CommandDl_Reset.Location = new System.Drawing.Point(6, 99);
+      this.IAP_CheckBox_CommandDl_Reset.Location = new System.Drawing.Point(6, 133);
       this.IAP_CheckBox_CommandDl_Reset.Name = "IAP_CheckBox_CommandDl_Reset";
       this.IAP_CheckBox_CommandDl_Reset.Size = new System.Drawing.Size(95, 17);
       this.IAP_CheckBox_CommandDl_Reset.TabIndex = 37;
@@ -1789,6 +1791,18 @@
       this.Session_Label_Blink.TabIndex = 25;
       this.Session_Label_Blink.Text = "      ";
       // 
+      // IAP_CheckBox_CommandDl_Connect
+      // 
+      this.IAP_CheckBox_CommandDl_Connect.AutoSize = true;
+      this.IAP_CheckBox_CommandDl_Connect.Checked = true;
+      this.IAP_CheckBox_CommandDl_Connect.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.IAP_CheckBox_CommandDl_Connect.Location = new System.Drawing.Point(6, 110);
+      this.IAP_CheckBox_CommandDl_Connect.Name = "IAP_CheckBox_CommandDl_Connect";
+      this.IAP_CheckBox_CommandDl_Connect.Size = new System.Drawing.Size(116, 17);
+      this.IAP_CheckBox_CommandDl_Connect.TabIndex = 38;
+      this.IAP_CheckBox_CommandDl_Connect.Text = "Connect before DL";
+      this.IAP_CheckBox_CommandDl_Connect.UseVisualStyleBackColor = true;
+      // 
       // Form1
       // 
       this.AllowDrop = true;
@@ -2032,6 +2046,7 @@
     private System.Windows.Forms.Label label36;
     private System.Windows.Forms.TextBox IAP_TextBox_CommandDl_File;
     private System.Windows.Forms.Label label37;
+    private System.Windows.Forms.CheckBox IAP_CheckBox_CommandDl_Connect;
   }
 }
 

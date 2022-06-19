@@ -269,7 +269,7 @@ public:
     return ltyZwerg;
   }
 
-
+  /*
   // Liest die Daten aus dem Ringbuffer und erzeugt gleich eine Summe der gelesenen Daten
   u32 getwithsum_unsafe(tycRingBufT* ltyItem, tycRingBufTIndex lu32Cnt)
   {
@@ -334,7 +334,7 @@ public:
     u32Ret = getwithsum_unsafe(ltyItem, lu32Cnt);
     _eai();
     return u32Ret;
-  }
+  }*/
 
   void get_unsafe(tycRingBufT *ltyItem, tycRingBufTIndex lu32Cnt)
   {

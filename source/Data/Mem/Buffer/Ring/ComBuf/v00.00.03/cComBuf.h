@@ -84,6 +84,7 @@ class cComBuf : public cRingBufDynT<uint8, uint16>
     return luLen;
   }
 
+  /*
   u32 getwithsum(cbArrayExtT<uint16>* lcEntry)
   {
     uint32 luSum = 0;
@@ -120,7 +121,7 @@ class cComBuf : public cRingBufDynT<uint8, uint16>
     }
     _eai();
     return luSum;
-  }
+  }*/
 
   void get(cbArrayExtT<uint16> *lcEntry)
   {

@@ -170,9 +170,7 @@ void MAIN_vInitSystem(void)
                 NULL               /*10ms_LP*/,
                 NULL               /*100ms_LP*/,
                 MAIN_vTick1000msLp /*1s_LP*/);
-
 }
-
 
 
 

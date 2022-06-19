@@ -48,12 +48,7 @@ IF %TcArgCount%=="2" (
 )
 
 :: ToolCaller Commands 
-set TcCmds=buildtool/elf2bin/call;buildtool/flash/call;buildtool/debug/call
-
-set TcCmds=buildtool/elf2bin/call
-set TcCmds=%TcCmds%;tools/create_embitz_ebp/subscript/call
-set TcCmds=%TcCmds%;buildtool/flash/call
-set TcCmds=%TcCmds%;buildtool/debug/call
+set TcCmds=buildtool/elf2bin/call;tools/create_embitz_ebp/subscript/call;buildtool/flash/call;buildtool/debug/call
 
 
 :: Start of ToolCaller 

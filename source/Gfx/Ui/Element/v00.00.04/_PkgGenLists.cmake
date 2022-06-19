@@ -8,14 +8,15 @@ set (gen_files
 	./Base/uielement_base.cpp
 	./Box3D/uielement_box3d.cpp
 	./Box3D/uielement_box3dobj.cpp
-	./Box3Df/Base/uielement_box3df_face.cpp
-	./Box3Df/Base/uielement_box3df_obj.cpp
-	./Box3Df/Base/uielement_box3df_point.cpp
-	./Box3Df/Base/uielement_box3df_viewer_base.cpp
-	./Box3Df/Base/uielement_box3df_viewer_flat.cpp
-	./Box3Df/Base/uielement_box3df_viewer_txgradz.cpp
-	./Box3Df/Base/uielement_box3df_world.cpp
-	./Box3Df/Tex_Light/uielement_box3df.cpp
+	./Box3Df/uielement_box3df.cpp
+	./Box3Df/uielement_box3df_face.cpp
+	./Box3Df/uielement_box3df_obj.cpp
+	./Box3Df/uielement_box3df_point.cpp
+	./Box3Df/uielement_box3df_viewer_base.cpp
+	./Box3Df/uielement_box3df_viewer_basicz.cpp
+	./Box3Df/uielement_box3df_viewer_flat.cpp
+	./Box3Df/uielement_box3df_viewer_txgradz.cpp
+	./Box3Df/uielement_box3df_world.cpp
 	./Button/uielement_button.cpp
 	./Root/uielement_root.cpp
 	./Split/uielement_split.cpp
@@ -35,14 +36,15 @@ set (gen_headers
 	./Base/uielement_base.h
 	./Box3D/uielement_box3d.h
 	./Box3D/uielement_box3dobj.h
-	./Box3Df/Base/uielement_box3df_face.h
-	./Box3Df/Base/uielement_box3df_obj.h
-	./Box3Df/Base/uielement_box3df_point.h
-	./Box3Df/Base/uielement_box3df_viewer_base.h
-	./Box3Df/Base/uielement_box3df_viewer_flat.h
-	./Box3Df/Base/uielement_box3df_viewer_txgradz.h
-	./Box3Df/Base/uielement_box3df_world.h
-	./Box3Df/Tex_Light/uielement_box3df.h
+	./Box3Df/uielement_box3df.h
+	./Box3Df/uielement_box3df_face.h
+	./Box3Df/uielement_box3df_obj.h
+	./Box3Df/uielement_box3df_point.h
+	./Box3Df/uielement_box3df_viewer_base.h
+	./Box3Df/uielement_box3df_viewer_basicz.h
+	./Box3Df/uielement_box3df_viewer_flat.h
+	./Box3Df/uielement_box3df_viewer_txgradz.h
+	./Box3Df/uielement_box3df_world.h
 	./Button/uielement_button.h
 	./Root/uielement_root.h
 	./Split/uielement_split.h
@@ -67,8 +69,7 @@ set (gen_include_directories
 	# List of all source files found in gen_include_directories
 	./Base
 	./Box3D
-	./Box3Df/Base
-	./Box3Df/Tex_Light
+	./Box3Df
 	./Button
 	./Root
 	./Split

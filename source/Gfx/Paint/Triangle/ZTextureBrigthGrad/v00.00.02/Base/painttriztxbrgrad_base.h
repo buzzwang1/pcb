@@ -1,9 +1,8 @@
-#ifndef __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT__lfBASE_H__
-#define __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT__lfBASE_H__
+#ifndef __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT_BASE_H__
+#define __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT_BASE_H__
 
 #include "screen.h"
 #include "math.h"
-
 
 #ifdef __cplusplus
  extern "C" {
@@ -50,11 +49,9 @@ class cPaintTriZTxBrigthgrad
         tstTex stTex;
 
         u8     u8B;
-
       }tstData;
 
-      tstData Dat[3];
-      
+      tstData Dat[3];      
       cBitmap *cBm;
     }tstTri;
 
@@ -352,7 +349,6 @@ class cPaintTriZTxBrigthgrad
       }
     }
 
-
     void vSortX(uint8 lu8t1, uint8 lu8t2)
     {
       tstTri::tstData lstTemp;
@@ -520,5 +516,5 @@ class cPaintTriZTxBrigthgrad
 #endif
 
 
-#endif // __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT__lfBASE_H__
+#endif // __PAINT_TRIANGLE_Z_TElfXTURE_lfBRIGHTNESS_GRADIENT_BASE_H__
 

@@ -32,6 +32,7 @@ class cUart
   virtual u32  PortBase(void) = 0;
   virtual void vIRQHandler(void) = 0;
   virtual void vSend(char8 lchData) = 0;
+  virtual void vSend(const u8* lpu8Data, u16 lu16Count) = 0;
   virtual void vSend(void) = 0;
   virtual void vSetWakeup(bool lbActivate) = 0;
 
@@ -46,6 +47,15 @@ class cUart
     {
       vAdd(*lpchStr);
       lpchStr++;
+    }
+  }
+
+  inline void vAdd(const u8* lpu8Data, u16 lu16Count)
+  {
+    while (lu16Count)
+    {
+      vAdd(*lpu8Data++);
+      lu16Count--;
     }
   }
 
@@ -169,14 +179,34 @@ public:
 
   inline void vIRQHandler(void)
   {
-    // check if the USART1 transmission complete interrupt flag was set
+    // check if the USART1 transmission empty interrupt flag was set
     if ((LL_USART_IsActiveFlag_TXE((USART_TypeDef*)Port())) &&
         (LL_USART_IsEnabledIT_TXE((USART_TypeDef*)Port())))
     {
+      LL_USART_DisableIT_TXE((USART_TypeDef*)Port());
+      ((USART_TypeDef*)Port())->ICR = LL_USART_ISR_TXE;
+
+      if (!mcUartDataOut.isEmpty())
+      {
+        LL_USART_TransmitData8((USART_TypeDef*)Port(), mcUartDataOut.get());
+        LL_USART_EnableIT_TC((USART_TypeDef*)Port());
+      }
+    }
+    else
+    // check if the USART1 transmission complete interrupt flag was set
+    if (LL_USART_IsActiveFlag_TC((USART_TypeDef*)Port()))
+    {
+      ((USART_TypeDef*)Port())->ICR = LL_USART_ISR_TC;
       if (!mcUartDataOut.isEmpty())
       {
         LL_USART_TransmitData8((USART_TypeDef*)Port(), mcUartDataOut.get());
       }
+      else
+      {
+        /* Disable Transmission complete interrupt */        
+        LL_USART_DisableIT_TC((USART_TypeDef*)Port());
+      }
+
     }
     else
     // check if the USART1 receive data register not empty interrupt flag was set
@@ -188,23 +218,28 @@ public:
     {
       ((USART_TypeDef*)Port())->ICR = 0x0ffff;
     }
-
-    if (mcUartDataOut.isEmpty())
-    {
-      /* Disable Transmission complete interrupt */
-      LL_USART_DisableIT_TXE((USART_TypeDef*)Port());
-    }
   }
 
   inline void vSend(char8 lchData) override
   {
     vAdd(lchData);
-    LL_USART_EnableIT_TXE((USART_TypeDef*)Port());
+    vSend();
+  }
+
+  inline void vSend(const u8* lpu8Data, u16 lu16Count) override
+  {
+    vAdd(lpu8Data, lu16Count);
+    vSend();
   }
 
   inline void vSend(void) override
   {
-    LL_USART_EnableIT_TXE((USART_TypeDef*)Port());
+    if (!((LL_USART_IsEnabledIT_TC((USART_TypeDef*)Port())) ||
+          (LL_USART_IsEnabledIT_TXE((USART_TypeDef*)Port()))))
+    {
+
+      LL_USART_EnableIT_TXE((USART_TypeDef*)Port());
+    }
   }
 
   inline void vSetWakeup(bool lbActivate)

@@ -38,20 +38,23 @@ set(PCB_ProjectPackageList
     Data/String/CStrT/v00.00.01
     Data/String/StringTools/v00.00.02
 
-    Data/BotNet/v00.00.03/Base/v00.00.02
-    Data/BotNet/v00.00.03/BnLinks/Base/v00.00.02
-    #Data/BotNet/v00.00.03/BnLinks/I2c/v00.00.01
-    Data/BotNet/v00.00.03/BnLinks/BotCom/v00.00.03
-    Data/BotNet/v00.00.03/BnLinks/nRf905/v00.00.02
-    Data/BotNet/v00.00.03/BnLinks/nRf905Net/v00.00.02
+    Data/BotNet/v00.00.04/Base/Main/App/v00.00.01:default
+    Data/BotNet/v00.00.04/Base/Main/Switch/v00.00.01:default
+    Data/BotNet/v00.00.04/Base/Misc/Adr/v00.00.01:default
+    Data/BotNet/v00.00.04/Base/Misc/Cfg/v00.00.01:default
+    Data/BotNet/v00.00.04/Base/Misc/Msg/v00.00.01:default
+    Data/BotNet/v00.00.04/BnLinks/Base/v00.00.02:default
+    #Data/BotNet/v00.00.04/BnLinks/I2c/v00.00.02:default
+    Data/BotNet/v00.00.04/BnLinks/BotCom/v00.00.03:default
+    Data/BotNet/v00.00.04/BnLinks/nRf905/v00.00.02:default
+    Data/BotNet/v00.00.04/BnLinks/nRf905Net/v00.00.02:default
+    Data/BotNet/v00.00.04/BnMsgSys/Base/v00.00.01:default
+    Data/BotNet/v00.00.04/BnStreamSys/Base/v00.00.01:default
+    Data/BotNet/v00.00.04/BnStreamSys/Ports/Base/v00.00.01:default
+    Data/BotNet/v00.00.04/BnStreamSys/Ports/Cmd/v00.00.01:default
+    Data/BotNet/v00.00.04/BnStreamSys/Ports/Com/v00.00.01:default
+    Data/BotNet/v00.00.04/BnStreamSys/Ports/Echo/v00.00.01:default
 
-    Data/BotNet/v00.00.03/BnMsgSys/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnStreamSys/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnStreamSys/Ports/Base/v00.00.01
-    Data/BotNet/v00.00.03/BnStreamSys/Ports/Cmd/v00.00.01
-    Data/BotNet/v00.00.03/BnStreamSys/Ports/Com/v00.00.01
-    Data/BotNet/v00.00.03/BnStreamSys/Ports/Echo/v00.00.01
-    #Data/BotNet/v00.00.03/BnStreamSys/Ports/Iap/v00.00.01:STM32F303CCT
 
     Gfx/General/GfxDefs/v00.00.01:32Bit
     Gfx/Bitmap/Bitmap/v00.00.01

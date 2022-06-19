@@ -116,6 +116,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PCB_ROOT_BUILD_DIRECTORY}/lib")
 # Just write this somewhere, to avoid the "CMAKE_TOOLCHAIN_FILE was not used by the project" message
 set(CMAKE_TOOLCHAIN_FILE_DUMMY "${CMAKE_TOOLCHAIN_FILE}")
 
+# Make list files
+set(CMAKE_C_COMPILE_OBJECT "${CMAKE_C_COMPILE_OBJECT} -Wa,-alh=<OBJECT>.lst")
+set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Wa,-alh=<OBJECT>.lst")
+
 # For link libraries
 #cmake_policy(SET CMP0079 NEW)
 

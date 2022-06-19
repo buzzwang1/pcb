@@ -222,6 +222,8 @@ class cPaintTriZBasic
                                          else lu16g = mstTri->unCol.stARGB.g >> 2;
           if (mstTri->unCol.stARGB.b == 0xFF) lu16b = 31;
                                          else lu16b = mstTri->unCol.stARGB.b >> 3;
+										 
+		      u16 lu16Col = BM_BPP16_5R6G5B_RGB(lu16r, lu16g, lu16b);
                   
           while (lpu16Start <= lpu16End)
           {
@@ -230,7 +232,7 @@ class cPaintTriZBasic
             if (lfz > *lpu16StartZ)
             {
               *lpu16StartZ = lfz;
-              *lpu16Start = BM_BPP16_5R6G5B_RGB(lu16r, lu16g, lu16b);
+              *lpu16Start = lu16Col;
             }
 
             lfiZ += lfiZ_inc;

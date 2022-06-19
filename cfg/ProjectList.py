@@ -15,10 +15,22 @@ configs.update(configs_PcWin)
 project = lambda name, enable, mode, configs: {'name':name, 'enable':enable, 'mode':mode, 'configs':configs}
 projects = {
     #label                                      name                                  enable    mode   configs
+    # --- GD32F130G6/UBTECH/Servo ------------------------------------------------
+    'STM/F1/GD32F1x0/UbTech/Servo1/Ledblink'      : project('GD32F1x0_UbTech_Servo1_Ledblink',        True,      '',   {'Debug' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/App'           : project('GD32F1x0_UbTech_Servo1_App',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/AppDebug'      : project('GD32F1x0_UbTech_Servo1_Debug',           True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Blu'           : project('GD32F1x0_UbTech_Servo1_Blu',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Tim0'          : project('GD32F1x0_UbTech_Servo1_Tim0',            True,      '',   {'Debug' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01' : project('GD32F1x0_UbTech_Servo1_Usart_HdInt01',   True,      '',   {'Debug' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Usart/MdHd01'  : project('GD32F1x0_UbTech_Servo1_Usart_MdInt01',   True,      '',   {'Debug' : 'Config_GD32F1x0'}),
+
     # --- STM32F103RBT/BluePill ------------------------------------------------
-    'STM/F1/STM32F103C8T/BluePill/LedBlink/1s'    : project('STM32F103C8T_LedBlink1s',        True,      '',   {'Debug' : 'Config_STM32F103xx'}),
-    'STM/F1/STM32F103C8T/BluePill/LedBlink/100ms' : project('STM32F103C8T_LedBlink100ms',     True,      '',   {'Debug' : 'Config_STM32F103xx'}),
-    'STM/F1/STM32F103C8T/BluePill/SM4PWM/Test01'  : project('STM32F103C8T_SW4PWM_Test01',     True,      '',   {'Debug' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/LedBlink/1s'    : project('STM32F103C8T_LedBlink1s',                True,      '',   {'Debug' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/LedBlink/100ms' : project('STM32F103C8T_LedBlink100ms',             True,      '',   {'Debug' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/SM4PWM/Test01'  : project('STM32F103C8T_SW4PWM_Test01',             True,      '',   {'Debug' : 'Config_STM32F103xx'}),
+
+    # --- STM32F302C8T6/BluePill -----------------------------------------------                    
+    'STM/F3/STM32F302C8T6/Lidar/01'               : project('STM32F302C8T6_Lidar_01',                 True,      '',   {'Release' : 'Config_STM32F30x'}),
 
     # --- STM32F303VC/Discovery -----------------------------------------------
 
@@ -112,6 +124,7 @@ projects = {
     'STM/F4/STM32F407ZET/STF4BB/Misc/ConstTest'   : project('STM32F407ZET_STF4BB_Misc_ConstTest',   True,     '',   {'Debug' : 'Config_STM32F407x', 'Release' : 'Config_STM32F407x'}),
     'STM/F4/STM32F407ZET/STF4BB/I2C/APDS9960'     : project('STM32F407ZET_STF4BB_I2C_APDS9960',     True,     '',   {'Debug' : 'Config_STM32F407x'}),
     'STM/F4/STM32F407ZET/STF4BB/I2C/OLED'         : project('STM32F407ZET_STF4BB_I2C_OLED',         True,     '',   {'Debug' : 'Config_STM32F407x'}),
+    'STM/F4/STM32F407ZET/STF4BB/I2C/SW6007'       : project('STM32F407ZET_STF4BB_I2C_SW6007',       True,     '',   {'Debug' : 'Config_STM32F407x'}),
 
     #--- STM32F407VGT/F4DISC --------------------------------------------------
 
@@ -175,6 +188,8 @@ projects = {
     'STM/L4/STM32L433CCT/BluePill/I2C/SW6007'          : project('STM32L433CCT_I2C_SW6007',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Mot/Test02'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Mot/Test03'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/PC13'       : project('STM32L433CCT_LedBlink_PC13',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/All'        : project('STM32L433CCT_LedBlink_All',           True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Test/Usart12'        : project('STM32L433CCT_Tests_Usart12',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
@@ -187,7 +202,17 @@ projects = {
 
     'STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test01'   : project('STM32L433CCT_Usart_MpHd_T01',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test02'   : project('STM32L433CCT_Usart_MpHd_T02',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/MpHd/Test03'   : project('STM32L433CCT_Usart_MpHd_T03',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo'    : project('STM32L433CCT_Tests_Usart1Echo',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Switch'  : project('STM32L433CCT_Tests_Servo_Switch',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01'  : project('STM32L433CCT_Tests_Servo_Test01',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02'  : project('STM32L433CCT_Tests_Servo_Test02',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03'  : project('STM32L433CCT_Tests_Servo_Test03',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04'  : project('STM32L433CCT_Tests_Servo_Test04',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+
+    'STM/L4/STM32L433CCT/BluePill/WS2812/Test01'       : project('STM32L433CCT_Tests_WS2812_Test01',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/WS2812/Test02'       : project('STM32L433CCT_Tests_WS2812_Test02',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/WS2812/Test03'       : project('STM32L433CCT_Tests_WS2812_Test03',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     #--- STM32L4R9/STM32L4R9IDISCOVERY -------------------------------------
 
@@ -215,9 +240,10 @@ projects = {
 
     'PcSim/F4/STM32F407ZET/STF4BB/Gfx/WaveGen'         : project('PcSim_STM32F407ZET_STF4BB_Gfx_WaveGen',         True,     '',   {'Debug' : 'Config_PcMsWin'}),
 
+    'PcSim/F4/STM32F407ZET/STF4BB/Gfx/FrakGra/01'      : project('PcSim_STM32F407ZET_STF4BB_Gfx_FrakGra_01',      True,     '',   {'Debug' : 'Config_PcMsWin'}),
+
     #--- STM32L433CCT/BluePill --------------------------------------------------
 
-    'PcSim/L4/STM32L433CCT/BluePill/Bn/Test01'            : project('PcSim_STM32L433CCT_Bn_Test01',              True,  '', {'Debug' : 'Config_PcMsWin'}),
     'PcSim/L4/STM32L433CCT/BluePill/Bootloader/Test01'    : project('PcSim_STM32L433CCT_Bootloader_Test01',      True,  '', {'Debug' : 'Config_PcMsWinConsole'}),
 
     #--- STM32L552ZET/NUCLEO --------------------------------------------------
@@ -226,8 +252,9 @@ projects = {
 
     #--- Pc -------------------------------------------------------------------
 
-    'Pc/Garmin/Test01'                                    : project('Pc_Garmin_Test01',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
-    'Pc/Garmin/Test02'                                    : project('Pc_Garmin_Test02',   True,     '',   {'Debug' : 'Config_PcMsWin'}),
+    'Pc/Garmin/Test01'                                    : project('Pc_Garmin_Test01',            True,     '',   {'Debug' : 'Config_PcMsWin'}),
+    'Pc/Garmin/Test02'                                    : project('Pc_Garmin_Test02',            True,     '',   {'Debug' : 'Config_PcMsWin'}),
+    'Pc/Test/OverloadOpTest01'                            : project('Pc_Test_OverloadOpTest01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
 }
 
 

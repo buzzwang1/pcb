@@ -32,6 +32,7 @@ class cUart
   virtual u32  PortBase(void) = 0;
   virtual void vIRQHandler(void) = 0;
   virtual void vSend(char8 lchData) = 0;
+  virtual void vSend(const u8* lpu8Data, u16 lu16Count) = 0;
   virtual void vSend(void) = 0;
 
   inline void vAdd(char8 lchData)
@@ -45,6 +46,15 @@ class cUart
     {
       vAdd(*lpchStr);
       lpchStr++;
+    }
+  }
+
+  inline void vAdd(const u8* lpu8Data, u16 lu16Count)
+  {
+    while (lu16Count)
+    {
+      vAdd(*lpu8Data++);
+      lu16Count--;
     }
   }
 
@@ -206,10 +216,17 @@ public:
     USART_ITConfig((USART_TypeDef*)Port(), USART_IT_TXE, ENABLE);
   }
 
+  inline void vSend(const u8* lpu8Data, u16 lu16Count) override
+  {
+    vAdd(lpu8Data, lu16Count);
+    vSend();
+  }
+
   inline void vSend() override
   {
     USART_ITConfig((USART_TypeDef*)Port(), USART_IT_TXE, ENABLE);
   }
+
 
 };
 

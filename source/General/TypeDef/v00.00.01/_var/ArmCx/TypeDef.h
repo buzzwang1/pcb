@@ -88,9 +88,9 @@ typedef int8    FRet;
 #define INT32MAX 2147483647
 #define INT16MAX 32767
 #define INT8MAX  127
-#define INT32MIN ((int32)(-2147483647))
-#define INT16MIN ((int16)(-32767))
-#define INT8MIN  ((int8)(-127))
+#define INT32MIN ((int32)(-2147483648))
+#define INT16MIN ((int16)(-32768))
+#define INT8MIN  ((int8)(-128))
 
 
 // Punkt

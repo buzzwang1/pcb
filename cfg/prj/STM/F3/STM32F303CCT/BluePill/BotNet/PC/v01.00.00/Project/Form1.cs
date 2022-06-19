@@ -924,6 +924,8 @@ namespace Project
       cComPort_Entry lComTx = new cComPort_Entry();
       long lTxAckTimeStamp = 0;
       
+      bool lMsgStarted = false;
+      
 
       while (true)
       {
@@ -937,48 +939,56 @@ namespace Project
             int liDataToRead = ComPort.BytesToRead;
             for (int lit = 0; lit < liDataToRead; lit++)
             {
-              if (llstRxData.Count == 0)
-              {
-                lRxTimeStamp = ComPort_mcTimestamp.ElapsedMilliseconds;
-              }
 
               u8 lu8Data = (u8)ComPort.ReadByte();
+
               llstRxData.Add(lu8Data);
               lu8RxDataDecoded = MsgTrace_mcBotCom.vDecode(lu8Data);
-
-              if (lu8RxDataDecoded != null)
-              {
-                ComTrace_vPutRx(llstRxData.ToArray());
-                MsgTrace_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
-                Session_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
-                BotNet_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
-                IAP_Download_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
-                llstRxData.Clear();
-              }
               
-              if ((lu8Data >> 5) == 3) // BotCom Status message
+              switch (lu8Data>>5)
               {
-                String lszStr = "0x" + lu8Data.ToString("X2");
-                u16  lu16Sleep = 0;
-                if ((lu8Data & 1) == 1) // Acknowledge
+                case 3: // BotCom Status message
                 {
-                  lszStr += "|ACK";
-                  lComTx.isAcknowledged = true; // Nächste Nachricht kann gesendet werden
-                }
-                else
-                {
-                  lszStr += "|NACK";
-                  lComTx.bRepeat=true;
-                  lu16Sleep = 2;
-                }
-                if ((lu8Data & 2) == 2) // Busy
-                {
-                  lszStr += "|Busy";
-                  lu16Sleep = 10;
-                }
+                  String lszStr = "0x" + lu8Data.ToString("X2");
+                  u16  lu16Sleep = 0;
+                  if ((lu8Data & 1) == 1) // Acknowledge
+                  {
+                    lszStr += "|ACK";
+                    lComTx.isAcknowledged = true; // Nächste Nachricht kann gesendet werden
+                  }
+                  else
+                  {
+                    lszStr += "|NACK";
+                    lComTx.bRepeat=true;
+                    lu16Sleep = 2;
+                  }
+                  if ((lu8Data & 2) == 2) // Busy
+                  {
+                    lszStr += "|Busy";
+                    lu16Sleep = 10;
+                  }
 
-                ComTrace_vPutString(lszStr);
-                if (lu16Sleep > 0) Thread.Sleep(lu16Sleep);
+                  ComTrace_vPutString("-- ", lszStr);
+                  if (lu16Sleep > 0) Thread.Sleep(lu16Sleep);
+                  }
+                break;
+              
+                case 7: // Botocm Frame Start 111x xxxx
+                  lRxTimeStamp = ComPort_mcTimestamp.ElapsedMilliseconds;
+                  lMsgStarted = true;
+                break;
+                case 0:  // Botocm Frame Ende 000x xxxx
+                  ComTrace_vPutRx(llstRxData.ToArray());
+                  if ((llstRxData.Count > 1) && (lMsgStarted))
+                  {
+                    MsgTrace_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
+                    Session_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
+                    BotNet_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
+                    IAP_Download_vPutRx(new cBotNetMsg_Base(lu8RxDataDecoded));
+                  }
+                  lMsgStarted = false;
+                  llstRxData.Clear();
+                break;
               }
             }
 
@@ -1010,7 +1020,7 @@ namespace Project
               if ((ComPort_mcTimestamp.ElapsedMilliseconds - lTxAckTimeStamp) > 10000)
               {
                 lComTx.isAcknowledged = true;
-                ComTrace_vPutString("!Force Ack!");
+                ComTrace_vPutString("-- ", "!Force Ack!");
               }
             }
             else
@@ -1028,42 +1038,22 @@ namespace Project
     }
 
     /* ----------------------------------- ComTrace ---------------------------------------------------- */
-
-    public class cComTrace_Entry
+    public class cComTraceString_Entry
     {
-      public long mu32TimeStamp;
-      public u8[] mData;
+      public String mszString;
 
-      public cComTrace_Entry(long lu32TimeStamp, u8[] lData)
+      public cComTraceString_Entry(String lszString)
       {
-        mu32TimeStamp = lu32TimeStamp;
-        mData = lData;
+        mszString = lszString;
       }
     }
 
-    public class cComTraceString_Entry
-    {
-      public long mu32TimeStamp;
-      public String mszString;
-
-      public cComTraceString_Entry(long lu32TimeStamp, String lszString)
-      {
-        mu32TimeStamp = lu32TimeStamp;
-        mszString = lszString;
-      }
-    }    
-
-
-    Queue<cComTrace_Entry>       ComTrace_mcQueueRx;
-    Queue<cComTrace_Entry>       ComTrace_mcQueueTx;
     Queue<cComTraceString_Entry> ComTrace_mcQueueString;
     Thread ComTrace_mcThread;
     Stopwatch ComTrace_mcTimestamp;
 
     void ComTrace_vInit()
     {
-      ComTrace_mcQueueRx = new Queue<cComTrace_Entry>();
-      ComTrace_mcQueueTx = new Queue<cComTrace_Entry>();
       ComTrace_mcQueueString = new Queue<cComTraceString_Entry>();
       ComTrace_mcTimestamp = new Stopwatch();
 
@@ -1072,7 +1062,7 @@ namespace Project
 
       ComTrace_mcThread = new Thread(delegate()
       {
-        ComTrace_vProcess(ComTrace_mcQueueRx, ComTrace_mcQueueTx);
+        ComTrace_vProcess(ComTrace_mcQueueString);
       });
       ComTrace_mcThread.Start();
     }
@@ -1082,19 +1072,33 @@ namespace Project
       ComTrace_mcThread.Abort();
     }
 
-    void ComTrace_vPutRx(u8[] lData)
-    {
-      ComTrace_mcQueueRx.Enqueue(new cComTrace_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lData));
-    }
-
-    void ComTrace_vPutString(String lszStr)
-    {
-      ComTrace_mcQueueString.Enqueue(new cComTraceString_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lszStr));
-    }
-
     void ComTrace_vPutTx(u8[] lData)
     {
-      ComTrace_mcQueueTx.Enqueue(new cComTrace_Entry(ComTrace_mcTimestamp.ElapsedMilliseconds, lData));
+      ComTrace_vPutString("tx ", lData);
+    }
+
+    void ComTrace_vPutRx(u8[] lData)
+    {
+      ComTrace_vPutString("  rx ", lData);
+    }
+
+
+    void ComTrace_vPutString(String lszPreFix, u8[] lData)
+    {
+      String lszText = "";
+      foreach (u8 lu8PayloadValue in lData)
+      {
+        lszText += lu8PayloadValue.ToString("X2") + ".";
+      }
+      ComTrace_vPutString(lszPreFix, lszText);
+    }
+
+    void ComTrace_vPutString(String lszPreFix, String lszStr)
+    {
+      String lszText;
+      lszText = lszPreFix + ComTrace_mcTimestamp.ElapsedMilliseconds.ToString("#,###,##0") + " ";
+      lszText += lszStr + "\r\n";
+      ComTrace_mcQueueString.Enqueue(new cComTraceString_Entry(lszText));
     }
 
     public void ComTrace_vAppendTextBox(string lszText)
@@ -1112,50 +1116,20 @@ namespace Project
       Com_Text_ConIO.AppendText(lszText);
     }
 
-    public void ComTrace_vProcess(Queue<cComTrace_Entry> ComTrace_lcQueueRx, Queue<cComTrace_Entry> ComTrace_lcQueueTx)
+    public void ComTrace_vProcess(Queue<cComTraceString_Entry> ComTrace_lcQueueString)
     {
-      String lszText;
       StringBuilder lcSb = new StringBuilder();
       uint16 lu16Tick5ms = 0;
       
       while (true)
       {
-        do
+        while (ComTrace_lcQueueString.Count > 0)
         {
-          lszText = "";
-          if (ComTrace_lcQueueRx.Count > 0)
-          {
-            cComTrace_Entry lCom = ComTrace_lcQueueRx.Dequeue();
-            lszText = "rx " + lCom.mu32TimeStamp.ToString("#,###,##0") + " ";
-            foreach (u8 lu8PayloadValue in lCom.mData)
-            {
-              lszText += lu8PayloadValue.ToString("X2") + ".";
-            }
-          }
+          cComTraceString_Entry lcString = ComTrace_lcQueueString.Dequeue();
 
-          if (ComTrace_lcQueueTx.Count > 0)
-          {
-            cComTrace_Entry lCom = ComTrace_lcQueueTx.Dequeue();
-            lszText = "tx " + lCom.mu32TimeStamp.ToString("#,###,##0") + " ";
-            foreach (u8 lu8PayloadValue in lCom.mData)
-            {
-              lszText += lu8PayloadValue.ToString("X2") + ".";
-            }
-          }
-
-          if (ComTrace_mcQueueString.Count > 0)
-          {
-            cComTraceString_Entry lCom = ComTrace_mcQueueString.Dequeue();
-            lszText = "-- " + lCom.mu32TimeStamp.ToString("#,###,##0") + " ";
-            lszText += lCom.mszString;
-          }
-
-          if (lszText != "")
-          {
-            ComTrace_vAppendTextBox(lszText + "\r\n");
-            lcSb.Append(DateTime.Now.ToString("yyyyMMdd HH:mm:ss") + " " + lszText + "\r\n");
-          }
-        } while (lszText != "");
+          ComTrace_vAppendTextBox(lcString.mszString);
+          lcSb.Append(DateTime.Now.ToString("yyyyMMdd HH:mm:ss") + lcString.mszString);
+        }
 
         lu16Tick5ms++;
         if (lu16Tick5ms == 1000)
@@ -1168,7 +1142,7 @@ namespace Project
           }
         }
 
-        Thread.Sleep(1);
+        Thread.Sleep(5);
       }
     }
 
@@ -1258,7 +1232,7 @@ namespace Project
           if (MsgTrace_lcQueueRx.Count > 0)
           {
             cMsgTrace_Entry lMsg = MsgTrace_lcQueueRx.Dequeue();
-            lszText = "rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
+            lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
             foreach (u8 lu8PayloadValue in lMsg.mMsg.ToByteArray())
             {
               lszText += lu8PayloadValue.ToString("X2") + ".";
@@ -1415,7 +1389,7 @@ namespace Project
                   cBotNetAdress lcBnAdr = new cBotNetAdress();
                   lcBnAdr.Set(lu16BnAdr);
 
-                  lszText = "rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
+                  lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
                   lszText += "Info:  ";
                   lszText += "DeviceAdr: " + lu16DeviceAdr.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString() + " ";
@@ -1448,7 +1422,7 @@ namespace Project
                   cBotNetAdress lcBnAdr = new cBotNetAdress();
                   lcBnAdr.Set(Session_mu16ConnectedBnAdr);
 
-                  lszText = "rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
+                  lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
                   lszText += "Brige: Connection Ack: ";
                   lszText += "DeviceAdr: " + Session_mu16ConnectedDeviceID.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString();
@@ -1462,7 +1436,7 @@ namespace Project
                   cBotNetAdress lcBnAdr = new cBotNetAdress();
                   lcBnAdr.Set(Session_mu16ConnectedBnAdr);
 
-                  lszText = "rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
+                  lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
                   lszText += "Brige: Dis-Connection Ack: ";
                   lszText += "DeviceAdr: " + Session_mu16ConnectedDeviceID.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString();
@@ -1477,7 +1451,7 @@ namespace Project
                   cBotNetAdress lcBnAdr = new cBotNetAdress();
                   lcBnAdr.Set(lu16BnAdr);
 
-                  lszText = "rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
+                  lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
                   lszText += "Clock: ";
                   lszText += "DeviceAdr: " + lu16DeviceAdr.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString() + " ";
@@ -2135,6 +2109,7 @@ namespace Project
           IAP_vBufMemCopy(bU32toByteArray(0x01020304), IAP_mui8BufOut, 4, 0, 4);
           IAP_vBufMemCopy(bU32toByteArray(ReadTextDezOrBin(this.IAP_TextBox_CommandEnter_ID1.Text)), IAP_mui8BufOut, 4, 0, 8);
           IAP_vBufMemCopy(bU32toByteArray(ReadTextDezOrBin(this.IAP_TextBox_CommandEnter_ID2.Text)), IAP_mui8BufOut, 4, 0, 12);
+          IAP_vBufMemCopy(bU32toByteArray(0x00000000), IAP_mui8BufOut, 4, 0, 16);
           break;
       }
     }
@@ -2471,7 +2446,7 @@ namespace Project
 
               lcDiag_Client.ui32CheckSumData++;
 
-              if (lcDiag_Client.bWriteBlockIsActive)
+              //if (lcDiag_Client.bWriteBlockIsActive)
               {
                 if (lui32Temp != lcDiag_Client.ui32CheckSumData)
                 {
@@ -2943,84 +2918,32 @@ namespace Project
 
           IAP_vSet_IAP_TextBox_Donwload_Status("Start Download");
 
-          if (!Session_mbConnected)
+          if (IAP_CheckBox_CommandDl_Connect.Checked)
           {
-            MsgTrace_vPutTx(Session_Get_Stop_Message());
-            Thread.Sleep(250);
-          }
-
-          // --- Conntect to Target
-          if (!Session_mbConnected)
-          {
-            u32 lu32Timeout = 0;
-            IAP_vSet_IAP_TextBox_Donwload_Status("Try to connect. (3min Timeout)");
-
-            MsgTrace_vPutTx(Session_Get_Start_Message());
-
-            while ((!Session_mbConnected) && (lu32Timeout < 3 * 60 * 1000))
+            if (!Session_mbConnected)
             {
-              Thread.Sleep(50);
-              lu32Timeout += 50;
+              MsgTrace_vPutTx(Session_Get_Stop_Message());
+              Thread.Sleep(250);
             }
-          }
 
-          if (Session_mbConnected)
-          {
-            IAP_vSet_IAP_TextBox_Donwload_Status("  => We are connected");
-          }
-          else
-          {
-            IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
-            break;
-          }
-
-          // --- Enter Diag
-          {
-            u32 lu32Timeout = 0;
-            bool lbSuccess = false;
-            bool lbAck = false;
-
-            IAP_vSet_IAP_TextBox_Donwload_Status("Enter Diag (5s Timeout)");
-
-            IAP_Download_mcQueueRx.Clear();
-            IAP_vBufUpdateBufOut(9);
-            this.BeginInvoke(new IAP_vBufShow_Callback(IAP_vBufShow), new object[] { this.IAP_mui8BufOut });
-            IAP_Send(true);
-
-            while ((!lbSuccess) && (lu32Timeout < 5 * 1000)) // 5s
+            // --- Conntect to Target
+            if (!Session_mbConnected)
             {
-              Thread.Sleep(50);
-              lu32Timeout += 50;
+              u32 lu32Timeout = 0;
+              IAP_vSet_IAP_TextBox_Donwload_Status("Try to connect. (3min Timeout)");
 
-              while (IAP_Download_mcQueueRx.Count > 0)
+              MsgTrace_vPutTx(Session_Get_Start_Message());
+
+              while ((!Session_mbConnected) && (lu32Timeout < 3 * 60 * 1000))
               {
-                IAP_Download_Entry lcEntry = IAP_Download_mcQueueRx.Dequeue();
-                //     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
-                // rx 01.81.00.00.00.04.03.02.01.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.E0.00.10.00.81.
-                if ((lcEntry.mMsg.u8Len() == 38) &&
-                    (lcEntry.mMsg.mMsgData[37] == 0x81) &&
-                    (lcEntry.mMsg.mMsgData[0] == System.Convert.ToByte(IAP_Text_SteamID.Text)) &&
-                    (lcEntry.mMsg.mMsgData[1] == 0x81))
-                {
-                  lbSuccess = true;
-                  if (lcEntry.mMsg.mMsgData[2] == 0)
-                  {
-                    lbAck = true;
-                  }
-                }
+                Thread.Sleep(50);
+                lu32Timeout += 50;
               }
             }
-            if (lbSuccess)
+
+            if (Session_mbConnected)
             {
-              if (lbAck)
-              {
-                IAP_vSet_IAP_TextBox_Donwload_Status("  => We are in");
-              }
-              else
-              {
-                IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
-                break;
-              }
+              IAP_vSet_IAP_TextBox_Donwload_Status("  => We are connected");
             }
             else
             {
@@ -3029,11 +2952,94 @@ namespace Project
             }
           }
 
+          bool lbSuccess = true;
+          u32 lu32ClientBufferSize = 0;
+          u32 lu32IapPageSize = 0;
 
-          // --- Read Info2 to get IAP Flash Partition
+          // --- Enter Diag
+          if ((lbSuccess) && (lu32ClientBufferSize == 0))
           {
             u32 lu32Timeout = 0;
-            bool lbSuccess = false;
+            u32 lu32Retrys = 1;
+            bool lbAck = false;
+
+            lbSuccess = false;
+            lu32Retrys = 0;
+            
+            while ((lu32Retrys < 5) && (lu32ClientBufferSize == 0))
+            {
+              lu32Timeout = 0;
+              lbAck = false;
+              lbSuccess = false;
+
+              IAP_vSet_IAP_TextBox_Donwload_Status((lu32Retrys+1).ToString()+".Try: Enter Diag (1s Timeout)");
+
+              IAP_Download_mcQueueRx.Clear();
+              IAP_vBufUpdateBufOut(9);
+              this.BeginInvoke(new IAP_vBufShow_Callback(IAP_vBufShow), new object[] { this.IAP_mui8BufOut });
+              IAP_Send(true);
+
+              // Bei einigen muss man 2 Enter machen
+              // Das erste  Mal um der App in den Bootloader zu springen
+              // Das zweite Mal um den Bootloader zu aktivieren
+              while ((!lbSuccess) && (lu32Timeout < 1 * 1000)) // 2s
+              {
+                Thread.Sleep(50);
+                lu32Timeout += 50;
+
+                while (IAP_Download_mcQueueRx.Count > 0)
+                {
+                  IAP_Download_Entry lcEntry = IAP_Download_mcQueueRx.Dequeue();
+                  //     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
+                  // rx 01.81.00.00.00.04.03.02.01.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.00.E0.00.10.00.81.
+                  if ((lcEntry.mMsg.u8Len() == 38) &&
+                      (lcEntry.mMsg.mMsgData[37] == 0x81) &&
+                      (lcEntry.mMsg.mMsgData[0] == System.Convert.ToByte(IAP_Text_SteamID.Text)) &&
+                      (lcEntry.mMsg.mMsgData[1] == 0x81))
+                  {
+                    lbSuccess = true;
+                    if (lcEntry.mMsg.mMsgData[2] == 0)
+                    {
+                      lu32ClientBufferSize = (((u32)lcEntry.mMsg.mMsgData[20]) << 24) + (((u32)lcEntry.mMsg.mMsgData[19]) << 16) + (((u32)lcEntry.mMsg.mMsgData[18]) << 8) + (u32)lcEntry.mMsg.mMsgData[17];
+                      lbAck = true;
+                    }
+                  }
+                }
+              }
+              if (lbSuccess)
+              {
+                if (lbAck)
+                {
+                  if (lu32ClientBufferSize == 0)
+                  {
+                    IAP_vSet_IAP_TextBox_Donwload_Status("  => We are in " + lu32Retrys.ToString() + ". Try. No ClientBufferSize. Retry.");
+                    Thread.Sleep(50);
+                  }
+                  else
+                  {
+                    IAP_vSet_IAP_TextBox_Donwload_Status("  => We are in. ClientBufferSize = " + lu32ClientBufferSize.ToString());
+                  }
+                }
+                else
+                {
+                  IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
+                }
+              }
+              else
+              {
+                IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
+              }
+              lu32Retrys++;              
+            }
+          }
+
+          if (!lbSuccess) break;
+
+          // --- Read Info2 to get IAP Flash Partition
+          if (lbSuccess)
+          {
+            u32 lu32Timeout = 0;
+            lbSuccess = false;
             bool lbAck = false;
             u32 lu32Partitions = 0;
 
@@ -3078,12 +3084,11 @@ namespace Project
                   {
                     lbAck = true;
                     lu32Partitions = lcEntry.mMsg.mMsgData[13];
+                    break;
                   }
                 }
               }
             }
-
-
 
             if (lbSuccess)
             {
@@ -3094,11 +3099,11 @@ namespace Project
                 IAP_Download_Entry lcEntry = null;
 
                 IAP_vSet_IAP_TextBox_Donwload_Status("  => Info2 Ack");
-                IAP_vSet_IAP_TextBox_Donwload_Status("  => Read " + lu32Partitions.ToString() + "Partitions (3min Timeout)");
+                IAP_vSet_IAP_TextBox_Donwload_Status("  => Read " + lu32Partitions.ToString() + "Partitions (30s Timeout)");
 
                 lbSuccess = false;
                 lu32Timeout = 0;
-                while ((!lbSuccess) && (lu32Timeout < 3 * 60 * 1000)) // 5s
+                while ((!lbSuccess) && (lu32Timeout < 1 * 30 * 1000)) // 5s
                 {
                   Thread.Sleep(50);
                   lu32Timeout += 50;
@@ -3140,8 +3145,10 @@ namespace Project
                         if (lszPartitionName.IndexOf("Flash IAP") >= 0)
                         {
                           lbFlashPartitionFound = true;
-                          IAP_Download_mu32FlashAdr = (((u32)lcEntry_Last.mMsg.mMsgData[24]) << 24) + (((u32)lcEntry_Last.mMsg.mMsgData[23]) << 16) + (((u32)lcEntry_Last.mMsg.mMsgData[22]) << 8) + (u32)lcEntry_Last.mMsg.mMsgData[21];
+                          lu32IapPageSize            = (((u32)lcEntry_Last.mMsg.mMsgData[16]) << 24) + (((u32)lcEntry_Last.mMsg.mMsgData[15]) << 16) + (((u32)lcEntry_Last.mMsg.mMsgData[14]) << 8) + (u32)lcEntry_Last.mMsg.mMsgData[13];
+                          IAP_Download_mu32FlashAdr  = (((u32)lcEntry_Last.mMsg.mMsgData[24]) << 24) + (((u32)lcEntry_Last.mMsg.mMsgData[23]) << 16) + (((u32)lcEntry_Last.mMsg.mMsgData[22]) << 8) + (u32)lcEntry_Last.mMsg.mMsgData[21];
                           IAP_Download_mu32FlashSize = (((u32)lcEntry_Last.mMsg.mMsgData[32]) << 24) + (((u32)lcEntry_Last.mMsg.mMsgData[31]) << 16) + (((u32)lcEntry_Last.mMsg.mMsgData[30]) << 8) + (u32)lcEntry_Last.mMsg.mMsgData[29];
+                          
                           IAP_vSet_IAP_TextBox_Donwload_Status("    => Adr:  " + IAP_Download_mu32FlashAdr.ToString() + " (0x" + IAP_Download_mu32FlashAdr.ToString("X2") + ")");
                           IAP_vSet_IAP_TextBox_Donwload_Status("    => Size: " + IAP_Download_mu32FlashSize.ToString() + " (0x" + IAP_Download_mu32FlashSize.ToString("X2") + ")");
                         }
@@ -3195,7 +3202,10 @@ namespace Project
             }
           }
 
+          if (!lbSuccess) break;
+
           //     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37
+          // tx 01.10.80.55.55.55.55.55.55.00.00.02.08.55.55.55.55.00.04.00.00.55.55.55.55.55.55.55.55.55.55.55.55.10.00.E0.00.81.
           // rx 01.10.00.01.00.00.00.00.00.00.C0.02.08.00.00.00.00.00.04.00.00.18.5B.01.00.00.00.00.00.00.00.00.00.E0.00.10.00.81.
           // tx 01.10.FF.65.20.6D.69.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.55.10.00.E0.00.81.
           // tx 01.10.A1.75.6E.67.20.69.6E.20.64.61.73.2C.20.77.61.73.20.69.63.68.20.65.72.6C.65.62.74.20.68.61.62.10.00.E0.00.81.
@@ -3233,38 +3243,51 @@ namespace Project
           // tx 01.10.81.65.6C.6C.75.6E.67.20.75.6E.73.65.72.65.72.20.44.69.65.6E.73.74.65.2E.20.4D.69.74.20.64.65.10.00.E0.00.81.
           // tx 01.10.80.0D.0A.43.6F.6F.6B.69.65.73.20.65.72.6C.65.69.63.68.74.65.72.6E.20.64.69.65.20.42.65.73.74.10.00.E0.00.81.
           // rx 01.10.00.00.00.00.00.00.00.00.C0.02.08.00.00.00.00.00.04.00.00.00.00.00.00.F0.03.00.00.00.00.00.00.E0.00.10.00.81.
-          // tx 01.10.80.55.55.55.55.55.55.00.C0.02.08.55.55.55.55.00.04.00.00.55.55.55.55.55.55.55.55.55.55.55.55.10.00.E0.00.81.
           // --- Write Data
           {
             u32 lu32Timeout = 0;
-            bool lbSuccess = false;
             bool lbAck = false;
-            bool lbOk = true;
+            bool lbOk = false;
+            
+            int  liTrys = 0;
 
+            lbSuccess = false;
 
             u32 lu32Checksum_Send = 0;
-            u32 lu32Checksum_Received = 0;
+            u32 lu32Checksum_Received;
             u32 lu32Index;
 
             uint32 u32Adress = IAP_Download_mu32FlashAdr;
             uint32 u32DataIdx = 0;
-            uint32 u32Data2Copy = 1024 * 2; //  in 2kb Blocks
+            uint32 u32Data2Copy = lu32IapPageSize;
+            
+            if (lu32ClientBufferSize > u32Data2Copy) u32Data2Copy = lu32ClientBufferSize;
+            MAIN_vSetInvokeTextBox(IAP_TextBox_CommandDl_BlockLen, u32Data2Copy.ToString());
+            
+            //uint32 u32Data2Copy = 1024 * 2; //  in 2kb Blocks
             //IAP_Download_mu32FlashSize
 
             MAIN_vSetInvokeTextBox(IAP_TextBox_CommandDl_BlockLen, "");
             MAIN_vSetInvokeTextBox(IAP_TextBox_CommandDl_BlockLen, u32Data2Copy.ToString());
-            
-            while ((lbOk) && (u32DataIdx < IAP_Download_mu32FileSize))
+
+
+            while ((liTrys < 3) && (u32DataIdx < IAP_Download_mu32FileSize))
             {
+              liTrys++;
               lbSuccess = false;
               lbAck = false;
+              lbOk = false;
+              lu32Timeout = 0;
+              lu32Checksum_Received = 0;
+
+              // --- Start Übertragung der Headline
 
               if (u32Data2Copy + u32DataIdx >= IAP_Download_mu32FileSize)
               {
                 u32Data2Copy = IAP_Download_mu32FileSize - u32DataIdx;
               }
 
-              IAP_vSet_IAP_TextBox_Donwload_Status("Write " + IAP_TextBox_CommandDl_BlockLen.Text + "B Block " + (((u32DataIdx * 100) / IAP_Download_mu32FileSize)).ToString() + "% (3min Timeout)");
+              IAP_vSet_IAP_TextBox_Donwload_Status("Write " + IAP_TextBox_CommandDl_BlockLen.Text + "B Block to 0x" + u32Adress.ToString("X2") + " " + (((u32DataIdx * 100) / IAP_Download_mu32FileSize)).ToString() + "% (3min Timeout) " + liTrys.ToString() + ". Try");
 
               IAP_Download_mcQueueRx.Clear();
 
@@ -3285,104 +3308,103 @@ namespace Project
               IAP_vBufUpdateBufOut(3);
               this.BeginInvoke(new IAP_vBufShow_Callback(IAP_vBufShow), new object[] { this.IAP_mui8BufOut });
               IAP_Send(true);
-
-              // Warten bis Übertragung fertig
-              while ((!lbSuccess) && (lu32Timeout < 3 * 60 * 1000)) // 5s
+              
+              IAP_vSet_IAP_TextBox_Donwload_Status("Wait for Block start (3min Timeout)");
+              while ((!lbSuccess) && (lu32Timeout < 1 * 10 * 1000)) // 5s
               {
-                Thread.Sleep(50);
-                lu32Timeout += 50;
+                Thread.Sleep(5);
+                lu32Timeout += 5;
 
                 while (IAP_Download_mcQueueRx.Count > 0)
                 {
                   IAP_Download_Entry lcEntry = IAP_Download_mcQueueRx.Dequeue();
-
+                  // --- Warten auf die Antwort für die Headline 16 0 0
                   if ((lcEntry.mMsg.u8Len() == 38) &&
                       (lcEntry.mMsg.mMsgData[37] == 0x81) &&
                       (lcEntry.mMsg.mMsgData[0] == System.Convert.ToByte(IAP_Text_SteamID.Text)) &&
                       (lcEntry.mMsg.mMsgData[1] == 0x10))
                   {
                     lbSuccess = true;
-
-                    if (lcEntry.mMsg.mMsgData[2] == 0)
+                    if ((lcEntry.mMsg.mMsgData[2] == 0) &&
+                        (lcEntry.mMsg.mMsgData[3] == 0))
                     {
                       lbAck = true;
                     }
+                    else
+                    {
+                      IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
+                    }
+                    break;
                   }
                 }
               }
-
-
-              // Warten auf das Ende ds Blocks und Checksumme vergleichen
-              if (lbSuccess)
+              if (!lbAck)
               {
-                if (lbAck)
+                IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
+              }
+              
+              
+              if (lbAck)
+              {
+                // Warten auf das Ende ds Blocks und Checksumme vergleichen
+                lbSuccess = false;
+                lbAck = false;
+                bool lbExit = false;
+
+                IAP_vSet_IAP_TextBox_Donwload_Status("Wait for Block finished (3min Timeout)");
+                while ((!lbSuccess) && (!lbExit) && (lu32Timeout < 1 * 20 * 1000)) // 5s
                 {
-                  IAP_vSet_IAP_TextBox_Donwload_Status("Wait for Block finished (3min Timeout)");
-                  lbSuccess = false;
-                  lbAck = false;
+                  Thread.Sleep(5);
+                  lu32Timeout += 5;
 
-                  while ((!lbSuccess) && (lu32Timeout < 3 * 60 * 1000)) // 5s
+                  while (IAP_Download_mcQueueRx.Count > 0)
                   {
-                    Thread.Sleep(50);
-                    lu32Timeout += 50;
-
-                    while (IAP_Download_mcQueueRx.Count > 0)
+                    IAP_Download_Entry lcEntry = IAP_Download_mcQueueRx.Dequeue();
+                    // --- Warten auf die Antwort für die Headline 16 0 1
+                    if ((lcEntry.mMsg.u8Len() == 38) &&
+                        (lcEntry.mMsg.mMsgData[37] == 0x81) &&
+                        (lcEntry.mMsg.mMsgData[0] == System.Convert.ToByte(IAP_Text_SteamID.Text)) &&
+                        (lcEntry.mMsg.mMsgData[1] == 0x10))
                     {
-                      IAP_Download_Entry lcEntry = IAP_Download_mcQueueRx.Dequeue();
+                      lbSuccess = true;
 
-                      if ((lcEntry.mMsg.u8Len() == 38) &&
-                          (lcEntry.mMsg.mMsgData[37] == 0x81) &&
-                          (lcEntry.mMsg.mMsgData[0] == System.Convert.ToByte(IAP_Text_SteamID.Text)) &&
-                          (lcEntry.mMsg.mMsgData[1] == 0x10))
+                      if ((lcEntry.mMsg.mMsgData[2] == 0) &&
+                          (lcEntry.mMsg.mMsgData[3] == 1))
                       {
-                        lbSuccess = true;
+                        lbAck = true;
+                        lbExit = true;
 
-                        if ((lcEntry.mMsg.mMsgData[2] == 0) &&
-                            (lcEntry.mMsg.mMsgData[3] == 1))
+                        lu32Checksum_Received = (((u32)lcEntry.mMsg.mMsgData[24]) << 24) + (((u32)lcEntry.mMsg.mMsgData[23]) << 16) + (((u32)lcEntry.mMsg.mMsgData[22]) << 8) + (u32)lcEntry.mMsg.mMsgData[21];
+                        if (lu32Checksum_Send == lu32Checksum_Received)
                         {
-                          lbAck = true;
-
-                          lu32Checksum_Received = (((u32)lcEntry.mMsg.mMsgData[24]) << 24) + (((u32)lcEntry.mMsg.mMsgData[23]) << 16) + (((u32)lcEntry.mMsg.mMsgData[22]) << 8) + (u32)lcEntry.mMsg.mMsgData[21];
-                          if (lu32Checksum_Send == lu32Checksum_Received)
-                          {
-                            IAP_vSet_IAP_TextBox_Donwload_Status("  => Checksum ok");
-                            u32DataIdx += u32Data2Copy;
-                            u32Adress += u32Data2Copy;
-                          }
+                          lbOk = true;
+                          IAP_vSet_IAP_TextBox_Donwload_Status("  => Checksum ok");
+                          u32DataIdx += u32Data2Copy;
+                          u32Adress += u32Data2Copy;
+                          liTrys = 0;
                         }
+                        else
+                        {
+                          IAP_vSet_IAP_TextBox_Donwload_Status("  => Checksum Error");
+                        }
+                        break;
+                      }
+                      
+                      if (lcEntry.mMsg.mMsgData[2] == 1)
+                      {
+                        IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
+                        lbExit = true;
+                        break;
                       }
                     }
                   }
-
-                  if (!lbSuccess)
-                  {
-                    IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
-                    lbOk = false;
-                  }
-                  if (!lbAck)
-                  {
-                    IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
-                    lbOk = false;
-                  }
-                  if (lu32Checksum_Send != lu32Checksum_Received)
-                  {
-                    IAP_vSet_IAP_TextBox_Donwload_Status("  => Checksum Error");
-                    lbOk = false;
-                  }
                 }
-                else
+                if (!lbSuccess)
                 {
-                  IAP_vSet_IAP_TextBox_Donwload_Status("  => NACK");
-                  lbOk = false;
+                  IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
                 }
-              }
-              else
-              {
-                IAP_vSet_IAP_TextBox_Donwload_Status("  => Timeout");
-                lbOk = false;
               }
             }
-
             if (!lbOk) break;
           }
 

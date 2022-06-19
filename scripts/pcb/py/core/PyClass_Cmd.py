@@ -138,7 +138,7 @@ class tcCmd():
         else:
             print(lszString)
 
-    def error(self, lszPrompt, liErrorNumber, lszErrorText, end='\n', lbAddTraceback = False):
+    def error(self, lszPrompt, liErrorNumber, lszErrorText, end='', lbAddTraceback = False):
         if (self.mcErrHdl != None):
             self.mcErrHdl.error(lszPrompt, liErrorNumber, lszErrorText, end, lbAddTraceback)
         else:

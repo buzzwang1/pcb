@@ -99,7 +99,6 @@ void PendSV_Handler(void)
   }
 }
 
-
 void Delay(__IO uint32_t nTime)
 {
   TimingDelay = nTime;

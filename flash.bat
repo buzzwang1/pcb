@@ -50,7 +50,7 @@ IF %TcArgCount%=="2" (
 )
 
 :: ToolCaller Commands 
-set TcCmds=buildtool/elf2bin/call;buildtool/flash/call
+set TcCmds=buildtool/elf2bin/call;buildtool/dirbin/call;buildtool/flash/call
 
 :: Start of ToolCaller 
 @call python scripts/toolcaller.py -cmds=%TcCmds% -project=%Tcproject% -selectionmode=%TcSelectionMode% -root_dir=%PCB_ENVIRONMENT_ROOT_DIR% -build_dir=%PCB_ENVIRONMENT_BUILD_DIR% -source_dir=%PCB_ENVIRONMENT_SOURCE_DIR% -tools_dir=%PCB_ENVIRONMENT_TOOLS_DIR% || echo failed toolcaller.py && goto :error

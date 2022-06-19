@@ -211,7 +211,7 @@ class cStrTools
 
 
   // Gibt die Länge in Bytes zurück
-  static u32 uixItoa(int num, int base)
+  static u32 uixIton(int num, int base)
   {
     u32 luSize = 0;
     if (!num) return 1;
@@ -249,7 +249,7 @@ class cStrTools
       return i;
     }
 
-    Size = uixItoa(num, base);
+    Size = uixIton(num, base);
 
     if (Size > len) Size = len;
     str = str + (Size - 1);
@@ -355,7 +355,7 @@ class cStrTools
 
   // Gibt die Länge in Bytes zurück
   // expon: länge des nachkommateils
-  static u32 uixFtoa(float num, int precision, u8 &expon)
+  static u32 uixFton(float num, int precision, u8 &expon)
   {
     expon = 0;
     if (num != 0)
@@ -363,7 +363,7 @@ class cStrTools
       u32 luSize;
       int inum = int(num);
 
-      luSize = uixItoa(inum, 10);
+      luSize = uixIton(inum, 10);
 
       if ((inum == 0) && (num < 0)) // z.B. -0.5
       {
@@ -442,7 +442,7 @@ class cStrTools
 
     if (precision > 9) precision = 9;
 
-    uixFtoa(num, precision, expon);
+    uixFton(num, precision, expon);
 
     inum = int(num);
 

@@ -263,6 +263,32 @@ class tcConfig():
                 lszNewText = os.path.normpath(lszNewText)
                 lcCMakeParser.Replace(lszNewText)
 
+            elif (lszCmd == "slash"):
+                if self.Exists(lszText): # Check if key existing
+                    lszNewText = self.GetValue(lszText, lszLocation, liRecursionLvl + 1)
+                else:
+                    # if not, try to resolve relative keys
+                    lszText2 = self.JoinRelativePath(lszLocation, lszText)
+                    if self.Exists(lszText2):
+                        lszNewText = self.GetValue(lszText2, lszLocation, liRecursionLvl + 1)
+                    else: # if not, return given unresolved key
+                        lszNewText = lszText
+                lszNewText = lszNewText.replace('\\','/')
+                lcCMakeParser.Replace(lszNewText)
+
+            elif (lszCmd == "bslash"):
+                if self.Exists(lszText): # Check if key existing
+                    lszNewText = self.GetValue(lszText, lszLocation, liRecursionLvl + 1)
+                else:
+                    # if not, try to resolve relative keys
+                    lszText2 = self.JoinRelativePath(lszLocation, lszText)
+                    if self.Exists(lszText2):
+                        lszNewText = self.GetValue(lszText2, lszLocation, liRecursionLvl + 1)
+                    else: # if not, return given unresolved key
+                        lszNewText = lszText
+                lszNewText = lszNewText.replace('/','\\')
+                lcCMakeParser.Replace(lszNewText)
+
             elif (lszCmd == "os.exe"):
                 if self.Exists(lszText): # Check if key existing
                     lszNewText = self.GetValue(lszText, lszLocation, liRecursionLvl + 1)
@@ -450,8 +476,6 @@ class tcConfig():
             self.msztoString += "#   - \\ replaced by \\\\\n"
             self.msztoString += "#   - \" replaced by ''\n"
             self.msztoString += "#   - ${ replaced by prjref{\n\n\n"
-
-
 
         for key, value in lDctWorking.items():
             if isinstance(value, dict):

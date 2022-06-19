@@ -23,6 +23,7 @@
 
 __IO uint32_t TimingDelay = 0;
 
+cClockInfo    mcClockInfo;
 LED<GPIOC_BASE, 13> lcLedRed;
 tcUart<USART1_BASE, GPIOA_BASE,  9, GPIOA_BASE, 10> mcComPort(115200, GPIO_AF7_USART2, 64, 64);
 
@@ -46,7 +47,7 @@ class __attribute__((packed)) cLogData
   i16 mi16Spg;
 }; // 6Byte
 
-cLogData cLogBuf[5000]; // 35kb
+cLogData cLogBuf[5000]; // 35kb Reicht für 5s @1khz
 cRingBufT<cLogData, u16> cRingBufLog(cLogBuf, 5000);
 
 class cCliCmd_ShowLog : public cCliCmd
@@ -488,6 +489,78 @@ void MAIN_vTick10msLp(void)
 i32 mi32Pos200ms;
 i32 mi32Pos300ms;
 
+/*
+// Impulsantwort
+// Aus dem Stand 100% in die eine Richtung, Pause und dann 100% in die anderen Richtung
+void MAIN_vTick100msLp(void)
+{
+  static u8 luCnt100ms  = 0;
+
+  if (mcOpMode.IsAuto())
+  {
+    switch (luCnt100ms)
+    {
+      // 100ms  // Pause
+    case 0: luCnt100ms++; mcMot1.vSetPwm(0); mcMot1.vSetMode(3); break;
+
+      // 200ms // Voll in die eine Richtung drehen
+    case 1: luCnt100ms++; mcMot1.vSetPwm(256); mcMot1.vSetMode(3); break;
+
+      // 300ms // Pause
+    case 2: luCnt100ms++; mcMot1.vSetPwm(0); mcMot1.vSetMode(3); break;
+
+      // 400ms // Voll in die andere Richtung drehen
+    case 3: luCnt100ms=0; mcMot1.vSetPwm(-256); mcMot1.vSetMode(3); break;
+    }
+  }
+}*/
+
+// Zick-Zack
+// Aus dem Stand 100% in die eine Richtung, wie Impulsantwort ohne Pause.
+//    dann doppelt so lange 100% in die anderen Richtung
+//    dann doppelt so lange 100% in die anderen Richtung
+void MAIN_vTick100msLp(void)
+{
+  static u8 luCnt100ms = 0;
+
+  if (mcOpMode.IsAuto())
+  {
+    switch (luCnt100ms)
+    {
+      // 100ms  // Pause
+    case 0: luCnt100ms++; mcMot1.vSetPwm(0); mcMot1.vSetMode(3); break;
+
+      // 200ms // Voll in die eine Richtung drehen
+    case 1: luCnt100ms++; mcMot1.vSetPwm(256); mcMot1.vSetMode(3); break;
+
+      // 300ms // Voll in die andere Richtung drehen
+    case 2: luCnt100ms++; mcMot1.vSetPwm(-256); mcMot1.vSetMode(3); break;
+      // 400ms // Voll in die andere Richtung drehen
+    case 3: luCnt100ms++; mcMot1.vSetPwm(-256); mcMot1.vSetMode(3); break;
+
+      // 500ms // Voll in die eine Richtung drehen
+    case 4: luCnt100ms++; mcMot1.vSetPwm(256); mcMot1.vSetMode(3); break;
+      // 600ms // Voll in die eine Richtung drehen
+    case 5: luCnt100ms = 2; mcMot1.vSetPwm(256); mcMot1.vSetMode(3); break;
+
+    }
+  }
+}
+
+
+/*
+// Poti Messung speziell für 360° Servos
+// Aus dem Stand 100% in die eine Richtung, Pause und dann 100% in die anderen Richtung
+void MAIN_vTick100msLp(void)
+{
+  if (mcOpMode.IsAuto())
+  {
+    mcMot1.vSetPwm(256); mcMot1.vSetMode(3);
+  }
+}*/
+
+
+
 /*void MAIN_vTick100msLp(void)
 { 
   static u8 luCnt100ms    = 5;
@@ -647,7 +720,7 @@ i32 mi32Pos300ms;
   }
 }*/
 
-void MAIN_vTick100msLp(void)
+/*void MAIN_vTick100msLp(void)
 { 
   static u8 luCnt100ms    = 0;
 
@@ -659,7 +732,7 @@ void MAIN_vTick100msLp(void)
       case 0: luCnt100ms=0; mcMot1.vSetPwm(0);       mcMot1.vSetMode(0); break;
     }
   }
-}
+}*/
 
 
 void MAIN_vTick1000msLp(void)
