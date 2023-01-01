@@ -17,7 +17,6 @@ class cDiffTimer
 #endif
 {
   public:
-
   static u8  mu8Init;
   char mszString[10];
 

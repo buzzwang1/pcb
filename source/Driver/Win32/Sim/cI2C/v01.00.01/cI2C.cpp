@@ -229,7 +229,7 @@ void cI2c::vInitHw(bool lbMaster)
   //if (mI2C == I2C1) lnNVIC_IRQChannel = I2C1_EV_IRQn; //I2C1 connect to channel 7 of DMA1
   //if (mI2C == I2C2) lnNVIC_IRQChannel = I2C2_EV_IRQn;
   ///* Set the TIMx priority */
-  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 8, 8);
   ///* Enable the TIMx global Interrupt */
   //HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
   //
@@ -237,7 +237,7 @@ void cI2c::vInitHw(bool lbMaster)
   //if (mI2C == I2C1) lnNVIC_IRQChannel = I2C1_ER_IRQn; //I2C1 connect to channel 7 of DMA1
   //if (mI2C == I2C2) lnNVIC_IRQChannel = I2C2_ER_IRQn;
   ///* Set the TIMx priority */
-  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 8, 8);
   ///* Enable the TIMx global Interrupt */
   //HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 
@@ -279,7 +279,7 @@ void cI2c::vInitHw(bool lbMaster)
   //if (mI2C == I2C1) lnNVIC_IRQChannel = DMA1_Channel7_IRQn; //I2C1 connect to channel 7 of DMA1
   //if (mI2C == I2C2) lnNVIC_IRQChannel = DMA1_Channel5_IRQn;
   /* Set the TIMx priority */
-  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 8, 8);
   /* Enable the TIMx global Interrupt */
   //HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 
@@ -309,7 +309,7 @@ void cI2c::vInitHw(bool lbMaster)
   //if (mI2C == I2C1) lnNVIC_IRQChannel = DMA1_Channel6_IRQn; //I2C1 connect to channel 7 of DMA1
   //if (mI2C == I2C2) lnNVIC_IRQChannel = DMA1_Channel4_IRQn;
   /* Set the TIMx priority */
-  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+  //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 8, 8);
   /* Enable the TIMx global Interrupt */
   //HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 

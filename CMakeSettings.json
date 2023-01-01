@@ -1,6 +1,366 @@
 {
   "configurations": [
     {
+      "ProjectName": "SAMD10_XpMini_Ledblink",
+      "ProjectLabelName": "ATMEL/SAMD10/XpMini/Ledblink",
+      "ProjectFullLabelName": "ATMEL/SAMD10/XpMini/Ledblink.Debug",
+      "name": "ATMEL/SAMD10/XpMini/Ledblink.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Ledblink\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Ledblink\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/XpMini/Ledblink"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Ledblink\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_XpMini_Usart_Poll",
+      "ProjectLabelName": "ATMEL/SAMD10/XpMini/Usart/Poll",
+      "ProjectFullLabelName": "ATMEL/SAMD10/XpMini/Usart/Poll.Debug",
+      "name": "ATMEL/SAMD10/XpMini/Usart/Poll.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Poll\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Poll\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/XpMini/Usart/Poll"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Poll\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_XpMini_Usart_Int",
+      "ProjectLabelName": "ATMEL/SAMD10/XpMini/Usart/Int",
+      "ProjectFullLabelName": "ATMEL/SAMD10/XpMini/Usart/Int.Debug",
+      "name": "ATMEL/SAMD10/XpMini/Usart/Int.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Int\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Int\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/XpMini/Usart/Int"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Int\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_XpMini_Usart_Dma",
+      "ProjectLabelName": "ATMEL/SAMD10/XpMini/Usart/Dma",
+      "ProjectFullLabelName": "ATMEL/SAMD10/XpMini/Usart/Dma.Debug",
+      "name": "ATMEL/SAMD10/XpMini/Usart/Dma.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Dma\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Dma\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/XpMini/Usart/Dma"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\XpMini\\Usart\\Dma\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo3_Ledblink",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo3/Ledblink",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo3/Ledblink.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo3/Ledblink.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Ledblink\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Ledblink\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo3/Ledblink"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Ledblink\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo3_Mot",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo3/Mot",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo3/Mot.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo3/Mot.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Mot\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Mot\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo3/Mot"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Mot\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo3_Adc",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo3/Adc",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo3/Adc.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo3/Adc.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Adc\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Adc\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo3/Adc"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Adc\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo3_Servo",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo3/Servo",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo3/Servo.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo3/Servo.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Servo\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Servo\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo3/Servo"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo3\\Servo\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo4_Ledblink",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo4/Ledblink",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo4/Ledblink.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo4/Ledblink.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Ledblink\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Ledblink\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo4/Ledblink"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Ledblink\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo4_Mot",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo4/Mot",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo4/Mot.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo4/Mot.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Mot\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Mot\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo4/Mot"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Mot\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo4_Enc",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo4/Enc",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo4/Enc.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo4/Enc.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Enc\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Enc\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo4/Enc"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Enc\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "SAMD10_UbTech_Servo4_Adc",
+      "ProjectLabelName": "ATMEL/SAMD10/UbTech/Servo4/Adc",
+      "ProjectFullLabelName": "ATMEL/SAMD10/UbTech/Servo4/Adc.Debug",
+      "name": "ATMEL/SAMD10/UbTech/Servo4/Adc.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Adc\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Adc\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "ATMEL/SAMD10/UbTech/Servo4/Adc"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\ATMEL\\SAMD10\\UbTech\\Servo4\\Adc\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "GD32F1x0_UbTech_Servo1_Ledblink",
       "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Ledblink",
       "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Ledblink.Debug",
@@ -203,6 +563,36 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Usart\\MdHd01\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "GD32F1x0_MicroBn_MpHp01",
+      "ProjectLabelName": "STM/F1/GD32F1x0/MicroBn/MpHd01",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/MicroBn/MpHd01.Release",
+      "name": "STM/F1/GD32F1x0/MicroBn/MpHd01.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\MicroBn\\MpHd01\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\MicroBn\\MpHd01\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/MicroBn/MpHd01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\MicroBn\\MpHd01\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -3991,6 +4381,186 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mini_LedBlink_PB9Int",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int.Debug",
+      "name": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Int\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Int\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Int\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_LedBlink_PB9Ext",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Ext",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Ext.Debug",
+      "name": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Ext.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Ext\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Ext\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Ext"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Ext\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MB01_I2C_INA219",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MB01/I2C/INA219",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MB01/I2C/INA219.Debug",
+      "name": "STM/L4/STM32L433CCT/Mini/MB01/I2C/INA219.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\I2C\\INA219\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\I2C\\INA219\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MB01/I2C/INA219"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\I2C\\INA219\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MB01_Main01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MB01/Main01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MB01/Main01.Debug",
+      "name": "STM/L4/STM32L433CCT/Mini/MB01/Main01.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MB01/Main01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MB01_Main01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MB01/Main01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MB01/Main01.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/MB01/Main01.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MB01/Main01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\Main01\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MB01_SleepTest",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MB01/SleepTest",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MB01/SleepTest.Debug",
+      "name": "STM/L4/STM32L433CCT/Mini/MB01/SleepTest.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\SleepTest\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\SleepTest\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MB01/SleepTest"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MB01\\SleepTest\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Bootloader",
       "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Bootloader",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Bootloader.Debug",
@@ -5093,6 +5663,276 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L5\\STM32L552ZET\\L552_Nucleo\\LedBlink\\PB7\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U5_HalLib",
+      "ProjectLabelName": "STM/U5/HalLib/v01.01.00",
+      "ProjectFullLabelName": "STM/U5/HalLib/v01.01.00.og",
+      "name": "STM/U5/HalLib/v01.01.00.og",
+      "generator": "Ninja",
+      "configurationType": "og",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\og\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\og\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/HalLib/v01.01.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\og\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U5_HalLib",
+      "ProjectLabelName": "STM/U5/HalLib/v01.01.00",
+      "ProjectFullLabelName": "STM/U5/HalLib/v01.01.00.o3",
+      "name": "STM/U5/HalLib/v01.01.00.o3",
+      "generator": "Ninja",
+      "configurationType": "o3",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\o3\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\o3\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/HalLib/v01.01.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\o3\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U5_HalLib",
+      "ProjectLabelName": "STM/U5/HalLib/v01.01.00",
+      "ProjectFullLabelName": "STM/U5/HalLib/v01.01.00.os",
+      "name": "STM/U5/HalLib/v01.01.00.os",
+      "generator": "Ninja",
+      "configurationType": "os",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\os\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\os\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/HalLib/v01.01.00"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\HalLib\\v01.01.00\\os\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_LedBlink_PB7",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/LedBlink/PB7",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/LedBlink/PB7.Debug",
+      "name": "STM/U5/STM32U575ZI/Nucleo/LedBlink/PB7.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\LedBlink\\PB7\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\LedBlink\\PB7\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/LedBlink/PB7"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\LedBlink\\PB7\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_U575_Nucleo_Gfx_Gui_v2_Test05",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05.Debug",
+      "name": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_U575_Nucleo_Gfx_Gui_v2_Test05",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05.Release",
+      "name": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/Gfx/Gui/v2/Test05"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Gfx\\Gui\\v2\\Test05\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_Examples_DMA_M2MLL",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2MLL",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2MLL.Debug",
+      "name": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2MLL.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2MLL\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2MLL\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2MLL"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2MLL\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_Examples_DMA_M2SpiHal",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2SpiHal",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2SpiHal.Debug",
+      "name": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2SpiHal.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2SpiHal\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2SpiHal\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/Examples/DMA/M2SpiHal"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\DMA\\M2SpiHal\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U575ZI_Examples_SPI_ITLL",
+      "ProjectLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/SPI/ITLL",
+      "ProjectFullLabelName": "STM/U5/STM32U575ZI/Nucleo/Examples/SPI/ITLL.Debug",
+      "name": "STM/U5/STM32U575ZI/Nucleo/Examples/SPI/ITLL.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\SPI\\ITLL\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\SPI\\ITLL\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U575ZI/Nucleo/Examples/SPI/ITLL"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U575ZI\\Nucleo\\Examples\\SPI\\ITLL\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",

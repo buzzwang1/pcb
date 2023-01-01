@@ -22,7 +22,6 @@ cComNodeList::~cComNodeList()
   delete []mpacNodes;
 }
 
-
 uint32 cComNodeList::SizeOf()
 {
   uint32 lui32Size;
@@ -39,6 +38,12 @@ uint32 cComNodeList::SizeOf()
   }
   return lui32Size;
 }
+
+void cComNodeList::vResetPos()
+{
+  ui32Pos = -1;
+}
+
 
 void cComNodeList::vStartAll()
 {

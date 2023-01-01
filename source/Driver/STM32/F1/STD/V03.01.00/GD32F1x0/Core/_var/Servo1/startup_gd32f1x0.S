@@ -70,31 +70,31 @@ __HeapLimit:
 __isr_vector:
     .long    __StackTop            /* Top of Stack */
     .long    Reset_Handler         /* Reset Handler */
-    .long    NMI_Handler           /* NMI Handler */
+    .long    0           /* NMI Handler */
     .long    HardFault_Handler     /* Hard Fault Handler */
-    .long    MemManage_Handler     /* MPU Fault Handler */
-    .long    BusFault_Handler      /* Bus Fault Handler */
-    .long    UsageFault_Handler    /* Usage Fault Handler */
+    .long    0     /* MPU Fault Handler */
+    .long    0      /* Bus Fault Handler */
+    .long    0    /* Usage Fault Handler */
     .long    0                     /* Reserved */
     .long    0                     /* Reserved */
     .long    0                     /* Reserved */
     .long    0                     /* Reserved */
-    .long    SVC_Handler           /* SVCall Handler */
-    .long    DebugMon_Handler      /* Debug Monitor Handler */
+    .long    0           /* SVCall Handler */
+    .long    0      /* Debug Monitor Handler */
     .long    0                     /* Reserved */
-    .long    PendSV_Handler        /* PendSV Handler */
+    .long    0        /* PendSV Handler */
     .long    SysTick_Handler       /* SysTick Handler */
 
              
-    .long    WWDGT_IRQHandler
-    .long    LVD_IRQHandler
-    .long    RTC_IRQHandler
-    .long    FMC_IRQHandler
-    .long    RCU_IRQHandler
-    .long    EXTI0_1_IRQHandler
-    .long    EXTI2_3_IRQHandler
-    .long    EXTI4_15_IRQHandler
-    .long    TSI_IRQHandler
+    .long    0
+    .long    0
+    .long    0
+    .long    0
+    .long    0
+    .long    0
+    .long    0
+    .long    0
+    .long    0
     .long    DMA_Channel0_IRQHandler
     .long    DMA_Channel1_2_IRQHandler
     .long    DMA_Channel3_4_IRQHandler
@@ -109,10 +109,10 @@ __isr_vector:
     .long    TIMER14_IRQHandler
     .long    TIMER15_IRQHandler
     .long    TIMER16_IRQHandler
-    .long    I2C0_EV_IRQHandler
-    .long    I2C1_EV_IRQHandler
-    .long    SPI0_IRQHandler
-    .long    SPI1_IRQHandler
+    .long    0
+    .long    0
+    .long    0
+    .long    0
     .long    USART0_IRQHandler
 
 
@@ -206,27 +206,9 @@ _start:
     .size    \handler_name, . - \handler_name
     .endm
 
-    def_irq_handler    NMI_Handler
     def_irq_handler    HardFault_Handler
-    def_irq_handler    MemManage_Handler
-    def_irq_handler    BusFault_Handler
-    def_irq_handler    UsageFault_Handler
-    def_irq_handler    SVC_Handler
-    def_irq_handler    DebugMon_Handler
-    def_irq_handler    PendSV_Handler
     def_irq_handler    SysTick_Handler
-    def_irq_handler    Default_Handler
 
-
-    def_irq_handler    WWDGT_IRQHandler
-    def_irq_handler    LVD_IRQHandler
-    def_irq_handler    RTC_IRQHandler
-    def_irq_handler    FMC_IRQHandler
-    def_irq_handler    RCU_IRQHandler
-    def_irq_handler    EXTI0_1_IRQHandler
-    def_irq_handler    EXTI2_3_IRQHandler
-    def_irq_handler    EXTI4_15_IRQHandler
-    def_irq_handler    TSI_IRQHandler
     def_irq_handler    DMA_Channel0_IRQHandler
     def_irq_handler    DMA_Channel1_2_IRQHandler
     def_irq_handler    DMA_Channel3_4_IRQHandler
@@ -240,11 +222,6 @@ _start:
     def_irq_handler    TIMER14_IRQHandler
     def_irq_handler    TIMER15_IRQHandler
     def_irq_handler    TIMER16_IRQHandler
-    def_irq_handler    I2C0_EV_IRQHandler
-    def_irq_handler    I2C1_EV_IRQHandler
-    def_irq_handler    SPI0_IRQHandler
-    def_irq_handler    SPI1_IRQHandler
     def_irq_handler    USART0_IRQHandler
-
 
     .end

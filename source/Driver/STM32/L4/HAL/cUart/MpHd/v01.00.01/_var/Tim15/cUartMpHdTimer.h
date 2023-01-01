@@ -1,5 +1,5 @@
-#ifndef __cI2C_TIM_H__
-#define __cI2C_TIM_H__
+#ifndef __cUSART_MPHD_TIM_H__
+#define __cUSART_MPHD_TIM_H__
 
 #include "Typedef.h"
 #include "stm32l433xx.h"
@@ -7,11 +7,11 @@
 
 #include "ClockInfo.h"
 
-class cBotNet_DownLinkI2c_Timer
+class cBotNet_DownLinkUsartMpHd_Timer
 {
   public:
 
-  cBotNet_DownLinkI2c_Timer()
+  cBotNet_DownLinkUsartMpHd_Timer()
   {
     vInit();
   }
@@ -59,7 +59,7 @@ class cBotNet_DownLinkI2c_Timer
     TIM15->DIER |= TIM_DIER_UIE;
 
     // Enable the TIM15 global Interrupt
-    HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 3, 0);
+    HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 7, 8);  // Höhere Prio,wegen Asynchron
     /* Enable the TIM15 global Interrupt */
     HAL_NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
   }
@@ -69,4 +69,4 @@ class cBotNet_DownLinkI2c_Timer
 
 
 
-#endif // __cI2C_TIM_H__
+#endif // __cUSART_MPHD_TIM_H__

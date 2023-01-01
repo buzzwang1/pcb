@@ -25,6 +25,9 @@ class cSW6007: public cComNode
     enCmdSetId,
     enCmdSetId2,
 
+    enCmdSet0x32PlugInOutDetectConfig,
+    enCmdSet0x32PlugInOutDetectConfig2,
+
   }tenAPDS9960_Cmd;
 
 
@@ -39,6 +42,7 @@ class cSW6007: public cComNode
 
   bool mbInit;
   bool mbId;
+  bool mbSet0x32PlugInOutDetectConfig;
 
   u8   mu8Mem[256];
 
@@ -55,6 +59,11 @@ class cSW6007: public cComNode
     mStatus.IsInit = false;
 
     i8Setup();
+    
+    mbId = false;
+    mbSet0x32PlugInOutDetectConfig = false;
+
+    i8Set0x32PlugInOutDetectConfig(0x50);
 
     vSetStartRequest();
 
@@ -70,7 +79,8 @@ class cSW6007: public cComNode
   inline void vSetStartRequest()
   {
     mStatus.IsStartRequested = (uint8)(mbInit |
-                                       mbId);
+                                       mbId | 
+                                       mbSet0x32PlugInOutDetectConfig);
   }
 
 
@@ -101,6 +111,12 @@ class cSW6007: public cComNode
       {
         mbId = false;
         menCmd = enCmdSetId;
+        vComDone();
+      }
+      else if (mbSet0x32PlugInOutDetectConfig)
+      {
+        mbSet0x32PlugInOutDetectConfig = false;
+        menCmd = enCmdSet0x32PlugInOutDetectConfig;
         vComDone();
       }
     }
@@ -147,7 +163,6 @@ class cSW6007: public cComNode
 
 
       case enCmdSetId: // REG 0x26: Version I
-        mIdx    = 0;
         menCmd  = enCmdSetId2;
         //Read ID
         mpcMsgRead.cTxData.mpu8Data[0] = 0x26;
@@ -157,6 +172,19 @@ class cSW6007: public cComNode
       case enCmdSetId2:
         menCmd     = enCmdIdle;
         break;
+
+      case enCmdSet0x32PlugInOutDetectConfig:
+        menCmd  = enCmdSet0x32PlugInOutDetectConfig2;
+        //Read ID
+        mpcMsgWrite.cTxData.mpu8Data[0] = 0x32;
+        mpcMsgWrite.cTxData.mpu8Data[1] = 0x50;
+        mpcMsgWrite.vStart();
+        mI2C->vStartMsg(&mpcMsgWrite);
+        break;
+      case enCmdSet0x32PlugInOutDetectConfig2:
+        menCmd     = enCmdIdle;
+        break;
+
       default:
         break;
     }
@@ -181,6 +209,15 @@ class cSW6007: public cComNode
   {
     mbId           = true;
     mStatus.IsStartRequested = 1;
+
+    return FRET_OK;
+  }
+
+  int8 i8Set0x32PlugInOutDetectConfig(u8 lu8Value)
+  {
+    mbSet0x32PlugInOutDetectConfig = true;
+    mu8Mem[0x32] = lu8Value;
+    mStatus.IsStartRequested       = 1;
 
     return FRET_OK;
   }

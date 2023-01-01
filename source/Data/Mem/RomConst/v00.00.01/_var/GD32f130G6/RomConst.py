@@ -140,7 +140,7 @@ for u8Byte in RomConst[0:0x310]:
     RomConst[liIdx] = liIdx & 0xFF
     liIdx+=1
 
-liAdr = 0x1E00
+liAdr = 0x1ED0
 
 SetHeader("Servo1", "GD32L130G6", "Cortex-M3,Rom 32KB,Ram 4KB",  0, liAdr, 5, 256)
 

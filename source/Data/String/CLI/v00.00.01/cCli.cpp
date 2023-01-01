@@ -33,39 +33,19 @@ bool cCliCmd_Help::bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, voi
     {
       if (mcCmdList->mCmdList[mu16Cnt] != null)
       {
-        while (mu16State < 3)
+        while (mu16State < 1)
         {
-          switch (mu16State)
-          {
-            case 0:
-            { 
-              char8 lszValue[8];
-              cStr lcValue((char8*)lszValue, 8);
+          char8 lszValue[8];
+          cStr lcValue((char8*)lszValue, 8);
 
-              lcValue.Itoa(mu16CmdCnt, 10);
-              lcValue += (const char*)".) ";
-              lcCli->bPrint(lcValue);
-              mu16State++;
-              return False;
-            }
-            break;
-            case 1:
-            {
-              lcCli->bPrint(mcCmdList->mCmdList[mu16Cnt]->mcCmd);
-              mu16State++;
-              return False;
-            }
-            case 2:
-            {
-              lcCli->bPrint((const char*) " : ");
-              lcCli->bPrintLn(mcCmdList->mCmdList[mu16Cnt]->mcCmdInfo);
-              mu16State++;
-              return False;
-            }
-            break;
-            default:
-              break;
-          }
+          lcValue.Itoa(mu16CmdCnt, 10);
+          lcValue += (const char*)".) ";
+          lcCli->bPrint(lcValue);
+          lcCli->bPrint(mcCmdList->mCmdList[mu16Cnt]->mcCmd);
+          lcCli->bPrint((const char*) " : ");
+          lcCli->bPrintLn(mcCmdList->mCmdList[mu16Cnt]->mcCmdInfo);
+          mu16State++;
+          return False;
         }
       }
       mu16State = 0;

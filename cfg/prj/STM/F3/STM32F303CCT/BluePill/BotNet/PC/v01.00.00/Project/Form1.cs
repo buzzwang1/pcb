@@ -1423,7 +1423,7 @@ namespace Project
                   lcBnAdr.Set(Session_mu16ConnectedBnAdr);
 
                   lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
-                  lszText += "Brige: Connection Ack: ";
+                  lszText += "Bridge: Connection Ack: ";
                   lszText += "DeviceAdr: " + Session_mu16ConnectedDeviceID.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString();
                   Session_mbConnected = true;
@@ -1437,7 +1437,7 @@ namespace Project
                   lcBnAdr.Set(Session_mu16ConnectedBnAdr);
 
                   lszText = "  rx " + lMsg.mu32TimeStamp.ToString("#,###,##0") + " ";
-                  lszText += "Brige: Dis-Connection Ack: ";
+                  lszText += "Bridge: Dis-Connection Ack: ";
                   lszText += "DeviceAdr: " + Session_mu16ConnectedDeviceID.ToString() + " ";
                   lszText += "BnAdr: " + lcBnAdr.ToString();
                   Session_mbConnected = false;

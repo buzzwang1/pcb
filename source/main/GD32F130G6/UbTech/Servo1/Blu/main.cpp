@@ -57,6 +57,9 @@ LED<GPIOB, 1>       mcLedRed;
 
 cBotNetCfg mcMyBotNetCfg((const char8*)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr);
 
+cUartMpHdSlave mcUartMpHdU0;
+cBotNet_UpLinkUsartMpHd mcUpLink(&mcUartMpHdU0);
+//cBotNet_UpLinkUsartMpHd_RMsg mcUpLink(&mcUartMpHdU0);
 cBotNet mcBn(&mcMyBotNetCfg);
 
 
@@ -126,8 +129,7 @@ void PendSV_Handler(void)
 }
 
 
-/*
-static volatile u32 mu32SysTick_Delay;
+/*static volatile u32 mu32SysTick_Delay;
 
 void vSysTickInit(void)
 {
@@ -187,15 +189,15 @@ void DMA_Channel1_2_IRQHandler(void)
   {
     dma_channel_disable(DMA_CH1);
     DMA_INTC = DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH1);
-    mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTxTc);
+    mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTxTc);
   }
 
   // USART1 RX
   if (DMA_INTF & DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2))
   {
-    dma_channel_disable(DMA_CH2);
+    DMA_CHCTL(DMA_CH2) &= ~DMA_CHXCTL_CHEN;
     DMA_INTC = DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2);
-    mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaRxTc);
+    mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaRxTc);
   }
 }
 
@@ -206,18 +208,19 @@ void USART0_IRQHandler(void)
     if (USART_STAT(USART0) & USART_STAT_TC)
     {
       USART_INTC(USART0) = USART_STAT_TC;
-      mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
+      mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
     }
 
     if (USART_STAT(USART0) & 0xF)
     {
-      mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
+      USART_INTC(USART0) = USART_STAT_ORERR;
+      mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
     }
   }
   else
   {
     //usart_deinit(USART0);
-    mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErUnknown);
+    mcUartMpHdU0.vInitHw();
   }
 }
 
@@ -227,7 +230,7 @@ void TIMER16_IRQHandler(void)
   {
     timer_interrupt_flag_clear(TIMER16, TIMER_INT_FLAG_UP);
     timer_disable(TIMER16);
-    mcBn.mcUartMpHdU0.TIM_EV_IRQHandler();
+    mcUartMpHdU0.TIM_EV_IRQHandler();
   }
 }
 
@@ -289,6 +292,9 @@ void MAIN_vInitSystem(void)
 {
   //SystemInit();
   //vSysTickInit();
+
+  // Add Uplink
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
 
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
   mcBn.vStreamPortConnect(0, 0xE000, 0);

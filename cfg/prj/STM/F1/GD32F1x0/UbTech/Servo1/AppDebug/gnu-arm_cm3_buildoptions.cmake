@@ -10,7 +10,7 @@ list(APPEND PCB_ListTargetDefinition
   -DGD32F130_150
   -D__NO_SYSTEM_INIT
 
-  -DTEST_BnLinkUsartMpHd
+#  -DTEST_BnLinkUsartMpHd
 
 #  -DUSE_HAL_DRIVER
 #  -DUSE_FULL_ASSERT

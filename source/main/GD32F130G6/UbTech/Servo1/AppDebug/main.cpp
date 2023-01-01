@@ -73,7 +73,7 @@
 
 
 LED<GPIOB, 1>       mcLedRed;
-//cServo1_Applikation mcMotor;
+cServo1_Applikation mcMotor;
 
 
 class cBn_MsgProcess : public cBotNet_MsgSysProcess
@@ -87,11 +87,12 @@ class cBn_MsgProcess : public cBotNet_MsgSysProcess
     i16* lpi16Data;
     lpi16Data = (i16*)lcMsgStatusMsg.mcPayload.mpu8Data;
 
-    *lpi16Data++ = 0;
-    *lpi16Data++ = 0;
-    *lpi16Data++ = 0;
-    *lpi16Data   = 0;
-    lpi16Data[8] = 0;
+                                                       // Idx
+    *lpi16Data++ = (i16)mcMotor.i16GetPosDegree();     // 0, 1
+    *lpi16Data++ = (i16)mcMotor.u16GetSupplyVoltage(); // 2, 3
+    *lpi16Data++ = (i16)mcMotor.u16GetCurrent();       // 4, 5
+    *lpi16Data   = (i16)mcMotor.i16GetTemp();          // 6, 7
+    lpi16Data[8] = (u8)mcMotor.mStatus.u8Status;       // 8
 
 
     lcMsgStatusMsg.vEncode();
@@ -100,19 +101,63 @@ class cBn_MsgProcess : public cBotNet_MsgSysProcess
 
   void vMsg(cBotNetMsg_MsgProt &lcMsg, cBotNet* lpcBn)
   {
-    UNUSED(lpcBn);
     switch (lcMsg.mu16Idx)
     {
       case 80: // i16 Sollpos + i16Strombegrenzung (optional)
         {
+          i16* lpi16PosSoll;
+          //i16* lpi16Strom;
+          if (lcMsg.mcPayload.muiLen >= 2)
+          {
+            lpi16PosSoll = (i16*)lcMsg.mcPayload.mpu8Data;
+            mcMotor.vSetMotMode_Servo();
+            mcMotor.vSetPosDegree(*lpi16PosSoll);
+
+            if (*lpi16PosSoll <= 0)  *lpi16PosSoll-=*lpi16PosSoll;
+            if (*lpi16PosSoll > 360)
+            {
+              mcMotor.vSetMotDisable();
+            }
+            else
+            {
+              mcMotor.vSetMotEnable();
+            }
+            vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
+          }
         }
         break;
       case 81: // i16 Sollpwm + i16Strombegrenzung (optional)
         {
+          i16* lpi16PwmSoll;
+          //i16* lpi16Strom;
+          if (lcMsg.mcPayload.muiLen >= 2)
+          {
+            lpi16PwmSoll = (i16*)lcMsg.mcPayload.mpu8Data;
+            mcMotor.vSetMotMode_Motor();
+            mcMotor.vSetSpeed(*lpi16PwmSoll);
+            if (*lpi16PwmSoll != 0)
+            {
+              mcMotor.vSetMotEnable();
+            }
+            else
+            {
+              mcMotor.vSetMotDisable();
+            }
+            vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
+          }
         }
         break;
       case 82: // Fp1814 Kp, Fp1814 Ki, Fp1814 Kd
         {
+          i32* lpi32Para;
+          if (lcMsg.mcPayload.muiLen >= 3*4)
+          {
+            lpi32Para = (i32*)lcMsg.mcPayload.mpu8Data;
+
+            mcMotor.mcMyPid.mFpKp.vSetFrac(*lpi32Para++);
+            mcMotor.mcMyPid.mFpKi.vSetFrac(*lpi32Para++);
+            mcMotor.mcMyPid.mFpKd.vSetFrac(*lpi32Para++);
+          }
         }
       break;
       default:
@@ -126,6 +171,10 @@ cBotNetCfg mcMyBotNetCfg((const char8*)RomConst_stDevice_Info->szDevice_Name, Ro
 
 cBn_MsgProcess mcBn_MsgProcess;
 
+
+cUartMpHdSlave mcUartMpHdU0;
+//cBotNet_UpLinkUsartMpHd mcUpLink(&mcUartMpHdU0);
+cBotNet_UpLinkUsartMpHd_RMsg mcUpLink(&mcUartMpHdU0);
 
 cBotNet mcBn(&mcMyBotNetCfg, &mcBn_MsgProcess);
 
@@ -141,14 +190,25 @@ class cCliCmd_SetPwm: public cCliCmd
   bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
     {
       UNUSED(lcParam);
-      UNUSED(lcCli);
       UNUSED(lbFirstCall);
       UNUSED(lCallerAdr);
 
       char8 lszStrBuf[32];
       cStr  lszStr(lszStrBuf, 32);
 
-
+      if (lcParam.Len() != 0)
+      {
+        i16 li16Val = lcParam.Atoi();
+        mcMotor.vSetMotMode_Motor();
+        mcMotor.vSetSpeed(li16Val);
+        if (li16Val != 0) mcMotor.vSetMotEnable();
+                    else  mcMotor.vSetMotDisable();
+      }
+      else
+      {
+        lszStr.Setf("A: %d", mcMotor.mSpeed_Soll);
+        lcCli->bPrintLn(lszStr);
+      }
       return True;
     }
 };
@@ -161,12 +221,24 @@ class cCliCmd_SetPos: public cCliCmd
 
   bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
     {
-      UNUSED(lcParam);
-      UNUSED(lcCli);
       UNUSED(lbFirstCall);
       UNUSED(lCallerAdr);
 
+      char8 lszStrBuf[32];
+      cStr  lszStr(lszStrBuf, 32);
 
+      if (lcParam.Len() != 0)
+      {
+        i16 li16Val = lcParam.Atoi();
+        mcMotor.vSetMotMode_Servo();
+        mcMotor.vSetPosDegree(li16Val);
+        mcMotor.vSetMotEnable();
+      }
+      else
+      {
+        lszStr.Setf("A: %d", mcMotor.i16GetPosDegree());
+        lcCli->bPrintLn(lszStr);
+      }
       return True;
     }
 };
@@ -179,12 +251,27 @@ class cCliCmd_Status: public cCliCmd
 
     bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
     {
+      char8  lszStrBuf[32];
+      cStr  lszStr(lszStrBuf, 32);
+
       UNUSED(lcParam);
-      UNUSED(lcCli);
       UNUSED(lbFirstCall);
       UNUSED(lCallerAdr);
 
+      lszStr.Setf((const char8*)"P: %d", mcMotor.i16GetPosDegree());
+      lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"U: %d", mcMotor.u16GetSupplyVoltage());
+      lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"I: %d", mcMotor.u16GetCurrent());
+      lcCli->bPrintLn(lszStr);
+      lszStr.Setf((const char8*)"T: %d\r\n", mcMotor.i16GetTemp());
+      lcCli->bPrintLn(lszStr);
 
+      for (u8 lu8t=0; lu8t < mcMotor.nChnCount; lu8t++)
+      {
+        lszStr.Setf((const char8*)"%d: %d", lu8t + 1, mcMotor.mAdcResult[lu8t]);
+        lcCli->bPrintLn(lszStr);
+      }
 
       return True;
     }
@@ -327,38 +414,37 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif
 
+
 void DMA_Channel1_2_IRQHandler(void)
 {
-  // USART1 RX
-  if (DMA_INTF & DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2))
-  {
-    #ifdef TEST_BnLinkUsartMpHd
-      cTimeStampArray::vDtwStart();
-      gpio_bit_set(GPIOB, GPIO_PIN_1);
-      cTimeStampArray::vReset();
-      cTimeStampArray::vSetTimeStamp(0);
-    #endif
-
-    DMA_CHCTL(DMA_CH2) &= ~DMA_CHXCTL_CHEN;
-    DMA_INTC = DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2);
-    mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaRxTc);
-
-    #ifdef TEST_BnLinkUsartMpHd
-      gpio_bit_reset(GPIOB, GPIO_PIN_1);
-      cTimeStampArray::vDtwStop();
-      cTimeStampArray::vSetTimeStamp(1);
-    #endif
-  }
-  else
   // USART1 TX
   if (DMA_INTF & DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH1))
   {
     #ifdef TEST_BnLinkUsartMpHd
       cTimeStampArray::vSetTimeStamp(25);
+      //gpio_bit_reset(GPIOB, GPIO_PIN_1);
     #endif
-    DMA_CHCTL(DMA_CH1) &= ~DMA_CHXCTL_CHEN;
+    dma_channel_disable(DMA_CH1);
     DMA_INTC = DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH1);
-    mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTxTc);
+    mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTxTc);
+  }
+
+  // USART1 RX
+  if (DMA_INTF & DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2))
+  {
+    #ifdef TEST_BnLinkUsartMpHd
+      cTimeStampArray::vReset();
+      cTimeStampArray::vSetTimeStamp(0);
+      //gpio_bit_set(GPIOB, GPIO_PIN_1);
+    #endif
+
+    DMA_CHCTL(DMA_CH2) &= ~DMA_CHXCTL_CHEN;
+    DMA_INTC = DMA_FLAG_ADD(DMA_INTF_FTFIF, DMA_CH2);
+    mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaRxTc);
+
+    #ifdef TEST_BnLinkUsartMpHd
+      cTimeStampArray::vSetTimeStamp(1);
+    #endif
   }
 }
 
@@ -373,7 +459,7 @@ void USART0_IRQHandler(void)
       #endif
 
       USART_INTC(USART0) = USART_STAT_TC;
-      mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
+      mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
       #ifdef TEST_BnLinkUsartMpHd
         cTimeStampArray::vSetTimeStamp(27);
       #endif
@@ -382,13 +468,13 @@ void USART0_IRQHandler(void)
     if (USART_STAT(USART0) & 0xF)
     {
       USART_INTC(USART0) = USART_STAT_ORERR;
-      mcBn.mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
+      mcUartMpHdU0.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
     }
   }
   else
   {
     //usart_deinit(USART0);
-    mcBn.mcUartMpHdU0.vInitHw();
+    mcUartMpHdU0.vInitHw();
   }
 }
 
@@ -398,7 +484,7 @@ void TIMER16_IRQHandler(void)
   {
     timer_interrupt_flag_clear(TIMER16, TIMER_INT_FLAG_UP);
     timer_disable(TIMER16);
-    mcBn.mcUartMpHdU0.TIM_EV_IRQHandler();
+    mcUartMpHdU0.TIM_EV_IRQHandler();
   }
 }
 
@@ -463,6 +549,9 @@ void MAIN_vInitSystem(void)
   //SystemInit();
   //vSysTickInit();
 
+  // Add Uplink
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
+
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
   mcBn.vStreamPortConnect(0, 0xE000, 0);
 
@@ -500,6 +589,7 @@ int main(void)
     if (MAIN_u32Counter_1000ms_old != MAIN_u32Counter_1000ms)
     {
       MAIN_u32Counter_1000ms_old = MAIN_u32Counter_1000ms;
+      mcMotor.vTick1ms();
     }
 
     if (MAIN_u32Counter_10ms >= 10)

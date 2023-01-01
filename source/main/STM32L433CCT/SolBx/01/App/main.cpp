@@ -536,14 +536,14 @@ cBn_MsgProcess_0x1000 mcBn_MsgProcess_0x1000;
 cBotNetStreamPort_BotNetMemPort  mcMemPort(RomConst_Partition_Count, RomConst_stDevice_Info->stPartitions);
 cBotNetStreamPort_TextPort       mcTextPort(cBotNetStreamPort_TextPort::nFitSmartRev, 256+128, &cRFont_Res8b_Bpp1_1G_5x5Ucase);
 
-// --- 0xE000 SideLink => PC
-cNRF905                  mcNRF905(0x00010110, 0x00010100);
-cBotNet_UpLinknRf905     mcSideLnk_0x1000Rf(0xE000, &mcNRF905);
-cBotNet_UpLinknRf905Net  mcSideLnk_0x1000(&mcSideLnk_0x1000Rf);
-
 // Device ID: 8 = Clock Master
 cBotNet mcBnNode(&mcMyBotNetCfg, &mcBn_MsgProcess_0x1000);
 
+
+// --- 0xE000 SideLink => PC
+cNRF905                  mcNRF905(0x00010110, 0x00010100);
+cBotNet_UpLinknRf905     mcSideLnk_0x1000Rf(&mcNRF905);
+cBotNet_UpLinknRf905Net  mcSideLnk_0x1000(&mcSideLnk_0x1000Rf, &mcBnNode);
 
 
 void I2C1_EV_IRQHandler(void)
@@ -1513,12 +1513,12 @@ void MAIN_Switch_DoAction(void)
 {
   // Schalter automatic
 
-  if (mcPowerMonitor.stGlobals.i32U_Bat < 2800)
+  if (mcPowerMonitor.stGlobals.i32U_Bat < 2500)
   {
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS2] = 0;
   }
 
-  if (mcPowerMonitor.stGlobals.i32U_Bat < 3000)
+  if (mcPowerMonitor.stGlobals.i32U_Bat < 3100)
   {
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS1] = 1;
     mcPowerMonitor.stGlobals.aui8Switches[cPowerMonitor::MAIN_nS3] = 1;
@@ -1701,7 +1701,7 @@ void MAIN_vInitSystem(void)
   MAIN_Switch_vInit();
 
 
-  mcBnNode.bAddLink((cBotNet_LinkBase*)&mcSideLnk_0x1000);
+  mcBnNode.bAddLink((cBotNet_LinkBase*)&mcSideLnk_0x1000, 0xE000);
 
   u16 lu16PortIdx;
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
@@ -1720,6 +1720,8 @@ void MAIN_vInitSystem(void)
   lu16PortIdx = mcBnNode.u16StreamPortAdd(&mcBnPortPowMon);
 
   mcBnNode.vSetName(RomConst_stDevice_Info->szDevice_Name);
+
+  mcSideLnk_0x1000.vSetTiming(60 * 1000, 100);
 
   CycCall_Start(MAIN_vTick1msHp /*1ms_HP*/,
                 MAIN_vTick10msHp /*10ms_HP*/,

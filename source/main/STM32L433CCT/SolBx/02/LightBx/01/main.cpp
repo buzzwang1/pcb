@@ -644,10 +644,10 @@ void MAIN_vPrintPort(u8 lu8StartIdx, u8 lu8StopIdx)
       for (liCnxIdx = 0; liCnxIdx < cBotNet_StreamSysPortsCnxCnt; liCnxIdx++)
       {
         // interne Connection
-        if (mcBn_0x1200->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx] != 0)
+        if (mcBn_0x1200->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx] != 0)
         {
           lszStr.Setf((const char8*)"%d int: ", liCnxIdx + 1);
-          lszStr += mcBn_0x1200->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mszName;
+          lszStr += mcBn_0x1200->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mszName;
 
           cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(20, 14+liPosY, lszStr.ToString(), &mcScreen1);
           liPosY+=8;

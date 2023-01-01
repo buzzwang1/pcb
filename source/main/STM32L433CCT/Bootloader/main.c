@@ -383,9 +383,9 @@ int main(void)
   if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST)) 
   {
     lbResetByWatchdog = True;
+    __HAL_RCC_CLEAR_RESET_FLAGS();
   }
 
-  __HAL_RCC_CLEAR_RESET_FLAGS();
 
   // Check, if there something in the image area
   // if yes decompress it and execute it

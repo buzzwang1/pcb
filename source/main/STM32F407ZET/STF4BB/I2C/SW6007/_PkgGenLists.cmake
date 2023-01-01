@@ -14,7 +14,6 @@ set (gen_files
 set (gen_headers 
 	# List of all source files found in gen_headers
 	./main.h
-	./stm32l4xx_hal_conf.h
 )
 
 

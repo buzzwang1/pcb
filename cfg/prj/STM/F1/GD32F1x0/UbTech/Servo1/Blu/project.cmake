@@ -31,17 +31,17 @@ set(PCB_ProjectPackageList
     Data/Mem/RomConst/v00.00.01:GD32f130G6
     Data/Math/cFixPti1814/v00.00.01
 
-    Data/BotNet/v00.00.04/Base/Main/Blu/v00.00.01:Servo1
-    Data/BotNet/v00.00.04/Base/Misc/Adr/v00.00.01:default
-    Data/BotNet/v00.00.04/Base/Misc/Cfg/v00.00.01:Servo1_Blu
-    Data/BotNet/v00.00.04/Base/Misc/Msg/v00.00.01:default
-    Data/BotNet/v00.00.04/BnLinks/Base/v00.00.02:Servo1
-    Data/BotNet/v00.00.04/BnLinks/UsartMpHd/v00.00.02:Servo1
-    Data/BotNet/v00.00.04/BnMsgSys/Base/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Base/v00.00.01:Servo1_Blu
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Base/v00.00.01:Servo1_Blu
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Echo/v00.00.01:Servo1_Blu
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Iap/v00.00.01:Servo1:Blu
+    Data/BotNet/v00.00.05/Base/Main/Blu/v00.00.01:Servo1
+    Data/BotNet/v00.00.05/Base/Misc/Adr/v00.00.01:default
+    Data/BotNet/v00.00.05/Base/Misc/Cfg/v00.00.01:Servo1_Blu
+    Data/BotNet/v00.00.05/Base/Misc/Msg/v00.00.01:default
+    Data/BotNet/v00.00.05/BnLinks/Base/v00.00.02:default
+    Data/BotNet/v00.00.05/BnLinks/UsartMpHd/v00.00.03:default
+    Data/BotNet/v00.00.05/BnMsgSys/Base/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Base/v00.00.01:Servo1_Blu
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Base/v00.00.01:Servo1_Blu
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Echo/v00.00.01:Servo1_Blu
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Iap/v00.00.01:Servo1:Blu
 
     Data/String/Cli/v00.00.01
     

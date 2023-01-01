@@ -38,6 +38,12 @@ class cComBuf : public cRingBufDynT<uint8, uint16>
     mui16MsgCnt = 0;
   }
 
+  virtual void reset()
+  {
+    cRingBufDynT::reset();
+    mui16MsgCnt = 0;
+  }
+
   inline uint32 SizeOf()
   {
     return sizeof(cComBuf) + cRingBufDynT<uint8, uint16>::mtySize * sizeof(uint8);

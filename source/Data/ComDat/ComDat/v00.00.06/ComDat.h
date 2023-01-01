@@ -121,6 +121,7 @@ class cComNode
     u8 IsOnline         : 1;
     u8 IsStartRequested : 1;
     u8 IsError          : 1;
+    u8 IsBusy           : 1;
 
     u8 IsFirstTx :  1;
     u8 IsThisTxOk : 1;
@@ -147,6 +148,8 @@ class cComNode
 
   void vResetStatusComFlags()
   {
+    mStatus.IsError  = 0;
+    mStatus.IsBusy   = 0;
     mStatus.IsStartRequested = 0;
     mStatus.IsFirstTx  = 1;
     mStatus.IsThisTxOk = 0;
@@ -325,6 +328,8 @@ class cComNodeList
 
   uint32 SizeOf();
 
+  void   vResetPos();
+
   bool   isEmpty();
   bool   isSlotFree();
 
@@ -337,6 +342,7 @@ class cComNodeList
   void vRemove(cComNode *lpcNode);
   cComNode* cGetNext();
 };
+
 
 
 #endif // __COMDAT_H__

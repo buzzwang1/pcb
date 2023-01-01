@@ -156,9 +156,9 @@ public:
     __HAL_UART_ENABLE_IT(&UartHandle, UART_IT_RXNE);
     switch (mu32Usart_BaseAdr)
     {
-      case USART1_BASE: HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);HAL_NVIC_EnableIRQ(USART1_IRQn);;break;
-      case USART2_BASE: HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);HAL_NVIC_EnableIRQ(USART2_IRQn);;break;
-      case USART3_BASE: HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);HAL_NVIC_EnableIRQ(USART3_IRQn);;break;
+      case USART1_BASE: HAL_NVIC_SetPriority(USART1_IRQn, 8, 8);HAL_NVIC_EnableIRQ(USART1_IRQn);;break;
+      case USART2_BASE: HAL_NVIC_SetPriority(USART2_IRQn, 8, 8);HAL_NVIC_EnableIRQ(USART2_IRQn);;break;
+      case USART3_BASE: HAL_NVIC_SetPriority(USART3_IRQn, 8, 8);HAL_NVIC_EnableIRQ(USART3_IRQn);;break;
     }
   }
 

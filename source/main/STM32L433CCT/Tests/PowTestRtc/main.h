@@ -27,6 +27,7 @@
 #include "stm32l4xx_ll_exti.h"
 #include "stm32l4xx_ll_rtc.h"
 #include "stm32l4xx_ll_pwr.h"
+#include "stm32l4xx_ll_dac.h"
 #include "stm32l4xx_ll_cortex.h"
 
 
@@ -42,6 +43,8 @@ extern void DebugMon_Handler(void);
 extern void PendSV_Handler(void);
 extern void SysTick_Handler(void);
 
+extern void RTC_WKUP_IRQHandler(void);
+extern void EXTI0_IRQHandler(void);
 extern void USART1_IRQHandler(void);
 extern void USART2_IRQHandler(void);
 

@@ -195,31 +195,35 @@ class cBitmap
     BM_INLINE u32    u32PosX(u32 lui32PxlIdx)                        {return ((lui32PxlIdx) % miGfxWidth);};
     BM_INLINE u32    u32PosY(u32 lui32PxlIdx)                        {return ((lui32PxlIdx) / miGfxWidth);};
     BM_INLINE u32    u32PxlIdx(GfxInt liGfxX, GfxInt liGfxY)         {return ((uint32)((liGfxY) * miGfxWidth + (liGfxX)));};
-    BM_INLINE u32    u32Size()                                       {return ((uint32)(miGfxWidth * miGfxHeight));};
     BM_INLINE u8*    pu8Data()                                       {return (mpui8Data);};
     BM_INLINE i8     i8Clone(cBitmap lcBm)                           {return lcBm.i8Create(miGfxWidth, miGfxHeight, mui8Type);};
     BM_INLINE GfxInt iGfxAbs(GfxInt  liGfxV)                         {if (liGfxV < 0) return -liGfxV; else return liGfxV;};
+
+    BM_INLINE u32    u32Size()
+    {
+      u32 lu32Size = miGfxWidth * miGfxHeight;
+
+      switch (mui8Type)
+      {
+        case BM_BPP1_1G:
+          lu32Size /= 8;
+        break;
+        case BM_BPP16_5R6G5B:
+          lu32Size *= 2;
+        break;
+        case BM_BPP32_8R8G8B:
+          lu32Size *= 4;
+        break;
+      }
+      return lu32Size;
+    }
+
 
     BM_INLINE void vCopy(cBitmap &lcBm)
     {
       if ((lcBm.miGfxWidth == miGfxWidth) && (lcBm.miGfxHeight == miGfxHeight))
       {
-        u32 lu32Size = miGfxWidth * miGfxHeight;
-
-        switch (mui8Type)
-        {
-          case BM_BPP1_1G:
-            lu32Size /= 8;
-          break;
-          case BM_BPP16_5R6G5B:
-            lu32Size *= 2;
-          break;
-          case BM_BPP32_8R8G8B:
-            lu32Size *= 4;
-          break;
-        }
-
-        cMemTools::vMemCpy(lcBm.mpui8Data, mpui8Data, lu32Size);
+        cMemTools::vMemCpy(lcBm.mpui8Data, mpui8Data, u32Size());
       }
     }
     

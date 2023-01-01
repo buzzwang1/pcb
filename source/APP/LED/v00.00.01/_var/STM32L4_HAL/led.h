@@ -10,7 +10,9 @@ class LED : public tcGpPin<mpstPort, mui16Pin>
   public:
 
   LED()
-   : tcGpPin<mpstPort, mui16Pin>(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM, 0) {};
+   : tcGpPin<mpstPort, mui16Pin>(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0) {};
+
+  void vReInit() {tcGpPin<mpstPort, mui16Pin>::vReInit(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);}
 
   void On()     {this->vSet0();};
   void Off()    {this->vSet1();};

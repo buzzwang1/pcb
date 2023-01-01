@@ -191,13 +191,13 @@ class cPaintTriZBasic
         {
           float lfzTemp;
           lfzTemp = fGetZ(liGfxPoslfX1, lu16IdxY);
-          if ((1.0 / lfiZ) >= (lfzTemp - 1.0f))
+          if ((1.0f / lfiZ) >= (lfzTemp - 1.0f))
           {
             lu8Paint++;
           }
 
           lfzTemp = fGetZ(liGfxPoslfX2, lu16IdxY);
-          if ((1.0 / (lfiZ + lfiZ_inc * (liGfxPoslfX2 - liGfxPoslfX1))) >= (lfzTemp - 1.0f))
+          if ((1.0f / (lfiZ + lfiZ_inc * (liGfxPoslfX2 - liGfxPoslfX1))) >= (lfzTemp - 1.0f))
           {
             lu8Paint++;
           }

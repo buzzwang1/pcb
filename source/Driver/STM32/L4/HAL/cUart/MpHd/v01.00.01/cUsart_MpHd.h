@@ -105,7 +105,7 @@ class cUartMpHd
       DMA1_Channel3->CCR &=  ~DMA_CCR_EN; // USART3_RX
     }
   }
-  
+
   // Überpruft ob sich der DMA counter geändert hat. Um rauszufinden, ob irgendwas empfangen wurde
   u16 u16GetDmaCounter()
   {
@@ -113,7 +113,7 @@ class cUartMpHd
     if (mUsart == USART2) return DMA1_Channel6->CNDTR;
     if (mUsart == USART3) return DMA1_Channel3->CNDTR;
     return 0;
-  }  
+  }
 
   void  vStartDMA(uint8* pBuffer, uint32 BufferSize, cComNode::tenEvent lenDirection)
   {
@@ -189,7 +189,7 @@ class cUartMpHd
     else if (mUsart == USART2) __HAL_RCC_USART2_CLK_DISABLE();
     else if (mUsart == USART3) __HAL_RCC_USART3_CLK_DISABLE();
 
-    // DMA Rx
+    // DMA
     __HAL_RCC_DMA1_CLK_ENABLE();
 
     vStopDMA();
@@ -265,7 +265,7 @@ class cUartMpHd
     else /*if (mUsart == USART3)*/ lnNVIC_IRQChannel = USART3_IRQn;
 
     // Set the priority
-    HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+    HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 7, 8); // Höhere Prio,wegen Asynchron
     // Enable the TIMx global Interrupt
     HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 
@@ -304,7 +304,7 @@ class cUartMpHd
     else if (mUsart == USART2) lnNVIC_IRQChannel = DMA1_Channel6_IRQn;
     else if (mUsart == USART3) lnNVIC_IRQChannel = DMA1_Channel3_IRQn;
     // Set the TIMx priority
-    HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
+    HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 7, 8);  // Höhere Prio,wegen Asynchron
     // Enable the TIMx global Interrupt
     HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 
@@ -331,14 +331,14 @@ class cUartMpHd
     // Configure DMA Channel source address
     lhDMA.Instance->CMAR = 0;
 
-    // DMA interrupt
-    if (mUsart == USART1) lnNVIC_IRQChannel = DMA1_Channel4_IRQn; //USART1 connect to channel 7 of DMA1
-    else if (mUsart == USART2) lnNVIC_IRQChannel = DMA1_Channel7_IRQn;
-    else if (mUsart == USART3) lnNVIC_IRQChannel = DMA1_Channel2_IRQn;
-    // Set the TIMx priority
-    HAL_NVIC_SetPriority(lnNVIC_IRQChannel, 0, 0);
-    // Enable the TIMx global Interrupt
-    HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
+    // DMA interrupt -- TX DMA interrupt wird nicht benötigt
+    //if (mUsart == USART1) lnNVIC_IRQChannel = DMA1_Channel4_IRQn; //USART1 connect to channel 7 of DMA1
+    //else if (mUsart == USART2) lnNVIC_IRQChannel = DMA1_Channel7_IRQn;
+    //else if (mUsart == USART3) lnNVIC_IRQChannel = DMA1_Channel2_IRQn;
+    //// Set the TIMx priority
+    //HAL_NVIC_SetPriority(lnNVIC_IRQChannel, , 8);  // Höhere Prio,wegen Asynchron
+    //// Enable the TIMx global Interrupt
+    //HAL_NVIC_EnableIRQ(lnNVIC_IRQChannel);
 
     munDeviceStatus = tenComDeviceStatus::enDeviceReady;
     munBusStatus    = tenComBusStatus::enBusNoError;
@@ -446,23 +446,36 @@ class cUartMpHdMaster : public cUartMpHd
   uint32               mui32ComByteCnt;
 
   u8                   mu8Lock;
+  u8                   mu8SelfTimer;
 
-  cBotNet_DownLinkI2c_Timer mTimer;
+  cBotNet_DownLinkUsartMpHd_Timer mTimer;
 
   cUartMpHdMaster(USART_TypeDef *lstUsart, uint32 lui32Slaves, u32 lu32Baudrate)
     : cUartMpHd(lstUsart, lu32Baudrate), mcSlaves(lui32Slaves)
   {
-    mSm  = cComNode::tenState::enStIdle;
+    vInit();
+  }
+
+  void vReInit()
+  {
+    vInit();
+    mcSlaves.vResetPos();
+  }
+
+  void vInit()
+  {
+    mSm = cComNode::tenState::enStIdle;
     menComState = cComNode::tenState::enStIdle;
 
     mpcActiveSlave = NULL;
-    mpcActiveMsg   = NULL;
+    mpcActiveMsg = NULL;
 
-    mui8Adr        = 0;
-    mu8Lock        = 0;
+    mui8Adr = 0;
+    mu8Lock = 0;
+    mu8SelfTimer = 0;
 
     mu16ReInitTicks = 100;
-    mu16ComStuckTicksReload = 1000;
+    mu16ComStuckTicksReload = 2000;
     mu16ComStuckTicks = mu16ComStuckTicksReload;
 
     vInitHw(True);
@@ -484,7 +497,20 @@ class cUartMpHdMaster : public cUartMpHd
   {
     if (mpcActiveSlave)
     {
-      mpcActiveSlave->vComStart(cComNode::tenEvent::enEvMisc);
+      if (mu8SelfTimer)
+      {
+        mu8SelfTimer = 0;
+        u16 lu16DmaCounter = u16GetDmaCounter();
+        if (mu16DmaCounter2ms_Old == lu16DmaCounter) // Counter hat sich nicht geändert
+        {
+          mu16TickCounter = 5;
+          vSm(cComNode::tenEventType::enEvTySw, cComNode::tenEvent::enEvTick);
+        }
+      }
+      else
+      {
+        mpcActiveSlave->vComStart(cComNode::tenEvent::enEvMisc);
+      }
     }
   }
 
@@ -523,6 +549,46 @@ class cUartMpHdMaster : public cUartMpHd
   {
     mu16TickCounter++;
     vSm(cComNode::tenEventType::enEvTySw, cComNode::tenEvent::enEvTick);
+
+    if (mSm == cComNode::enStError)
+    {
+      if (mu16ReInitTicks)
+      {
+        mu16ReInitTicks--;
+
+        if (!mu16ReInitTicks)
+        {
+          mpcActiveMsg   = NULL;
+          mu8Lock        = 0;
+          this->vReInitHw(cComNode::tenConsts::enResetHwFull, True);
+          this->vReInitAllSlave();
+        }
+      }
+    }
+    else
+    {
+      mu16ReInitTicks   = 100;
+    }
+
+    if (munComStatus != tenComStatus::enStatusStuck)
+    {
+      if (mu16ComStuckTicks)
+      {
+        if (mSm != cComNode::tenState::enStIdle)
+        {
+          mu16ComStuckTicks--;
+        }
+      }
+      else
+      {
+        mSm = cComNode::enStError;
+        munDeviceStatus   = tenComDeviceStatus::enDeviceReady;
+        munBusStatus      = tenComBusStatus::enBusNoError;
+        munComStatus      = tenComStatus::enStatusStuck;
+        mu16ComStuckTicks = mu16ComStuckTicksReload;
+        mu16ReInitTicks   = 100;
+      }
+    }
   }
 
 
@@ -560,12 +626,16 @@ class cUartMpHdMaster : public cUartMpHd
             if (mpcActiveMsg->cTxData.muiLen > 0)
             {
               menComState = cComNode::tenState::enStAdressAndData;
+
+              // Rx ausschalten
+              mUsart->CR1 &= ~USART_CR1_RE;
+              mUsart->CR1 |= USART_CR1_TE;
+
               // Adresse nur senden wenn != 0xFF
               if (mpcActiveSlave->mAdr != 0xFF)
               {
                 mUsart->TDR = mpcActiveSlave->mAdr | 0x100;
               }
-              LL_USART_SetTransferDirection(mUsart, LL_USART_DIRECTION_TX); // Rx ausschalten
               vStartDMA(mpcActiveMsg->cTxData.mpu8Data, mpcActiveMsg->cTxData.muiLen, cComNode::enEvPrepareForTx);
               // Soll nach dem Senden noch was empfangen werden
               if (mpcActiveMsg->cRxData.muiLen > 0)
@@ -583,9 +653,12 @@ class cUartMpHdMaster : public cUartMpHd
             {
               mu16TickCounter = 0;
               menComState = cComNode::tenState::enStWaitData;
-              LL_USART_SetTransferDirection(mUsart, LL_USART_DIRECTION_TX_RX); // Alles einschalten
+              // Rx einschalten
+              mUsart->CR1 |= USART_CR1_RE;
               vStartDMA(mpcActiveMsg->cRxData.mpu8Data, mpcActiveMsg->cRxData.muiLen, cComNode::enEvPrepareForRx);
               mSm = cComNode::tenState::enStWait;
+              mu8SelfTimer = 1;
+              mTimer.vStart(250);
             }
             else
             {
@@ -602,10 +675,13 @@ class cUartMpHdMaster : public cUartMpHd
         {
           if (lenEvent == cComNode::tenEvent::enEvUsartTc)
           {
-             LL_USART_SetTransferDirection(mUsart, LL_USART_DIRECTION_TX_RX); // Alles einschalten
+             // Rx einschalten
+             mUsart->CR1 |= USART_CR1_RE;
              mu16TickCounter = 0;
              menComState = cComNode::tenState::enStWaitData;
              mSm = cComNode::tenState::enStWait;
+             mu8SelfTimer = 1;
+             mTimer.vStart(250);
           }
         }
         break;
@@ -639,8 +715,16 @@ class cUartMpHdMaster : public cUartMpHd
             break;
             case cComNode::tenEvent::enEvDmaRxTc:
               {
+                // Rx ausschalten
+                mUsart->CR1 &= ~USART_CR1_RE;
                 mSm = cComNode::tenState::enStIdle;
                 menComState = cComNode::tenState::enStIdle;
+                if (mu8SelfTimer)
+                {
+                  mu8SelfTimer = 0;
+                  mTimer.vStop();
+                }
+                vStopDMA();
                 mpcActiveMsg->vDone();
                 mpcActiveSlave->vComDone();
               }
@@ -655,9 +739,15 @@ class cUartMpHdMaster : public cUartMpHd
           if (lenEvent == cComNode::tenEvent::enEvUsartTc)
           {
             // receiver abschalten um mögliche Overrun-Errors zuvermeiden.
-            LL_USART_SetTransferDirection(mUsart, LL_USART_DIRECTION_NONE);
+            mUsart->CR1 &= ~USART_CR1_RE;
             mSm = cComNode::tenState::enStIdle;
             menComState = cComNode::tenState::enStIdle;
+            if (mu8SelfTimer)
+            {
+              mu8SelfTimer = 0;
+              mTimer.vStop();
+            }
+            vStopDMA();
             mpcActiveMsg->vDone();
             mpcActiveSlave->vComDone();
           }
@@ -738,51 +828,6 @@ class cUartMpHdMaster : public cUartMpHd
         mpcActiveSlave->vComStart(cComNode::tenEvent::enEvPrepareToSendData);
       }
     }
-
-    if (mSm == cComNode::enStError)
-    {
-      if (mu16ReInitTicks)
-      {
-        mu16ReInitTicks--;
-
-        if (!mu16ReInitTicks)
-        {
-          mpcActiveMsg   = NULL;
-          mu8Lock        = 0;
-          this->vReInitHw(cComNode::tenConsts::enResetHwFull, True);
-          this->vReInitAllSlave();
-        }
-      }
-    }
-    else
-    {
-      mu16ReInitTicks   = 100;
-    }
-
-    if (munComStatus != tenComStatus::enStatusStuck)
-    {
-      if (mu16ComStuckTicks)
-      {
-        if (mSm != cComNode::tenState::enStIdle)
-        {
-          mu16ComStuckTicks--;
-        }
-      }
-      else
-      {
-        mSm = cComNode::enStError;
-        munDeviceStatus   = tenComDeviceStatus::enDeviceReady;
-        munBusStatus      = tenComBusStatus::enBusNoError;
-        munComStatus      = tenComStatus::enStatusStuck;
-        mu16ComStuckTicks = mu16ComStuckTicksReload;
-        mu16ReInitTicks   = 100;
-      }
-    }
-
-    if (mSm == cComNode::enStError)
-    {
-      return False;
-    }
     return True;
   }
 };
@@ -798,7 +843,7 @@ class cUartMpHdSlave : public cUartMpHd
   cComNode::tenState   menComState;
   cComNode::tenError   menErrorActive;
 
-  cBotNet_DownLinkI2c_Timer mTimer;
+  cBotNet_DownLinkUsartMpHd_Timer mTimer;
 
   cUartMpHdSlave(USART_TypeDef *lstUsart, u32 lu32Baudrate)
   : cUartMpHd(lstUsart, lu32Baudrate)

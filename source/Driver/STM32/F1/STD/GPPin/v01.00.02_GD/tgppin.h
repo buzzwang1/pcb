@@ -36,10 +36,10 @@ class tcGpPin : public tcPort<mu32Port_BaseAdr>
 {
 public:
   tcGpPin(u32 lu32Mode,
-         u32 lu32PupPdwn,
-         u32 lu32oType,
-         u32 lu32Speed,
-         u8  lu8InitValue)
+          u32 lu32PupPdwn,
+          u32 lu32oType,
+          u32 lu32Speed,
+          u8  lu8InitValue)
     : tcPort<mu32Port_BaseAdr>()
   {
     vSet(lu8InitValue);

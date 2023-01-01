@@ -7,7 +7,6 @@
 #include "gd32f1x0_usart.h"
 #include "gd32f1x0_dma.h"
 
-
 #include "cUartMpHdTimer.h"
 
 #include "tGPPin.h"
@@ -178,14 +177,86 @@ class cUartMpHd
 
     nvic_irq_enable(DMA_Channel1_2_IRQn, 1, 1);
 
-    mSm             = cComNode::tenState::enStIdle;
+    mSm  = cComNode::tenState::enStIdle;
   }
 
-  void  vReInitHw(cComNode::tenConsts lenOption)
+  void  vReInitHw(cComNode::tenConsts lenOption, bool lbMaster = False)
   {
     UNUSED(lenOption);
+    UNUSED(lbMaster);
     // Immer cComNode::enResetHwFull, Spart ein paar Byte
     vInitHw();
+  }
+};
+// Dummy Class
+class cUartMpHdMaster : public cUartMpHd
+{
+  public:
+    cUsartMpHd_Slave_Timer mTimer;
+
+
+  cUartMpHdMaster()
+    : cUartMpHd()
+  {
+  }
+
+  ~cUartMpHdMaster()
+  {
+  }
+
+
+  inline void SetLock()   {}
+  inline void ResetLock() {}
+
+  void TIM_EV_IRQHandler()
+  {
+  }
+
+  void ComIrqHandler(cComNode::tenEventType lenEventType, cComNode::tenEvent lenEvent)
+  {
+    UNUSED(lenEventType);
+    UNUSED(lenEvent);
+  }
+
+  void vSetReInitTicks(u16 lu16ReInitTicks)
+  {
+    UNUSED(lu16ReInitTicks);
+  }
+
+  void vTick1ms()
+  {
+  }
+
+
+  void vAddSlave(cComNode *lpcSlave)
+  {
+    UNUSED(lpcSlave);
+  }
+
+  void vRemoveSlave(cComNode *lpcSlave)
+  {
+    UNUSED(lpcSlave);
+  }
+
+  void vReInitAllSlave()
+  {
+  }
+
+  void vSm(cComNode::tenEventType lenEventType, cComNode::tenEvent lenEvent)  // __attribute__((optimize("-O0")))
+  {
+    UNUSED(lenEventType);
+    UNUSED(lenEvent);
+  }
+
+  void vStartMsg(cComDatMsg *lpcActiveMsg) // __attribute__((optimize("-O0")))
+  {
+    UNUSED(lpcActiveMsg);
+  }
+
+  bool bStartNext() // __attribute__((optimize("-O0")))
+  {
+
+    return True;
   }
 };
 
@@ -205,6 +276,7 @@ class cUartMpHdSlave : public cUartMpHd
   {
     mSm         = cComNode::tenState::enStIdle;
     mpcComNode  = NULL;
+    mpcMsg->vDone();
   }
 
   ~cUartMpHdSlave()
@@ -269,9 +341,15 @@ class cUartMpHdSlave : public cUartMpHd
 
   void vError(cComNode::tenError lenError)
   {
+    cUartMpHd::vInitHw();
     mpcMsg->vDone();
-    vInitHw();
     mpcComNode->vComError(lenError, cComNode::tenState::enStError);
+  }
+
+  void vReInitHw(cComNode::tenConsts lenOption, bool lbMaster = False)
+  {
+    cUartMpHd::vReInitHw(lenOption, lbMaster);
+    mpcMsg->vDone();
   }
 
   void vSetMsg(cComDatMsg* lpcMsg)

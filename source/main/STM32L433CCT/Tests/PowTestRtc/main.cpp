@@ -8,12 +8,23 @@
 // Rom 256KB
 // Ram 64KB
 
+//                    Voltage Reg.                        DS      real
+//             Clock   MP      LP    PC13 PB8 PB9  DAC    uA      uA
+// Stop0        Off    On      On     On  On  On   On    110      300
+// Stop1        Off    Off     On     On  On  On   On      5      200
+// Stop2        Off    Off     On     On² On  On   Off     2      300
+// Standby      Off    Off     Off    On² On³ On³  Off    <1       63
+// Shutdown     Off    Off     Off    On² On³ On³  Off   <<1       63
+
+//²: no source, max 3ma Sink
+//³: Only pull up and pull down: gemessen 2,07V an 120k bei 2,71 VCC und interner pullup (40k) => 2,7V * 120/160 = 2,02V
 
 __IO uint32_t TimingDelay = 0;
 
 LED<GPIOC_BASE, 13> lcLedRed;
-tcUart<USART1_BASE, GPIOA_BASE,  9, GPIOA_BASE, 10> mcComPort(19200, GPIO_AF7_USART2, 256, 64);
-//tcUart<USART2_BASE, GPIOA_BASE,  2, GPIOA_BASE,  3> mcComPort(19200, GPIO_AF7_USART2, 64, 64);
+//tcUart<USART1_BASE, GPIOA_BASE,  9, GPIOA_BASE, 10> mcComPort(19200, GPIO_AF7_USART2, 256, 64);
+tcUart<USART2_BASE, GPIOA_BASE,  2, GPIOA_BASE,  3> mcComPort(19200, GPIO_AF7_USART2, 64, 64);
+
 
 bool mbLedActivated = True;
 
@@ -216,8 +227,25 @@ void ConfigureRTC(void)
   // ck_spre = 256Hz   / (255 + 1)         = 1 Hz
   lstRtc.SynchPrescaler  = ((uint32_t)0x00FF);
   LL_RTC_Init(RTC, &lstRtc);
+
+
 }
 
+
+void vPrepareDac()
+{
+  __HAL_RCC_DAC1_CLK_ENABLE();
+  cGpPin mDac(GPIOA_BASE, 4, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH, 0);
+
+  LL_DAC_InitTypeDef DAC_InitStructure;
+
+  /* DAC channel1 Configuration */
+  LL_DAC_StructInit(&DAC_InitStructure);
+  DAC_InitStructure.OutputBuffer = LL_DAC_OUTPUT_BUFFER_DISABLE;
+  LL_DAC_Init(DAC1, LL_DAC_CHANNEL_1, &DAC_InitStructure);
+  LL_DAC_ConvertData12RightAligned(DAC1, LL_DAC_CHANNEL_1, (4096 * 2000) / 2700);
+  LL_DAC_Enable(DAC1, LL_DAC_CHANNEL_1);
+}
 
 
 void PreparePA0(bool lbPin)
@@ -257,6 +285,80 @@ void PreparePA0(bool lbPin)
   }
 }
 
+
+
+inline void vEnableIrqRtcWut()
+{
+  __HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
+}
+
+inline void vDisableIrqRtcWut()
+{
+  __HAL_RTC_WAKEUPTIMER_EXTI_DISABLE_IT();
+  LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_20); // 20 = RTC wakeup timer
+}
+
+void RTC_WKUP_IRQHandler(void)
+{
+  __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_20);
+  vDisableIrqRtcWut();
+}
+
+
+
+inline void vEnableIrqPa0()
+{
+  EXTI->IMR1 |= (1 << 0);
+}
+
+inline void vDisableIrqPa0()
+{
+  EXTI->IMR1 &= ~(1 << 0);
+  LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_0);
+}
+
+
+void EXTI0_IRQHandler(void)
+{
+  __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_0);
+  vDisableIrqPa0();
+}
+
+void PreparePA0_Exti()
+{
+  lcLedRed.Off();
+  mcComPort.vSend();
+  while (!mcComPort.mcUartDataOut.isEmpty()) {};
+  HAL_SuspendTick();
+  cClockInfo::Delay_ms(100);
+  mcComPort.vSetWakeup(True);
+
+  {cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_PULLDOWN, GPIO_SPEED_FREQ_LOW, 0);}
+
+  __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_0);
+
+  // Enable clock for SYSCFG
+  __HAL_RCC_SYSCFG_CLK_ENABLE();
+  // Tell system that you will use PA0 for EXTI_Line0
+  LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
+
+  //EXTI init
+  LL_EXTI_InitTypeDef EXTI_InitStruct;
+  // PA0 is connected to EXTI_Line0
+  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_0;
+  EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
+  EXTI_InitStruct.LineCommand = ENABLE;
+  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
+  LL_EXTI_Init(&EXTI_InitStruct);
+
+  //NVIC init
+  // Add IRQ vector to NVIC
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 15, 15);  // Niedere Prio, wegen busy waiting
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+}
+
+
 class cCliCmd_LowPower: public cCliCmd
 {
   public:
@@ -290,9 +392,52 @@ class cCliCmd_LowPower: public cCliCmd
       else if (lcParam.Instr(0, (const char8*)"stop1") == 0)
       {
         lcCli->bPrintLn((const char8*)"ok");
-        PreparePA0(True);
+        PreparePA0_Exti();
 
+        //EXTI init
+        LL_EXTI_InitTypeDef EXTI_InitStruct;
+        // PA0 is connected to EXTI_Line0
+        EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_20;
+        EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
+        EXTI_InitStruct.LineCommand = ENABLE;
+        EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+        EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
+        LL_EXTI_Init(&EXTI_InitStruct);
+
+        //EXTI->SWIER1 |= 1 << 20; // Software interrupt on EXTI20
+
+        //NVIC init
+        // Add IRQ vector to NVIC
+        HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 15, 15);  // Niedere Prio, wegen busy waiting
+        HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
+
+        ConfigureRTC();
+
+        LL_RTC_DisableWriteProtection(RTC);
+
+        /* Disable wake up timer to modify it */
+        LL_RTC_WAKEUP_Disable(RTC);
+
+        while (LL_RTC_IsActiveFlag_WUTW(RTC) != 1) {}
+
+        LL_RTC_WAKEUP_SetAutoReload(RTC, 4);
+        LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_CKSPRE);
+
+        LL_RTC_WAKEUP_Enable(RTC);
+        LL_RTC_EnableIT_WUT(RTC);
+
+        /* Enable RTC registers write protection */
+        LL_RTC_EnableWriteProtection(RTC);
+
+        LL_RTC_ClearFlag_WUT(RTC);
+
+        //__HAL_RCC_RTCAPB_CLK_SLEEP_ENABLE();
+        //__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
+
+
+        __HAL_FLASH_PREFETCH_BUFFER_DISABLE();
         HAL_PWREx_EnterSTOP1Mode(PWR_STOPENTRY_WFI);
+        __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
         MainSystemInit();
       }
       else if (lcParam.Instr(0, (const char8*)"stop2") == 0)
@@ -351,6 +496,30 @@ class cCliCmd_LowPower: public cCliCmd
 
         HAL_PWREx_EnterSHUTDOWNMode();
       }
+      else if (lcParam.Instr(0, (const char8*)"sd1") == 0)
+      {
+        lcCli->bPrintLn((const char8*)"sd1 ok");
+
+        mcComPort.vSend("Enable RTC\n\r");
+
+        PreparePA0(True);
+
+
+        //ConfigureRTC();
+        EnableRTC();
+        LL_RTC_DisableWriteProtection(RTC);
+        PWR->CR3 |= PWR_CR3_APC;
+        PWR->PUCRB |= 1 << 8;
+        PWR->PDCRB |= 1 << 9;
+
+        LL_RTC_SetAlarmOutEvent(RTC, LL_RTC_ALARMOUT_ALMB);
+        LL_RTC_SetAlarmOutputType(RTC, LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL);
+        //LL_RTC_OUTPUTPOLARITY_PIN_HIGH, LL_RTC_OUTPUTPOLARITY_PIN_LOW
+        LL_RTC_SetOutputPolarity(RTC, LL_RTC_OUTPUTPOLARITY_PIN_LOW);
+
+        HAL_PWREx_EnterSHUTDOWNMode();
+      }
+
 
       mcComPort.vSetWakeup(False);
       lcCli->bPrintLn((const char8*)"continue");
@@ -487,13 +656,13 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 void USART1_IRQHandler(void)
 {
-  lcLedRed.Toggle();
+  if (mbLedActivated) lcLedRed.Toggle();
   mcComPort.vIRQHandler();
 }
 
 void USART2_IRQHandler(void)
 {
-  lcLedRed.Toggle();
+  if (mbLedActivated) lcLedRed.Toggle();
   mcComPort.vIRQHandler();
 }
 
@@ -502,6 +671,13 @@ void MAIN_vInitSystem(void)
 {
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
+
+  vPrepareDac();
+
+  cGpPin mPin1(GPIOB_BASE, 8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  cGpPin mPin2(GPIOB_BASE, 9, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
+
+
 
   /* STM32L4xx HAL library initialization:
        - Configure the Flash prefetch

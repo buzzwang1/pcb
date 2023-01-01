@@ -59,7 +59,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) {
 
 	/*##-2- Configure the NVIC for DMA #########################################*/
 	/* NVIC configuration for DMA transfer complete interrupt */
-	HAL_NVIC_SetPriority(TIMx_DMA_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(TIMx_DMA_IRQn, 8, 8);
 	HAL_NVIC_EnableIRQ(TIMx_DMA_IRQn);
 }
 

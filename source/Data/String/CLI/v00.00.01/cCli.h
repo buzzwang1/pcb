@@ -8,7 +8,7 @@
 #include "cStrT.h"
 
 
-#define CLI_KEY_MAXLINE     16
+#define CLI_KEY_MAXLINE     32
 
 // VT100 => ESC = Start von Sonderzeichen
 
@@ -400,7 +400,7 @@ class cCli
   cCliCmdList *mcCmdList;
   cCliCmd     *mCmdActive;
 
-  char8 mBufDataIn[32];
+  char8 mBufDataIn[CLI_KEY_MAXLINE];
   cStr  mcStrIn;
 
   char8 mBufPrompt[10];
@@ -414,7 +414,7 @@ class cCli
   uint8 mui8CursorPos;
 
   cCli(cRingBufT<uint8, uint16> *lcStreamIn, cRingBufT<uint8, uint16> *lcStreamOut, cCliCmdList *lcCmdList, u8 lu8HistoryCnt, void* lpOwner = null)
-        : mcStrIn(mBufDataIn, 32), mcStrPrompt(mBufPrompt, 10),
+        : mcStrIn(mBufDataIn, CLI_KEY_MAXLINE), mcStrPrompt(mBufPrompt, 10),
           mcPrinter(lcStreamOut),
           mcHistory(lu8HistoryCnt)
   {
@@ -517,7 +517,7 @@ class cCli
       }
     }
 
-    bPrintLn((char8*)"???");
+    bPrintLn((rsz)"???");
     mboPrompt = True;
   }
 
@@ -601,7 +601,7 @@ class cCli
               case CLI_KEY_ARROW_LEFT: // Pfeil links
                 if (mui8CursorPos > 0)
                 {
-                  bPrint((char8*)"\b");
+                  bPrint((rsz)"\b");
                   mui8CursorPos--;
                 }
                 break;
@@ -655,7 +655,7 @@ class cCli
 
               case CLI_KEY_RETURN: // return
 
-                bPrintLn((const char8*)"");
+                bPrintLn("");
                 mcHistory.vAdd(&mcStrIn);
 
                 vProcessCmd();
@@ -675,19 +675,19 @@ class cCli
                   lui16t = mui8CursorPos + 1;
                   while (lui16t)
                   {
-                    bPrint((char8*)"\b");
+                    bPrint((rsz)"\b");
                     lui16t--;
                   }
                   mcStrIn.Cut(mui8CursorPos, 1);
 
                   bPrint(mcStrIn);
-                  bPrint((char8*)" ");
+                  bPrint((rsz)" ");
 
                   // Alte Postion
                   lui16t = mcStrIn.Len() + 1;
                   while (lui16t > mui8CursorPos)
                   {
-                    bPrint((char8*)"\b");
+                    bPrint((rsz)"\b");
                     lui16t--;
                   }
                 }
@@ -708,7 +708,7 @@ class cCli
 
                   for (lui8t = mui8CursorPos; lui8t < mcStrIn.Len(); lui8t++)
                   {
-                    bPrint((char8*)"\b");
+                    bPrint((rsz)"\b");
                   }
                 }
                 break;

@@ -31,7 +31,7 @@ public abstract class cBotNetStreamPort
   public Queue<u8> mcRxRingBuf;
   public Queue<u8> mcTxRingBuf;
 
-  public cBotNetStreamPort[] lcConnection;
+  public cBotNetStreamPort[] mcConnection;
 
   public cBotNetStreamPort_CmdPrinter mcPrinter;
 
@@ -40,7 +40,7 @@ public abstract class cBotNetStreamPort
     mcRxRingBuf = new Queue<u8>();
     mcTxRingBuf = new Queue<u8>();
 
-    lcConnection = new cBotNetStreamPort[cBnCfg.cBotNet_StreamSysPortsCnxCnt];
+    mcConnection = new cBotNetStreamPort[cBnCfg.cBotNet_StreamSysPortsCnxCnt];
 
     mcBnDestAdr = new cBotNetAdress();
 
@@ -51,7 +51,7 @@ public abstract class cBotNetStreamPort
 
     for (int i = 0; i < cBnCfg.cBotNet_StreamSysPortsCnxCnt; i++)
     {
-      lcConnection[i] = null;
+      mcConnection[i] = null;
     }
   }
 
@@ -61,7 +61,7 @@ public abstract class cBotNetStreamPort
     // schon connected ?
     for (int i = 0; i < cBnCfg.cBotNet_StreamSysPortsCnxCnt; i++)
     {
-      if (lcConnection[i] == lcPort)
+      if (mcConnection[i] == lcPort)
       {
         return;
       }
@@ -69,9 +69,9 @@ public abstract class cBotNetStreamPort
 
     for (int i = 0; i < cBnCfg.cBotNet_StreamSysPortsCnxCnt; i++)
     {
-      if (lcConnection[i] == null)
+      if (mcConnection[i] == null)
       {
-        lcConnection[i] = lcPort;
+        mcConnection[i] = lcPort;
         return;
       }
     }
@@ -103,9 +103,9 @@ public abstract class cBotNetStreamPort
   {
     for (int i = 0; i < cBnCfg.cBotNet_StreamSysPortsCnxCnt; i++)
     {
-      if (lcConnection[i] == lcPort)
+      if (mcConnection[i] == lcPort)
       {
-        lcConnection[i] = null;
+        mcConnection[i] = null;
         return;
       }
     }

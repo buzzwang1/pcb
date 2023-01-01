@@ -313,7 +313,7 @@ class cNRF905
 
     SetChannel_433((u16)NRF905_CHANNEL_433_2, False);
     SetCrc(0);
-    
+
     mstNRF905.mstConfig.CRC_Check_enable       = NRF905_CRC_DISABLE; //NRF905_CRC_ENABLE;
     mstNRF905.mstConfig.CRC_Mode               = NRF905_CRC_16;
 
@@ -322,6 +322,45 @@ class cNRF905
     mstNRF905.u8SpiCmdTxPl  = NRF905_CMD_W_TX_PAYLOAD;
     mstNRF905.u8SpiCmdTxAdr = NRF905_CMD_W_TX_ADDRESS;
     mstNRF905.u8SpiCmdRxPl  = NRF905_CMD_R_RX_PAYLOAD;
+
+    mstNRF905.u8SpiCmdTxPlW = NRF905_CMD_W_CONFIG_TX_PW;
+    mstNRF905.mui8TxPayLoadWidth = mstNRF905.mstConfig.Tx_Payload_Width;
+
+    mstNRF905.u8SpiCmdRxPlW = NRF905_CMD_W_CONFIG_RX_PW;
+    mstNRF905.mui8RxPayLoadWidth = mstNRF905.mstConfig.Rx_Payload_Width;
+  }
+
+  void vReInit(/*uint32 lui32RxAdress, uint32 lui32TxAdress*/)
+  {
+    mPins.vReInit();
+    mSpi.vReInit();
+    mTimer.vReInit();
+
+    mstNRF905.mstConfig.Rx_Transmit_Width = NRF905_ADDR_SIZE_4;
+    mstNRF905.mstConfig.Tx_Transmit_Width = NRF905_ADDR_SIZE_4;
+
+    mstNRF905.mstConfig.Rx_Payload_Width = NRF905_MAX_PAYLOAD;
+    mstNRF905.mstConfig.Tx_Payload_Width = NRF905_MAX_PAYLOAD;
+
+    //mstNRF905.mstConfig.RxAdress = lui32RxAdress;
+
+    //mstNRF905.mui32TxAdress = lui32TxAdress;
+
+    mstNRF905.mstConfig.Output_Clock_Frequency = NRF905_OUTCLK_DISABLE;
+    mstNRF905.mstConfig.Output_Clock_Enabled = NRF905_OUTCLK_DISABLE;
+    mstNRF905.mstConfig.Crystal_Osc_Freq = NRF905_CLK_16MHZ;
+
+    SetChannel_433((u16)NRF905_CHANNEL_433_2, False);
+    SetCrc(0);
+
+    mstNRF905.mstConfig.CRC_Check_enable = NRF905_CRC_DISABLE; //NRF905_CRC_ENABLE;
+    mstNRF905.mstConfig.CRC_Mode = NRF905_CRC_16;
+
+
+    mstNRF905.u8SpiCmdCfg = NRF905_CMD_W_CONFIG;
+    mstNRF905.u8SpiCmdTxPl = NRF905_CMD_W_TX_PAYLOAD;
+    mstNRF905.u8SpiCmdTxAdr = NRF905_CMD_W_TX_ADDRESS;
+    mstNRF905.u8SpiCmdRxPl = NRF905_CMD_R_RX_PAYLOAD;
 
     mstNRF905.u8SpiCmdTxPlW = NRF905_CMD_W_CONFIG_TX_PW;
     mstNRF905.mui8TxPayLoadWidth = mstNRF905.mstConfig.Tx_Payload_Width;
@@ -416,9 +455,9 @@ class cNRF905
           //       before alles auf dem realen Bur fertig ist
           mSpi.vWaitBussy();
           mPins.mCS_SPI.vSet1();
-          
-          // 750us warten bis einstellungen übernommen sind
-          mTimer.vStart(750);
+
+          // 5us warten bis einstellungen übernommen sind
+          mTimer.vStart(5);
           break;
 
         case NRF905_StWriteConfig6:
@@ -878,7 +917,7 @@ class cNRF905
 
   void SetChannel_433(u16 lu16Channel, bool bIKnowWhatIDo)
   {
-    // Sets center freq. together with HFREQ_PLL (default = 001101100b = 108d). 
+    // Sets center freq. together with HFREQ_PLL (default = 001101100b = 108d).
     //  - fRF = ( 422.4 + CH_NOd /10)*(1+HFREQ_PLLd) MHz
 
     //  Operating frequency HFREQ_PLL      CH_NO
@@ -886,12 +925,12 @@ class cNRF905
     //  433.1 MHz              [0]      [001101011]
     //  433.2 MHz              [0]      [001101100]
     //  434.7 MHz              [0]      [001111011]
-    //                                  
+    //
     //  862.0 MHz              [1]      [001010110]
     //  868.2 MHz              [1]      [001110101]
     //  868.4 MHz              [1]      [001110110]
     //  869.8 MHz              [1]      [001111101]
-    //                                  
+    //
     //  902.2 MHz              [1]      [100011111]
     //  902.4 MHz              [1]      [100100000]
     //  927.8 MHz              [1]      [110011111]
@@ -961,7 +1000,7 @@ class cNRF905
     {
       case 0:
         mstNRF905.mstConfig.CRC_Check_enable       = NRF905_CRC_DISABLE; //NRF905_CRC_ENABLE;
-        mstNRF905.mstConfig.CRC_Mode               = NRF905_CRC_16;    
+        mstNRF905.mstConfig.CRC_Mode               = NRF905_CRC_16;
         break;
       case 8:
         mstNRF905.mstConfig.CRC_Check_enable       = NRF905_CRC_ENABLE;

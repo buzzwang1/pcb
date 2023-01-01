@@ -15,7 +15,7 @@ cClockInfo mcClkInfo;
 uint8 mDisplayMemory[DISPLAY_X * DISPLAY_Y * 2] __attribute__((section(".ExtMem")));
 float mafzBuffer[320 * 240] __attribute__((section(".ExtMem")));
 
-cDiffTimer                              mcDiffTimer;
+cDiffTimer                               mcDiffTimer;
 cMsgBox                                  mcMsgBox(20);
 cCursor                                  mcCursor(200, 800, &mcMsgBox);
 
@@ -39,6 +39,7 @@ ciGraphY_Channel                    mcChnYA(&cRFont_Res8b_Bpp1_1G_5x5Ucase, mstC
 cUiElement_Root                     mc16GuiRoot(10, 10, DISPLAY_X-20, DISPLAY_Y-20, &mcMsgBox, &mc16GScreen1, BM_BPP32_8R8G8B_RGB(0xFF,0,0));
 cUiElement                          mc16GuiBase01(&mcMsgBox, &mc16GScreen1);
 cUiElement_TextBox                  mc16GuiText01(&mcMsgBox, &mc16GScreen1, 128, &cRFont_Res8b_Bpp1_1G_5x5Ucase);
+cUiElement_TextBox                  mc16GuiText_Perf(&mcMsgBox, &mc16GScreen1, 128, &cRFont_Res8b_Bpp1_1G_5x5Ucase);
 cUiElement                          mc16GuiBase02(&mcMsgBox, &mc16GScreen1);
 
 
@@ -651,7 +652,7 @@ u16 TP_Read_XOY(u8 xy)
   u16 buf[READ_TIMES];
   u16 sum = 0;
   u16 temp;
-  for (i = 0; i < READ_TIMES; i++)buf[i] = TP_Read_AD(xy);
+  for (i = 0; i < READ_TIMES; i++) buf[i] = TP_Read_AD(xy);
   for (i = 0; i < READ_TIMES - 1; i++)
   {
     for (j = i + 1; j < READ_TIMES; j++)
@@ -928,12 +929,14 @@ void MAIN_vTick10msLp(void)
     li16LValue = li16Value;
     mcChnYA.vAdd(li16Value);
     mc16GuiGraphY.vRepaint();
-
+   
     mc16GuiRoot.vPaint();
 
     mc16GSpriteEng.vSetParam(Sprite_nModeOr, &mc16GSprite, &mc16GScreen1);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.mui32Col = mc16GScreen1.u32GetCol(0xFFFFFF);
     cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 10, mcCursor.toString(), &mc16GScreen1);
+
+    mc16GuiText_Perf.vSetText(mcDiffTimer.toString());
 
     ILI9341_Show(&mc16GBm);
   }
@@ -994,25 +997,27 @@ void MAIN_vInitSystem(void)
 
   mc16GuiRoot.bAdd(10, 10, 50, 50, &mc16GuiBase01);
   mc16GuiBase01.bAdd(10, 10, 20, 20, &mc16GuiText01);
+  mc16GuiBase01.bAdd(0, 0, 50, 10, &mc16GuiText_Perf);
+  
 
   mc16GuiRoot.bAdd(70, 70, 50, 50, &mc16GuiBase02);
   mc16GuiBase02.bAdd(10, 10, 30, 10, &mc16GuiBtn01);
 
   mc16GuiText01.vSetText("Text acbfgr-tdfgd fdgdee 2134");
+  mc16GuiText_Perf.vSetText("----");
 
-  mc16GuiRoot.bAdd(60, 40, 150, 100, &mc16GuiWindow01);
-  mc16GuiWindow01.bAdd(20, 20, 150, 100, &mc16GuiGraphXY);
+  mc16GuiRoot.bAdd(20, 80, 150, 100, &mc16GuiWindow01);
+  mc16GuiWindow01.bAdd(20, 60, 150, 100, &mc16GuiGraphXY);
   mc16GuiGraphXY.vToggleMaximize();
 
-  mc16GuiRoot.bAdd(60, 40, 60, 50, &mc16GuiWindow02);
+  mc16GuiRoot.bAdd(180, 80, 100, 100, &mc16GuiWindow02);
   mc16GuiWindow02.bAdd(20, 20, 150, 100, &mc16GuiGraphY);
   mc16GuiGraphY.vToggleMaximize();
 
-
-  mc16GuiRoot.bAdd(20, 15, 60, 60, &mc16GuiBox3D_Cube);
-  mc16GuiRoot.bAdd(20, 15, 60, 60, &mc16GuiBox3D_Torus);
-  mc16GuiRoot.bAdd(20, 15, 60, 60, &mc16GuiBox3D_Sphere);
-  mc16GuiRoot.bAdd(20, 15, 60, 60, &mc16GuiBox3D_Monkey);
+  mc16GuiRoot.bAdd( 20, 15, 60, 60, &mc16GuiBox3D_Cube);
+  mc16GuiRoot.bAdd( 70, 15, 60, 60, &mc16GuiBox3D_Torus);
+  mc16GuiRoot.bAdd(120, 15, 60, 60, &mc16GuiBox3D_Sphere);
+  mc16GuiRoot.bAdd(170, 15, 60, 60, &mc16GuiBox3D_Monkey);
 
   mc16GuiBox3D_Cube.mu32BaseCol = BM_BPP32_8R8G8B_RGB(128, 128, 128);
   mc16GuiBox3D_Torus.mu32BaseCol = BM_BPP32_8R8G8B_RGB(128, 128, 128);
@@ -1020,7 +1025,7 @@ void MAIN_vInitSystem(void)
   mc16GuiBox3D_Monkey.mu32BaseCol = BM_BPP32_8R8G8B_RGB(128, 128, 128);
 
 
-  mc16GuiRoot.bAdd(100, 15, 60, 60, &mc16GuiWindow02_3Df);
+  mc16GuiRoot.bAdd(210, 15, 60, 60, &mc16GuiWindow02_3Df);
   mc16GuiWindow02_3Df.bAdd(20, 15, 60, 60, &mc16GuiBox3Df);
   mc16GuiBox3Df.vToggleMaximize();
   mc16GuiBox3Df.mstStatus.PaintFrame = 0;

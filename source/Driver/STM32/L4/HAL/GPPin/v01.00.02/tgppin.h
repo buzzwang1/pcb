@@ -42,14 +42,22 @@ public:
           u8  lui8InitValue)
     : tcPort<mu32Port_BaseAdr>()
   {
+    vReInit(lenMode, lenPuPd, lenSpeed, lui8InitValue);
+  }
+
+  void vReInit(u32 lenMode,
+               u32 lenPuPd,
+               u32 lenSpeed,
+               u8  lui8InitValue)
+  {
     GPIO_InitTypeDef  gpioinitstruct = {};
 
     vSet(lui8InitValue);
 
     /* Configure the GPIO_LED pin */
-    gpioinitstruct.Pin   = (1 << mui16Pin);
-    gpioinitstruct.Mode  = lenMode;
-    gpioinitstruct.Pull  = lenPuPd;
+    gpioinitstruct.Pin = (1 << mui16Pin);
+    gpioinitstruct.Mode = lenMode;
+    gpioinitstruct.Pull = lenPuPd;
     gpioinitstruct.Speed = lenSpeed;
     gpioinitstruct.Alternate = 0;
     HAL_GPIO_Init((GPIO_TypeDef*)this->Port(), &gpioinitstruct);
@@ -158,6 +166,17 @@ public:
     vInit(lu32PortBase, lui16Pin, lenMode, lenPuPd, lenSpeed, lui8InitValue);
   }
 
+  void vReInit(u32 lu32PortBase,
+               u16 lui16Pin,
+               u32 lenMode,
+               u32 lenPuPd,
+               u32 lenSpeed,
+               u8  lui8InitValue)
+  {
+    vInit(lu32PortBase, lui16Pin, lenMode, lenPuPd, lenSpeed, lui8InitValue);
+  }
+
+
   void vInit(u32 lu32PortBase,
              u16 lui16Pin,
              u32 lenMode,
@@ -182,7 +201,11 @@ public:
       case (u32)GPIOH_BASE: __HAL_RCC_GPIOH_CLK_ENABLE();break;
     }
 
-    vSet(lui8InitValue);
+    if ((lenMode == GPIO_MODE_OUTPUT_PP) ||
+        (lenMode == GPIO_MODE_OUTPUT_OD))
+    {
+      vSet(lui8InitValue);
+    }
 
     /* Configure the GPIO_LED pin */
     gpioinitstruct.Pin   = (1 << mui16Pin);

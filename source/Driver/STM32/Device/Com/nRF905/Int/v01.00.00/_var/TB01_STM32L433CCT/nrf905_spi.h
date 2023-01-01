@@ -154,10 +154,10 @@ class cNRF905_Spi
 
     /* DMA interrupt init */
     /* DMA1_Channel2_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 8, 8);
     HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     /* DMA1_Channel3_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 8, 8);
     HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
   }
 
@@ -288,7 +288,7 @@ class cNRF905_Timer
     TIM7->DIER |= TIM_DIER_UIE;
 
     // Enable the TIM7 global Interrupt
-    HAL_NVIC_SetPriority(TIM7_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM7_IRQn, 8, 8);
     /* Enable the TIM7 global Interrupt */
     HAL_NVIC_EnableIRQ(TIM7_IRQn);
   }
@@ -337,7 +337,7 @@ class cNRF905_Pins
     LL_EXTI_Init(&EXTI_InitStruct);
 
     // Add IRQ vector to NVIC
-    HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(EXTI15_10_IRQn, 8, 8);
     HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
   };
 

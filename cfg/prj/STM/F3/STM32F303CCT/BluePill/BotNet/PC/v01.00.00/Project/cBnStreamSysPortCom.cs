@@ -480,29 +480,29 @@ bool cBotNetStreamPort_BotNetCmdPort::bProcessCmd(cStr& lcStrCmd, cStr& lcStrPar
         mcMyPrinter.vPrintLn(mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mszName);
         for (liCnxIdx = 0; liCnxIdx < cBotNet_StreamSysPortsCnxCnt; liCnxIdx++)
         {
-          if (mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx] != 0)
+          if (mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx] != 0)
           {
             mcMyPrinter.vPrint((const char8*)"  ");
             lszStr.Itoa(liCnxIdx, 10);
             lszStr += (const char8*)lszCnx;
             mcMyPrinter.vPrint(lszStr);
 
-            if (mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestAdr.mAdr.u16Adr != 0)
+            if (mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestAdr.mAdr.u16Adr != 0)
             {
-              lszStr.Itoa(0, mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD4, 16);
+              lszStr.Itoa(0, mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD4, 16);
               lszStr += '.';
-              lszStr.Itoa(2,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD3, 16);
+              lszStr.Itoa(2,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD3, 16);
               lszStr += '.';
-              lszStr.Itoa(4, mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD2, 16);
+              lszStr.Itoa(4, mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD2, 16);
               lszStr += '.';
-              lszStr.Itoa(6,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD1, 16);
+              lszStr.Itoa(6,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestAdr.mAdr.stAdr.AdrD1, 16);
               lszStr += (const char8*)": ";
-              lszStr.Itoa(8,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mcBnDestPortIdx, 10);
+              lszStr.Itoa(8,mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mcBnDestPortIdx, 10);
               mcMyPrinter.vPrint(lszStr);
             }
             else
             {
-              mcMyPrinter.vPrintLn(mcBotNet->mcStreamSys.mcPorts[liPortIdx]->lcConnection[liCnxIdx]->mszName);
+              mcMyPrinter.vPrintLn(mcBotNet->mcStreamSys.mcPorts[liPortIdx]->mcConnection[liCnxIdx]->mszName);
             }
           }
         }

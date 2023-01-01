@@ -38,10 +38,21 @@ void cAPDS9960::vComError(cComNode::tenError lenError, cComNode::tenState lenSta
 {
   UNUSED(lenError);
   UNUSED(lenState);
-  mStatus.IsStartRequested = false;
   menCmd     = enCmdIdle;
   mStatus.IsInit  = false;
-  i8Setup();
+  mStatus.IsStartRequested = false;
+
+  this->menGestureSM = enSmStIdle;
+  this->menDirection = nAPDS9960_DIR_NONE;
+  mbInit = true;
+
+  mbSetMode = true;
+  mbSetControl = true;
+
+  if (isEnabledGestureSensor())
+  {
+    mbSetupGestureSensor = true;
+  }
 }
 
 void cAPDS9960::vComStart(cComNode::tenEvent lenEvent)

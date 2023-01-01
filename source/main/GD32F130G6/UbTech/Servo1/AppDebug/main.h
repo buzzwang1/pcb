@@ -10,7 +10,9 @@
 #include "cRingBufT.h"
 #include "cBnLinkUsartMpHd.h"
 #include "cBnStreamSysPortIap.h"
+#include "cBnStreamSysPortIap.h"
 #include "cBotnet.h"
+#include "cUsart_MpHd.h"
 #include "App.h"
 
 #ifdef TEST_BnLinkUsartMpHd

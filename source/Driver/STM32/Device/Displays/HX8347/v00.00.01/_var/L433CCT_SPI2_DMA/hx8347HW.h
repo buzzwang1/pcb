@@ -112,7 +112,7 @@ class cHx8347_HW
     }
     
     __HAL_DMA_ENABLE_IT(&lhDma, (DMA_IT_TC /*| DMA_IT_HT | DMA_IT_TE*/));
-    HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 8, 8);
     HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
   };
 

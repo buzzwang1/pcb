@@ -7,11 +7,11 @@
 
 #include "ClockInfo.h"
 
-class cBotNet_DownLinkI2c_Timer
+class cBotNet_DownLinkUsartMpHd_Timer
 {
   public:
 
-  cBotNet_DownLinkI2c_Timer()
+  cBotNet_DownLinkUsartMpHd_Timer()
   {
     vInit();
   }
@@ -59,7 +59,7 @@ class cBotNet_DownLinkI2c_Timer
     TIM16->DIER |= TIM_DIER_UIE;
 
     // Enable the TIM16 global Interrupt
-    HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 3, 0);
+    HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 7, 8);  // Höhere Prio,wegen Asynchron
     /* Enable the TIM16 global Interrupt */
     HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);
   }

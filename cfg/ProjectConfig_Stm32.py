@@ -145,6 +145,7 @@ Config_STM32F429x  = copy.deepcopy(default_Config_STM32_CMX)
 Config_STM32L4x3   = copy.deepcopy(default_Config_STM32_CMX)
 Config_STM32L4R9   = copy.deepcopy(default_Config_STM32_CMX)
 Config_STM32L552   = copy.deepcopy(default_Config_STM32_CMX)
+Config_STM32U5xx   = copy.deepcopy(default_Config_STM32_CMX)
 Config_GD32F1x0    = copy.deepcopy(default_Config_STM32_CMX)
 
 Config_GD32F1x0['system']['project']['target']['platform'] = 'GD32F1x0'
@@ -170,6 +171,8 @@ Config_STM32L4R9['system']['project']['target']['platform']   = 'STM32L4R9'
 Config_STM32L4R9['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32L4R9.svd'
 Config_STM32L552['system']['project']['target']['platform']   = 'STM32L552'
 Config_STM32L552['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32L552.svd'
+Config_STM32U5xx['system']['project']['target']['platform']   = 'STM32U5xx'
+Config_STM32U5xx['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32U5xx.svd'
 
 Config_STM32F303_BlApp = copy.deepcopy(Config_STM32F303)
 Config_STM32F303_BlApp['buildtool']['flash']['adress']        = '0x8008000' # 8000 (32kb) offset for bootloader
@@ -179,6 +182,9 @@ Config_STM32L4x3_BlApp['buildtool']['flash']['adress']        = '0x8008000' # 80
 
 Config_GD32F1x0['buildtool']['flash']                         = Config_GD32F1x0['buildtool']['flash3']
 Config_GD32F1x0['buildtool']['flash']['target']               = 'target/stm32f1x.cfg'
+
+Config_STM32L552['buildtool']['flash']                        = Config_STM32L552['buildtool']['flash2']
+Config_STM32U5xx['buildtool']['flash']                        = Config_STM32U5xx['buildtool']['flash2']
 
 # ------------------------
 # use-able configurations:
@@ -202,6 +208,7 @@ configs_Stm32 = {
     'Config_STM32L4x3_BlApp' : Config_STM32L4x3_BlApp,
     'Config_STM32L4R9'  : Config_STM32L4R9,
     'Config_STM32L552'  : Config_STM32L552,
+    'Config_STM32U5xx'  : Config_STM32U5xx,
 }
 
 

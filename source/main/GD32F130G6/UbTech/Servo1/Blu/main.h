@@ -11,6 +11,7 @@
 #include "cBnLinkUsartMpHd.h"
 #include "cBnStreamSysPortIap.h"
 #include "cBotnet.h"
+#include "cUsart_MpHd.h"
 
 #ifdef __cplusplus
   extern "C" {

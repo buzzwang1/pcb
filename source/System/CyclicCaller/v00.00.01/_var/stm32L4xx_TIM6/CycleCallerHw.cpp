@@ -25,7 +25,7 @@ void CycCallHw_vInit(CycCallTimer_Callback lptrCycCall_Callback_1ms_HP)
 
   /*##-2- Configure the NVIC for TIMx ########################################*/
   /* Set the TIMx priority */
-  HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(TIM6_DAC_IRQn, 8, 8);
 
   /* Enable the TIMx global Interrupt */
   HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);

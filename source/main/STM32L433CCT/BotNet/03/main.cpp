@@ -333,18 +333,15 @@ void MAIN_vInitSystem(void)
   mcBn_0x1000 = new cBotNet(&mcBnCfg_0x1000, &mcBn_MsgProcess_0x1000);
 
   // --- 0x1000 UpLink
-  mcSideLnk_0x1000Rf = (cBotNet_UpLinknRf905*) new cBotNet_UpLinknRf905(0xE000, &mcNRF905);
-  mcSideLnk_0x1000   = (cBotNet_UpLinknRf905Net*) new cBotNet_UpLinknRf905Net(mcSideLnk_0x1000Rf);
-  mcBn_0x1000->bAddLink(mcSideLnk_0x1000);
+  mcSideLnk_0x1000Rf = (cBotNet_UpLinknRf905*) new cBotNet_UpLinknRf905(&mcNRF905);
+  mcSideLnk_0x1000   = (cBotNet_UpLinknRf905Net*) new cBotNet_UpLinknRf905Net(mcSideLnk_0x1000Rf, mcBn_0x1000);
+  mcBn_0x1000->bAddLink((cBotNet_LinkBase*)mcSideLnk_0x1000, 0xE000);
   mcSideLnk_0x1000->vSetTiming(15000, 100);
 
   // --- 0x1000 DownLinks
-  cBotNetAdress mcBnAdr_0x1000;
-  mcBnAdr_0x1000.Set(0x1000);
   for (lu8t = 0; lu8t < cBotNet::enCnstSlaveCnt; lu8t++)
   {
-    uint16 lui16Adr = mcBnAdr_0x1000.GetSlaveAdr(lu8t + 1);
-    mcDownLinks_0x1000[lu8t] = (cBotNet_DownLinkI2c*) new cBotNet_DownLinkI2c(lui16Adr, mcI2C2_Master);
+    mcDownLinks_0x1000[lu8t] = (cBotNet_DownLinkI2c*) new cBotNet_DownLinkI2c(mcI2C2_Master);
     mcBn_0x1000->bAddLink((cBotNet_LinkBase*)mcDownLinks_0x1000[lu8t]);
   }
 
@@ -365,10 +362,10 @@ void MAIN_vInitSystem(void)
 
   // --- 0x1100 ----
   mcI2C1_Slave    = new cI2cSlave(I2C2,  &lcSCL_Slave,  &lcSDA_Slave,   1 << 1, 0);
-  mcBn_0x1100  = new cBotNet(&mcBnCfg_0x1100, &mcBn_MsgProcess_0x1100);
+  mcBn_0x1100     = new cBotNet(&mcBnCfg_0x1100, &mcBn_MsgProcess_0x1100);
 
   // --- 0x1100 UpLink
-  mcSideLnk_0x1100 = (cBotNet_UpLinkI2c*) new cBotNet_UpLinkI2c(0x1100, mcI2C1_Slave);
+  mcSideLnk_0x1100 = (cBotNet_UpLinkI2c*) new cBotNet_UpLinkI2c(mcI2C1_Slave);
   mcBn_0x1100->bAddLink((cBotNet_LinkBase*)mcSideLnk_0x1100);
 
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
@@ -388,21 +385,6 @@ void MAIN_vInitSystem(void)
 }
 
 
-void vCleanUp()
-{
-  delete mcSideLnk_0x1000;
-  delete mcSideLnk_0x1100;
-  for (int t = 0; t < cBotNet::enCnstSlaveCnt; t++)
-  {
-    delete mcDownLinks_0x1000[t];
-    delete mcDownLinks_0x1100[t];
-  }
-
-  delete mcI2C1_Slave;
-  delete mcI2C2_Master;
-  delete mcBn_0x1000;
-  delete mcBn_0x1100;
-}
 
 /* Main functions ---------------------------------------------------------*/
 int main(void)

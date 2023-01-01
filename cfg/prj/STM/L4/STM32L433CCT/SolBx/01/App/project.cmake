@@ -77,24 +77,25 @@ set(PCB_ProjectPackageList
     Data/DateTime/Clock/v00.00.01
 
     # Links auf -Ofast kompilieren
-    Data/BotNet/v00.00.04/Base/Main/App/v00.00.01:default${lFastDriver}
-    Data/BotNet/v00.00.04/Base/Misc/Adr/v00.00.01:default${lFastDriver}
-    Data/BotNet/v00.00.04/Base/Misc/Cfg/v00.00.01:default${lFastDriver}
-    Data/BotNet/v00.00.04/Base/Misc/Msg/v00.00.01:default${lFastDriver}
-    Data/BotNet/v00.00.04/BnLinks/Base/v00.00.02:default${lFastDriver}
-    #Data/BotNet/v00.00.04/BnLinks/I2c/v00.00.02:default${lFastDriver}
-    #Data/BotNet/v00.00.04/BnLinks/UsartMpHd/v00.00.02:default${lFastDriver}
-    Data/BotNet/v00.00.04/BnLinks/BotCom/v00.00.03:default${lFastDriver}
-    Data/BotNet/v00.00.04/BnLinks/nRf905/v00.00.02:default${lFastDriver}
-    Data/BotNet/v00.00.04/BnLinks/nRf905Net/v00.00.02:default${lFastDriver}
+    Data/BotNet/v00.00.05/Base/Main/App/v00.00.01:default${lFastDriver}
+    Data/BotNet/v00.00.05/Base/Misc/Adr/v00.00.01:default${lFastDriver}
+    Data/BotNet/v00.00.05/Base/Misc/Cfg/v00.00.01:default${lFastDriver}
+    Data/BotNet/v00.00.05/Base/Misc/Msg/v00.00.01:default${lFastDriver}
+    Data/BotNet/v00.00.05/BnLinks/Base/v00.00.02:default${lFastDriver}
+    #Data/BotNet/v00.00.05/BnLinks/I2c/v00.00.02:default${lFastDriver}
+    #Data/BotNet/v00.00.05/BnLinks/UsartMpHd/v00.00.03:default${lFastDriver}
+    Data/BotNet/v00.00.05/BnLinks/BotCom/v00.00.03:default${lFastDriver}
+    Data/BotNet/v00.00.05/BnLinks/nRf905/v00.00.02:default${lFastDriver}
+    Data/BotNet/v00.00.05/BnLinks/nRf905Net/v00.00.02:default${lFastDriver}
 
-    Data/BotNet/v00.00.04/BnMsgSys/Base/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Base/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Base/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Cmd/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Com/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Echo/v00.00.01:default
-    Data/BotNet/v00.00.04/BnStreamSys/Ports/Iap/v00.00.01:default:STM32L433CCT_RomConst
+    Data/BotNet/v00.00.05/BnMsgSys/Base/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Base/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Base/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Cmd/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Com/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Echo/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Text/v00.00.01:default
+    Data/BotNet/v00.00.05/BnStreamSys/Ports/Iap/v00.00.01:default:STM32L433CCT_RomConst
 
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4

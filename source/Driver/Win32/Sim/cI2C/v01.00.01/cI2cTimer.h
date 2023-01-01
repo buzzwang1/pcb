@@ -57,7 +57,7 @@ class cBotNet_DownLinkI2c_Timer
     //TIM15->DIER |= TIM_DIER_UIE;
 
     // Enable the TIM15 global Interrupt
-    //HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 3, 0);
+    //HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 8, 8);
     // Enable the TIM15 global Interrupt
     //HAL_NVIC_EnableIRQ(TIM1_BRK_TIM15_IRQn);
   }
