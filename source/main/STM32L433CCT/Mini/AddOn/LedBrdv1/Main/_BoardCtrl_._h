@@ -1,0 +1,423 @@
+#ifndef __BOARD_CONTROL_H__
+#define __BOARD_CONTROL_H__
+
+
+#include "TypeDef.h"
+#include "stm32l433xx.h"
+#include "stm32l4xx_hal.h"
+#include "stm32l4xx_ll_bus.h"
+#include "stm32l4xx_ll_rcc.h"
+#include "stm32l4xx_ll_system.h"
+#include "stm32l4xx_ll_utils.h"
+#include "stm32l4xx_ll_cortex.h"
+#include "stm32l4xx_ll_gpio.h"
+#include "stm32l4xx_ll_dac.h"
+#include "stm32l4xx_ll_exti.h"
+#include "stm32l4xx_ll_rtc.h"
+#include "stm32l4xx_ll_pwr.h"
+
+#include "tGPPin.h"
+#include "LED.h"
+#include "cI2c.h"
+#include "ina3221.h"
+
+#include "cClock.h"
+#include "ClockInfo.h"
+
+#include "RomConst.h"
+
+
+class cWorkMode
+{
+public:
+
+  typedef enum
+  {
+    nStManuel,
+    nStAuto,
+  }tenState;
+
+  tenState mMode;
+  u16      mCounter;
+
+  cWorkMode()
+  {
+    mCounter = 0;
+    vSet(cWorkMode::nStAuto);
+  }
+
+  void vSet(cWorkMode::tenState lMode)
+  {
+    mMode = lMode;
+    if (mMode == cWorkMode::nStManuel)
+    {
+      mCounter = 60 * 10; // 10min
+    }
+  }
+
+  bool IsAuto()
+  {
+    return (mMode == cWorkMode::nStAuto);
+  }
+
+  void vTick1000ms()
+  {
+    if (mCounter)
+    {
+      mCounter--;
+      if (mCounter == 0)
+      {
+        vSet(cWorkMode::nStAuto);
+      }
+    }
+  }
+
+  const char* ToString()
+  {
+    if (mMode == cWorkMode::nStManuel)
+    {
+      return (const char*)"manuel";
+    }
+    else
+    {
+      return (const char*)"auto";
+    }
+  }
+};
+
+class cStatusLedMode
+{
+  public:
+  typedef enum
+  {
+    nStToggle100ms,
+    nStToggle200ms,
+    nStToggle500ms,
+    nStToggle1000ms,
+    nStPuls500ms,
+    nStPuls1000ms,
+    nStPuls5000ms,
+    nStSinglePuls1000ms,
+    nStSinglePuls2000ms,
+    nStSinglePuls3000ms,
+    nStOn,
+    nStOff,
+  }tenMode;
+};
+
+
+template <const uintptr_t mpstPort, const uint16 mui16Pin>
+class cStatusLed : public LED<mpstPort, mui16Pin>, public cStatusLedMode
+{
+public:
+  tenMode mSm;
+  u8      mCounter;
+
+  cStatusLed(bool lbInverse)
+    : LED<mpstPort, mui16Pin>()
+  {
+    mSm = nStToggle500ms;
+    mCounter = 0;
+    this->mInverse = lbInverse;
+  };
+
+  void vSetMode(cStatusLedMode::tenMode lSm)
+  {
+    if (mSm != lSm) mCounter = 0;
+    mSm = lSm;
+  }
+
+
+  void vTick100ms()
+  {
+    switch (mSm)
+    {
+      case nStToggle100ms:
+        this->Toggle();
+        break;
+      case nStToggle200ms:
+        if (mCounter & 1)
+        {
+          this->Toggle();
+        }
+        break;
+      case nStToggle500ms:
+        if ((mCounter % 5) == 0)
+        {
+          this->Toggle();
+        }
+        break;
+      case nStToggle1000ms:
+        if ((mCounter % 10) == 0)
+        {
+          this->Toggle();
+        }
+        break;
+      case nStPuls500ms:
+        if ((mCounter % 5) == 0)
+        {
+          this->On();
+        }
+        else
+        {
+          this->Off();
+        }
+        break;
+      case nStPuls1000ms:
+        if ((mCounter % 10) == 0)
+        {
+          this->On();
+        }
+        else
+        {
+          this->Off();
+        }
+        break;
+      case nStPuls5000ms:
+        if (mCounter == 0)
+        {
+          this->On();
+        }
+        else
+        {
+          this->Off();
+        }
+        break;
+      case nStOn:
+        this->On();
+        break;
+      case nStOff:
+        this->Off();
+        break;
+
+      case nStSinglePuls1000ms:
+        if (mCounter < 10)
+        {
+          this->On();
+        }
+        else
+        {
+          vSetMode(nStOff);
+        }
+        return;
+        break;
+      case nStSinglePuls2000ms:
+        if (mCounter < 20)
+        {
+          this->On();
+        }
+        else
+        {
+          vSetMode(nStOff);
+        }
+        return;
+        break;
+      case nStSinglePuls3000ms:
+        if (mCounter < 30)
+        {
+          this->On();
+        }
+        else
+        {
+          vSetMode(nStOff);
+        }
+        return;
+        break;
+    }
+
+    if (mCounter < 49)
+    {
+      mCounter++;
+    }
+    else
+    {
+      mCounter = 0;
+    }
+  }
+};
+
+
+
+
+
+class cBoard
+{
+public:
+
+  typedef enum
+  {
+    enINA_P1 = 0,
+  }tenLipoMonGeneral;
+
+  typedef enum
+  {
+    enSmStOff = 0,
+    enSmStOn
+  }tenLipoMonS_States;
+
+  typedef enum
+  {
+    enSmEvInit = 0,
+    enSmEvOff,
+    enSmEvOn,
+    enSmEvAuto
+  }tenLipoMonS_Events;
+
+
+  cI2cMaster* mcI2C;
+
+  cINA3221* mcIna;
+  u8 mu8InaErr;
+
+  u8     mu8ForceDirectRead;
+  int32  mi32VBus[3];
+  float  mfVBusAvg[3];
+  int32  mi32IShunt[3];
+  float  mfIShuntAvg[3];
+  int32  mi32VShunt[3];
+  float  mfVShuntAvg[3];
+
+  uint8 mui8P2Mode;
+
+  u16   mu16Startup_Delay;
+
+  cGpPin* mS_Relais;
+
+
+  cBoard(cI2cMaster* lcI2C)
+  {
+    mcI2C = lcI2C;
+
+    mcIna     = new cINA3221(mcI2C, INA3221_I2C_ADDRESS_CONF_0, 10, 10, 10);
+    mS_Relais = new cGpPin(GPIOA_BASE, 8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+    mu8InaErr = 0;
+
+    u8 lui8t;
+    for (lui8t = 0; lui8t < 3; lui8t++)
+    {
+      mi32VBus[lui8t] = 0;
+      mi32IShunt[lui8t] = 0;
+      mi32VShunt[lui8t] = 0;
+    }
+
+    mu16Startup_Delay = 1000; //[ms]
+  }
+
+  void vRelaisOn()  { mS_Relais->vSet1(); }
+  void vRelaisOff() { mS_Relais->vSet0(); }
+
+
+
+  float fGetLedVoltageAbs(u8 lu8Idx)
+  {
+    float lfValue = 0;
+    switch (lu8Idx)
+    {
+      case 1: lfValue = mfVBusAvg[0]; break;
+      case 2: lfValue = mfVBusAvg[1]; break;
+      case 3: lfValue = mfVBusAvg[2]; break;
+    }
+
+    return lfValue;
+  }
+
+  i16 i16GetLedVoltageAbs(u8 lu8Idx)
+  {
+    return (i16)fGetLedVoltageAbs(lu8Idx);
+  }
+
+
+  float fGetLedCurrentAbs(u8 lu8Idx)
+  {
+    float lfValue = 0;
+    switch (lu8Idx)
+    {
+      case 1: lfValue = mfIShuntAvg[0]; break;
+      case 2: lfValue = mfIShuntAvg[1]; break;
+      case 3: lfValue = mfIShuntAvg[2]; break;
+    }
+    return lfValue;
+  }
+
+  i16 i16GetLedCurrentAbs(u8 lu8Idx)
+  {
+    return (i16)fGetLedCurrentAbs(lu8Idx);
+  }
+
+
+
+  void vUpdateAll(bool bIsAuto)
+  {
+    u8 lui8i;
+
+    volatile float lfInputFactor;
+
+    lfInputFactor = 0.01f;
+
+    mu8InaErr = 0;
+    if (mcIna->mStatus.IsError == 1)
+    {
+      mu8InaErr = 1;
+      mu16Startup_Delay = 1000;
+    }
+
+    if (mu16Startup_Delay)
+    {
+      mu8ForceDirectRead = True;
+    }
+
+    // Strom und Spannung einlesen und Durchschnitt ermitteln
+    if (!mu8InaErr)
+    {
+      // --------------  Eingangwerte lesen ------------------
+      for (lui8i = 0; lui8i < 3; lui8i++)
+      {
+        mcIna->i8ReadVShunt_digit(lui8i+1);
+        mcIna->i8ReadVBus_digit(lui8i+1);
+
+        mi32VBus[lui8i]   = mcIna->i32CalcVBus_uV(3-lui8i)   / 1000;
+        mi32IShunt[lui8i] = mcIna->i32CalcIShunt_uA(3-lui8i) / 1000;
+        mi32VShunt[lui8i] = mcIna->i32CalcVShunt_uV(3-lui8i) / 1000;
+
+        if (mu8ForceDirectRead)
+        {
+          mfVBusAvg[lui8i]   = mi32VBus[lui8i];
+          mfIShuntAvg[lui8i] = mi32IShunt[lui8i];
+          mfVShuntAvg[lui8i] = mi32VShunt[lui8i];
+        }
+        else
+        {
+          float lfError = (mcIna->i32CalcVBus_uV(3 - lui8i) / 1000.0f - mfVBusAvg[lui8i]);
+          mfVBusAvg[lui8i] = mfVBusAvg[lui8i] + lfError * lfInputFactor;
+
+          lfError = (mcIna->i32CalcIShunt_uA(3 - lui8i) / 1000.0f - mfIShuntAvg[lui8i]);
+          mfIShuntAvg[lui8i] = mfIShuntAvg[lui8i] + lfError * lfInputFactor;
+
+          lfError = (mcIna->i32CalcVShunt_uV(3 - lui8i) / 1000.0f - mfVShuntAvg[lui8i]);
+          mfVShuntAvg[lui8i] = mfVShuntAvg[lui8i] + lfError * lfInputFactor;
+        }
+      }
+
+      if (mu8ForceDirectRead)
+      {
+        mu8ForceDirectRead--;
+      }
+
+      if ((mu16Startup_Delay == 0) && (bIsAuto))
+      {
+      }
+      else
+      {
+        if (mu16Startup_Delay > 10) mu16Startup_Delay -= 10;
+        else mu16Startup_Delay = 0;
+      }
+    }
+    else // InaError
+    {
+    }
+  }
+};
+
+
+
+#endif  //__BOARD_CONTROL_H__

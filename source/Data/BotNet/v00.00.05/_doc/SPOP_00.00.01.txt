@@ -1,0 +1,86 @@
+15:03 26.01.2023
+Ver. 00.00.01
+
+SPOP: Special Operations
+
+Interface:
+Msg.: Index 3
+
+
+
+Exit 0 Kommando
+-> 00 
+<- 80
+
+Enter 1 Kommando
+-> 01 12 34
+<- 81 00 // fail, else success
+<- 81 01 // success
+
+
+EEPROM/Flash Sektor löschen 4 Kommando
+
+-> 04 MI AA AA AA AA
+    MI: Memory Index
+  AAAA: 32Bit Sektor Addresse
+<- 84 00 // fail, else success
+<- 84 01 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 84 02 fertig
+
+
+Speicher lesen und in den BTR schreiben 5 Kommando
+-> 05 MI AA AA AA AA SS SS SS SS
+    MI: Memory Index
+  AAAA: 32Bit Sektor Addresse
+  SSSS: 32Bit Größe
+<- 85 00 // fail, else success
+<- 85 01 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 84 02 AA AA AA AA // fertig
+  AAAA: Anzahl übertragener Bytes
+
+Speicher aus den BTR lesen und in ECU schreiben 6 Kommando
+-> 06 MI AA AA AA AA SS SS SS SS
+    MI: Memory Index
+  AAAA: 32Bit Sektor Addresse
+  SSSS: 32Bit Größe
+<- 86 00 // fail, else success
+<- 86 01 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 84 02 AA AA AA AA // fertig
+  AAAA: Anzahl übertragener Bytes
+
+
+Checksumme lesen 0x10 Kommando
+Start:
+-> 10 AAAA AAAA SSSS SSSS
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+<- 90 00 // fail, else success
+<- 90 01 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 90 02 CKCK CKCK // success
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+
+
+
+Call 0x20 Kommando
+-> 20 AAAA AAAA P1P1 P1 P1 P2P2 P2P2 P3P3 P3P3 P4P4 P4P4
+<- A0 00 // fail, else success
+<- A0 01 // success
+  AAAA: 32Bit Zieladdresse, die aufgerufen werden soll
+  P1P1: 32Bit Parameter1
+  P2P2: 32Bit Parameter2
+  P3P3: 32Bit Parameter3
+  P4P4: 32Bit Parameter4
+
+
+Call 0x21 Kommando
+-> 21 AAAA AAAA
+<- A1 00 // fail, else success
+<- A1 01 // success
+  AAAA: 32Bit Zieladdresse, die aufgesprungen werden soll
+
+

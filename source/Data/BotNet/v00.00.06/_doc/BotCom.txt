@@ -1,0 +1,80 @@
+Protokoll V1.5
+==============
+
+Datenübertragung -> "CCCD DDDD"
+===============================
+
+DDDDD = Datenbits
+CCC   = Commandbits
+|||__
+||__ |
+|__ ||
+   |||
+   000 : Übertragung Ende: Checksumme in den unteren 5 Bits. Checksumme geht nur über die Datenbits. Checksumme = Summe(Daten)+1
+   001 : Daten Start: Start Daten. Die unteren 5 Bits enthalten die unter 5Bit der Anzahl der Datenbytes (Raw oder codiert ?)
+   010 : Daten Zusatz: Die oberen 3 Bits, z.B. 010x xDDD
+           - kommt nur nach einer 001 oder 111 kommen, falls der Wert >31 ist
+           - kann auch nach einer Start Nachricht kommen, die beiden ungenutzen Bits können einen
+             einen Message Counter beinhalten z.B. 010C CDDD
+   011 : Status: Status in den unteren 5 Bits. Wird nach jeder Nachricht vom Empfänger verschickt
+                                               Kann mit '0'-Datennachricht (keine Daten) getriggert werden
+                 000BA
+                   B: Bussy: =1 Es können keine weitere Daten empfangen weden, z.B. der Empfangbuffer ist voll
+                   A: Acknowledge: =1 Nachricht komplett empfangen, =0 Checksummen Fehler under Datenverlsut
+   100 : NC
+   101 : NC
+   110 : NC
+   111 : Übertragung Start: Anzahl Daten (Low 5-Bit) in den unteren 5 Bits
+
+
+'0'-Datennachricht: 1110 0000 0000 0001 = E0 01.
+
+Protokoll V1.4
+==============
+
+Datenübertragung -> "CCCD DDDD"
+===============================
+
+DDDDD = Datenbits
+CCC   = Commandbits
+|||__
+||__ |
+|__ ||
+   |||
+   000 : Übertragung Ende: Checksumme in den unteren 5 Bits
+   001 : Daten Start: Start Daten. Die unteren 5 Bits
+   010 : Daten Zusatz: Die oberen  3 Bits 
+           - kommt nur nach einer 001 oder 111 kommen, falls der Wert >31 ist
+   011 : NC
+   100 : NC
+   101 : NC
+   110 : NC
+   111 : Übertragung Start: Anzahl Daten (Low 5-Bit) in den unteren 5 Bits
+
+
+
+
+Protokoll V1.3
+==============
+
+Datenübertragung -> "AAAX DDDD"
+===============================
+
+DDDD = Datenbits
+X    = Extrabit
+AAA  = Commandbits
+|||__
+||__ |
+|__ ||
+   |||
+   000 : Übertragung Ende: Checksumme in den unteren 5 Bits
+   001 : Daten High 4-Bit = High Nibbel
+   010 : Daten Low  4-Bit = Low  Nibbel
+   011 : Daten 5-Bit
+   100 : NC
+   101 : NC
+   110 : Anzahl Daten High 4-Bit = High Nibbel
+   111 : Übertragung Start: Anzahl Daten (Low  4-Bit = Low  Nibbel) in den unteren 4 Bits
+
+Wichtig: - bei Daten zuerst High Nibbel, dann Low Nibbel übertragen
+

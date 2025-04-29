@@ -1,0 +1,115 @@
+
+Idx
+32: Request messages
+      Message Req:         Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index 
+                                             //                                    S1 = Sub Index1  
+                                             //                                    S2 = Sub Index2  
+
+                                             // R1 S1 S2
+                                             //  0  0  0:  System:      Status: Version
+                                             //  0  1  0:  System:      Software: Status
+                                             //  1  0  0:  Clock:       DateTime
+                                             //  1  1  0:  Clock:       Calender
+                                             //  2  0  0:  Power:       Status
+                                             //  4  0  0:  PowerModule: Mode Status
+                                             //  4  1  X:  PowerModule: Module X: Set Values Status
+                                             //  4  2  X:  PowerModule: Module X: Current Values Status
+
+
+
+
+33: Response messages
+
+                                      0    1    2   3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+    
+      Sys: Status: Version        TX 00 | 00 | 00 | HV.HV.SV.SV.BT.00.00.00.00.00: HV: HW Version; SV: SW Version; BT Board Type (0 = 2Cell, 1 = 4cell)
+      Sys: Sw:     Status         TX 00 | 01 | 00 | TS.TS.SM.EI.00.00.00.00.00.00: TS: Time to sleep [s]; 
+                                                                                   SM: system mode (bitcoded, B0 = automatic/manuel, B1 = testmode)
+                                                                                   ER: Error indicator
+      Clk:  DateTime: Status      TX 01 | 00 | 00 | 00.00.YH.YL.MM.DD HH.MM.SS.VV: DateTime: VV = Valid 
+      Clk:  Calender: Status      TX 01 | 01 | 00 | -TBD-
+      Pwr:  Status                TX 02 | 00 | 00 | 1M.1V.1V.1I.1I.2M.2V.2V.2I.2I.3M.3V.3V.3I.3I
+                                                                                // XM: Channel X: Mode
+                                                                                // XV: Channel X: Voltage [mV]
+                                                                                // XI: Channel X: Current [mA]
+
+      PoMo: Status                TX 04 | 00 | 00 | PC                          // PC:  Power Module Count
+      PoMo: Mod X: Set Value1     TX 04 | 01 | 0X | 01.PT.ST.IM.IV.IV.II.II.OM.OV.OV.OI.OI.TH.TL
+                                                                                // 0X: Power Module Index: 0..PC
+                                                                                // PT: Power Module Type
+                                                                                // ST: Enable state
+                                                                                   IM: Input mode 
+                                                                                   IVIV, IIII: Input voltage and current
+                                                                                   OM: Input mode 
+                                                                                   OVOV, OIOI: Output voltage and current
+                                                                                // TH.TL: Temperature value (°C,  int16)
+      PoMo: Mod X: Set Values2    TX 04 | 01 | 0X | 02.PI.IL.IL.IL.IL.KP.KP.KP.KP.KI.KI.KI.KI.IC.IC.IC.IC.KD.KD.KD.KD.OL.OL.OL.OL.
+                                                                                // PI = PID index [0..3]; IL = input lowpass OL = output lowpass
+                                                                                   KI = k-value; IC = i value; IC = i cutoff value; KD = d value
+      PoMo: Mod X: Current Val    TX 04 | 02 | 0X | IM.IV.IV.II.II.OV.OV.OI.OI.TH.TL
+                                                                                // ST: Enable state
+                                                                                   IVIV, IIII: Input voltage and current
+                                                                                   OVOV, OIOI: Output voltage and current
+                                                                                // TH.TL: Temperature value (°C,  int16)
+
+
+34: Set Message
+      Pwr:  Status                RX 02 | 00 | 00 | 1M.2M.3M                    // Set Modes
+                                                                                // XM: Channel X: Mode 0xFF: No Change
+      PoMo: Mod X: Set            RX 04 | 01 | 0X | 01.ST.IM.IV.IV.II.II.OM.OV.OV.OI.OI.TH.TL
+                                                                                // ST: Enable state 0xFF: No Change
+                                                                                   IM: Input mode   0xFF: No Change
+                                                                                   IVIV, IIII: Input voltage and current
+                                                                                   OM: Output mode   0xFF: No Change
+                                                                                   OVOV, OIOI: Output voltage and current
+                                                                                // TT: max. Temperature value (°C,  int16)
+      PoMo: Mod X: Set            RX 04 | 01 | 0X | 02.PI.IL.IL.IL.IL.KP.KP.KP.KP.KI.KI.KI.KI.IC.IC.IC.IC.KD.KD.KD.KD.OL.OL.OL.OL.
+                                                                                // PI = PID index [0..3]; IL = input lowpass OL = output lowpass
+                                                                                   KI = k-value; IC = i value; IC = i cutoff value; KD = d value
+
+
+
+// SLED Add-on:
+
+40: Request Messages
+      Message Req:         Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index 
+                                             //                                    S1 = Sub Index1  
+                                             //                                    S2 = Sub Index2  
+
+                                             // R1 S1 S2
+                                             //  0  0  0:  SLED:     Status
+
+41: Response messages
+      SLED: Status         TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL        //  ES: Enable status LEDs
+                                                                            //  Px: Channel x PWM/Dimming (0..100%);
+                                                                            //  AI: Animation Index
+                                                                            //  RGB: RGB value
+                                                                            //  TH.TL: Temperature value (°C,  int16)
+
+
+42: Set messages
+      Set                  TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL        //  ES: Enable status LEDs
+                                                                            //  Px: Channel x PWM/Dimming (0..100%);
+                                                                            //  AI: Animation Index
+                                                                            //  RGB: RGB value
+                                                                            //  TH.TL: max. Temperature value (°C,  int16)
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+vmax = 7 digit/ms
+von 7 zu -7 in ~54ms in ~
+von 7 zu  0 in ~12ms in ~43 digits
+von 0 zu -7 in ~12ms in ~55 digits
+Totzeit =~30ms
+
+
+Beschleunigung von Stillstand
+~70ms in ~300 digits

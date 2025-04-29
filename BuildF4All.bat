@@ -1,0 +1,1 @@
+build *stm/f4* all

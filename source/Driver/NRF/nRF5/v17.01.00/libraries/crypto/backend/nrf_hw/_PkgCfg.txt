@@ -1,0 +1,2 @@
+[Common]
+PackageName=crypto_nrf_hw

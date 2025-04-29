@@ -1,0 +1,14 @@
+Memcopy:
+
+
+
+Profiling newlib-nano's memcpy: https://interrupt.memfault.com/blog/memcpy-newlib-nano
+
+
+
+Memcopy: Lib-Nano
+https://sourceware.org/git/?p=newlib-cygwin.git;a=blob;f=newlib/libc/string/memcpy.c;h=52f716b9275f5d24cedb7d66c41541945d13bfb6;hb=HEAD#l49
+
+
+Memcopy: [newlib-cygwin.git] / newlib / libc / machine / arm / memcpy-armv7m.S
+https://cygwin.com/git/?p=newlib-cygwin.git;a=blob;f=newlib/libc/machine/arm/memcpy-armv7m.S;h=c8bff36f60cf6ed520172c85406f6a9529f41de3;hb=HEAD

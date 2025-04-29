@@ -1,0 +1,19 @@
+
+
+
+
+
+Idx: 80:
+   PP P1 P2 P3 RR GG BB
+
+   PP: 220V Power 1: an 0: aus
+   P1: PWM 0..100 Kanal1
+   P2: PWM 0..100 Kanal2
+   P3: PWM 0..100 Kanal3
+   RR: WS2812 Rot
+   GG: WS2812 Grün
+   BB: WS2812 Blau
+
+
+
+

@@ -1,0 +1,7 @@
+
+I2C1:
+ - 400khz
+ - SCL:   PB6: grün
+ - SDA:   PB7: orange
+ - GND:   GND: braun
+ - 3.3V: 3.3V: rot

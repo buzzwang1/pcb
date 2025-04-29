@@ -1,0 +1,82 @@
+
+Idx
+32: Request messages
+      Message Req:         Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index 
+                                             //                                    S1 = Sub Index1  
+                                             //                                    S2 = Sub Index2  
+                                             // R1 S1 S2
+                                             //  0  0  0:  System:      Status: Version
+                                             //  0  1  0:  System:      Software: Status
+                                             //  1  0  0:  Clock:       DateTime
+                                             //  1  1  0:  Clock:       Calender
+                                             //  2  0  0:  Power:       Status
+
+
+33: Response messages
+
+                                      0    1    2   3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+    
+      Sys: Status: Version        TX 00 | 00 | 00 | HV.HV.SV.SV.BT.00.00.00.00.00: HV: HW Version; SV: SW Version; BT Board Type (0 = 2Cell, 1 = 4cell)
+      Sys: Sw:     Status         TX 00 | 01 | 00 | TS.TS.SM.EI.00.00.00.00.00.00: TS: Time to sleep [s]; 
+                                                                                   SM: system mode (bitcoded, B0 = automatic/manuel, B1 = testmode)
+                                                                                   ER: Error indicator
+      Clk:  DateTime: Status      TX 01 | 00 | 00 | 00.00.YH.YL.MM.DD HH.MM.SS.VV: DateTime: VV = Valid 
+      Clk:  Calender: Status      TX 01 | 01 | 00 | -TBD-
+      Pwr:  Status                TX 02 | 00 | 00 | RM.1M.1V.1V.1I.1I.2M.2V.2V.2I.2I.3M.3V.3V.3I.3I
+                                                                                // RM: Relais Mode
+                                                                                // XM: Channel X: Mode
+                                                                                // XV: Channel X: Voltage [mV] HB.LB
+                                                                                // XI: Channel X: Current [mA] HB.LB
+
+
+34: Set Message
+      Pwr:  Status                TX 02 | 00 | 00 | RM.1M.2M.3M                 // Set Modes
+                                                                                // RM: Relais Mode       0: off, 1: on, 0xFF: no change
+                                                                                // XM: Channel X: Mode   0..100% Pwm, 0xFF: no change
+
+
+
+// SLED Add-on:
+
+40: Request Messages
+      Message Req:         Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index 
+                                             //                                    S1 = Sub Index1  
+                                             //                                    S2 = Sub Index2  
+                                             // R1 S1 S2
+                                             //  0  0  0:  SLED:        Status
+                                             //  1  0  0:  Temperatur:  Status
+
+41: Response messages
+      SLED: Status         TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB              //  ES: Enable status LEDs
+                                                                            //  Px: Channel x PWM/Dimming (0..100%);
+                                                                            //  AI: Animation Index
+                                                                            //  RGB: RGB value
+                                                                            //  TH.TL: Temperature value (°C,  int16)
+
+42: Response messages
+      Temp: Status         TX 01 | 00 | 00 | T1.T1.T2.T2.T3.T3.T4.T4        //  ES: Enable status LEDs
+                                                                            //  Px: Channel x PWM/Dimming (0..100%);
+                                                                            //  AI: Animation Index
+                                                                            //  RGB: RGB value
+                                                                            //  TX.TX: Temperature value (°C,  int16)
+
+42: Set messages
+      Set                  RX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TT.TT        //  ES: Enable status LEDs
+                                                                            //  Px: Channel x PWM/Dimming (0..100%);
+                                                                            //  AI: Animation Index
+                                                                            //  RGB: RGB value
+                                                                            //  TT: max. Temperature value (°C,  int16)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

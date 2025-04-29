@@ -1,0 +1,2 @@
+#include "ComDat.h"
+

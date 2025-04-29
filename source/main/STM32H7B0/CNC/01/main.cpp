@@ -1,0 +1,514 @@
+﻿
+#include "main.h"
+
+
+
+// STM32H7B0
+// ARM®-based Cortex®-M7 32b MCU, (280 MHz max)
+// Rom 128KB
+// Ram 1024KB
+
+
+u32 TimingDelay = 0;
+
+LED<GPIOE_BASE, 3> lcLedRed;
+
+cST7735 mcDisplay(cST7735::LANDSCAPE_ROT180);
+
+#define DISPLAY_X 160
+#define DISPLAY_Y  80
+
+uint8 mDisplayMemory2[DISPLAY_X * DISPLAY_Y * 2] __attribute__((aligned (4)));
+uint8 mDisplayMemory[DISPLAY_X * DISPLAY_Y * 2] __attribute__((aligned (4)));
+
+//cDiffTimer                               mcDiffTimer;
+
+cBitmap_Bpp16_5R6G5B                     mcBm(DISPLAY_X, DISPLAY_Y, mDisplayMemory);
+cBitmap_Bpp16_5R6G5B                     mcBm2(DISPLAY_X, DISPLAY_Y, mDisplayMemory2);
+cScreen_Bpp16_5R6G5B                     mcScreen1(&mcBm);
+
+cSprite_Res8b_Bpp1_1G                    mc16GSprite;
+cRes8b_Bpp1_1G_SpriteEngine_Bpp16_5R6G5B mc16GSpriteEng(Sprite_nModeOr);
+
+cRFont_Res8b_Bpp1_1G                     cRFont_Res8b_Bpp1_1G_5x5Ucase(SPRTMST_FontLut_RFont01_05x05U_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_05x05U_1BPP_1G_Bmp, &mc16GSpriteEng);
+cRFont_Res8b_Bpp1_1G                     cRFont_Res8b_Bpp1_1G_Full(SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp, &mc16GSpriteEng);
+
+
+u8 mu8RingBufMem[1024];
+cRingBufT<u8, u16> mcUsbDataIn(mu8RingBufMem, 1024);
+
+
+// CNC
+  // Ausgänge:
+    // Takt_X:          PB14: Tim12_Ch1: AF2 (20us Puls); TIM15 (Pulstriggerung)
+    // Takt_Y:          PA0:  Tim5_Ch1:  AF2 (20us Puls); TIM16 (Pulstriggerung)
+    // Takt_Z:          PB11: Tim2_Ch4:  AF1 (20us Puls); TIM17 (Pulstriggerung)
+    // Richtung_X:      PA9
+    // Richtung_Y:      PA10
+    // Richtung_Z:      PA15
+    // Taktabschaltung: PB0
+    // StromAbsenkung:  PB1
+  // Eingänge:
+    // Ref_X:  PC3
+    // Ref_Y:  PC4
+    // Ref_Z:  PC5
+    // Ubrf_X: PA1
+    // Ubrf_Y: PA3
+    // Ubrf_Z: PA5
+
+// nRF905
+  // RF_CE:   PB12
+  // TF_TXEN: PE7
+  // TF_PWR:  PE8
+  // TF_DR:   PE9
+  // TF_CLK:  PB13: SPI2: AF5
+  // TF_MISO: PC2:  SPI2: AF5
+  // TF_MOSI: PC1:  SPI2: AF5
+  // TF_CS:   PC0
+
+cGpPin mTaktX(GPIOB_BASE, 14, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mTaktY(GPIOA_BASE, 0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mTaktZ(GPIOB_BASE, 11, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mRichtX(GPIOA_BASE, 9, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mRichtY(GPIOA_BASE, 10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mRichtZ(GPIOA_BASE, 15, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mTaktAbs(GPIOB_BASE, 0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mStromAbs(GPIOB_BASE, 1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+
+cGpPin mRefX(GPIOC_BASE, 3, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mRefY(GPIOC_BASE, 4, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mRefZ(GPIOC_BASE, 5, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mUbrfX(GPIOA_BASE, 1, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mUbrfY(GPIOA_BASE, 3, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin mUbrfZ(GPIOA_BASE, 5, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+
+
+
+cRingBufDynT<u8, u16> mcUartDataIn(128);
+cRingBufDynT<u8, u16> mcUartDataOut(128);
+
+cCncAchse mcAX(&mRefX, &mRichtX, &mTaktX);
+cCncAchse mcAY(&mRefY, &mRichtY, &mTaktY);
+cCncAchse mcAZ(&mRefZ, &mRichtZ, &mTaktZ);
+cCnc mcCnc(&mcUartDataOut, TIM15, TIM12, &mcAX, &mcAY, &mcAZ, &mStromAbs);
+cPal mcPal(&mcCnc, &mcUartDataIn, &mcUartDataOut);
+
+u16 mu8CncInputLines = 0;
+
+u16 u16Main_CncGetInputLines()
+{
+  u8 lu8Ref;
+  u8 lu8Ubrf;
+
+  lu8Ref = 0;
+  if (!mRefX.ui8Get()) lu8Ref += 4;
+  if (!mRefY.ui8Get()) lu8Ref += 2;
+  if (!mRefZ.ui8Get()) lu8Ref += 1;
+
+  lu8Ubrf = 0;
+  if (!mUbrfX.ui8Get()) lu8Ubrf += 4;
+  if (!mUbrfY.ui8Get()) lu8Ubrf += 2;
+  if (!mUbrfZ.ui8Get()) lu8Ubrf += 1;
+
+  return (lu8Ref + (lu8Ubrf << 8));
+}
+
+
+void NMI_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+void HardFault_Handler(void)
+{
+  /* Go to infinite loop when Hard Fault exception occurs */
+  while (1)
+  {
+  }
+}
+
+
+void MemManage_Handler(void)
+{
+  /* Go to infinite loop when Memory Manage exception occurs */
+  while (1)
+  {
+  }
+}
+
+
+void BusFault_Handler(void)
+{
+  /* Go to infinite loop when Bus Fault exception occurs */
+  while (1)
+  {
+  }
+}
+
+
+void UsageFault_Handler(void)
+{
+  /* Go to infinite loop when Usage Fault exception occurs */
+  while (1)
+  {
+  }
+}
+
+
+void SVC_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+void DebugMon_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+
+void PendSV_Handler(void)
+{
+  while (1)
+  {
+  }
+}
+
+
+void Delay(__IO u32 nTime)
+{
+  TimingDelay = nTime;
+
+  while(TimingDelay != 0);
+}
+
+
+void TimingDelay_Decrement(void)
+{
+  if (TimingDelay != 0x00)
+  {
+    TimingDelay--;
+  }
+}
+
+
+void SysTick_Handler(void)
+{
+  TimingDelay_Decrement();
+  HAL_IncTick();
+}
+
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(u8 *file, u32 line)
+{
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+  /* Infinite loop */
+  while (1)
+  {
+  }
+}
+#endif
+
+
+
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+    __asm volatile ("nop");
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+
+void TIM8_BRK_TIM12_IRQHandler(void)
+{
+  if (TIM12->SR & TIM_SR_UIF) // if UIF flag is set
+  {
+    TIM12->SR &= ~TIM_SR_UIF; // clear UIF flag
+    mcCnc.vIrqHandlerTimStep();
+  }
+}
+
+void TIM15_IRQHandler(void)
+{
+  if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
+  {
+    TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
+    mcCnc.vIrqHandlerTimDelay();
+  }
+}
+
+
+
+void SPI4_IRQHandler(void)
+{
+  mcDisplay.vEvTc();
+}
+
+
+void Main_Usb_Receive(u8* Buf, u16 Len)
+{
+  mcUsbDataIn.put(Buf, Len);
+}
+
+
+void MAIN_vTick1msLp(void)
+{
+  mcPal.bDoProcess();
+  mcCnc.DoProcess1ms();
+}
+
+void MAIN_vTick100msLp(void)
+{
+  cStr_Create(lcStr, 64);
+
+  lcLedRed.Toggle();
+
+  if (mcDisplay.isReady())
+  {
+    mcScreen1.vFill(BM_BPP32_8R8G8B_BLACK);
+
+    cRFont_Res8b_Bpp1_1G_Full.mpcSpriteEng->menMode = Sprite_nModeCopy;
+    cRFont_Res8b_Bpp1_1G_Full.mui32Col = mcScreen1.u32GetCol(0xFFFFFF);
+
+    lcStr.Setf("RefX: %d", (mu8CncInputLines & 4) / 4);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, &lcStr, &mcScreen1);
+    lcStr.Setf("RefY: %d", (mu8CncInputLines & 2) / 2);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, &lcStr, &mcScreen1);
+    lcStr.Setf("RefZ: %d", (mu8CncInputLines & 1) / 1);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 30, &lcStr, &mcScreen1);
+
+    lcStr.Setf("UbrfX: %d", (mu8CncInputLines & 0x400) / 0x400);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50, 10, &lcStr, &mcScreen1);
+    lcStr.Setf("UbrfY: %d", (mu8CncInputLines & 0x200) / 0x200);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50, 20, &lcStr, &mcScreen1);
+    lcStr.Setf("UbrfZ: %d", (mu8CncInputLines & 0x100) / 0x100);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(50, 30, &lcStr, &mcScreen1);
+
+    lcStr.Setf("PosX: %d", mcAX.mi32PosIst);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 40, &lcStr, &mcScreen1);
+    lcStr.Setf("PosY: %d", mcAY.mi32PosIst);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 50, &lcStr, &mcScreen1);
+    lcStr.Setf("PosZ: %d", mcAZ.mi32PosIst);
+    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 60, &lcStr, &mcScreen1);
+
+    mcDisplay.vShowScreenDma(mcScreen1.mpcBm->mpui8Data);
+  }
+}
+
+void OTG_HS_IRQHandler(void)
+{
+  HAL_PCD_IRQHandler(&hpcd_USB_OTG_HS);
+}
+
+
+void MAIN_vInitSystem(void)
+{
+  cClockInfo::Update();
+  SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
+
+  /* STM32L4xx HAL library initialization:
+       - Configure the Flash prefetch
+       - Systick timer is configured by default as source of time base, but user
+         can eventually implement his proper time base source (a general purpose
+         timer for example or other time source), keeping in mind that Time base
+         duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and
+         handled in milliseconds basis.
+       - Set NVIC Group Priority to 4
+       - Low Level Initialization
+     */
+  HAL_Init();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  MX_USB_DEVICE_Init();
+
+
+  CycCall_Start(NULL /*1ms_HP*/,
+                NULL /*10ms_HP*/,
+                NULL /*100ms_HP*/,
+                NULL /*1s_HP*/,
+
+                MAIN_vTick1msLp    /*1ms_LP*/,
+                NULL               /*10ms_LP*/,
+                MAIN_vTick100msLp  /*100ms_LP*/,
+                NULL               /*1s_LP*/);
+
+  //HAL_DCMI_Start_DMA(&mcCamera.hdcmi, DCMI_MODE_CONTINUOUS, (u32)&pic, FrameWidth * FrameHeight * 2 / 4);
+
+}
+
+
+
+volatile static u8 lu8Byte_Rx[8] __attribute__((aligned (4)));
+volatile static u8 lu8Byte_Tx[8] __attribute__((aligned (4)));
+
+
+int main(void)
+{
+  MAIN_vInitSystem();
+
+  while (1)
+  {
+    mu8CncInputLines = u16Main_CncGetInputLines();
+
+    while (mcUsbDataIn.cnt())
+    {
+      lu8Byte_Rx[0] = mcUsbDataIn.get();
+      mcUartDataIn.put(lu8Byte_Rx[0]);
+    }
+
+    if (!CDC_Transmit_Busy())
+    {
+      while (mcUartDataOut.cnt())
+      {
+        lu8Byte_Tx[0] = mcUartDataOut.get();
+        CDC_Transmit_HS((u8*)lu8Byte_Tx, 1);
+      }
+    }
+
+    CycCall_vIdle();
+    //__asm("wfi");
+  }
+}
+
+
+void SysError_Handler()
+{
+  while (1)
+  {};
+}
+
+void SystemClock_Config_HSI_64MHZ(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
+
+  /** Initializes the CPU, AHB and APB busses clocks
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    SysError_Handler();
+  }
+  /** Initializes the CPU, AHB and APB busses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    SysError_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_USART2
+                                       |RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_I2C2
+                                       |RCC_PERIPHCLK_I2C3;
+  PeriphClkInit.Usart16ClockSelection = RCC_USART1CLKSOURCE_HSI;
+  PeriphClkInit.Usart234578ClockSelection = RCC_USART2CLKSOURCE_HSI;
+  PeriphClkInit.I2c123ClockSelection = RCC_I2C1CLKSOURCE_HSI;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+  {
+    SysError_Handler();
+  }
+  /** Configure the main internal regulator output voltage
+  */
+  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+  {
+    SysError_Handler();
+  }
+}
+
+
+void SystemClock_Config_HSE_240Mhz(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+
+  /*AXI clock gating */
+  RCC->CKGAENR = 0xFFFFFFFF;
+
+  /** Supply configuration update enable
+  */
+  HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.HSIState = RCC_HSI_DIV1;
+  RCC_OscInitStruct.HSICalibrationValue = 64;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 5;
+  RCC_OscInitStruct.PLL.PLLN = 48;
+  RCC_OscInitStruct.PLL.PLLP = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 5;
+  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
+  RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
+  RCC_OscInitStruct.PLL.PLLFRACN = 0;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    //Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+    | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2
+    | RCC_CLOCKTYPE_D3PCLK1 | RCC_CLOCKTYPE_D1PCLK1;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
+  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    //Error_Handler();
+  }
+}
+
+// This is called from the Startup Code, before the c++ contructors
+void MainSystemInit()
+{
+  SystemInit();
+  SystemClock_Config_HSE_240Mhz();
+  SystemCoreClockUpdate();
+}
+

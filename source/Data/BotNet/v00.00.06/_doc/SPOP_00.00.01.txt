@@ -1,0 +1,103 @@
+15:03 26.01.2023
+Ver. 00.00.01
+
+SPOP: Special Operations
+
+Interface:
+Msg.: Index 3
+
+
+Exit 0 Kommando
+-> 00 
+<- 80
+
+Enter 1 Kommando
+-> 01 12 34
+<- 81 FE // fail, else success
+<- 81 M1 CACACACA M2 BABABABA BSBSBSBS ASASASAS
+                     // success
+                     // M1: Memory Index RomConst. 0xFF = Default Memory
+                     // CACACACA = Adresse RomConst.
+                     // M2: Memory Index Btr
+                     // BABABABA = Adresse Btr
+                     // BSBSBSBS = Btr Größe in Byte
+                     // ASASASAS = Combuf Größe in Bytes
+
+
+Konfiguration 3 Kommando
+
+-> 03 C1 C2 C3 C4 C5 C6 C7 C8
+    Cx: Konfigurationsbyte
+      - C1: Default Memory Sort. Im Falls, gegebene Adresse, beim Löschen oder Schreiben, kann nicht aufgelöst werden
+<- 83 FE // fail, else success
+<- 83 00 // success
+
+
+EEPROM/Flash Sektor löschen 4 Kommando
+
+-> 04 MI AA AA AA AA
+    MI: Memory Index
+  AAAA: 32Bit Sektor Addresse
+<- 84 FE // fail, else success
+<- 84 00 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 84 01 fertig; 84 FE // fail
+
+
+Speicher lesen 5 Kommando
+-> 05 MI AA AA AA AA SS SS SS SS
+    MI: Memory Index
+  AAAA: 32Bit Addresse
+  SSSS: 32Bit Größe, es sollten nie mehr als Anzahl an Bytes = ComBuf-Größe auf einmal übertragen werden
+<- 85 PC D1 D2 ... [CS CS CS CS] // PC = Packet Counter 0..200=>0..; 0xFF = letztes Paket
+   An das letzte Paket wird noch eine Checksumme angehängt
+
+
+Speicher schreiben 6 Kommando
+-> 06 F0 MI AA AA AA AA SS SS SS SS
+    MI: Memory Index
+    F0: Erstes Packet
+  AAAA: 32Bit Addresse
+  SSSS: 32Bit Größe, es sollten nie mehr als Anzahl an Bytes = ComBuf-Größe auf einmal übertragen werden
+<- 86 00 TT TT TT TT// success; 86 FE 00 00 00 00// fail
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+-> 86 PC D1 D2 ... // PC = Packet Counter 0..200=>0..; 0xFF = letztes Packet
+  Nachdem PC=0xFF übertragen wurde, kommt eine Antwort
+  Antwort entspricht BTR index lesen: 
+<- 86 FC CS CS CS CS // CSCSCSCS = Checksumme
+
+
+
+Checksumme erstellen 0x08 Kommando
+Start:
+-> 08 MI AAAA AAAA SSSS SSSS
+    MI: Memory Index
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+<- 88 FE // fail, else success
+<- 88 00 TTTT TTTT // success
+  TTTT: 32Bit Geschätze Rechnendauer in ms
+<- 88 01 CKCK CKCK // success
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+
+
+
+Call 0x10 Call Kommando
+-> 10 AAAA AAAA P1P1 P1P1 P2P2 P2P2 P3P3 P3P3 P4P4 P4P4
+<- 90 FE // fail, else success
+<- 90 00 // success
+  AAAA: 32Bit Zieladdresse, die aufgerufen werden soll
+  P1P1: 32Bit Parameter1
+  P2P2: 32Bit Parameter2
+  P3P3: 32Bit Parameter3
+  P4P4: 32Bit Parameter4
+
+
+Call 0x11 Jump Kommando
+-> 11 AAAA AAAA P1P1 P1P1
+<- 91 FE // fail, else success
+<- 91 00 // success
+  AAAA: 32Bit Zieladdresse, die angesprungen werden soll, 0 = reset
+  P1P1: 32Bit Parameter1
+

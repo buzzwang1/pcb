@@ -1,0 +1,16 @@
+.vs/*
+/bin/*
+*/bin/*
+__pycache__
+**/*.bin
+**/*.gz
+**/*.zip
+**/*.exe
+**/*.pdb
+**/*.pdf
+/source/Driver/STM32/F3/**/*.a
+/source/Driver/STM32/G4/**/*.a
+/source/Driver/STM32/H7/**/*.a
+/source/Driver/STM32/L4/**/*.a
+/source/Driver/STM32/L5/**/*.a
+/source/Driver/STM32/U5/**/*.a

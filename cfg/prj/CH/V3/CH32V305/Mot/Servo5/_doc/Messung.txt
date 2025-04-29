@@ -1,0 +1,25 @@
+RSense = 10kohm
+
+4,31 10Ohm  430ma  468mV
+4,72 20ohm  233ma  261mV
+4,97 maxohm   1ma  34mV
+4,94 4,7ohm  44ma  51mV
+4,97  1kohm   6ma  34mV
+4,86 100ohm  49ma  70mV
+4,74  47ohm 100ma 124mV
+
+
+UB 3kg Motor
+Leerlauf
+In2 3V, In1 PWM
+  0%  4990mV  0mA 
+ 10%  4990mV  7mA   
+ 20%  4990mV 18mA 
+ 30%  4990mV 28mA 
+ 40%  4990mV 36mA 
+ 50%  4990mV 38mA 
+ 60%  4990mV 37mA 
+ 70%  4990mV 34mA 
+ 80%  4990mV 26mA 
+ 90%  4990mV 17mA 
+100%  4990mV 12mA 

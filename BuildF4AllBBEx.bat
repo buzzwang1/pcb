@@ -1,0 +1,1 @@
+build *STM/F4/STM32F407ZET/STF4BB/Ex* all

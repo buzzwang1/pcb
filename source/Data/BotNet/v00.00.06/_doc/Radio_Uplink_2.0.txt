@@ -1,0 +1,148 @@
+BN Radio:
+
+Adressen und Device Adressen:
+
+0000-000F : -Reserved-
+  0000 0000 : -Reserved-
+  0001 0000 : Non Session Mode
+  0002 0000 : Non RomConst Adress/Fallback Adress
+  0007 E000 : PC
+  0008 1000 : Clock Master
+0010-FFFF : Free
+  0010 1000 : e.g. First free one
+  0014 1000 : Solbox 2
+
+  0021 1000 : Lampe  1
+  0022 1000 : Bad
+  0023 1000 : Lampe  3
+  0024 1000 : Lampe  4
+  0025 1000 : Lampe  5
+  0026 1000 : Lampe  6
+  0027 1000 : Lampe  7
+  0028 1000 : Lampe  8
+  0029 1000 : Lampe  9
+  002A 1000 : Lampe 10
+  ...
+  002F 1000 : Lampe 15
+  0040 1000 : Lampe 32
+  0041 1000 : Blume 1
+  ...
+  0060 1000 : Blume 32
+  0061 1000 : Gerät 1
+  ...
+  00A0 1000 : Gerät 64
+
+
+BH = 21 Byte: BN Msg Protocol Message mit 5Byte BN Frame => Ganze Nachricht 25 Byte
+     Wird 1mal in der Minute gesendet, wenn keine Session aktiv ist.
+
+
+Adresse:
+  Non Session: 
+    Wenn wartet auf Clock Info:        RX: 0001 0000   TX: ---- ----
+    Ansonsten ist Radio aus:           RX: ---- ----   TX: ---- ----
+
+  Session Info Mode: 
+    Senden der eigenen Session Info:   RX: 0014 1000   TX: 0001 0000 : Gegenstellen hat 1s Zeit um mit Session Start zu antworten
+           e.g. Solbox2
+
+  Session Mode:
+     e.g. Solbox2 <-> PC               RX: 0014 1000   TX: 0007 E000 : Solbox seitig
+                                       RX: 0007 E000   TX: 0014 1000 : PC seitig
+
+
+      BN Radio Msg ID:            0x11:  1 Byte
+      BN Radio Sender Device ID:  DH.DL: 2 Bytes
+      BN Radio Msg SubID:         XX:    1 Byte
+      BN Radio Data:              XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX: 16 Bytes
+      BN Radio Msg BN Footer:     00 00 SA SA 80: 5 Bytes: BN->Dest: 0.0.0.0; BN->Source: SA SA; 0x80: Standard-Message
+
+      SubID:
+
+                             0    1  2    3    4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    20 21 22 23 24
+      Session
+          - Info:           11 | DH DL | 00 | KH.KL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || 00 00 SA SA 80 : K = Kanal; X = beliebig
+          - Start:          11 | DH DL | 01 | XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || 00 00 SA SA 80
+          - Stop:           11 | DH DL | 02 | XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || 00 00 SA SA 80
+      Clock:                11 | 00 08 | 10 | 00.XX.XX.XX XX.XX.XX.XX YH.YL.MM.DD HH.MM.SS.VV || 00 00 SA SA 80
+
+      PC-Interface:
+         Session:
+           
+           - Wait & Start:  11 | DH DL | FE | SH.SL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || DA DA E0 00 80 : PC->Brigde: 
+                                                                                                                  Versucht mit DH.DL:DA.DA zu verbinden
+                                                                                                                  DH DL: Destination Device ID
+                                                                                                                  SH SL: Source Device ID
+                            11 | DH DL | FE | SH.SL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || E0 00 DA DA 80:  Brigde->PC: 
+                                                                                                                  Wird von der Bridge gesendet, wenn connected
+           - Disconnect:    11 | DH DL | FF | XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || DA DA E0 00 80 : PC->Brigde 
+                            11 | DH DL | FF | SH.SL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || E0 00 DA DA 80:  Brigde->PC: 
+                                                                                                                  Wird von der Bridge gesendet, wenn disconnected
+
+
+PC Ports:
+  0xE000.0: Cmd Port Interface
+  0xE000.1: Mem Port Interface
+
+
+
+Beispiel:
+
+Slave Knoten sendet 1mal die Minute
+
+SPI: 00 6C 0C 44 12 12 00 00 00 00 DB
+        : 6C: Channel: 108
+        : 0C: Power Lvl 3
+        : 44: Adress Width Tx: 4Byte Rx:4Byte
+        : 12: Payload Width Rx: 18Byte
+        : 12: Payload Width Tx: 18Byte
+        : 00.00.00.00: RxAdress
+        : DB: 16Bit CRC, 16Mhz Osc, No Output Clock, 500khz Output Clock
+     22 00 01 00 00 
+        : Tx Adress
+
+     Tx_En: On
+
+     20 80 12 01 10 00 00 11 00 10 00 00 7B 00 00 00 00 00 00
+              : S 0.1.1.0
+                    : D 0.0.0.0
+                             : DevAdr. 0010
+                                : Session Info 
+                                         : Channel: 123 0x7B
+
+     TRx_CE: On -> Off
+
+     00 7B 0C 44 12 12 10 01 01 00 98
+        : 7B: Channel: 123
+        : 0C: Power Lvl 3
+        : 44: Adress Width Tx: 4Byte Rx:4Byte
+        : 12: Payload Width Rx: 18Byte
+        : 12: Payload Width Tx: 18Byte
+        : 10.01.01.00: RxAdress
+        : 98: No CRC, 16Mhz Osc, No Output Clock, 4Mhz Output Clock
+     22 00 07 00 00 : 00 07 PC Adresse
+
+
+Non-Session Mode: (mit CRC)
+Slave sendet 1x die Minute auf Adresse 00010000: Kanal 0 eine Session Info
+Er sendet seine Adresse (DH:DL SA:SA) und auf welchen Kanal KH.KL er ereichbar ist für 1s 
+  Session Info:  Chnl 0: 00.01.00.00: 80 12 00 00 SA SA || 11 | DH DL | 00 | KH.KL.XX.XX.XX.XX.XX.XX
+
+Master PC sendet an Adresse (DH:DL SA:SA) Kanal [KH.KL] ein Session Start mit seiner Adresse (DH:DL SA:SA). 
+  Session Start: Chnl KH.KL: xx.xx.xx.xx: 80 12 00 00 SA SA || 11 | DH DL | 01 | XX.XX.XX.XX.XX.XX.XX.XX
+
+Slave merkt sich die Adresse (DH:DL)
+Beide Seiten kennen sich nun gegeneinander.
+Slave und Master gehen von Non-Session in den Session-Betrieb
+Ab dann normale Master-Slave Botnet-Kommunikation (Sync-Data-Ack, periodisch)
+
+Session Mode: (ohne CRC)
+Master kann Session beenden mit Session Stop oder einfach aufhören zu sync'en
+oder
+Slave nach Timeout (60s)
+
+
+Dann gehen beide wieder in den Non-Session Mode
+
+
+

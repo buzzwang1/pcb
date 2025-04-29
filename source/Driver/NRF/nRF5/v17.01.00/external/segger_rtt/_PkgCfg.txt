@@ -1,0 +1,2 @@
+[Common]
+PackageName=segger_rtt

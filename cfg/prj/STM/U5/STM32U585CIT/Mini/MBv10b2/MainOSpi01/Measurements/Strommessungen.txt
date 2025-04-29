@@ -1,0 +1,19 @@
+31.12.2022:
+Komplett bestückt
+
+Shutdown uC 
+ - PC13 an 
+ - 7,5V an Bat
+ - 48kOhm am 5V Buck => 4,8V / 48k = 100uA
+
+ => µC: Wacht aber nicht wieder auf.
+   980uA mit LED und LowPower
+   150uA ohne LED und LowPower
+
+ => Brücke 
+   980uA mit LED und LowPower
+   890uA mit LED und LowPower ohne Buck, nur mit dem Stabi
+   150uA ohne LED und LowPower
+
+   5,88mA mit LED und 3v3 Power mit Funk Module
+   2,62mA mit LED und 3V3 Power ohne Funk-Module

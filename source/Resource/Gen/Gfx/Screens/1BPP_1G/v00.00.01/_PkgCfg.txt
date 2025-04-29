@@ -1,0 +1,2 @@
+[Common]
+PackageName=ResGfxScreens1BPP_1G

@@ -1,0 +1,2 @@
+[Common]
+PackageName=mem_manager

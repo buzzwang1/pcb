@@ -1,0 +1,1 @@
+build *stm/f3* all

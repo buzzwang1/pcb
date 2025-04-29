@@ -1,0 +1,81 @@
+14:45 21.08.2022
+Ver. 00.01.00
+
+
+100khz => 10us
+Immer 10byte pro Nachricht
+=> 1ms pro Nachricht
+
+2Byte Header
+8Byte (Adresse) + Daten
+
+
+
+
+daaa zzzz xxcc ckck
+
+  d = Direction   0 = Lesen, 1 = Schreiben
+aaa = Destination 0..6 (7 = reserved)
+
+zzzz = Anzahl Daten 0..8 mit adress 0..4
+  xx = reserve = 0
+
+ cc = 0: Daten
+      1: Adresse + Daten
+      2: Info
+      3: Flash Interface
+
+  
+ckck = checksumme (Summe erste 12 bit +  8 Datenbytes + 1)
+
+
+Info Block 32 Byte
+
+ssssssss ssssssss ssssssss ssssssss
+ssssssss ssssssss ssssssss ssssssss
+
+blblblbl fsfsfsfs fzfzfzfz fbfbfbfb
+ftftftft frfrfrfr fxfxfxfx xxxxxxaa
+
+
+sz = string
+
+bl Adresse Block-Checksumme 
+fs Flash-Startadresse
+fz Flash Size
+fb Flash flashblock Größe
+ft Flash timeout
+fr DataRam-Startadresse
+fx DataRam-Größe
+xx reserved
+aa Adresse
+
+
+
+
+3 Flash interface
+
+cc = 0
+
+Additional Info in zzzz
+zzzz is not used for Anzahl Daten
+
+zzzz = 0 => Daten in Flash schreiben. In den ersten 4byte der Daten steht die Ziel- Flashadresse. Dann wird ein Block (fbfbfbfb) von Adressse frfrfrfr an die übergebene adresse geschrieben
+zzzz = 1 => SW-Reset no Bootloader
+zzzz = 2 => SW-Reset with Bootloader
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

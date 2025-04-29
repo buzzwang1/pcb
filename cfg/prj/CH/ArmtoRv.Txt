@@ -1,0 +1,123 @@
+Von ARM zu RiscV (GD32F330 (Arm-CM4F) -> CH32V305 (RV32imafcxw, V4F))
+
+Hallo, 
+über Weihnachten habe ich ein Hobby-Projekt mehrfach konvertiert.
+Hier mal meine gesammelten Erfahrungen. Vielleicht hilft es jemanden.
+
+
+Original war auf einem GD32F130 (Arm-CM3 ohne FPU).
+Dann ging es weiter auf einen GD32F330 (Arm-CM4F) und dann auf einen CH32V305 (RV32imafcxw, V4F)
+
+Von (Arm-CM3 ohne FPU) auf (Arm-CM4F): Ging relative entspannt.
+Das Projekt kam von einem nicht FPU uC und daher habe ich auch weiterhin keine floating points benutzt. 
+Trotzdem baut der Compiler, je nach Optimierungstufe, wohl SIMD/FPU-Befehle rein. Daher FPU in Startup aktiviert und es war ok.
+Das war es schon.
+
+
+Von (Arm-CM4F) auf (RV32imafcxw, V4F) war aufwendiger als gedacht.
+Es war auch mein erstes Projekt mit RV.
+
+
+1. User Mode <-> Machine Mode
+Mein Projekt besteht aus Bootloader und Applikation.
+Der WCH-Startup Code setzt am Ende die CPU in User Mode. Dadurch werden diverse CPU Register gesperrt.
+Beipspiel:
+Wenn der Bootloader zur App weiterspringt, löst diese daher in ihren Startup-Code direkt einen Hard-Fault aus.
+Lösung:
+Die CPU die ganze Zeit im Machine Mode belassen. Im Hobby-1 Mann Projekt-Bereich scheint mir das besser zu sein.
+
+
+2. Interrupt und HW-Inpterrupt-Beschleuniger
+2a Prioriäten:
+Der CH32V305 hat nur 8 Level Prio (also max. 8 mal verschachteln) im Vergleich zum GD32F330 mit 16.
+Die Prio-Bits sind auch auf der 'anderen Seite'. Highest Nibble beim CH32V305 <-> Lowest Nibble beim GD32F330
+
+2b
+Der CH32V305 hat einen 3-Level Interrupt HW-Beschleuninger. 
+D.h. bei den ersten 3 Interrupts-Verschachtelungen werden die Register in ein HW-Stack gesichert und ab den 4 müssen die ganz normal auf den SW-Stack
+Meiner Meinung ist das im Compiler schlecht umgesetzt, weil der Benutzer das selbst managen muss. 
+Eigentlich sollte es möglich sein, am Anfang eines IRQ-Handlers die aktuelle Verschatelungstiefe abzufragen um bei >3 die Register auf den SW-Stack zu sichern.
+Weil das aber nicht geht und um sicher zu sein, habe ich in meinem Projekt nur max. 3 IRQ Prios verwendet.
+
+2c. Vektor Tabelle
+Beim RV stehen wirklich nur die IRQ in der Vektortabelle
+Beim CM4 sind die ersten beide Einträge der Entry Point und der Stackpointer.
+
+
+3. Unterprogramm-Aufruf
+Beipspiel:
+Der Bootloader soll in die App springen.
+Beim CM4 finde ich das etwas gemurgst, wegen der Vektortabelle. Beim RV ist das einfach nur ein Sprung.
+D.h. beim CM4 muss die Vektortabelle/VTOR vor dem Aufruf gesetzt werden, beim RV wird das dannach, im Startup Code der App gemacht.
+
+4. CPU Register
+Der RV hat einige CSRs (Control and Status Registers) in der CPU, die das Verhalten der CPU entscheident beeinflussen.
+z.B. Interrupt verhalten, Privilegierung, ...
+Wird meist vom Startup Code initialisiert.
+Ich würde empfehlen, anzuschauen was da gibt und was die genau tun.
+
+5. Aligned Access
+Das finde ich einen der größten Nachteile vom RV.
+Im CM4 Code habe ich viele Zugriffe direkt in den Speicher
+z.B.
+  lpi16Payload = (i16*)lcMsg.mcPayload.mpu8Data;
+  lpi16PosSoll = *lpi16Payload++;
+  lpi16PosCur  = *lpi16Payload;
+
+Beim CM4 kein Problem, aber beim RV gibt es einen Hard Fault, falls es auf einen ungeraden Adresse liegt.
+Von daher muss ich meinen Code an vielen Stellen anpassen :(
+
+6. Kein SIMD
+Soviel ich gesehen habe, hat der RV keine SIMD-Erweiterung, wie der CM4.
+Daher wird er bei diversen Speicheroperation langsamer sein.
+
+7. GP
+Der RV hat einen Global Pointer. +/-2048 Byte um den GP geht der Zugriff auf dem RAM etwas schneller.
+Es ist zwar etwas schwer, das in C/C++ geschickt einzusetztn, aber FYI.
+Also nicht gerade einen 4k großen leeren RAM-Block an den Anfang das RAMs legen. ;)
+
+8. Hardfault Ursache
+Ich weiß nicht, ob es eine IDE oder ein CPU-Feature ist, aber der RV speichert seiner Return Adresse in einem Register.
+Dadurch bleibt der Calltree auch im Hard Fault Fall erhalten und man kann mit dem Cause-Register ziemlich leicht Ort und Grund des Problems herausfinden
+
+9. BKP-Register
+Beim CH32V305 16Bit breit und beim GD32F330 32bit.
+Beispiel:
+Ich benutzt BPK-Register um zwischen Bootloader und App Daten (über Reset) auszutauschen
+
+10. Port-AF-Selection Register
+Der CH32V305 hat keine AF-Register wie bei GD32F330/Stm32.
+Ist etwas ungewohnt am Anfang.
+
+11. Performance Vergleich
+Zum Performancetesten gibt es beim CM4 eine Debug Einheit (DWT).
+Ich habe noch nicht geschaut, ob RV da was Ähnliches hat.
+
+Laufzeitmessung: tbd
+
+
+12. Toolchain
+Da habe ich eine Eigenlösung. Die IDEs benutze ich nur zum Debuggen. Bauen und flashen nutze ich eine CMAKE/Pyhton Umgebung.
+Ich lade dann nur das elf file in die IDE, um zu Debuggen. Debuggen via noLoad, weil ich ja vorher schon geflasht hatte.
+Ist vielleicht nicht die ideale Lösung, aber so arbeite ich eben.
+
+CH32V305: Bauen: GCC*; Flashen: OpenOCD* via WCH-Link;          Debuggen: Mounriver Studio via OpenOCD und WCH-Link
+GD32F330: Bauen: GCC;  Flashen: OpenOCD via China StLink-Clone; Debuggen: EmBitz via EbLink und China StLink-Clone
+
+*keine offizielle Version, sondern eine spezielle Anpassung von WCH/Mounriver
+
+
+Embitz ist wohl den meisten bekannt. Etwas rustikal aber tut seinen Job. Läuft auch ziemlich gut auf meinem alten PC.
+
+Mounriver Studio ist Eclipse basierend. Von daher ist es etwas komfortabler als EmBitz, aber läuft nur sehr langsam auf meinem PC und braucht auch viel RAM im vgl. zu Embitz
+ - In meinem speziellen Fall:
+      - benutze ich die NoLoad Option. Dann kommt immer ein Warnfester beim Beginn des Debuggens. Etwas nervig.
+      - geht uC-Restet nicht. Ich benutze dann 'Termiate and Relauch'. Ist aber langsam. FYI, mit den Mouriver Beispielen geht Reset.
+ - Ich vermisse den Live-View von Embitz
+ - Der Mounriver OpenOcd scheint vor dem Programmieren den kompletten Flash zu löschen. Ist halt blöd, wenn man nur die App ab Adr. 0x4000 programmieren will und danach der Bootloader weg ist. Evtl. gibt es da eine Option die ich nicht kenne.
+ - Die Beispielprojekte in WCH\Mounriver waren sehr hilfreich. Jedoch könnte der Startup Code besser kommentiert sein, weil hier viele wichtigen CPU-Optionen gesetzt werden.
+
+
+
+
+

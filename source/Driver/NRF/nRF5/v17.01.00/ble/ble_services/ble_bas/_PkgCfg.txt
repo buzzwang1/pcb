@@ -1,0 +1,2 @@
+[Common]
+PackageName=ble_bas

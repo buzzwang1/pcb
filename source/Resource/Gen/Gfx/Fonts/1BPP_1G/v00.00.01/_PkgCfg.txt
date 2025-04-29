@@ -1,0 +1,2 @@
+[Common]
+PackageName=ResGfxFonts1BPP_1G

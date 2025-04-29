@@ -1,0 +1,22 @@
+16:54 11.11.2024
+
+Ver. 00.00.01
+
+RRpt: Request Repeater
+
+
+Interface:
+Msg.: Index 4
+
+
+0 Kommando
+  Reserviert
+
+Set 1 Kommando
+-> 01 MI RI S1 S2 DH DL CT  // Payload Len: 8;     MI = Message Index
+                            //                     SI = Request Index
+                            //                     S1 = Sub Index
+                            //                     S2 = Sub Index
+                            //                     DH.DL = Destination Botnet Adr
+                            //                     CT = Cycle Time [10ms] 0 = single request or cancle cycle
+                            //                                            1 = 10ms cycle

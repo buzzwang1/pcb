@@ -1,0 +1,43 @@
+14:45 21.08.2022
+Ver. 00.01.00
+
+
+Immer 10Byte
+10Bit / Byte => 100Bit
+
+100.000 Bit/sec => ~1000 Cmd/s
+
+1 Adresse
+2 Command:5,Checksumme:3
+3..10 8xDaten
+
+
+<=
+  1. Pos Ack: 0: 0xAA
+  1. Neg Ack: 0: 0xFF
+  1. Neg Ack Check: 0: 0xFC
+  2. Pos Ack: 0: 0xAA 0xAA
+  2. Neg Ack: 0: 0xFF 0xFF
+
+
+
+Cmd:
+=>
+0: NOP-Empty
+1: BL: Enter / Exit / Reset
+  0: Enter: 12-34-56-78
+  1: Exit
+  2: Reset
+ 10: Erease Main
+ 11: Erease RomConst
+ 12: Read
+ 13: Set P
+<=
+
+=>
+2: BL: Flash Write
+   D1 D2 D3 D4 D5 D6 D7 D8
+
+3: Stream
+
+8..31 Frei

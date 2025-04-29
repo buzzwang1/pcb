@@ -1,0 +1,190 @@
+#define rszGetRomConstDeviceName()           ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0000))           // Defaultvalue MBv9b2GrowLight
+#define rszGetRomConstPlatformName()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0010))           // Defaultvalue STM32L433CCT6
+#define rszGetRomConstPlatformInfo()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0020))           // Defaultvalue Cortex-M4,Rom 256KB,Ram 64KB
+#define u16GetRomConstBnDeviceID()           (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0040)))       // Defaultvalue 65     
+#define u16GetRomConstBnAdr()                (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0042)))       // Defaultvalue 4096   
+#define u32GetRomConstIapRamSize()           (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0044)))       // Defaultvalue 4096   
+#define u8GetRomConstRomConstPageCnt()       (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0048)))        // Defaultvalue 1      
+#define u8GetRomConstPartitionCnt()          (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0049)))        // Defaultvalue 6      
+#define u8GetRomConstTablesCnt()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004A)))        // Defaultvalue 8      
+#define u8GetRomConstReserve1()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C)))         // Defaultvalue 255    
+#define u16GetRomConstHwInfo()               (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C)))       // Defaultvalue 9      
+#define u16GetRomConstRomConstVersion()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004E)))       // Defaultvalue 2      
+#define u8GetRomConstDateTimeSyncTimeout_s() (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0050)))        // Defaultvalue 180    
+#define u8GetRomConstDateTimeSyncHour_s()    (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0051)))        // Defaultvalue 2      
+#define u8GetRomConstDateTimeValidTimeout_d() (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0052)))       // Defaultvalue 2      
+#define u8GetRomConstReserve()               (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0053)))        // Defaultvalue 0      
+#define u16GetRomConstRadioPingIntervall_s() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0054)))       // Defaultvalue 15     
+#define u16GetRomConstRadioPingTimeoutSessionReq_ms() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0056))) // Defaultvalue 50  
+#define u16GetRomConstBaudUpLink()           (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0058)))       // Defaultvalue 400    
+#define u16GetRomConstBaudSideLink()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005A)))       // Defaultvalue 100    
+#define u16GetRomConstBaudDownLink1()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005C)))       // Defaultvalue 400    
+#define u16GetRomConstBaudDownLink2()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005E)))       // Defaultvalue 200    
+#define u8GetRomConstUpLink()                (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0060)))        // Defaultvalue 1      
+#define u8GetRomConstSideLink()              (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0061)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink1()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0062)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink2()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0063)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink3()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0064)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink4()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0065)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink5()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0066)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink6()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0067)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink7()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0068)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink8()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0069)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink9()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006A)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink10()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006B)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink11()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006C)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink12()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006D)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink13()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006E)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink14()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006F)))        // Defaultvalue 1      
+#define rszGetRomConstPartition0Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0070))           // Defaultvalue Flash Bl
+#define u16GetRomConstPartition0Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0080)))       // Defaultvalue 16     
+#define u16GetRomConstPartition0Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0082)))       // Defaultvalue 0      
+#define u32GetRomConstPartition0BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0084)))       // Defaultvalue 134217728
+#define u32GetRomConstPartition0Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0088)))       // Defaultvalue 32768  
+#define u32GetRomConstPartition0BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X008C)))       // Defaultvalue 2048   
+#define rszGetRomConstPartition1Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0090))           // Defaultvalue Flash APP
+#define u16GetRomConstPartition1Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition1Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition1BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A4)))       // Defaultvalue 134250496
+#define u32GetRomConstPartition1Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A8)))       // Defaultvalue 147456 
+#define u32GetRomConstPartition1BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00AC)))       // Defaultvalue 2048   
+#define rszGetRomConstPartition2Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00B0))           // Defaultvalue Flash IAP
+#define u16GetRomConstPartition2Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition2Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition2BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C4)))       // Defaultvalue 134397952
+#define u32GetRomConstPartition2Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C8)))       // Defaultvalue 77824  
+#define u32GetRomConstPartition2BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00CC)))       // Defaultvalue 2048   
+#define rszGetRomConstPartition3Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00D0))           // Defaultvalue Flash EEP
+#define u16GetRomConstPartition3Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition3Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition3BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E4)))       // Defaultvalue 134475776
+#define u32GetRomConstPartition3Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E8)))       // Defaultvalue 4096   
+#define u32GetRomConstPartition3BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00EC)))       // Defaultvalue 2048   
+#define rszGetRomConstPartition4Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00F0))           // Defaultvalue Ram    
+#define u16GetRomConstPartition4Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0100)))       // Defaultvalue 0      
+#define u16GetRomConstPartition4Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0102)))       // Defaultvalue 0      
+#define u32GetRomConstPartition4BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0104)))       // Defaultvalue 536870912
+#define u32GetRomConstPartition4Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0108)))       // Defaultvalue 49152  
+#define u32GetRomConstPartition4BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X010C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition5Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0110))           // Defaultvalue BuRam  
+#define u16GetRomConstPartition5Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0120)))       // Defaultvalue 0      
+#define u16GetRomConstPartition5Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0122)))       // Defaultvalue 0      
+#define u32GetRomConstPartition5BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0124)))       // Defaultvalue 1073752144
+#define u32GetRomConstPartition5Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0128)))       // Defaultvalue 128    
+#define u32GetRomConstPartition5BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X012C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition6Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0130))           // Defaultvalue Dummy  
+#define u16GetRomConstPartition6Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0140)))       // Defaultvalue 0      
+#define u16GetRomConstPartition6Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0142)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0144)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0148)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X014C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition7Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0150))           // Defaultvalue Dummy  
+#define u16GetRomConstPartition7Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0160)))       // Defaultvalue 0      
+#define u16GetRomConstPartition7Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0162)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0164)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0168)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X016C)))       // Defaultvalue 1      
+#define u8GetRomConstReserve4()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178)))         // Defaultvalue 255    
+#define u32GetRomConstChecksum1()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178)))       // Defaultvalue 13834  
+#define rszGetRomConstMagicPattern1()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X017C))           // Defaultvalue FLKA   
+#define u16GetRomConstPowerInVout()          ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0180))          // Defaultvalue [4255, 4944, 5949, 6951, 7965, 8970, 9959, 10982, 11984, 12955, 13996, 14996, 15967, 17123, 18147, 19169]
+#define u16GetRomConstPowerInDac()           ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01A0))          // Defaultvalue [4095, 3840, 3584, 3328, 3072, 2816, 2560, 2304, 2048, 1792, 1536, 1280, 1024, 768, 512, 256]
+#define u16GetRomConstTable3()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01C0))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable4()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01E0))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable5()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0200))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable6()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0220))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable7()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0240))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable8()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0260))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u8GetRomConstBoardType()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280)))        // Defaultvalue 0:     Type des Boards
+#define u8GetRomConstChrgCellCount()         (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0281)))        // Defaultvalue 1:     Anzahl Zellen der Lipo
+#define u8GetRomConstChrgModeCharged()       (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0282)))        // Defaultvalue 0:     Verhalten, wenn Laden beendet, 0: Charger aus, 1: Erhaltungsspannung
+#define u8GetRomConstChrgModeStart()         (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0283)))        // Defaultvalue 0:     Verhalten, wenn Laden gestartet wird, 0: Sobald Spannung kleiner ChrgVoltStart, 1: Sobald Eingangsspannung vorhanden
+#define u16GetRomConstChrgVoltLipoOff()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284)))       // Defaultvalue 2800:  VoltLipoOff [mV]        Tiefentladeschutz. Bei der Spannung schaltet sich der uC ab. Versorgung zur Lipo wird getrennt
+#define u16GetRomConstChrgVoltSysOff()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0286)))       // Defaultvalue 3000:  VoltSysOff [mV]         Unterspannungsschutz. Bei der Spannung wird der Ausgang ausgeschaltet und der uC geht in  den Stromsparmodus
+#define u16GetRomConstChrgMaxVoltCell()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288)))       // Defaultvalue 4050:  MaxVoltCell [mV]        Ladeschlussspannung. Bei der Spannung ist die Lipo geladen
+#define u16GetRomConstChrgVoltBalance()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028A)))       // Defaultvalue 4200:  VoltBalance [mV]        Balancespannung. Bei der Spannung wird beim Laden der Balancer der Zelle aktiviert.  (0 == Balancer aus)
+#define u16GetRomConstChrgCurrentSave()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C)))       // Defaultvalue 25:    CurrentSave [mA]        Sichere Ladestrom. Ladestrom bei tiefentladener Zelle oder wenn Balancer einer Zelle an ist.
+#define u16GetRomConstChrgCurrentCharged()   (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028E)))       // Defaultvalue 9999:  CurrentCharged [mA]     Laden wird beendet, sobald diese Strom unterschritten ist
+#define u16GetRomConstChrgVoltStart()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290)))       // Defaultvalue 3400:  VoltStart [mV]          Spannung, bei der das Laden gestartet wird
+#define u16GetRomConstChrgMaxCurrentBat()    (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0292)))       // Defaultvalue 100:   MaxCurrentBat [mA]      Ladestrombegrenzung. Maximaler Ladestrom der Akku.
+#define u16GetRomConstChrgVoltCellDefect()   (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294)))       // Defaultvalue 1500:  VoltCellDefect [mV]     Defektspannung. Bei dieser Spannung wird die Zelle als defekt erkannt und die Versorgung zur Lipo wird getrennt
+#define u16GetRomConstChrgVoltPowerInCharged() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0296)))     // Defaultvalue 100:   VoltPowerInCharged [mV] Erhaltungsspannung. Sobald Lipo fertig geladen ist, wird diese Spannung eingestellt
+#define u16GetRomConstChrgTimeOut1()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0298)))       // Defaultvalue 2000:  TimeOut1 [ms]           Timeout: Ein Spannung muss diese Zeit anliegen um gultig zu werden, z.B. Ladeschlussspannung
+#define u16GetRomConstChrgTimeOut2()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029A)))       // Defaultvalue 1000:  TimeOut2 [ms]
+#define u16GetRomConstChrgTimeOut3()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029C)))       // Defaultvalue 500:   TimeOut3 [ms]
+#define u16GetRomConstChrgTimeOut4()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029E)))       // Defaultvalue 100:   TimeOut4 [ms]
+#define u8GetRomConstReserve5()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C0)))         // Defaultvalue 255    
+#define u8GetRomConstReserve6()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C1)))         // Defaultvalue 255    
+#define u8GetRomConstModulInType()           (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C1)))        // Defaultvalue 7:     Type des Input Moduls
+#define u8GetRomConstModulInModeInput()      (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C2)))        // Defaultvalue 0:     Input Modus des Input Modules
+#define u8GetRomConstModulInModeOutput()     (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C3)))        // Defaultvalue 14:    Output Modus des Input Modules
+#define u16GetRomConstModulInSetVoltInput()  (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C4)))       // Defaultvalue 5000:  Soll Input Spannung des Input Moduls [mV]
+#define u16GetRomConstModulInSetCurrInput()  (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C6)))       // Defaultvalue 400:   Soll Input Strom des Input Moduls [mA]
+#define u16GetRomConstModulInSetVoltOutput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C8)))       // Defaultvalue 5000:  Soll Output Spannung des Input Moduls [mV]
+#define u16GetRomConstModulInSetCurrOutput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CA)))       // Defaultvalue 400:   Soll Output Strom des Input Moduls [mA]
+#define u16GetRomConstModulInVoltMinSupply() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CC)))       // Defaultvalue 2500:  Minimal Eingangsspannung. Minimal Spannung, damit das Modul aktiviert wird [mV]
+#define u16GetRomConstModulInVoltMax()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CE)))       // Defaultvalue 18000: Maximale Ausgangsspannung. [mV]
+#define u8GetRomConstReserve8()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0)))         // Defaultvalue 255    
+#define fGetRomConstModulInInVoltLpIn()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulInInVoltKp()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E4)))     // Defaultvalue 0.1:   Kp
+#define fGetRomConstModulInInVoltKi()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E8)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulInInVoltKiCut()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02EC)))     // Defaultvalue 200.0: KiCut
+#define fGetRomConstModulInInVoltKd()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F0)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulInInVoltLpOut()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F4)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulInInCurrLpIn()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F8)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulInInCurrKp()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02FC)))     // Defaultvalue 0.5:   Kp
+#define fGetRomConstModulInInCurrKi()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0300)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulInInCurrKiCut()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0304)))     // Defaultvalue 100.0: KiCut
+#define fGetRomConstModulInInCurrKd()        (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0308)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulInInCurrLpOut()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X030C)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulInOutVoltLpIn()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0310)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulInOutVoltKp()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0314)))     // Defaultvalue 0.1:   Kp
+#define fGetRomConstModulInOutVoltKi()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0318)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulInOutVoltKiCut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X031C)))     // Defaultvalue 200.0: KiCut
+#define fGetRomConstModulInOutVoltKd()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0320)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulInOutVoltLpOut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0324)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulInOutCurrLpIn()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0328)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulInOutCurrKp()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X032C)))     // Defaultvalue 0.5:   Kp
+#define fGetRomConstModulInOutCurrKi()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0330)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulInOutCurrKiCut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0334)))     // Defaultvalue 100.0: KiCut
+#define fGetRomConstModulInOutCurrKd()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0338)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulInOutCurrLpOut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X033C)))     // Defaultvalue 1.0:   LP_Out
+#define u8GetRomConstReserve7()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0341)))         // Defaultvalue 255    
+#define u8GetRomConstModulOutType()          (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0341)))        // Defaultvalue 6:     Type des Output Moduls
+#define u8GetRomConstModulOutModeInput()     (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0342)))        // Defaultvalue 0:     Input Modus des Output Modules
+#define u8GetRomConstModulOutModeOutput()    (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0343)))        // Defaultvalue 14:    Output Modus des Output Modules
+#define u16GetRomConstModulOutSetVoltInput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0344)))       // Defaultvalue 5000:  Soll Input Spannung des Output Moduls [mV]
+#define u16GetRomConstModulOutSetCurrInput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0346)))       // Defaultvalue 400:   Soll Input Strom des Output Moduls [mA]
+#define u16GetRomConstModulOutSetVoltOutput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0348)))      // Defaultvalue 5000:  Soll Output Spannung des Output Moduls [mV]
+#define u16GetRomConstModulOutSetCurrOutput() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034A)))      // Defaultvalue 1000:  Soll Output Strom des Output Moduls [mA]
+#define u16GetRomConstModulOutVoltMinSupply() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034C)))      // Defaultvalue 2500:  Minimal Eingangsspannung. Minimal Spannung, damit das Modul aktiviert wird [mV]
+#define u16GetRomConstModulOutVoltMax()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034E)))       // Defaultvalue 18000: Maximale Ausgangsspannung. [mV]
+#define u8GetRomConstReserve9()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360)))         // Defaultvalue 255    
+#define fGetRomConstModulOutInVoltLpIn()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulOutInVoltKp()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0364)))     // Defaultvalue 0.1:   Kp
+#define fGetRomConstModulOutInVoltKi()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0368)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulOutInVoltKiCut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X036C)))     // Defaultvalue 200.0: KiCut
+#define fGetRomConstModulOutInVoltKd()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0370)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulOutInVoltLpOut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0374)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulOutInCurrLpIn()     (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0378)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulOutInCurrKp()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X037C)))     // Defaultvalue 0.5:   Kp
+#define fGetRomConstModulOutInCurrKi()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0380)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulOutInCurrKiCut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0384)))     // Defaultvalue 100.0: KiCut
+#define fGetRomConstModulOutInCurrKd()       (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0388)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulOutInCurrLpOut()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X038C)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulOutOutVoltLpIn()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0390)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulOutOutVoltKp()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0394)))     // Defaultvalue 0.1:   Kp
+#define fGetRomConstModulOutOutVoltKi()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0398)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulOutOutVoltKiCut()   (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X039C)))     // Defaultvalue 200.0: KiCut
+#define fGetRomConstModulOutOutVoltKd()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03A0)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulOutOutVoltLpOut()   (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03A4)))     // Defaultvalue 1.0:   LP_Out
+#define fGetRomConstModulOutOutCurrLpIn()    (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03A8)))     // Defaultvalue 1.0:   LP_In
+#define fGetRomConstModulOutOutCurrKp()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03AC)))     // Defaultvalue 0.5:   Kp
+#define fGetRomConstModulOutOutCurrKi()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03B0)))     // Defaultvalue 0.0:   Ki
+#define fGetRomConstModulOutOutCurrKiCut()   (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03B4)))     // Defaultvalue 100.0: KiCut
+#define fGetRomConstModulOutOutCurrKd()      (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03B8)))     // Defaultvalue 0.0:   Kd
+#define fGetRomConstModulOutOutCurrLpOut()   (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03BC)))     // Defaultvalue 1.0:   LP_Out
+#define u8GetRomConstReserve10()             (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F0)))         // Defaultvalue 255    
+#define u8GetRomConstReserve11()             (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))         // Defaultvalue 255    
+#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 60531  
+#define rszGetRomConstMagicPattern2()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03FC))           // Defaultvalue FLKA   

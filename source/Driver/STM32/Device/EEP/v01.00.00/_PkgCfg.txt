@@ -1,0 +1,2 @@
+[Common]
+PackageName=I2cEep

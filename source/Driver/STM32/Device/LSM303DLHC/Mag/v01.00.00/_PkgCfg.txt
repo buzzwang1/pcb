@@ -1,0 +1,2 @@
+[Common]
+PackageName=LSM303DLHC_MAG

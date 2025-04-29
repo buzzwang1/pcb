@@ -1,0 +1,54 @@
+#define rszGetRomConstDeviceName()           ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0000))           // Defaultvalue Servo5 
+#define rszGetRomConstPlatformName()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0010))           // Defaultvalue CH32V305
+#define rszGetRomConstPlatformInfo()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0020))           // Defaultvalue RiscV-V4F,Rom 128KB,Ram 32KB
+#define u16GetRomConstBnDeviceID()           (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0040)))       // Defaultvalue 0      
+#define u16GetRomConstBnAdr()                (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0042)))       // Defaultvalue 7696   
+#define u8GetRomConstPartitionCnt()          (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0048)))        // Defaultvalue 5      
+#define u32GetRomConstIapRamSize()           (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C)))       // Defaultvalue 256    
+#define rszGetRomConstPartition0Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0050))           // Defaultvalue Flash Bl
+#define u16GetRomConstPartition0Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0060)))       // Defaultvalue 16     
+#define u16GetRomConstPartition0Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0062)))       // Defaultvalue 0      
+#define u32GetRomConstPartition0BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0064)))       // Defaultvalue 134217728
+#define u32GetRomConstPartition0Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0068)))       // Defaultvalue 16384  
+#define u32GetRomConstPartition0BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006C)))       // Defaultvalue 16384  
+#define rszGetRomConstPartition1Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0070))           // Defaultvalue Flash APP
+#define u16GetRomConstPartition1Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0080)))       // Defaultvalue 16     
+#define u16GetRomConstPartition1Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0082)))       // Defaultvalue 0      
+#define u32GetRomConstPartition1BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0084)))       // Defaultvalue 134234112
+#define u32GetRomConstPartition1Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0088)))       // Defaultvalue 110592 
+#define u32GetRomConstPartition1BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X008C)))       // Defaultvalue 16384  
+#define rszGetRomConstPartition2Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0090))           // Defaultvalue Flash IAP
+#define u16GetRomConstPartition2Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition2Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition2BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A4)))       // Defaultvalue 134234112
+#define u32GetRomConstPartition2Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A8)))       // Defaultvalue 110592 
+#define u32GetRomConstPartition2BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00AC)))       // Defaultvalue 16384  
+#define rszGetRomConstPartition3Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00B0))           // Defaultvalue Flash EEP
+#define u16GetRomConstPartition3Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition3Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition3BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C4)))       // Defaultvalue 134344704
+#define u32GetRomConstPartition3Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C8)))       // Defaultvalue 4096   
+#define u32GetRomConstPartition3BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00CC)))       // Defaultvalue 16384  
+#define rszGetRomConstPartition4Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00D0))           // Defaultvalue Ram    
+#define u16GetRomConstPartition4Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E0)))       // Defaultvalue 0      
+#define u16GetRomConstPartition4Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition4BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E4)))       // Defaultvalue 536870912
+#define u32GetRomConstPartition4Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E8)))       // Defaultvalue 8192   
+#define u32GetRomConstPartition4BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00EC)))       // Defaultvalue 1      
+#define u32GetRomConstLpInputPos()           (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0150)))       // Defaultvalue 1966:  LpInputPos
+#define u32GetRomConstLpInputCurrent()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0154)))       // Defaultvalue 1966:  LpInputCurrent
+#define u32GetRomConstLpInputSupply()        (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0158)))       // Defaultvalue 1966:  LpInputSupply
+#define u32GetRomConstLpInputTemp()          (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X015C)))       // Defaultvalue 1966:  LpInputTemp
+#define u32GetRomConstPidPosKp()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0160)))       // Defaultvalue 122880:PidPosKp
+#define u32GetRomConstPidPosKi()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0164)))       // Defaultvalue 256:   PidPosKi
+#define u32GetRomConstPidPosKd()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0168)))       // Defaultvalue 4096000:PidPosKd
+#define u16GetRomConstPidPosLimit()          (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X016C)))       // Defaultvalue 100:   PidPosLimit
+#define u32GetRomConstPidPosLpOutput()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X016E)))       // Defaultvalue 1966:  PidPosLpOutput
+#define u32GetRomConstPidCurKp()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0172)))       // Defaultvalue 1638400:PidCurKp
+#define u32GetRomConstPidCurKi()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0176)))       // Defaultvalue 16384: PidCurKi
+#define u32GetRomConstPidCurKd()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X017A)))       // Defaultvalue 0:     PidCurKd
+#define u16GetRomConstPidCurLimit()          (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X017E)))       // Defaultvalue 1000:  PidCurLimit
+#define u32GetRomConstPidCurLpOutput()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0180)))       // Defaultvalue 1966:  PidCurLpOutput
+#define u8GetRomConstLedEnable()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0184)))        // Defaultvalue 1:     LedEnable
+#define rszGetRomConstMagicPattern()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0FFC))           // Defaultvalue FLKA   
+#define u32GetRomConstChecksum()             (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0FF8)))       // Defaultvalue 495729 

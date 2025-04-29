@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1539808330 source:r:\sw.sys.as_classic_ref_armcm4\repo\pkg\data\comdat\work_comdat\comdat.cpp
+	"ComDat.h"
+
+1541536103 r:\sw.sys.as_classic_ref_armcm4\repo\pkg\data\comdat\work_comdat\comdat.h
+	"Typedef.h"
+
+1535708333 r:\sw.sys.as_classic_ref_armcm4\repo\pkg\general\typedef\work_typedef\typedef.h
+	"ARM_Sections.h"
+	"ARM_Typedef.h"
+
+1511473500 r:\sw.sys.as_classic_ref_armcm4\repo\pkg\general\typedef\work_typedef\arm_sections.h
+
+1511800214 r:\sw.sys.as_classic_ref_armcm4\repo\pkg\general\typedef\work_typedef\arm_typedef.h
+	<inttypes.h>
+	<stddef.h>
+

@@ -1,0 +1,45 @@
+32Bit
+
+
+0: Reset-Reason: gesetzt von BL => 
+        - isWuTimerRtc;
+        - isWuStandBy
+        - isWuPin1
+        - isWuPinRst
+        - isWuSftRst
+1: Wakeup-Counter
+2: Error
+3: BL counter
+
+4: "SPOP": Spop special Reset to enter Bootloader-Updater
+5: SPOP-Adress: High 16Bit-BN-DST Adr: z.B. EE12 | Low 16Bit-BN-SRC Adr: z.B. 1EEE
+6: Rtc Sync Count
+7: Rtc Sync Date
+
+8: Rtc Sync Time
+9: Rtc Last Sync Attempt Date
+10: Rtc Last Sync Attempt Time
+11: Blu Reason
+12:
+13:
+14:
+15:
+16:
+17:
+18:
+19:
+20:
+21:
+22:
+23:
+24:
+25:
+26:
+27:
+28:
+29:
+30:
+31:
+
+
+

@@ -1,0 +1,2 @@
+If (Uin >3,3V) Uout = 3,3V;
+          else Uout = Uin-100mV;
