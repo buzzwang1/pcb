@@ -198,7 +198,7 @@ void SysTick_Handler(void)
 
 void GPDMA1_Channel6_IRQHandler(void)
 {
-  mcILI9341.vDmaTcHandler();
+  mcILI9341.bDmaTcHandler();
 }
 
 /*

@@ -45,7 +45,7 @@ class cSystem
       mcBoard(),
       mcCom(),
       mcSMsg(),
-      mcBnMsgSys(&mcCom.mcBn_0x1000),
+      mcBnMsgSys(&mcCom.mcBn),
       mszErrorInfo((const char8*)mszErrorInfo_Buf, 0, sizeof(mszErrorInfo_Buf))
   {
 

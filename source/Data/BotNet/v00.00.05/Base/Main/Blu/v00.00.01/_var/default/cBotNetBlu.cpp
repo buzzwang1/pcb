@@ -32,8 +32,8 @@ bool cBotNetBlu::bAddLink(cBotNet_LinkBase* lcLink)
 {
   if (lcLink != null)
   {
-    lcLink->vAddedToBn((cBotNet*)this, cBotNet_LinkBase::enSideLink);
     mcSideLink = lcLink;
+    return lcLink->bAddedToBn(mcAdr.Get());
   }
   return False;
 }
@@ -169,7 +169,7 @@ bool cBotNetBlu::bDecodeAndDispatch()
   else
   {
     // Ist die Destination der SideLink ?
-    if (mcSideLink->mcDAdr.isMe(mcMsgRx.cGetDAdr()))
+    if (mcSideLink->mcAdr.isMe(mcMsgRx.cGetDAdr()))
     {
       // Weiterleiten an SideLink
       return bForwardMsgToLink(mcSideLink, &mcMsgRx);

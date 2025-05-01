@@ -80,7 +80,7 @@ class cBotNet_ComLinknRf905: public cBotNet_SyncedLinkBase
 
     if (lbHandleHardware)
     {
-      mcNRF905->vReInit();
+      //mcNRF905->vReInit();
 
       bool mbnRF905 = mcNRF905->bInit();
 
@@ -141,7 +141,7 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
       
     if (lbHandleHardware)
     {
-      mcNRF905->vReInit();
+      //mcNRF905->vReInit();
 
       bool mbnRF905 = mcNRF905->bInit();
 

@@ -32,8 +32,8 @@ cAPDS9960::cAPDS9960(cI2cMaster* lpcI2C, uint8 lui8Adr, cUart* lcUart)
 
 cAPDS9960::~cAPDS9960()
 {
-  mpcMsgRead.vMemFree();
-  mpcMsgWrite.vMemFree();
+  //mpcMsgRead.vMemFree();
+  //mpcMsgWrite.vMemFree();
 }
 
 void cAPDS9960::vComError(cComNode::tenError lenError, cComNode::tenState lenState)

@@ -24,9 +24,9 @@ set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.15.01/Core
-    Driver/STM32/L4/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/v01.15.01/HAL:lib_o3
+    Driver/STM32/L4/Hal/v01.15.01/Core
+    Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default
+    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_8Mhz
 
     main/${Main_Location}
 )

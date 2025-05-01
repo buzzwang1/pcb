@@ -74,7 +74,7 @@ set(PCB_ProjectPackageList
     Driver/Win32/Display/v00.00.01
 
     #main/STM32F407ZET/STF4BB/Gfx/config:default
-    main/PcSim/STM32F407ZET/STF4BB/Gui/v1Test01
+    main/PcSim/STM32F407ZET/STF4BB/Gfx/Gui/v1/Test01
 )
 
 message(STATUS "Include buildoptions file: ${CMAKE_CURRENT_LIST_DIR}/Win32_buildoptions.cmake")

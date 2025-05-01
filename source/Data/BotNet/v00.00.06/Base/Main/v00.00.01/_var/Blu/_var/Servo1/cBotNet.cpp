@@ -55,7 +55,7 @@ bool cBotNet::bDecodeMsgType(cBotNetMsg_Base *lcMsg)
   switch (lcMsg->enGetMsgType())
   {
     case cBotNetMsgFrame::tenType::enMessage:
-    case cBotNetMsgFrame::tenType::enRMessage:
+    //case cBotNetMsgFrame::tenType::enRMessage:
     {
       cBotNetMsg_MsgProt lcMsgProt(lcMsg);
       lcMsgProt.vDecode(mcAdr.Get(), mcAdr.Get());

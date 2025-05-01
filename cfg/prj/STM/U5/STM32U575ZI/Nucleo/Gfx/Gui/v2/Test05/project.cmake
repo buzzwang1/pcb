@@ -69,12 +69,12 @@ set(PCB_ProjectPackageList
     Data/String/StringTools/v00.00.02
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
-    Driver/STM32/U5/v01.01.00/Core
-    Driver/STM32/u5/v01.01.00/Device/STM32U575xx:default
-    Driver/STM32/u5/v01.01.00/HAL:lib_o3
-    Driver/STM32/U5/GPPin/v01.00.02
+    Driver/STM32/U5/HAL/v01.01.00/Core
+    Driver/STM32/u5/HAL/v01.01.00/Device/STM32U575xx:default
+    Driver/STM32/u5/HAL/v01.01.00/HAL:lib_o3_32Mhz
+    Driver/STM32/U5/HAL/GPPin/v01.00.02
 
-    Driver/STM32/Device/Displays/ILI9341/U575_Nucleo/SPI/v01.00.03
+    Driver/STM32/Device/Displays/ILI9341/U5xx/SPI/v01.00.03:U575_Nucleo
 
 
     System/CyclicCaller/v00.00.01:stm32u5xx_TIM6

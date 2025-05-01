@@ -21,22 +21,22 @@
 string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 
 if (PCB_ProjectCfg STREQUAL "Debug")
-  set (lLibExtention "lib_og")
+  set (lLibExtention "lib_og_8Mhz")
   set (lFastDriver "")
 endif()
 
 if (PCB_ProjectCfg STREQUAL "Debug_App")
-  set (lLibExtention "lib_og")
+  set (lLibExtention "lib_og_8Mhz")
   set (lFastDriver "")
 endif()
 
 if (PCB_ProjectCfg STREQUAL "Release")
-  set (lLibExtention "lib_os")
+  set (lLibExtention "lib_os_8Mhz")
   set (lFastDriver "|-Ofast")
 endif()
 
 if (PCB_ProjectCfg STREQUAL "Release_App")
-  set (lLibExtention "lib_os")
+  set (lLibExtention "lib_os_8Mhz")
   set (lFastDriver "|-Ofast")
 endif()
 
@@ -67,7 +67,7 @@ set(PCB_ProjectPackageList
     Data/Mem/Buffer/Ring/RingBufT/v00.00.03
     Data/Mem/Buffer/Ring/ComBuf/v00.00.03
     Data/Mem/MemPart/v00.00.01
-    Data/Mem/RomConst/v00.00.01:STM32L433CCT
+    Data/Mem/RomConst/v00.00.01:STM32L433CCT:default
 
     Data/String/Cli/v00.00.01
     
@@ -99,15 +99,15 @@ set(PCB_ProjectPackageList
 
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.15.01/Core
-    Driver/STM32/L4/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/v01.15.01/HAL:${lLibExtention}
+    Driver/STM32/L4/Hal/v01.15.01/Core
+    Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default
+    Driver/STM32/L4/Hal/v01.15.01/HAL:${lLibExtention}
 
 
     # Treiber auf -Ofast kompilieren
-    Driver/STM32/L4/GPPin/v01.00.02${lFastDriver}
-    Driver/STM32/L4/cUart/Int/v01.00.01${lFastDriver}
-    Driver/STM32/L4/cI2C/v01.00.06${lFastDriver}
+    Driver/STM32/L4/HAL/GPPin/v01.00.02${lFastDriver}
+    Driver/STM32/L4/HAL/cUart/Int/v01.00.01${lFastDriver}
+    Driver/STM32/L4/HAL/cI2C/v01.00.06${lFastDriver}
     Driver/STM32/Device/Com/nRF905/Int/v01.00.00:TB01_STM32L433CCT${lFastDriver}
     Driver/STM32/Device/INA219/v01.00.01${lFastDriver}
     Driver/STM32/Device/Displays/HX8347/v00.00.01:L433CCT_SPI2_DMA${lFastDriver}

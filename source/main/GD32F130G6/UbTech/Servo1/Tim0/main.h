@@ -28,6 +28,7 @@
 //#include "stm32f30x_wwdg.h"
 #include "gd32f1x0_misc.h"
 
+extern void MainSystemInit(void);
 
 extern void SysTick_Handler(void);
 extern void TIMER2_IRQHandler(void);

@@ -75,8 +75,8 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default|-Ofast
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_24Mhz
     Driver/STM32/L4/Hal/GPPin/v01.00.02
-    #Driver/STM32/L4/cUart/Int/v01.00.01
-    #Driver/STM32/L4/cUart/MpHd/v01.00.02_Mini:Tim16|-Ofast
+    #Driver/STM32/L4/HAL/cUart/Int/v01.00.01
+    #Driver/STM32/L4/HAL/cUart/MpHd/v01.00.02_Mini:Tim16|-Ofast
     Driver/STM32/L4/Hal/cI2C/v01.00.09|-Ofast
 
     #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv7b2_STM32L433CCT

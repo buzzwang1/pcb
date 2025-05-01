@@ -57,16 +57,20 @@ class cClock
   tunTime mTime;
   tunDate mDate;
   tstTimeDate mLastSync;
+  tstTimeDate mLastSyncAttempt;
 
   u8      mValid;
 
   u8      mu8ClockSource; // 0 = no; 1 = LSE, 2 = LSI
 
+  u8      mu8WaitForLse_s;
+
   static const uint8 nMonthTable[12];
 
   cClock()
   {
-    mu8ClockSource = 0;
+    mu8ClockSource  = 0;
+    mu8WaitForLse_s = 0;
 
     cBuRam::vEnable();
 
@@ -82,28 +86,15 @@ class cClock
     }
     else
     {
-      vRtcInit(lu8Reset);
-
-      mTime.ui32Time = 0;
-      mDate.ui32Date = 0;
-      mValid = 0;
+      vRtcInit();
     }
 
-
-    if ((RCC->BDCR & RCC_BDCR_LSEON) && (LL_RCC_LSE_IsReady()) && (LL_RCC_GetRTCClockSource()== LL_RCC_RTC_CLKSOURCE_LSE))
-    {
-      mu8ClockSource = 1;
-    }
-    else
-    {
-      if ((RCC->BDCR & RCC_BDCR_LSION) && (LL_RCC_LSI_IsReady()) && (LL_RCC_GetRTCClockSource() == LL_RCC_RTC_CLKSOURCE_LSI))
-      {
-        mu8ClockSource = 2;
-      }
-    }
+    vGetClockSource();
 
     mLastSync.unDate.ui32Date = cBuRam::mBuRam->u32RtcSyncDate;
     mLastSync.unTime.ui32Time = cBuRam::mBuRam->u32RtcSyncTime;
+    mLastSyncAttempt.unDate.ui32Date = cBuRam::mBuRam->u32RtcSyncAttmptDate;
+    mLastSyncAttempt.unTime.ui32Time = cBuRam::mBuRam->u32RtcSyncAttmptTime;
   }
 
   void vClear()
@@ -112,35 +103,39 @@ class cClock
   }
 
 
-  void vRtcInit(bool boBuReset)
+  void vRtcInit()
   {
-    u8 lu8t = 10;
-
-    cBuRam::mBuRam->u32RtcSyncCnt  = 0; // set invalid 
-    cBuRam::mBuRam->u32RtcSyncDate = 0; // set invalid 
-    cBuRam::mBuRam->u32RtcSyncTime = 0; // set invalid 
-
     // --------------- First try LSE ---------------
 
     /*##-2- Configure LSE/LSI as RTC clock source ###############################*/
     // RTC_CLOCK_SOURCE_LSE
-    if (boBuReset)
-    {
-      // Löscht BuRam und RTC-Status, z.B. Wakeup
-      LL_RCC_ForceBackupDomainReset();
-      LL_RCC_ReleaseBackupDomainReset();
-    }
+    // Löscht BuRam und RTC-Status, z.B. Wakeup
+    // Once the RTC clock source has been selected, it cannot be changed any more unless
+    // the Backup domain is reset.The BDRST bit can be used to reset them.
+    LL_RCC_ForceBackupDomainReset();
+    LL_RCC_ReleaseBackupDomainReset();
+
     LL_RCC_LSE_Enable();
 
-    while ((LL_RCC_LSE_IsReady() != 1) && (lu8t > 0))
-    {
-      cClockInfo::Delay_us(10);
-      lu8t--;
-    }
-
+    // tSU(LSE)(3) Startup time VDD is stabilized: 2s
+    // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
+    // reached. This value is measured for a standard crystal and it can vary significantly with the crystal manufacturer
     if (LL_RCC_LSE_IsReady())
     {
-      mu8ClockSource = 1;
+      vRtcInit2();
+    }
+    else
+    {
+      mu8WaitForLse_s = 3;
+    }
+    vGetClockSource();
+  }
+
+
+  void vRtcInit2()
+  {
+    if (LL_RCC_LSE_IsReady())
+    {
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
 
       /*##-3- Enable RTC peripheral Clocks #######################################*/
@@ -164,7 +159,6 @@ class cClock
     }
     else
     {
-      mu8ClockSource = 2;
       LL_RCC_LSE_Disable();
 
       LL_RCC_LSI_Enable();
@@ -192,6 +186,27 @@ class cClock
       // ck_spre = 256Hz   / (255 + 1)         = 1 Hz
       lstRtc.SynchPrescaler = ((uint32_t)0x00FF);
       LL_RTC_Init(RTC, &lstRtc);
+    }
+    vGetClockSource();
+    mTime.ui32Time = 0;
+    mDate.ui32Date = 0;
+
+    mValid = 0;
+  }
+
+  void vGetClockSource()
+  {
+    // 0 = LL_RCC_RTC_CLKSOURCE_NONE
+    // 1 = LL_RCC_RTC_CLKSOURCE_LSE
+    // 2 = LL_RCC_RTC_CLKSOURCE_LSI
+    // 3 = LL_RCC_RTC_CLKSOURCE_HSE_DIV32
+
+    switch (LL_RCC_GetRTCClockSource())
+    {
+      case LL_RCC_RTC_CLKSOURCE_LSE:       mu8ClockSource = 1; break;
+      case LL_RCC_RTC_CLKSOURCE_LSI:       mu8ClockSource = 2; break;
+      case LL_RCC_RTC_CLKSOURCE_HSE_DIV32: mu8ClockSource = 3; break;
+      default: mu8ClockSource = 0; break;
     }
   }
 
@@ -234,6 +249,8 @@ class cClock
 
     cBuRam::mBuRam->u32RtcSyncDate = mLastSync.unDate.ui32Date;
     cBuRam::mBuRam->u32RtcSyncTime = mLastSync.unTime.ui32Time;
+
+    vSetSyncAttempt();
 
     mValid = 1;
   }
@@ -299,7 +316,7 @@ class cClock
     i32 days   = diff - years * 360 - months * 30 + daysInc;
 
     // Extra calculation when we can pass one month instead of 30 days.
-    if ((lstFrom.unDate.stDate.ui8Day == 1) && (mDate.stDate.ui8Day == 31)) 
+    if ((lstFrom.unDate.stDate.ui8Day == 1) && (mDate.stDate.ui8Day == 31))
     {
       months--;
       days = 30;
@@ -307,14 +324,38 @@ class cClock
     return days;
   }
 
-  bool bResync(i32 li32Days)
+  void vSetSyncAttempt()
+  {
+    mLastSyncAttempt.unDate.ui32Date = mDate.ui32Date;
+    mLastSyncAttempt.unTime.ui32Time = mTime.ui32Time;
+
+    cBuRam::mBuRam->u32RtcSyncAttmptDate = mLastSyncAttempt.unDate.ui32Date;
+    cBuRam::mBuRam->u32RtcSyncAttmptTime = mLastSyncAttempt.unTime.ui32Time;
+  }
+
+  bool bResync(i32 li32DiffLastSync_d = 2, i32 li32DiffLastSyncAttempt_d = 1)
   {
     i32 li32DiffDays;
 
-    li32DiffDays = i32DaysDiff(mLastSync);
+    // Es gab noch nie einen Versuch
+    // Normal nur nach Reset, dann immer Sync anfordern
+    if ((mLastSyncAttempt.unDate.ui32Date == 0) &&
+        (mLastSyncAttempt.unTime.ui32Time == 0)) return 1;
 
+    li32DiffDays = i32DaysDiff(mLastSyncAttempt);
+
+    // Letzter Synv-Versuch mind. 1 Tag her
     if (li32DiffDays < 0) li32DiffDays = -li32DiffDays;
-    if (li32DiffDays >= li32Days) return 1;
+    if (li32DiffDays >= li32DiffLastSyncAttempt_d)
+    {
+      if (!IsValid()) return 1;
+
+      li32DiffDays = i32DaysDiff(mLastSync);
+
+      // Letzter Synv-Versuch mind. 2 Tage her
+      if (li32DiffDays < 0) li32DiffDays = -li32DiffDays;
+      if (li32DiffDays >= li32DiffLastSync_d) return 1;
+    }
     return 0;
   }
 
@@ -383,6 +424,24 @@ class cClock
   void vAdd1s()
   {
     if (mValid) vReadFromRtc();
+
+    // tSU(LSE)(3) Startup time VDD is stabilized: 2s
+    // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
+    // reached. This value is measured for a standard crystal and it can vary significantly with the crystal manufacturer
+    // 
+    // Nachdem die Warte abgelaufen ist, überprüfen, ob auf LSE geschaltet werden kann.
+    if (mu8WaitForLse_s)
+    {
+      if (mu8WaitForLse_s > 1)
+      {
+        mu8WaitForLse_s--;
+      }
+      else
+      {
+        mu8WaitForLse_s = 0;
+        vRtcInit2();
+      }
+    }
   }
 
   void vAdd(cClock &lcClock)
@@ -550,6 +609,19 @@ class cClock
   }
 
 
+  u8* vSerializeLastSync(u8* lpu8Data)
+  {
+    *lpu8Data++ = mLastSync.unDate.stDate.ui16Year >> 8;
+    *lpu8Data++ = mLastSync.unDate.stDate.ui16Year & 0xFF;
+    *lpu8Data++ = mLastSync.unDate.stDate.ui8Month;
+    *lpu8Data++ = mLastSync.unDate.stDate.ui8Day;
+    *lpu8Data++ = mLastSync.unTime.stTime.ui8Hour;
+    *lpu8Data++ = mLastSync.unTime.stTime.ui8Minute;
+    *lpu8Data++ = mLastSync.unTime.stTime.ui8Second;
+    return lpu8Data;
+  }
+
+
   cStr& toStringTime(cStr& lcStr)
   {
     vReadFromRtc();
@@ -574,9 +646,10 @@ class cClock
 
     switch (mu8ClockSource)
     {
-      case 1:  lcStr += 'E'; break;
-      case 2:  lcStr += 'I'; break;
-      default: lcStr += '-'; break;
+      case 1:  lcStr += (rsz)"LSE"; break;
+      case 2:  lcStr += (rsz)"LSI"; break;
+      case 3:  lcStr += (rsz)"HSE"; break;
+      default: lcStr += (rsz)"---"; break;
     }
 
     return lcStr;

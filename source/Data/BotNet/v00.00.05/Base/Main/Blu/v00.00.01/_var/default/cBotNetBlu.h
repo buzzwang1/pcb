@@ -74,11 +74,10 @@ class cBotNetBlu
 
   uint32 SizeOf();
 
-  bool bAddLink(cBotNet_LinkBase* lcLink);
-
   u16 u16StreamPortAdd(cBotNetStreamPort* lcPort);
   void vStreamPortConnect(u8 lu8SourcePortIdx, u16 lu8DestPortAdr, u8 lu8DestPortIdx);
 
+  bool bAddLink(cBotNet_LinkBase* lcLink);
   void vLinkSync(cBotNet_LinkBase* lpcLink, bool lbForceSync);
   void vLinkSyncAll1ms();
   void vLinkMisc10ms();

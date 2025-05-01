@@ -39,12 +39,12 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/Displays/SSD1306/v01.00.01:A_128x64x1BPP
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.15.01/Core
-    Driver/STM32/L4/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/v01.15.01/HAL:default
+    Driver/STM32/L4/Hal/v01.15.01/Core
+    Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default
+    Driver/STM32/L4/Hal/v01.15.01/HAL:lib_o3_8Mhz
     
-    Driver/STM32/L4/GPPin/v01.00.02
-    Driver/STM32/L4/cI2C/v01.00.06
+    Driver/STM32/L4/HAL/GPPin/v01.00.02
+    Driver/STM32/L4/HAL/cI2C/v01.00.06
 
 
     Resource/Base/v00.00.01

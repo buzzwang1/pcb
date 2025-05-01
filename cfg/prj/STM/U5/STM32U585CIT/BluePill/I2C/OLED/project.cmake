@@ -39,12 +39,12 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/Displays/SSD1306/v01.00.01:A_128x64x1BPP
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
-    Driver/STM32/U5/v01.01.00/Core
-    Driver/STM32/u5/v01.01.00/Device/STM32U575xx:default
-    Driver/STM32/u5/v01.01.00/HAL:lib_o3
+    Driver/STM32/U5/HAL/v01.01.00/Core
+    Driver/STM32/u5/HAL/v01.01.00/Device/STM32U575xx:default
+    Driver/STM32/u5/HAL/v01.01.00/HAL:lib_o3_32Mhz
     
-    Driver/STM32/U5/GPPin/v01.00.02
-    Driver/STM32/U5/cI2C/v01.00.07
+    Driver/STM32/U5/HAL/GPPin/v01.00.02
+    Driver/STM32/U5/HAL/cI2C/v01.00.07
 
 
     Resource/Base/v00.00.01

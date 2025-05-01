@@ -38,7 +38,7 @@ set(PCB_ProjectPackageList
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
     Driver/STM32/L4/HAL/v01.15.01/Core
     Driver/STM32/L4/HAL/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3
+    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_8Mhz
     Driver/STM32/L4/HAL/GPPin/v01.00.02
     Driver/STM32/L4/HAL/cUart/Int/v01.00.01
 

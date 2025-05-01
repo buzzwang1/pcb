@@ -5,7 +5,7 @@ set(gen_pkg_name "hal")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
-	# List of all source files found in lib_og_gen_files
+	# List of all source files found in lib_og_8Mhz_gen_files
 )
 
 
@@ -127,14 +127,14 @@ set (gen_headers
 	./Inc/stm32l4xx_ll_usb.h
 	./Inc/stm32l4xx_ll_utils.h
 	./Inc/stm32l4xx_ll_wwdg.h
-	# List of all source files found in lib_og_gen_headers
+	# List of all source files found in lib_og_8Mhz_gen_headers
 )
 
 
 # List of all assembler files found in the packages filetree
 set (gen_asmfiles 
 	# List of all source files found in gen_asmfiles
-	# List of all source files found in lib_og_gen_asmfiles
+	# List of all source files found in lib_og_8Mhz_gen_asmfiles
 )
 
 
@@ -143,7 +143,7 @@ set (gen_include_directories
 	# List of all source files found in gen_include_directories
 	./Inc/Legacy
 	./Inc
-	# List of all source files found in lib_og_gen_include_directories
+	# List of all source files found in lib_og_8Mhz_gen_include_directories
 )
 
 

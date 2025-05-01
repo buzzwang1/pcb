@@ -1,31 +1,35 @@
 # PyClass_Packages.py: This is a generated file. Do not modify it.
 
-set(gen_pkg_name "ili9341")
+set(gen_pkg_name "cBotNetBaseMsg")
 
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
-	./ili9341.cpp
+	# List of all source files found in RiscV_gen_files
+	./_var/RiscV/cBnMsg.cpp
 )
 
 
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
-	./ili9341.h
+	# List of all source files found in RiscV_gen_headers
+	./_var/RiscV/cBnMsg.h
 )
 
 
 # List of all assembler files found in the packages filetree
 set (gen_asmfiles 
 	# List of all source files found in gen_asmfiles
+	# List of all source files found in RiscV_gen_asmfiles
 )
 
 
 # List of all folders containing any header in files the packages filetree
 set (gen_include_directories 
 	# List of all source files found in gen_include_directories
-	.
+	# List of all source files found in RiscV_gen_include_directories
+	./_var/RiscV
 )
 
 

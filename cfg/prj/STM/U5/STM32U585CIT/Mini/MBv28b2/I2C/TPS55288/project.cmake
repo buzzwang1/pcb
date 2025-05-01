@@ -43,7 +43,7 @@ set(PCB_ProjectPackageList
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
     Driver/STM32/U5/Hal/v01.01.00/Core
     Driver/STM32/U5/Hal/v01.01.00/Device/STM32U575xx:default
-    Driver/STM32/U5/Hal/v01.01.00/HAL:lib_o3
+    Driver/STM32/u5/HAL/v01.01.00/HAL:lib_o3_32Mhz
     Driver/STM32/U5/Hal/GPPin/v01.00.02
 
 

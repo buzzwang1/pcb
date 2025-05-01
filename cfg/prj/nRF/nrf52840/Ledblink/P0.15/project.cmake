@@ -23,6 +23,10 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
+    Driver/NRF/nRF5/v17.01.00/libraries/atomic
+    Driver/NRF/nRF5/v17.01.00/libraries/atomic_fifo
+    Driver/NRF/nRF5/v17.01.00/libraries/atomic_flags
+
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
     Driver/NRF/nRF5/v17.01.00/nrf52840/Core:default
@@ -40,7 +44,7 @@ set(PCB_ProjectPackageList
     Driver/NRF/nRF5/v17.01.00/libraries/strerror
 
 
-    Driver/NRF/nRF5/v17.01.00/softdevice:nosd
+    Driver/NRF/nRF5/v17.01.00/softdevice/sd:nosd
 
     #APP/LED/v00.00.01:STM32L4_HAL
     #System/CyclicCaller/v00.00.01:stm32l4xx_TIM6

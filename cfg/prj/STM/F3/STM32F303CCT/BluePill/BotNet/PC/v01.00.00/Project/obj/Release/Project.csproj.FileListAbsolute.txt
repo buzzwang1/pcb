@@ -1,8 +1,0 @@
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\bin\Release\Project.exe
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\bin\Release\Project.pdb
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\ResolveAssemblyReference.cache
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\Project.Form1.resources
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\Project.Properties.Resources.resources
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\Project.csproj.GenerateResource.Cache
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\Project.exe
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\v01.00.00\Project\obj\Release\Project.pdb

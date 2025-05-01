@@ -52,7 +52,7 @@ void cSysPkgCom::vInit1()
   }
 
   #ifdef PCB_PROJECTCFG_Test
-    mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcSideLinkBotCom, 0xE000);
+    mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLinkBotCom, 0xE000);
   #else
     mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLink, 0xE000);
   #endif

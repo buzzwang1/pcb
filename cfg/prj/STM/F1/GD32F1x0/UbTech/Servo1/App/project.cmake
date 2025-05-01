@@ -20,7 +20,7 @@
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
 
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
@@ -31,11 +31,13 @@ set(PCB_ProjectPackageList
     Data/Mem/RomConst/v00.00.01:GD32f130G6:Servo1
     Data/Math/cFixPti1814/v00.00.01
 
+
     Data/BotNet/v00.00.06/Base/Main/v00.00.01:UpLinkOnly
     Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
     Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:Servo1_App
     Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.01:GD32f130G6		
+    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
+    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.01:GD32f130G6
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
     Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.03:default
     Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.01:default
@@ -45,7 +47,7 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.00.06/BnStreamSys/Ports/Cmd/v00.00.01:Servo1_App
 
     Data/String/Cli/v00.00.01_noHist
-    
+ 
     Data/String/CStrT/v00.00.01_NoFpu
     Data/String/StringTools/v00.00.02
 

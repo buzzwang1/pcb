@@ -37,11 +37,11 @@ set(PCB_ProjectPackageList
     Data/String/StringTools/v00.00.02
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.15.01/Core
-    Driver/STM32/L4/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/v01.15.01/HAL:lib_o3
-    Driver/STM32/L4/GPPin/v01.00.02
-    Driver/STM32/L4/cUart/Int/v01.00.01
+    Driver/STM32/L4/Hal/v01.15.01/Core
+    Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default
+    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_8Mhz
+    Driver/STM32/L4/HAL/GPPin/v01.00.02
+    Driver/STM32/L4/HAL/cUart/Int/v01.00.01
 
     APP/LED/v00.00.01:STM32L4_HAL
     System/CyclicCaller/v00.00.01:stm32l4xx_TIM6

@@ -265,7 +265,7 @@ void cSysPkgBoard::vTick10msLp(void)
   {
     mcI2C2_Board.vTick10ms();
 
-    if (mcSys.mcCom.mcBn_0x1000.mcSpop.mcEep != null)
+    if (mcSys.mcCom.mcBn.mcSpop.mcEep != null)
     {
       mcEep.vTick10ms();
     }

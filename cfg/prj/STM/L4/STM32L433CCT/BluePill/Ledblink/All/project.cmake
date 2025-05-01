@@ -26,7 +26,7 @@ set(PCB_ProjectPackageList
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
     Driver/STM32/L4/HAL/v01.15.01/Core
     Driver/STM32/L4/HAL/v01.15.01/Device/stm32l433xx:default
-    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_24Mhz
+    Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_8Mhz
     Driver/STM32/L4/HAL/GPPin/v01.00.02
 
     APP/LED/v00.00.01:STM32L4_HAL

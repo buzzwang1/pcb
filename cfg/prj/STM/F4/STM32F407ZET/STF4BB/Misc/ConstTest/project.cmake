@@ -31,7 +31,7 @@ set(PCB_ProjectPackageList
     System/STM32/ClockInfo/v00.00.01:stm32f4xx
 
     APP/LED/v00.00.01:STM32F4_STD
-    main/STM32F407ZET/STF4BB/Gfx/ConstTest
+    main/STM32F407ZET/STF4BB/Misc/ConstTest
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f407zet_flash.ld")

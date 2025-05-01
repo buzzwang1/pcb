@@ -3,16 +3,15 @@
 
 
 cSysPkgCom::cSysPkgCom()
-  : mcMyBotNetCfg1((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr),
-    mcMyBotNetCfg2((rsz)"Virtual Node", 0, cBotNetAdress::GetSlaveAdr(RomConst_stDevice_Info->u16BnNodeAdr, 14)),
+  : mcMyBotNetCfg((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr),
     mcI2c1_SCL_Bn(GPIOB_BASE, 6, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
     mcI2c1_SDA_Bn(GPIOB_BASE, 7, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
     mcI2C1_BnMaster(I2C1, &mcI2c1_SCL_Bn, &mcI2c1_SDA_Bn, 2, 16, u16GetRomConstBaudDownLink1() * 1000),
     mcComPort2(38400, GPIO_AF7_USART2, 16, 16),
-    mcBn_0x1000(&mcMyBotNetCfg1),
+    mcBn(&mcMyBotNetCfg),
     mcNRF905(0x00010110, 0x00010100),
     mcSideLinkRf(&mcNRF905),
-    mcSideLink(&mcSideLinkRf, &mcBn_0x1000, 0),
+    mcSideLink(&mcSideLinkRf, &mcBn, 0),
     mcSideLinkBotCom(&mcComPort2),
     mcDownLinks_0x1000_to_0x1100(&mcI2C1_BnMaster),
     mcDownLinks_0x1000_to_0x1200(&mcI2C1_BnMaster),
@@ -22,32 +21,16 @@ cSysPkgCom::cSysPkgCom()
     mcDownLinks_0x1000_to_0x1600(&mcI2C1_BnMaster),
     mcDownLinks_0x1000_to_0x1700(&mcI2C1_BnMaster),
     mcDownLinks_0x1000_to_0x1800(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1900(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1A00(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1B00(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1C00(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1D00(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1E00(),
-    mcBn_0x1E00(&mcMyBotNetCfg2),
-    mcUpLinks_0x1E00_to_0x1000(),
     mcU1TxRx(GPIOA_BASE, 9, GPIO_MODE_OUTPUT_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1),
     mcMasterUartMpHdU1(USART1, cBotNet::enCnstSlaveCnt, u16GetRomConstBaudDownLink2() * 1000, &mcU1TxRx, 5),
-    mcDownLinks_0x1E00_to_0x1E10(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E20(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E30(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E40(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E50(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E60(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E70(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E80(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1E90(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1EA0(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1EB0(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1EC0(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1ED0(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1E00_to_0x1EE0(&mcMasterUartMpHdU1)
-{
-}
+    mcDownLinks_0x1000_to_0x1900(&mcMasterUartMpHdU1),
+    mcDownLinks_0x1000_to_0x1A00(&mcMasterUartMpHdU1),
+    mcDownLinks_0x1000_to_0x1B00(&mcMasterUartMpHdU1),
+    mcDownLinks_0x1000_to_0x1C00(&mcMasterUartMpHdU1),
+    mcDownLinks_0x1000_to_0x1D00(&mcMasterUartMpHdU1),
+    mcDownLinks_0x1000_to_0x1E00(&mcMasterUartMpHdU1)
+  {
+  }
 
 void cSysPkgCom::vInit1()
 {
@@ -63,61 +46,39 @@ void cSysPkgCom::vInit1()
     if ((lpPartition->ui16Sort == RomConst_Sort_ExtEep) ||
         (lpPartition->ui16Sort == RomConst_Sort_IntEep))
     {
-      mcBn_0x1000.mcSpop.mcEep = &mcSys.mcBoard.mcEep;
+      mcBn.mcSpop.mcEep = &mcSys.mcBoard.mcEep;
       break;
     }
   }
 
-  // Virtuelle Ports verbinden
-  mcUpLinks_0x1E00_to_0x1000.vConnect((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1E00);
-
   #ifdef PCB_PROJECTCFG_Test
-    mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcSideLinkBotCom, 0xE000);
+    mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLinkBotCom, 0xE000);
   #else
-    mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcSideLink, 0xE000);
+    mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLink, 0xE000);
   #endif
 
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1100);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1200);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1300);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1400);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1500);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1600);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1700);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1800);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1900);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1A00);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1B00);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1C00);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1D00);
-  mcBn_0x1000.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1E00);
-  mcBn_0x1000.vSetHandleHardware(1, True);
-  mcBn_0x1000.vSetHandleHardware(14, True);
+  // I2C
+  mcBn.vSetHandleHardware(1, True);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1100);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1200);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1300);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1400);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1500);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1600);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1700);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1800);
 
-
-  // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
-  mcBn_0x1000.vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
-
-
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcUpLinks_0x1E00_to_0x1000);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E10);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E20);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E30);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E40);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E50);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E60);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E70);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E80);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1E90);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1EA0);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1EB0);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1EC0);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1ED0);
-  mcBn_0x1E00.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1E00_to_0x1EE0);
-  mcBn_0x1E00.vSetHandleHardware(1, True);
+  // Usart
+  mcBn.vSetHandleHardware(9, True);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1900);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1A00);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1B00);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1C00);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1D00);
+  mcBn.bAddLink((cBotNet_LinkBase*)&mcDownLinks_0x1000_to_0x1E00);
 
   // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
-  mcBn_0x1E00.vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
+  mcBn.vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
 
   mcSideLink.vSetTiming(15*1000, 50); // 15s Ping Interval, 50ms warten auf eine Session nach Ping.
 }
@@ -160,7 +121,7 @@ bool cSysPkgCom::isReadyForSleep(cStr& lcStatus)
   cStr_Create(lszStrBuf, 32);
 
   // Warten bis SPOP fertig ist  
-  if (mcBn_0x1000.mcSpop.isBusy())
+  if (mcBn.mcSpop.isBusy())
   {
     lszStrBuf.Setf((rsz)"Spop");
     if (lcStatus.Len() > 0) lcStatus += (rsz)", ";
@@ -181,14 +142,12 @@ bool cSysPkgCom::isReadyForSleep(cStr& lcStatus)
 
 void cSysPkgCom::vTick1msHp()
 {
-  mcBn_0x1000.vTickHp1ms();
-  mcBn_0x1E00.vTickHp1ms();
+  mcBn.vTickHp1ms();
 }
 
 void cSysPkgCom::vTick1msLp(void)
 {
-  mcBn_0x1000.vProcess(1000);
-  mcBn_0x1E00.vProcess(1000);
+  mcBn.vProcess(1000);
 }
 
 void cSysPkgCom::vTick10msLp(void)

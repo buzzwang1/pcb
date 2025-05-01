@@ -1,9 +1,0 @@
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\bin\Debug\Project.exe
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\bin\Debug\Project.pdb
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.csproj.AssemblyReference.cache
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.Form1.resources
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.Properties.Resources.resources
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.csproj.GenerateResource.cache
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.csproj.CoreCompileInputs.cache
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.exe
-U:\E2\Projekte\SW\Code\pcb\cfg\prj\STM\F3\STM32F303CCT\BluePill\BotNet\PC\Gui_00_01_00\Project\obj\Debug\Project.pdb

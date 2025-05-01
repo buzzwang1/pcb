@@ -63,7 +63,7 @@ set(PCB_ProjectPackageList
 
 
     APP/LED/v00.00.01:STM32F4_STD
-    main/STM32F407ZET/STF4BB/Gfx/MemTest
+    main/STM32F407ZET/STF4BB/Gfx/Misc/MemTest
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f407zet_flash.ld")

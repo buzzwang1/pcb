@@ -15,7 +15,7 @@ set (gen_headers
 	# List of all source files found in gen_headers
 	./ClockInfo.h
 	# List of all source files found in stm32f4xx_hal_gen_headers
-	./_var/stm32f4xx_ClockInfo1.h
+	./_var/stm32f4xx_hal/ClockInfo1.h
 )
 
 

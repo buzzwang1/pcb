@@ -209,7 +209,7 @@ void CycCall_vMain_25ms()
 
   char8  lszData[100] = "";
 
-  cStrTools::i8Ftoan(1.25f, lszData, 100, 2);
+  cStrTools::uixFtoan(1.25f, lszData, 100, 2);
 
   cStr   lcStr(lszData, 100);
   lcStr.Setf((const char8*)"Test %d Test %x", 1234, 127);

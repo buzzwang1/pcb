@@ -51,6 +51,7 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.00.06/Base/Main/v00.00.02:default
     Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
     Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
+    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:default
     Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32U5xx
     Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default|-Ofast

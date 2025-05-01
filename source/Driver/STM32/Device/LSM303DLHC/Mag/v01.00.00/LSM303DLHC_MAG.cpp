@@ -29,8 +29,8 @@ cLSM303DLHC_MAG::cLSM303DLHC_MAG(cI2cMaster* lpcI2C)
 
 cLSM303DLHC_MAG::~cLSM303DLHC_MAG()
 {
-  mpcMsgRead.vMemFree();
-  mpcMsgWrite.vMemFree();
+  //mpcMsgRead.vMemFree();
+  //mpcMsgWrite.vMemFree();
 }
 
 void cLSM303DLHC_MAG::vComError(cComNode::tenError lenError, cComNode::tenState lenState)

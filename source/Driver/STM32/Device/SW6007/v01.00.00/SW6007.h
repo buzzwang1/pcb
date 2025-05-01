@@ -72,8 +72,8 @@ class cSW6007: public cComNode
 
   ~cSW6007()
   {
-    mpcMsgRead.vMemFree();
-    mpcMsgWrite.vMemFree();
+    //mpcMsgRead.vMemFree();
+    //mpcMsgWrite.vMemFree();
   }
 
   inline void vSetStartRequest()

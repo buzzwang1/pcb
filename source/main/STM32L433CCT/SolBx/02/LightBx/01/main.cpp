@@ -283,7 +283,7 @@ cBotNet                        *mcBn_0x1200; // Masternode for 011[x] all nodes,
 cBn_MsgProcess_0x1200 mcBn_MsgProcess_0x1200;
 
 // --- 0x1200 UpLink
-cBotNet_UpLinkI2c    mcUpLnk_0x1200(0x1000, &mcI2C2_BnSlave);
+cBotNet_UpLinkI2c    mcUpLnk_0x1200(&mcI2C2_BnSlave);
 
 
 tcUart<USART1_BASE, GPIOA_BASE,  9, GPIOA_BASE, 10> mcUart1(19200, GPIO_AF7_USART2, 64, 64);
@@ -549,10 +549,10 @@ void vPrintLinkToString(u16 liSlaveIdx, cBotNet_LinkBase* lcLink, cStr& lszStr)
     char8  lszStrBuf2[16];
     cStr   lszStr2(lszStrBuf2, 16);
 
-    lszStr.Setf((const char8*)"%d) %x.%x.%x.%x: ", liSlaveIdx, lcLink->mcDAdr.mAdr.stAdr.AdrD1,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD2,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD3,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD4);
+    lszStr.Setf((const char8*)"%d) %x.%x.%x.%x: ", liSlaveIdx, lcLink->mcAdr.mAdr.stAdr.AdrD1,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD2,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD3,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD4);
 
     if (lcLink->mStatus.IsOnline)
     {
@@ -815,7 +815,7 @@ void MAIN_vTick100msLp(void)
   mcBn_0x1200->bSendMsg(&lcMsgLightStatus);
 
   // Reset Buffer of Offline Links
-  mcBn_0x1200->vResetCom(False);
+  //mcBn_0x1200->vResetCom(False);
 
   InAppProg_Platform_vResetWdog();
 }

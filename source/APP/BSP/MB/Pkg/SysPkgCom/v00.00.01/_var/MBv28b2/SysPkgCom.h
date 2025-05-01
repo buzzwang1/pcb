@@ -30,8 +30,7 @@ class cSysPkgCom
 {
   public:
 
-  cBotNetCfg mcMyBotNetCfg1;
-  cBotNetCfg mcMyBotNetCfg2;
+  cBotNetCfg mcMyBotNetCfg;
 
   // I2C1:
   cGpPin     mcI2c1_SCL_Bn;
@@ -42,7 +41,7 @@ class cSysPkgCom
 
 
   // BotNet
-  cBotNet               mcBn_0x1000;
+  cBotNet               mcBn;
   //  0x1000 Masternode for 011[x] all nodes, e.g. downstream to 0111
   // 0 CmdPort
   // 1 ComPort (PA2: USART2_TX; PA3: USART2_RX; 9600)
@@ -55,7 +54,7 @@ class cSysPkgCom
   cBotNet_UpLinknRf905Net   mcSideLink;
     
   // Uart for developing
-  cBotNet_LinkBotCom        mcSideLinkBotCom;
+  cBotNet_LinkBotCom         mcSideLinkBotCom;
 
   // --- 0x1000 DownLinks
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1100;
@@ -66,41 +65,17 @@ class cSysPkgCom
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1600;
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1700;
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1800;
-  cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1900;
-  cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1A00;
-  cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1B00;
-  cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1C00;
-  cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1D00;
-  cBotNet_LinkVLink_DownLink mcDownLinks_0x1000_to_0x1E00;
 
-
-
-  // --- 0x1E00 -----
-  cBotNet                    mcBn_0x1E00;
-
-  // --- 0x1E00 Uplink
-  cBotNet_LinkVLink_UpLink   mcUpLinks_0x1E00_to_0x1000;
-
-  // --- 0x1E00 DownLinks
   cGpPin                     mcU1TxRx;
   cUartMpHdMaster            mcMasterUartMpHdU1;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1900;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1A00;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1B00;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1C00;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1D00;
+  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1E00;
 
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E10;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E20;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E30;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E40;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E50;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E60;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E70;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E80;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1E90;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1EA0;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1EB0;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1EC0;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1ED0;
-  cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1E00_to_0x1EE0;
 
-  
   cSysPkgCom();
 
   void vInit1();

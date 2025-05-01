@@ -6,7 +6,7 @@ set(gen_pkg_name "led")
 set (gen_files 
 	# List of all source files found in gen_files
 	# List of all source files found in STM32F4_HAL_gen_files
-	./_var/STM32F4_LED.cpp
+	./_var/STM32F4_HAL/LED.cpp
 )
 
 
@@ -14,7 +14,7 @@ set (gen_files
 set (gen_headers 
 	# List of all source files found in gen_headers
 	# List of all source files found in STM32F4_HAL_gen_headers
-	./_var/STM32F4_led.h
+	./_var/STM32F4_HAL/led.h
 )
 
 

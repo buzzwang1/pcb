@@ -231,3 +231,7 @@ int main(void)
   }
 }
 
+void MainSystemInit(void)
+{
+
+}

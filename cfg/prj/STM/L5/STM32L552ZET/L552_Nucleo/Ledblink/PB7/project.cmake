@@ -24,11 +24,11 @@ set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
-    Driver/STM32/L5/v01.00.04/Core
-    Driver/STM32/L5/v01.00.04/Device/STM32l552xx:default
-    Driver/STM32/L5/v01.00.04/HAL:default
+    Driver/STM32/L5/HAL/v01.00.04/Core
+    Driver/STM32/L5/HAL/v01.00.04/Device/STM32l552xx:default
+    Driver/STM32/L5/HAL/v01.00.04/HAL:default
 
-    Driver/STM32/L5/GPPin/v01.00.02
+    Driver/STM32/L5/HAL/GPPin/v01.00.02
 
     APP/LED/v00.00.01:STM32L5_HAL
     System/CyclicCaller/v00.00.01:stm32l5xx_TIM6

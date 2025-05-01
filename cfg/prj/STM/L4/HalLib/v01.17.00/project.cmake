@@ -22,9 +22,9 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 
 set(PCB_ProjectPackageList
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.17.00/Core
-    Driver/STM32/L4/v01.17.00/Device/stm32l4r9xx:default
-    Driver/STM32/L4/v01.17.00/HAL:default
+    Driver/STM32/L4/HAL/v01.17.00/Core
+    Driver/STM32/L4/HAL/v01.17.00/Device/stm32l4r9xx:default
+    Driver/STM32/L4/HAL/v01.17.00/HAL:default
 
     main/STM32L4/HalLib/v01.17.00
 )

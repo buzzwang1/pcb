@@ -28,8 +28,8 @@ cLSM303DLHC_ACC::cLSM303DLHC_ACC(cI2cMaster* lpcI2C)
 
 cLSM303DLHC_ACC::~cLSM303DLHC_ACC()
 {
-  mpcMsgRead.vMemFree();
-  mpcMsgWrite.vMemFree();
+  //mpcMsgRead.vMemFree();
+  //mpcMsgWrite.vMemFree();
 }
 
 void cLSM303DLHC_ACC::vComError(cComNode::tenError lenError, cComNode::tenState lenState)

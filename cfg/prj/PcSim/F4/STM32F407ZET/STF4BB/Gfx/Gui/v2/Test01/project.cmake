@@ -33,6 +33,7 @@ set(PCB_ProjectPackageList
     Gfx/Paint/Basic/v00.00.01
     Gfx/MemPaint/v00.00.01
     Gfx/Paint/Triangle/Basic/v00.00.01
+    Gfx/Paint/Triangle/ZBasic/v00.00.01
     #Gfx/Paint/Triangle/BrigthGrad/v00.00.01
     #Gfx/Paint/Triangle/ColGrad/v00.00.01
     #Gfx/Paint/Triangle/TextureBrigthGrad/v00.00.01

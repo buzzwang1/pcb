@@ -24,9 +24,9 @@ set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/F3/v01.11.00/Core
-    Driver/STM32/F3/v01.11.00/Device/stm32f30x:default
-    Driver/STM32/F3/v01.11.00/HAL:lib_os
+    Driver/STM32/F3/HAL/v01.11.00/Core
+    Driver/STM32/F3/HAL/v01.11.00/Device/stm32f30x:default
+    Driver/STM32/F3/HAL/v01.11.00/HAL:lib_os
 
     main/${Main_Location}
 )

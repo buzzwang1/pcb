@@ -18,7 +18,7 @@ void cSysPkgClock::vInit2(void)
   if (mClock.bResync())
   {
     mu32ClockResyncTimeout_s = 3 * 60;
-    mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
+    //mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
     mClock.vSetSyncAttempt();
   }
 }
@@ -63,7 +63,7 @@ void cSysPkgClock::vTick1000msLp(void)
   if (mClock.bResync())
   {
     mu32ClockResyncTimeout_s = 3 * 60;
-    mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
+    //mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
     mClock.vSetSyncAttempt();
   }
 

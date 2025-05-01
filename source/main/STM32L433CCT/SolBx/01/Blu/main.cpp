@@ -146,14 +146,17 @@ cBn_MsgProcess mcBn_MsgProcess;
 cBotNetStreamPort_BotNetMemPort mcMemPort(RomConst_Partition_Count, RomConst_stDevice_Info->stPartitions);
 //cBotNetStreamPort_BotNetMemPort_Base mcMemPort;
 
-// --- 0xE000 SideLink => PC
-cNRF905                  mcNRF905(0x00010110, 0x00010100);
-cBotNet_UpLinknRf905     mcSideLnk_0x1000Rf(0xE000, &mcNRF905);
-cBotNet_UpLinknRf905Net  mcSideLnk_0x1000(&mcSideLnk_0x1000Rf);
-
+// Device ID: 8 = Clock Master
 // 0 CmdPort
 // 1 MemPort
 cBotNet     mcBnNode(&mcMyBotNetCfg, &mcBn_MsgProcess);
+
+
+// --- 0xE000 SideLink => PC
+cNRF905                  mcNRF905(0x00010110, 0x00010100);
+cBotNet_UpLinknRf905     mcSideLnk_0x1000Rf(&mcNRF905);
+cBotNet_UpLinknRf905Net  mcSideLnk_0x1000(&mcSideLnk_0x1000Rf, &mcBnNode);
+
 //cBotNetBlu  mcBnNode(8, 0x1000);
 
 

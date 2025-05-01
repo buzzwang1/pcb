@@ -20,7 +20,7 @@
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:RiscV
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
 
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02 #|-Ofast
@@ -34,6 +34,7 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
     Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:Servo1_Blu
     Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:RiscV
+    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
     Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.01:CH32v305
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
     Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.03:default #|-Ofast

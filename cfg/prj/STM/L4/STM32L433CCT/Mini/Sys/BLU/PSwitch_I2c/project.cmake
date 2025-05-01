@@ -71,8 +71,8 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/Device/stm32l433xx:default
     Driver/STM32/L4/HAL/v01.15.01/HAL:${lLibExtention}
     Driver/STM32/L4/HAL/GPPin/v01.00.02
-    #Driver/STM32/L4/cUart/Int/v01.00.01
-    #Driver/STM32/L4/cUart/MpHd/v01.00.02_Mini:Tim15
+    #Driver/STM32/L4/HAL/cUart/Int/v01.00.01
+    #Driver/STM32/L4/HAL/cUart/MpHd/v01.00.02_Mini:Tim15
     Driver/STM32/L4/Hal/cI2C/v01.00.09
 
     #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv7b2_STM32L433CCT

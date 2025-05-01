@@ -305,12 +305,16 @@ cBn_MsgProcess_0x1000 mcBn_MsgProcess_0x1000;
 
 // --- 0xE000 SideLink => PC
 cNRF905                   mcNRF905(0x00010110, 0x00010100);
-cBotNet_UpLinknRf905      mcSideLinkRf(0xE000, &mcNRF905);
-cBotNet_UpLinknRf905Net   mcSideLink(&mcSideLinkRf);
+//cBotNet_UpLinknRf905      mcSideLinkRf(0xE000, &mcNRF905);
+cBotNet_UpLinknRf905      mcSideLinkRf(&mcNRF905);
+cBotNet_UpLinknRf905Net   mcSideLink(&mcSideLinkRf, mcBn_0x1000);
 
 // --- 0x1000 DownLinks
-cBotNet_DownLinkI2c  mcDownLinks_0x1100(0x1100, &mcI2C2_BnMaster);
-cBotNet_DownLinkI2c  mcDownLinks_0x1200(0x1200, &mcI2C2_BnMaster);
+//cBotNet_DownLinkI2c  mcDownLinks_0x1100(0x1100, &mcI2C2_BnMaster);
+//cBotNet_DownLinkI2c  mcDownLinks_0x1200(0x1200, &mcI2C2_BnMaster);
+cBotNet_DownLinkI2c  mcDownLinks_0x1100(&mcI2C2_BnMaster);
+cBotNet_DownLinkI2c  mcDownLinks_0x1200(&mcI2C2_BnMaster);
+
 
 cBotNetStreamPort_BotNetMemPort mcBnMemPort(RomConst_Partition_Count, RomConst_stDevice_Info->stPartitions);
 
@@ -700,10 +704,10 @@ void vPrintLinkToString(u16 liSlaveIdx, cBotNet_LinkBase* lcLink, cStr& lszStr)
     char8  lszStrBuf2[16];
     cStr   lszStr2(lszStrBuf2, 16);
 
-    lszStr.Setf((const char8*)"%d) %x.%x.%x.%x: ", liSlaveIdx, lcLink->mcDAdr.mAdr.stAdr.AdrD1,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD2,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD3,
-                                                               lcLink->mcDAdr.mAdr.stAdr.AdrD4);
+    lszStr.Setf((const char8*)"%d) %x.%x.%x.%x: ", liSlaveIdx, lcLink->mcAdr.mAdr.stAdr.AdrD1,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD2,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD3,
+                                                               lcLink->mcAdr.mAdr.stAdr.AdrD4);
 
     if (lcLink->mStatus.IsOnline)
     {
@@ -842,7 +846,7 @@ void MAIN_vTick100msLp(void)
   mcStatusLed.vTick100ms();
 
   // Reset Buffer of Offline Links
-  mcBn_0x1000->vResetCom(False);
+  // mcBn_0x1000->vResetCom(False);
 
   InAppProg_Platform_vResetWdog();
 }

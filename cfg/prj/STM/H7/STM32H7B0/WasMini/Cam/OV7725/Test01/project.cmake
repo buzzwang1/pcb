@@ -49,11 +49,11 @@ set(PCB_ProjectPackageList
 
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM7
-    Driver/STM32/H7/v01.11.00/Core
-    Driver/STM32/H7/v01.11.00/Device/STM32H7B0xx:default
-    Driver/STM32/H7/v01.11.00/HAL:lib_o3
+    Driver/STM32/H7/HAL/v01.11.00/Core
+    Driver/STM32/H7/HAL/v01.11.00/Device/STM32H7B0xx:default
+    Driver/STM32/H7/HAL/v01.11.00/HAL:lib_o3
 
-    Driver/STM32/H7/GPPin/v01.00.02
+    Driver/STM32/H7/HAL/GPPin/v01.00.02
     Driver/STM32/Device/Displays/ST7735/SPI/v00.00.02:H7_SPI1_DMA_WasMini
 
 

@@ -24,10 +24,10 @@ set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/v01.17.00/Core
-    Driver/STM32/L4/v01.17.00/Device/stm32l4r9xx:default
-    Driver/STM32/L4/v01.17.00/HAL:default
-    Driver/STM32/L4/GPPin/v01.00.02
+    Driver/STM32/L4/Hal/v01.17.00/Core
+    Driver/STM32/L4/Hal/v01.17.00/Device/stm32l4r9xx:default
+    Driver/STM32/L4/Hal/v01.17.00/HAL:default
+    Driver/STM32/L4/HAL/GPPin/v01.00.02
 
     APP/LED/v00.00.01:STM32L4_HAL
     System/CyclicCaller/v00.00.01:stm32l4xx_TIM6

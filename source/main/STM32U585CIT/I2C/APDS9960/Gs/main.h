@@ -5,6 +5,7 @@
 #include "LED.h"
 #include "cSSD1306.h"
 #include "apds9960.h"
+#include "HTU21D.h"
 
 //System
 #include "CycleCaller.h"
