@@ -29,9 +29,6 @@
 
 
 extern void SystemClock_Config();
-extern void MAIN_vInitSystem(void);
-
-
 extern void MainSystemInit(void);
 
 extern void NMI_Handler(void);

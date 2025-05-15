@@ -361,7 +361,7 @@ class cNRF905
     return False;
   }
 
-  bool bEventHandler(tenCmdEvents lenEvent)
+  bool bEventHandler(tenCmdEvents lenEvent) __attribute__((optimize("-O0")))
   {
     do
     {
@@ -719,7 +719,7 @@ class cNRF905
   }
 
 
-  u32 u32Start_Set_Mode(tenRF905_Mode lenNewMode)  __attribute__((optimize("-O0")))
+  u32 u32Start_Set_Mode(tenRF905_Mode lenNewMode)  // __attribute__((optimize("-O0")))
   {
     u32 lu32Ret = 0;
 

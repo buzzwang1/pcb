@@ -97,7 +97,7 @@
   *        (when HSE is used as system clock source, directly or through the PLL).
   */
 #if !defined  (HSE_VALUE)
-  #define HSE_VALUE    16000000UL /*!< Value of the External oscillator in Hz */
+  #define HSE_VALUE    32000000UL /*!< Value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)
@@ -226,7 +226,7 @@
 #define  USE_HAL_SDRAM_REGISTER_CALLBACKS      0U /* SDRAM register callback disabled     */
 #define  USE_HAL_SMARTCARD_REGISTER_CALLBACKS  0U /* SMARTCARD register callback disabled */
 #define  USE_HAL_SMBUS_REGISTER_CALLBACKS      0U /* SMBUS register callback disabled     */
-#define  USE_HAL_SPI_REGISTER_CALLBACKS        0U /* SPI register callback disabled       */
+#define  USE_HAL_SPI_REGISTER_CALLBACKS        1U /* SPI register callback disabled       */
 #define  USE_HAL_SRAM_REGISTER_CALLBACKS       0U /* SRAM register callback disabled      */
 #define  USE_HAL_TIM_REGISTER_CALLBACKS        0U /* TIM register callback disabled       */
 #define  USE_HAL_TSC_REGISTER_CALLBACKS        0U /* TSC register callback disabled       */

@@ -6,8 +6,8 @@ set(gen_pkg_name "cyccall")
 set (gen_files 
 	# List of all source files found in gen_files
 	./CycleCaller.cpp
-	# List of all source files found in stm32u5xx_TIM6_gen_files
-	./_var/stm32u5xx_TIM6/CycleCallerHw.cpp
+	# List of all source files found in stm32U5xx_TIM6_gen_files
+	./_var/stm32U5xx_TIM6/CycleCallerHw.cpp
 )
 
 
@@ -15,15 +15,15 @@ set (gen_files
 set (gen_headers 
 	# List of all source files found in gen_headers
 	./CycleCaller.h
-	# List of all source files found in stm32u5xx_TIM6_gen_headers
-	./_var/stm32u5xx_TIM6/CycleCallerHw.h
+	# List of all source files found in stm32U5xx_TIM6_gen_headers
+	./_var/stm32U5xx_TIM6/CycleCallerHw.h
 )
 
 
 # List of all assembler files found in the packages filetree
 set (gen_asmfiles 
 	# List of all source files found in gen_asmfiles
-	# List of all source files found in stm32u5xx_TIM6_gen_asmfiles
+	# List of all source files found in stm32U5xx_TIM6_gen_asmfiles
 )
 
 
@@ -31,8 +31,8 @@ set (gen_asmfiles
 set (gen_include_directories 
 	# List of all source files found in gen_include_directories
 	.
-	# List of all source files found in stm32u5xx_TIM6_gen_include_directories
-	./_var/stm32u5xx_TIM6
+	# List of all source files found in stm32U5xx_TIM6_gen_include_directories
+	./_var/stm32U5xx_TIM6
 )
 
 

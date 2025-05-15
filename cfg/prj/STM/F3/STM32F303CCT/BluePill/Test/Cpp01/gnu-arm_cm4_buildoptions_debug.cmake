@@ -19,6 +19,6 @@ list(APPEND PCB_ListTargetCompileOptionsCommon
   #-Os (Optimize for size. -Os enables all -O2 optimizations that do not typically increase code size. It also performs further optimizations designed to reduce code size. -Os disables the following optimization flags: -falign-functions -falign-jumps -falign-loops -falign-labels -freorder-blocks -freorder-blocks-and-partition -fprefetch-loop-arrays -ftree-vect-loop-version)
 
 
-	-Og
+	-Os
 )
 

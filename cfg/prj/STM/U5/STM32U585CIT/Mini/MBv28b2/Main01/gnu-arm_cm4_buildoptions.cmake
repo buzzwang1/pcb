@@ -1,5 +1,6 @@
 
 message(STATUS "${PCB_ProjectCfg} configuration")
+message(STATUS "Include buildoptions file: ${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm4_buildoptions_${PCB_ProjectCfg}.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm4_buildoptions_${PCB_ProjectCfg}.cmake")
 
 list(APPEND PCB_ListTargetDefinition
@@ -27,17 +28,17 @@ list(APPEND PCB_ListTargetDefinition
 list(APPEND PCB_ListTargetCompileOptionsCommon
 # Target specific settings:
 # -----------------------------------------------
-	-mcpu=cortex-m33 
-	-mthumb 
-	-mfloat-abi=hard
-	-mfpu=fpv5-sp-d16
+  -mcpu=cortex-m33 
+  -mthumb 
+  -mfloat-abi=hard
+  -mfpu=fpv5-sp-d16
 
-	-Wall
-	-g3
-	-fdata-sections
-#	-ffast-math
-	-ffunction-sections
-	-Wdouble-promotion
+  -Wall
+  -g3
+  -fdata-sections
+#  -ffast-math
+  -ffunction-sections
+  -Wdouble-promotion
 )
 
 list(APPEND PCB_ListTargetCompileOptionsCommon
@@ -49,29 +50,29 @@ list(APPEND PCB_ListTargetCompileOptionsCommon
 list(APPEND PCB_ListTargetCompileOptionsCpp
 # C++ specific settings:
 # -----------------------------------------------
-	-fmessage-length=0
-	-fsigned-char
-	-fdata-sections
-	-Wextra
-	-std=gnu++17
-	-fabi-version=6
-	-fno-exceptions
-	-fno-rtti
-	-fno-use-cxa-atexit
-	-fno-threadsafe-statics
-	-nostdinc++
+  -fmessage-length=0
+  -fsigned-char
+  -fdata-sections
+  -Wextra
+  -std=gnu++17
+  -fabi-version=6
+  -fno-exceptions
+  -fno-rtti
+  -fno-use-cxa-atexit
+  -fno-threadsafe-statics
+  -nostdinc++
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC
 # C specific settings:
 # -----------------------------------------------
 
-	-std=c11
-	-fmessage-length=0
-	-fsigned-char
-	-fdata-sections
-	-Wextra
-	-std=gnu17
+  -std=c11
+  -fmessage-length=0
+  -fsigned-char
+  -fdata-sections
+  -Wextra
+  -std=gnu17
 )
 
 list(APPEND PCB_ListTargetLinkOptions
@@ -94,7 +95,9 @@ list(APPEND PCB_ListTargetLinkOptions
 
   -eReset_Handler
 
-  -Wl,--gc-sections
+  # https://stackoverflow.com/questions/6687630/how-to-remove-unused-c-c-symbols-with-gcc-and-ld
+  -Wl,--gc-sections # discard unreferenced sections
+
   -Wl,-Map=${EXECUTABLE_OUTPUT_PATH}/${PCB_Project}.map
   # Don't optimize the startup code
   -Wl,--whole-archive -L${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} -l${PCB_PkgPrefix}core_lib  -Wl,--no-whole-archive

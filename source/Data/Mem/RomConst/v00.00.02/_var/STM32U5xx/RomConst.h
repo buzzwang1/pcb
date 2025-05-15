@@ -10,6 +10,14 @@ extern "C" {
 
 #define RomConst_Platform_vLoadPartition(lu8PartitionIdx, lpPartition) lpPartition = (const tstMemPart_Partition*)&RomConst_stDevice_Info->stPartitions[lu8PartitionIdx]
 
+//  000000 - 001FFF:   8kb BL
+//  002000 - 007FFF:  24kb BLU Img
+//  
+//  008000 - 097FFF: 576kb BLU Img
+//  098000 - 0FDFFF: 408kb BLU Img
+// 
+//  0FE000 - 0FFFFF:   8kb Romconst 
+
 #define ROMCONST_PARTITION_SIZE_BL  (  8 * 1024)
 #define ROMCONST_PARTITION_SIZE_BLU ( 24 * 1024)
 #define ROMCONST_PARTITION_SIZE_APP (576 * 1024)

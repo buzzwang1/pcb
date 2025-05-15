@@ -27,8 +27,6 @@ set(PCB_ProjectPackageList
     Driver/STM32/F3/STD/v01.02.03/Core/stm32f30x:default
     Driver/STM32/F3/STD/v01.02.03/STD:default
 
-   Driver/STM32/F3/STD/GPPin/v01.00.02
-
     main/${Main_Location}
 )
 

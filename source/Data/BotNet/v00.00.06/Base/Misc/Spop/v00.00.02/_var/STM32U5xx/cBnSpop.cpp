@@ -27,31 +27,31 @@ void cBnSpop_vResetWdog()
   IWDG->KR = IWDG_KEY_RELOAD;
 }
 
-//void cBnSpop_vDeactivateIWgdDuringSleep()
-//{
-//  FLASH_OBProgramInitTypeDef OB;
-//  HAL_FLASHEx_OBGetConfig(&OB);
-//
-//  // check if
-//  if ((OB.USERConfig & FLASH_OPTR_IWDG_STDBY) ||
-//    (OB.USERConfig & FLASH_OPTR_IWDG_STOP))
-//  {
-//    HAL_FLASH_Unlock();
-//    HAL_FLASH_OB_Unlock();
-//
-//    OB.OptionType = OPTIONBYTE_USER;
-//    OB.USERType = OB_USER_IWDG_STOP | OB_USER_IWDG_STDBY;
-//    OB.USERConfig = OB_IWDG_STOP_FREEZE | OB_IWDG_STDBY_FREEZE;
-//
-//    if (HAL_FLASHEx_OBProgram(&OB) != HAL_OK)
-//    {
-//      HAL_FLASH_OB_Lock();
-//      HAL_FLASH_Lock();
-//      return;
-//    }
-//    HAL_FLASH_OB_Launch();
-//  }
-//}
+void cBnSpop_vDeactivateIWgdDuringSleep()
+{
+  FLASH_OBProgramInitTypeDef OB;
+  HAL_FLASHEx_OBGetConfig(&OB);
+
+  // check if
+  if ((OB.USERConfig & FLASH_OPTR_IWDG_STDBY) ||
+      (OB.USERConfig & FLASH_OPTR_IWDG_STOP))
+  {
+    HAL_FLASH_Unlock();
+    HAL_FLASH_OB_Unlock();
+
+    OB.OptionType = OPTIONBYTE_USER;
+    OB.USERType   = OB_USER_IWDG_STOP | OB_USER_IWDG_STDBY;
+    OB.USERConfig = OB_IWDG_STOP_FREEZE | OB_IWDG_STDBY_FREEZE;
+
+    if (HAL_FLASHEx_OBProgram(&OB) != HAL_OK)
+    {
+      HAL_FLASH_OB_Lock();
+      HAL_FLASH_Lock();
+      return;
+    }
+    HAL_FLASH_OB_Launch();
+  }
+}
 
 
 uint16 cBnSpop_u16GetPartition(uint8* lpui8Adress)

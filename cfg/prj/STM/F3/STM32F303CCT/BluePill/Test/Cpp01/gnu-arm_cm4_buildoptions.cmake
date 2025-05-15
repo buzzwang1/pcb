@@ -24,17 +24,16 @@ list(APPEND PCB_ListTargetDefinition
 list(APPEND PCB_ListTargetCompileOptionsCommon
 # Target specific settings:
 # -----------------------------------------------
-	-mcpu=cortex-m4 
-	-mthumb 
-	-mfloat-abi=hard
-	-mfpu=fpv4-sp-d16
-
-	-Wall
-	-g3
-	-fdata-sections
-#	-ffast-math
-	-ffunction-sections
-	-Wdouble-promotion
+  -mcpu=cortex-m4 
+  -mthumb 
+  -mfloat-abi=hard
+  -mfpu=fpv4-sp-d16
+  -Wall
+  -g3
+  -fdata-sections
+#  -ffast-math
+  -ffunction-sections
+  -Wdouble-promotion
 )
 
 list(APPEND PCB_ListTargetCompileOptionsCommon
@@ -46,29 +45,29 @@ list(APPEND PCB_ListTargetCompileOptionsCommon
 list(APPEND PCB_ListTargetCompileOptionsCpp
 # C++ specific settings:
 # -----------------------------------------------
-	-fmessage-length=0 
-	-fsigned-char 
-	-fdata-sections 
-	-Wextra  
-	-std=gnu++11 
-	-fabi-version=6 
-	-fno-exceptions 
-	-fno-rtti 
-	-fno-use-cxa-atexit 
-	-fno-threadsafe-statics 
-	-nostdinc++  
+  -fmessage-length=0 
+  -fsigned-char 
+  -fdata-sections 
+  -Wextra  
+  -fabi-version=6 
+  -fno-exceptions 
+  -fno-rtti 
+  -fno-use-cxa-atexit 
+  -fno-threadsafe-statics 
+  #-nostdinc++  
+  -std=gnu++20
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC
 # C specific settings:
 # -----------------------------------------------
 
-	-std=c11
-	-fmessage-length=0 
-	-fsigned-char 
-	-fdata-sections 
-	-Wextra  
-	-std=gnu99  
+  -fmessage-length=0 
+  -fsigned-char 
+  -fdata-sections 
+  -Wextra  
+  #-std=gnu99  
+  -std=gnu2x
 )
 
 list(APPEND PCB_ListTargetLinkOptions
@@ -79,11 +78,13 @@ list(APPEND PCB_ListTargetLinkOptions
   #--specs=nosys.specs
   --specs=nano.specs
 
-  # -lstdc++ 
-  # -lsupc++ 
+  -lstdc++ 
+  -lsupc++ 
   # -lnosys
 
   -lm
+  -lc
+
 
   # -nostartfiles # https://stackoverflow.com/questions/43050089/when-is-the-gcc-flag-nostartfiles-used
                   # https://stackoverflow.com/questions/13734745/why-do-i-have-an-undefined-reference-to-init-in-libc-init-array
@@ -94,7 +95,7 @@ list(APPEND PCB_ListTargetLinkOptions
   -Wl,--gc-sections
   -Wl,-Map=${EXECUTABLE_OUTPUT_PATH}/${variant}.map
   # Don't optimize the startup code
-  -Wl,--whole-archive -L${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} -l${PCB_PkgPrefix}core_lib  -Wl,--no-whole-archive		
+  -Wl,--whole-archive -L${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} -l${PCB_PkgPrefix}core_lib  -Wl,--no-whole-archive    
   -T${LINKER_SCRIPT}
 )
 

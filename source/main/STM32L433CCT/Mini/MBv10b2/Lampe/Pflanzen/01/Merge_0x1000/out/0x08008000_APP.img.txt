@@ -1,14 +1,14 @@
 File:      in\0x08008000_APP.bin
-ChkSum:    8528329 0x8221c9
-Filesize:  77800 0x12fe8
+ChkSum:    8545424 0x826490
+Filesize:  77916 0x1305c
 -----------------------------------------------------------------
 File:      in\0x08008000_APP.bin.gz
-ChkSum:    7108535 0x6c77b7
-Filesize:  54358 0xd456
+ChkSum:    7102050 0x6c5e62
+Filesize:  54433 0xd4a1
 -----------------------------------------------------------------
 File:      in\0x08008000_APP.bin.gz.bin
-ChkSum:    7109645 0x6c7c0d
-ChkSumFile:7111186 0x6c8212
-Filesize:  54390 0xd476 69.9%
+ChkSum:    7103106 0x6c6282
+ChkSumFile:7104738 0x6c68e2
+Filesize:  54465 0xd4c1 69.9%
 Dest Adr:  134250496 0x8008000
 Exe Adr:   0 0x0

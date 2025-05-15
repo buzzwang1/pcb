@@ -3,12 +3,12 @@ ChkSum:    2413491 0x24d3b3
 Filesize:  23144 0x5a68
 -----------------------------------------------------------------
 File:      in\0x08002000_BLU.bin.gz
-ChkSum:    2098426 0x2004fa
+ChkSum:    2098628 0x2005c4
 Filesize:  16138 0x3f0a
 -----------------------------------------------------------------
 File:      in\0x08002000_BLU_Ext.bin.gz.bin
-ChkSum:    2099191 0x2007f7
-ChkSumFile:2100773 0x200e25
+ChkSum:    2099393 0x2008c1
+ChkSumFile:2100922 0x200eba
 Filesize:  16170 0x3f2a 69.9%
 Dest Adr:  134225920 0x8002000
 Exe Adr:   0 0x0

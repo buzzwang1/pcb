@@ -11,7 +11,7 @@
 
 __IO uint32_t TimingDelay = 0;
 
-LED<GPIOB_BASE, 7> lcLedRed;
+LED<GPIOB_BASE, 9> lcLedRed;
 
 void NMI_Handler(void)
 {
@@ -125,7 +125,7 @@ enum {
 };
 
 
-int8_t aTxBuffer[] = "****SPI - Two Boards communication based on DMA **** SPI Message ******** SPI Message ******** SPI Message ****";
+int8_t aTxBuffer[] = "012345678901234567890123456";
 
 /* Buffer used for reception */
 #define BUFFER_ALIGNED_SIZE (((BUFFERSIZE+31)/32)*32)
@@ -136,14 +136,11 @@ __IO uint32_t wTransferState = TRANSFER_WAIT;
 
 
 DMA_HandleTypeDef handle_GPDMA1_Channel7;
-DMA_HandleTypeDef handle_GPDMA1_Channel6;
 
 SPI_HandleTypeDef hspi1;
 
 DMA_NodeTypeDef Node_tx;
 DMA_QListTypeDef Queue_tx;
-DMA_NodeTypeDef Node_rx;
-DMA_QListTypeDef Queue_rx;
 
 
 /**
@@ -192,51 +189,7 @@ HAL_StatusTypeDef MX_Queue_tx_Config(void)
   return ret;
 }
 
-/**
-  * @brief  DMA Linked-list Queue_rx configuration
-  * @param  None
-  * @retval None
-  */
-HAL_StatusTypeDef MX_Queue_rx_Config(void)
-{
-  HAL_StatusTypeDef ret = HAL_OK;
-  /* DMA node configuration declaration */
-  DMA_NodeConfTypeDef pNodeConfig;
 
-  /* Set node configuration ################################################*/
-  pNodeConfig.NodeType = DMA_GPDMA_LINEAR_NODE;
-  pNodeConfig.Init.Request = GPDMA1_REQUEST_SPI1_RX;
-  pNodeConfig.Init.BlkHWRequest = DMA_BREQ_SINGLE_BURST;
-  pNodeConfig.Init.Direction = DMA_PERIPH_TO_MEMORY;
-  pNodeConfig.Init.SrcInc = DMA_SINC_FIXED;
-  pNodeConfig.Init.DestInc = DMA_DINC_INCREMENTED;
-  pNodeConfig.Init.SrcDataWidth = DMA_SRC_DATAWIDTH_BYTE;
-  pNodeConfig.Init.DestDataWidth = DMA_DEST_DATAWIDTH_BYTE;
-  pNodeConfig.Init.SrcBurstLength = 1;
-  pNodeConfig.Init.DestBurstLength = 1;
-  pNodeConfig.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT0;
-  pNodeConfig.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
-  pNodeConfig.TriggerConfig.TriggerPolarity = DMA_TRIG_POLARITY_MASKED;
-  pNodeConfig.DataHandlingConfig.DataExchange = DMA_EXCHANGE_NONE;
-  pNodeConfig.DataHandlingConfig.DataAlignment = DMA_DATA_RIGHTALIGN_ZEROPADDED;
-  pNodeConfig.SrcAddress = 0;
-  pNodeConfig.DstAddress = 0;
-  pNodeConfig.DataSize = 0;
-
-  /* Build Node_rx Node */
-  if (ret == HAL_OK)
-  {
-    ret = HAL_DMAEx_List_BuildNode(&pNodeConfig, &Node_rx);
-  }
-
-  /* Insert Node_rx to Queue */
-  if (ret == HAL_OK)
-  {
-    ret = HAL_DMAEx_List_InsertNode_Tail(&Queue_rx, &Node_rx);
-  }
-
-  return ret;
-}
 
 
 
@@ -251,8 +204,6 @@ static void MX_GPDMA1_Init(void)
   __HAL_RCC_GPDMA1_CLK_ENABLE();
 
   /* GPDMA1 interrupt Init */
-  HAL_NVIC_SetPriority(GPDMA1_Channel6_IRQn, 8, 8);
-  HAL_NVIC_EnableIRQ(GPDMA1_Channel6_IRQn);
   HAL_NVIC_SetPriority(GPDMA1_Channel7_IRQn, 8, 8);
   HAL_NVIC_EnableIRQ(GPDMA1_Channel7_IRQn);
 
@@ -269,16 +220,11 @@ static void MX_GPDMA1_Init(void)
   {
     Error_Handler();
   }
-  handle_GPDMA1_Channel6.Instance = GPDMA1_Channel6;
-  handle_GPDMA1_Channel6.InitLinkedList.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
-  handle_GPDMA1_Channel6.InitLinkedList.LinkStepMode = DMA_LSM_FULL_EXECUTION;
-  handle_GPDMA1_Channel6.InitLinkedList.LinkAllocatedPort = DMA_LINK_ALLOCATED_PORT1;
-  handle_GPDMA1_Channel6.InitLinkedList.TransferEventMode = DMA_TCEM_LAST_LL_ITEM_TRANSFER;
-  handle_GPDMA1_Channel6.InitLinkedList.LinkedListMode = DMA_LINKEDLIST_NORMAL;
-  if (HAL_DMAEx_List_Init(&handle_GPDMA1_Channel6) != HAL_OK)
+  if (HAL_DMA_ConfigChannelAttributes(&handle_GPDMA1_Channel7, DMA_CHANNEL_NPRIV) != HAL_OK)
   {
     Error_Handler();
   }
+
   /* USER CODE BEGIN GPDMA1_Init 2 */
 
   /* USER CODE END GPDMA1_Init 2 */
@@ -328,6 +274,10 @@ static void MX_SPI1_Init(void)
 
   /* USER CODE END SPI1_Init 0 */
 
+  __HAL_RCC_SPI1_CLK_ENABLE();
+
+  SPI_AutonomousModeConfTypeDef HAL_SPI_AutonomousMode_Cfg_Struct = { 0 };
+
   /* USER CODE BEGIN SPI1_Init 1 */
 
   /* USER CODE END SPI1_Init 1 */
@@ -339,7 +289,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -347,8 +297,6 @@ static void MX_SPI1_Init(void)
   hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
   hspi1.Init.NSSPolarity = SPI_NSS_POLARITY_LOW;
   hspi1.Init.FifoThreshold = SPI_FIFO_THRESHOLD_01DATA;
-  hspi1.Init.TxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
-  hspi1.Init.RxCRCInitializationPattern = SPI_CRC_INITIALIZATION_ALL_ZERO_PATTERN;
   hspi1.Init.MasterSSIdleness = SPI_MASTER_SS_IDLENESS_00CYCLE;
   hspi1.Init.MasterInterDataIdleness = SPI_MASTER_INTERDATA_IDLENESS_00CYCLE;
   hspi1.Init.MasterReceiverAutoSusp = SPI_MASTER_RX_AUTOSUSP_DISABLE;
@@ -360,9 +308,20 @@ static void MX_SPI1_Init(void)
   {
     Error_Handler();
   }
+  HAL_SPI_AutonomousMode_Cfg_Struct.TriggerState = SPI_AUTO_MODE_DISABLE;
+  HAL_SPI_AutonomousMode_Cfg_Struct.TriggerSelection = SPI_GRP1_GPDMA_CH0_TCF_TRG;
+  HAL_SPI_AutonomousMode_Cfg_Struct.TriggerPolarity = SPI_TRIG_POLARITY_RISING;
+  if (HAL_SPIEx_SetConfigAutonomousMode(&hspi1, &HAL_SPI_AutonomousMode_Cfg_Struct) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN SPI1_Init 2 */
 
   /* USER CODE END SPI1_Init 2 */
+
+  HAL_NVIC_SetPriority(SPI1_IRQn, 9, 8); // Niedere Prio, wegen busy waiting
+  HAL_NVIC_EnableIRQ(SPI1_IRQn);
+
 
 }
 
@@ -375,7 +334,25 @@ static void MX_GPIO_Init(void)
 {
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+
+  LL_GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_5 | LL_GPIO_PIN_4 | LL_GPIO_PIN_3;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_5;
+  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_6 | LL_GPIO_PIN_1 | LL_GPIO_PIN_0;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_5;
+  LL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 }
 
@@ -396,6 +373,9 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi)
   //BSP_LED_On(LED2);
   wTransferState = TRANSFER_COMPLETE;
 }
+
+
+
 
 /**
   * @brief  SPI error callbacks.
@@ -456,19 +436,29 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 
 
-void GPDMA1_Channel6_IRQHandler(void)
-{
-  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel6);
-}
-
 void GPDMA1_Channel7_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel7);
+  GPDMA1_Channel7->CCR &= ~DMA_CCR_EN;
+  GPDMA1_Channel7->CFCR = DMA_CFCR_TCF;
+  GPIOE->ODR |= (1 << 1);
 }
 
 void SPI1_IRQHandler(void)
 {
-  HAL_SPI_IRQHandler(&hspi1);
+  if ((SPI1->SR & SPI_FLAG_EOT))
+  {
+    //for (u32 i = 0; i < 100; i++)
+    //{
+    //  asm("nop");
+    //}
+
+    SPI1->IFCR = 0xFFFF; // Clear all flags
+    wTransferState = TRANSFER_COMPLETE;
+    GPIOE->ODR |= (1 << 6);
+    GPIOE->ODR |= (1 << 0);
+  }
+  SPI1->CR1 &= ~(SPI_CR1_SPE);
+
 }
 
 
@@ -477,6 +467,60 @@ void MAIN_vTick1000msLp(void)
     lcLedRed.Toggle();
 }
 
+void cNRF905_Spi_vStopDMA()
+{
+  // Disable all Interrupt
+  // Stop DMA
+  GPDMA1_Channel7->CCR &= ~0x0000FF01;
+
+  // Clear all Flags
+  GPDMA1_Channel7->CFCR = 0xFFFF;
+
+  //SPI1->CFG1 &= ~(SPI_CFG1_TXDMAEN);
+}
+
+
+void vStartDMA2(uint8* pBuffer, uint32 BufferSize)
+{
+  cNRF905_Spi_vStopDMA();
+
+  SPI1->IFCR = 0xFFFF; // Clear all flags
+  MODIFY_REG(SPI1->CR2, SPI_CR2_TSIZE, BufferSize);
+  SPI1->CR1 |= (SPI_CR1_SPE);
+
+  for (u32 i = 0; i < 8; i++)
+  {
+    LL_SPI_TransmitData8(SPI1, pBuffer[i]);
+  }
+
+
+  SPI1->CR1 |= SPI_CR1_CSTART;
+
+  GPIOE->ODR &= ~(1 << 0);
+  for (u32 i = 8; i < BufferSize; i++)
+  {
+    LL_SPI_TransmitData8(SPI1, pBuffer[i]);
+  }
+
+}
+
+void vStartDMA(uint8* pBuffer, uint32 BufferSize)
+{
+  cNRF905_Spi_vStopDMA();
+
+  SPI1->IFCR = 0xFFFF; // Clear all flags
+  MODIFY_REG(SPI1->CR2, SPI_CR2_TSIZE, BufferSize);
+  SPI1->CR1 |= (SPI_CR1_SPE);
+  SPI1->CR1 |= SPI_CR1_CSTART;
+  //SPI1->CFG1 |= SPI_CFG1_TXDMAEN;
+
+  GPDMA1_Channel7->CBR1  = BufferSize;
+  GPDMA1_Channel7->CSAR  = (uint32)pBuffer;
+  GPDMA1_Channel7->CTR1 |= DMA_CTR1_SINC;  // Memory Inc
+  GPDMA1_Channel7->CCR  |= (DMA_CCR_TCIE | DMA_CCR_EN);
+
+  GPIOE->ODR &= ~(1 << 0);
+}
 
 
 void MAIN_vInitSystem(void)
@@ -500,59 +544,109 @@ void MAIN_vInitSystem(void)
   /* Initialize all configured peripherals */
   MX_ICACHE_Init();
   MX_GPIO_Init();
-  MX_GPDMA1_Init();
-  MX_SPI1_Init();
-  /* USER CODE BEGIN 2 */
-  MX_Queue_tx_Config();
-  HAL_DMAEx_List_LinkQ(&handle_GPDMA1_Channel7, &Queue_tx);
-  __HAL_LINKDMA(&hspi1, hdmatx, handle_GPDMA1_Channel7);
-  MX_Queue_rx_Config();
-  HAL_DMAEx_List_LinkQ(&handle_GPDMA1_Channel6, &Queue_rx);
-  __HAL_LINKDMA(&hspi1, hdmarx, handle_GPDMA1_Channel6);
+  ////MX_GPDMA1_Init();
+  ////MX_SPI1_Init();
+  /////* USER CODE BEGIN 2 */
+  ////MX_Queue_tx_Config();
+  ////HAL_DMAEx_List_LinkQ(&handle_GPDMA1_Channel7, &Queue_tx);
+  ////__HAL_LINKDMA(&hspi1, hdmatx, handle_GPDMA1_Channel7);
+  ////
+  ////HAL_SPI_RegisterCallback(&hspi1, HAL_SPI_TX_COMPLETE_CB_ID, HAL_SPI_TxRxCpltCallback);
+  ////
+  /////* Configure User push-button button */
+  //////BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
+  /////* Wait for User push-button press before starting the Communication */
+  //////while (BSP_PB_GetState(BUTTON_USER) != GPIO_PIN_SET)
+  //////{
+  ////  //BSP_LED_Toggle(LED1);
+  ////  //HAL_Delay(100);
+  //////}
+  //////BSP_LED_Off(LED1);
+  ////
+  /////*##-2- Start the Full Duplex Communication process ########################*/
+/*//// While the SPI in TransmitReceive process, user can transmit data through
+  //// "aTxBuffer" buffer & receive data through "aRxBuffer" */
+  ////if (HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)aTxBuffer, BUFFERSIZE) != HAL_OK)
+  ////{
+  ////  /* Transfer error in transmission process */
+  ////  Error_Handler();
+  ////}
 
-  /* Configure User push-button button */
-  //BSP_PB_Init(BUTTON_USER, BUTTON_MODE_GPIO);
-  /* Wait for User push-button press before starting the Communication */
-  //while (BSP_PB_GetState(BUTTON_USER) != GPIO_PIN_SET)
-  //{
-    //BSP_LED_Toggle(LED1);
-    //HAL_Delay(100);
-  //}
-  //BSP_LED_Off(LED1);
+  __HAL_RCC_GPDMA1_CLK_ENABLE();
 
-  /*##-2- Start the Full Duplex Communication process ########################*/
-/* While the SPI in TransmitReceive process, user can transmit data through
-   "aTxBuffer" buffer & receive data through "aRxBuffer" */
-  if (HAL_SPI_TransmitReceive_DMA(&hspi1, (uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, BUFFERSIZE) != HAL_OK)
+  /* GPDMA1 interrupt Init */
+  HAL_NVIC_SetPriority(GPDMA1_Channel7_IRQn, 8, 8);
+  HAL_NVIC_EnableIRQ(GPDMA1_Channel7_IRQn);
+
+
+  GPDMA1_Channel7->CTR1 = 0x00004008;
+  GPDMA1_Channel7->CTR2 = 0x00000407;
+  GPDMA1_Channel7->CBR1 = sizeof(aTxBuffer);
+  GPDMA1_Channel7->CSAR = (u32)aTxBuffer;
+  GPDMA1_Channel7->CDAR = 0x40013020;
+  GPDMA1_Channel7->CCR  = 0x00820101;
+
+
+
+  __HAL_RCC_SPI1_CLK_ENABLE();
+  HAL_NVIC_SetPriority(SPI1_IRQn, 9, 8); // Niedere Prio, wegen busy waiting
+  HAL_NVIC_EnableIRQ(SPI1_IRQn);
+
+  //SPI1->CR2  = sizeof(aTxBuffer);
+  //SPI1->CFG1 = 0x70078007;
+  //SPI1->CFG2 |= 0x04400000;
+  //SPI1->CFG2 = 0x04400000;
+  //SPI1->IER  = 0x00000008;
+  //SPI1->CR1  |= 0x00001001;
+  //SPI1->CR1  |= 1;
+
+  __HAL_RCC_SPI1_CLK_ENABLE();
+
+  SPI_HandleTypeDef lhSpi = {};
+
+  /* SD_SPI Config */
+  lhSpi.Instance = SPI1;
+  lhSpi.Init.Mode = SPI_MODE_MASTER;
+  lhSpi.Init.Direction = SPI_DIRECTION_2LINES;
+  lhSpi.Init.DataSize = SPI_DATASIZE_8BIT;
+  lhSpi.Init.CLKPolarity = SPI_POLARITY_LOW;
+  lhSpi.Init.CLKPhase = SPI_PHASE_1EDGE;
+  lhSpi.Init.NSS = SPI_NSS_SOFT;
+  lhSpi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+  lhSpi.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  lhSpi.Init.TIMode = SPI_TIMODE_DISABLE;
+  lhSpi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  lhSpi.Init.CRCPolynomial = 7;
+  lhSpi.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+  lhSpi.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+  if (HAL_SPI_Init(&lhSpi) != HAL_OK)
   {
-    /* Transfer error in transmission process */
-    Error_Handler();
+    //Error_Handler();
   }
 
-  /*##-3- Wait for the end of the transfer ###################################*/
-  /*  Before starting a new communication transfer, you must wait the callback call
-      to get the transfer complete confirmation or an error detection.
-      For simplicity reasons, this example is just waiting till the end of the
-      transfer, but application may perform other tasks while transfer operation
-      is ongoing. */
-  while (wTransferState == TRANSFER_WAIT)
-  {
-  }
+  //mSPI->CR1 |= (SPI_CR1_SPE);
+  //mSPI->CFG1 |= (SPI_CFG1_TXDMAEN | SPI_CFG1_RXDMAEN);
 
-  switch (wTransferState)
-  {
-  case TRANSFER_COMPLETE:
-    /*##-4- Compare the sent and received buffers ##############################*/
-    if (Buffercmp((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, BUFFERSIZE))
-    {
-      /* Processing Error */
-      Error_Handler();
-    }
-    break;
-  default:
-    Error_Handler();
-    break;
-  }
+  SPI1->CR2  = sizeof(aTxBuffer);
+  SPI1->IER |= SPI_IER_EOTIE;
+
+  SPI1->CFG1 |= (SPI_CFG1_TXDMAEN);
+
+
+  ////switch (wTransferState)
+  ////{
+  ////case TRANSFER_COMPLETE:
+  ////  /*##-4- Compare the sent and received buffers ##############################*/
+  ////  if (Buffercmp((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, BUFFERSIZE))
+  ////  {
+  ////    /* Processing Error */
+  ////    Error_Handler();
+  ////  }
+  ////  break;
+  ////default:
+  ////  Error_Handler();
+  ////  break;
+  ////}
 
   CycCall_Start(NULL /*1ms_HP*/,
                 NULL /*10ms_HP*/,
@@ -567,11 +661,6 @@ void MAIN_vInitSystem(void)
 }
 
 
-void DMA_IRQHandler(void)
-{
-}
-
-
 
 
 int main(void)
@@ -580,8 +669,43 @@ int main(void)
 
   while (1)
   {
+    u32 i;
     CycCall_vIdle();
-    __asm("wfi");
+
+    for (i = 0; i < 10000; i++)
+    {
+      asm("nop");
+    }
+
+
+    wTransferState = TRANSFER_WAIT;
+
+    GPIOE->ODR &= ~(1 << 6);
+    GPIOE->ODR &= ~(1 << 1);
+
+    vStartDMA((u8*)aTxBuffer, sizeof(aTxBuffer));
+
+    while (wTransferState == TRANSFER_WAIT)
+    {
+    }
+
+    for (i = 0; i < 10000; i++)
+    {
+      asm("nop");
+    }
+
+
+    wTransferState = TRANSFER_WAIT;
+
+    GPIOE->ODR &= ~(1 << 6);
+    GPIOE->ODR &= ~(1 << 1);
+
+    vStartDMA2((u8*)aTxBuffer, 14);
+
+    while (wTransferState == TRANSFER_WAIT)
+    {
+    }
+
   }
 }
 
@@ -615,11 +739,11 @@ static void SystemClock_Config(void)
   {
   }
 
-  /* Switch to SMPS regulator instead of LDO */
-  LL_PWR_SetRegulatorSupply(LL_PWR_SMPS_SUPPLY);
-  while (LL_PWR_IsActiveFlag_REGULATOR() != 1)
-  {
-  }
+  ///* Switch to SMPS regulator instead of LDO */
+  //LL_PWR_SetRegulatorSupply(LL_PWR_SMPS_SUPPLY);
+  //while (LL_PWR_IsActiveFlag_REGULATOR() != 1)
+  //{
+  //}
 
   /* Enable MSI oscillator */
   LL_RCC_MSIS_SetRange(LL_RCC_MSISRANGE_4);

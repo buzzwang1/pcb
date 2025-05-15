@@ -11,6 +11,7 @@
 #include "stm32u5xx_hal_spi.h"
 #include "stm32u5xx_ll_spi.h"
 #include "stm32u5xx_ll_dma.h"
+#include "stm32u5xx_ll_exti.h"
 
 #include "ClockInfo.h"
 
@@ -28,9 +29,9 @@ class cNRF905_SpiPins
   tcGpPin<GPIOB_BASE, 5> mMOSI;
 
   cNRF905_SpiPins()
-    : mSCK( GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
-      mMISO(GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
-      mMOSI(GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0)
+    : mSCK( GPIO_MODE_AF_PP, GPIO_PULLDOWN, GPIO_SPEED_FREQ_VERY_HIGH, 0),
+      mMISO(GPIO_MODE_AF_PP, GPIO_PULLDOWN, GPIO_SPEED_FREQ_VERY_HIGH, 0),
+      mMOSI(GPIO_MODE_AF_PP, GPIO_PULLDOWN, GPIO_SPEED_FREQ_VERY_HIGH, 0)
   {
     vInit();
   };
@@ -51,12 +52,13 @@ class cNRF905_Spi
 
   SPI_TypeDef* mSPI;
 
+  uint8 mui8Dummy; // Dummy für Rx
+  u8    mu8ModeTx;
+
   u8    mu8DmaChRx;
   u8    mu8DmaChTx;
   DMA_Channel_TypeDef* mDmaChRx;
   DMA_Channel_TypeDef* mDmaChTx;
-
-  uint8 mui8Dummy; // Dummy für Rx
 
   cNRF905_Spi()
   : mPins()
@@ -105,8 +107,11 @@ class cNRF905_Spi
       //Error_Handler();
     }
 
-    mSPI->CR1  |= (SPI_CR1_SPE);
     mSPI->CFG1 |= (SPI_CFG1_TXDMAEN | SPI_CFG1_RXDMAEN);
+    //mSPI->CFG2 |= (0xF << SPI_CFG2_MIDI_Pos); // verzögert EOT
+
+    HAL_NVIC_SetPriority(SPI1_IRQn, 9, 8); // Niedere Prio, wegen busy waiting
+    HAL_NVIC_EnableIRQ(SPI1_IRQn);
 
     //----------------------------------------------------------
 
@@ -163,58 +168,6 @@ class cNRF905_Spi
     lstDmaInit.SrcAllocatedPort  = LL_DMA_DEST_ALLOCATED_PORT1; // Source is memory
     lstDmaInit.DestAllocatedPort = LL_DMA_DEST_ALLOCATED_PORT0; // Dest is periph
     LL_DMA_Init(GPDMA1, mu8DmaChTx, &lstDmaInit);
-
-
-
-
-    //__HAL_DMA_ENABLE_IT(&lhDma, (DMA_IT_TC /*| DMA_IT_HT | DMA_IT_TE*/));
-
-
-    IRQn_Type lenDmaIrqChnl = GPDMA1_Channel0_IRQn;
-
-    switch (mu8DmaChRx)
-    {
-      case  0: lenDmaIrqChnl = GPDMA1_Channel0_IRQn; break;
-      case  1: lenDmaIrqChnl = GPDMA1_Channel1_IRQn; break;
-      case  2: lenDmaIrqChnl = GPDMA1_Channel2_IRQn; break;
-      case  3: lenDmaIrqChnl = GPDMA1_Channel3_IRQn; break;
-      case  4: lenDmaIrqChnl = GPDMA1_Channel4_IRQn; break;
-      case  5: lenDmaIrqChnl = GPDMA1_Channel5_IRQn; break;
-      case  6: lenDmaIrqChnl = GPDMA1_Channel6_IRQn; break;
-      case  7: lenDmaIrqChnl = GPDMA1_Channel7_IRQn; break;
-      case  8: lenDmaIrqChnl = GPDMA1_Channel8_IRQn; break;
-      case  9: lenDmaIrqChnl = GPDMA1_Channel9_IRQn; break;
-      case 10: lenDmaIrqChnl = GPDMA1_Channel10_IRQn; break;
-      case 11: lenDmaIrqChnl = GPDMA1_Channel11_IRQn; break;
-      case 12: lenDmaIrqChnl = GPDMA1_Channel12_IRQn; break;
-      case 13: lenDmaIrqChnl = GPDMA1_Channel13_IRQn; break;
-      case 14: lenDmaIrqChnl = GPDMA1_Channel14_IRQn; break;
-      case 15: lenDmaIrqChnl = GPDMA1_Channel15_IRQn; break;
-    }
-    HAL_NVIC_SetPriority(lenDmaIrqChnl, 9, 8); // Niedere Prio, wegen busy waiting
-    HAL_NVIC_EnableIRQ(lenDmaIrqChnl);
-
-    switch (mu8DmaChTx)
-    {
-      case  0: lenDmaIrqChnl = GPDMA1_Channel0_IRQn; break;
-      case  1: lenDmaIrqChnl = GPDMA1_Channel1_IRQn; break;
-      case  2: lenDmaIrqChnl = GPDMA1_Channel2_IRQn; break;
-      case  3: lenDmaIrqChnl = GPDMA1_Channel3_IRQn; break;
-      case  4: lenDmaIrqChnl = GPDMA1_Channel4_IRQn; break;
-      case  5: lenDmaIrqChnl = GPDMA1_Channel5_IRQn; break;
-      case  6: lenDmaIrqChnl = GPDMA1_Channel6_IRQn; break;
-      case  7: lenDmaIrqChnl = GPDMA1_Channel7_IRQn; break;
-      case  8: lenDmaIrqChnl = GPDMA1_Channel8_IRQn; break;
-      case  9: lenDmaIrqChnl = GPDMA1_Channel9_IRQn; break;
-      case 10: lenDmaIrqChnl = GPDMA1_Channel10_IRQn; break;
-      case 11: lenDmaIrqChnl = GPDMA1_Channel11_IRQn; break;
-      case 12: lenDmaIrqChnl = GPDMA1_Channel12_IRQn; break;
-      case 13: lenDmaIrqChnl = GPDMA1_Channel13_IRQn; break;
-      case 14: lenDmaIrqChnl = GPDMA1_Channel14_IRQn; break;
-      case 15: lenDmaIrqChnl = GPDMA1_Channel15_IRQn; break;
-    }
-    HAL_NVIC_SetPriority(lenDmaIrqChnl, 9, 8); // Niedere Prio, wegen busy waiting
-    HAL_NVIC_EnableIRQ(lenDmaIrqChnl);
   }
 
   //Disable + All interrupts disable
@@ -223,17 +176,29 @@ class cNRF905_Spi
   void vStartDMA(uint8* pBuffer, uint32 BufferSize, uint32 Direction)
   {
     cNRF905_Spi_vStopDMA();
+
+    SPI1->IFCR = 0xFFFF; // Clear all flags
+    MODIFY_REG(SPI1->CR2, SPI_CR2_TSIZE, BufferSize);
+
+    // Disable => Enable sollte Fifo flushen
+    SPI1->CR1 |= (SPI_CR1_SPE);
+    SPI1->CR1 |= SPI_CR1_CSTART;
+    SPI1->IER |= SPI_IER_EOTIE;
+
+
     /* Initialize the DMA with the new parameters */
     if (Direction == SPI_DIRECTION_TX)
     {
-      mDmaChTx->CBR1 = BufferSize;
-      mDmaChTx->CSAR = (uint32)pBuffer;
-      mDmaChTx->CTR1|= DMA_CTR1_SINC;  // Memory Inc
-      mDmaChTx->CCR |= (DMA_CCR_TCIE | DMA_CCR_EN);
+      mu8ModeTx = 1;
+
+      mDmaChTx->CBR1  = BufferSize;
+      mDmaChTx->CSAR  = (uint32)pBuffer;
+      mDmaChTx->CTR1 |= DMA_CTR1_SINC;  // Memory Inc
+      mDmaChTx->CCR  |= (DMA_CCR_EN);
     }
     else /* Reception */
     {
-      vClearRxBuf();
+      mu8ModeTx = 0;
 
       mDmaChTx->CBR1 = BufferSize;
       mDmaChTx->CSAR = (uint32)(&mui8Dummy);
@@ -241,61 +206,79 @@ class cNRF905_Spi
 
       mDmaChRx->CBR1 = BufferSize;
       mDmaChRx->CDAR = (uint32)pBuffer;
-      mDmaChRx->CCR |= (DMA_CCR_EN | DMA_CCR_TCIE);
+      mDmaChRx->CCR |= (DMA_CCR_EN);
+      mDmaChTx->CCR |= (DMA_CCR_EN);
     }
   }
 
 
   inline void vWaitBussy()
   {
-    //while(mSPI->SR & SPI_FLAG_BSY);
+  }
+
+  inline void vWaitEOT()
+  {
+    while ((SPI1->SR & SPI_FLAG_EOT) == 0);
+    SPI1->IFCR = 0xFFFF;
   }
 
 
   inline void vClearRxBuf()
   {
-    // SPI1&2 FIFO Buffer is 16 Byte
-    // SPI3 FIFO Buffer is 8 Byte
-    // volatile u8 lu8Dummy;
-    // lu8Dummy = *(__IO uint8_t *) ((uint32_t)mSPI + 0x0C);
-    // lu8Dummy = *(__IO uint8_t *) ((uint32_t)mSPI + 0x0C);
-    // lu8Dummy = *(__IO uint8_t *) ((uint32_t)mSPI + 0x0C);
-    // lu8Dummy = *(__IO uint8_t *) ((uint32_t)mSPI + 0x0C);
-    // UNUSED(lu8Dummy);
+    // Disable/Enable flushes the Fifos
+    // CLEAR_BIT(SPI1->CR1 , SPI_CR1_SPE);
+    // SET_BIT(SPI1->CR1 , SPI_CR1_SPE);
+    while ((SPI1->SR & (SPI_FLAG_RXWNE | SPI_FLAG_FRLVL)))
+    {
+      LL_SPI_ReceiveData8(SPI1);
+    }
   }
 
   void vWrite(uint8 *lui8Data, uint32 lui32Len)
   {
-    static u8* spiDrPtr = (uint8_t*)&SPI1->TXDR;
+    SPI1->IER &= ~SPI_IER_EOTIE;
+    MODIFY_REG(SPI1->CR2, SPI_CR2_TSIZE, lui32Len);
+    SPI1->CR1 |= (SPI_CR1_SPE);
+    LL_SPI_StartMasterTransfer(SPI1);
 
-    while((mSPI->SR & SPI_FLAG_TXP) == 0); // TX Empty (Front Test)
-
-    while (lui32Len >= 1)
+    while (lui32Len)
     {
-      *spiDrPtr = *lui8Data;
+      while((SPI1->SR & SPI_FLAG_TXP) == 0); // Tx Fifo has space ?
+      LL_SPI_TransmitData8(SPI1, *lui8Data);
       lui8Data++;
       lui32Len--;
-      vWaitBussy();
     }
+    vWaitEOT();
+    SPI1->CR1 &= ~(SPI_CR1_SPE);
   }
 
-  void vRead(uint8 *lui8Data, uint32 lui32Len)
+  void vRead(uint8 *lui8Data, uint32 lui32RxLen)
   {
-    static u8* spiRxDrPtr = (uint8_t*)&SPI1->RXDR;
-    static u8* spiTxDrPtr = (uint8_t*)&SPI1->TXDR;
+    u32 lui32TxLen = lui32RxLen;
+
+    SPI1->IER &= ~SPI_IER_EOTIE;
+    MODIFY_REG(SPI1->CR2, SPI_CR2_TSIZE, lui32RxLen);
+    SPI1->CR1 |= (SPI_CR1_SPE);
     vClearRxBuf();
+    LL_SPI_StartMasterTransfer(SPI1);
 
-    while((mSPI->SR & SPI_FLAG_TXP) == 0); // TX Empty (Front Test)
-
-    while (lui32Len >= 1)
+    while ((lui32TxLen) || (lui32RxLen))
     {
-      *spiTxDrPtr = 0xFF;
-      vWaitBussy();
-      while((mSPI->SR & SPI_FLAG_RXP) == 0); // TX Empty (Front Test)
-      *lui8Data = *spiRxDrPtr;
-      lui8Data++;
-      lui32Len--;
+      if ((SPI1->SR & SPI_FLAG_TXP) && (lui32TxLen))
+      {
+        LL_SPI_TransmitData8(SPI1, 0xFF);
+        lui32TxLen--;
+      }
+
+      if ((SPI1->SR & (SPI_FLAG_RXWNE | SPI_FLAG_FRLVL)) && (lui32RxLen))
+      {
+        *lui8Data = LL_SPI_ReceiveData8(SPI1);
+        lui8Data++;
+        lui32RxLen--;
+      }
     }
+    vWaitEOT();
+    SPI1->CR1 &= ~(SPI_CR1_SPE);
   }
 };
 
@@ -362,10 +345,10 @@ class cNRF905_Pins
   public:
 
   //Outputs
-  tcGpPin<GPIOE_BASE,  6> mTRx_Cn; // Chip select
+  tcGpPin<GPIOE_BASE,  0> mTRx_Cn; // Chip select
   tcGpPin<GPIOB_BASE,  8> mTx_En;  // TX or RX (1 = Tx Mode, 0 = Rx Mode)
   tcGpPin<GPIOE_BASE,  1> mPWR;    // Power
-  tcGpPin<GPIOE_BASE,  0> mCS_SPI; // Chip select SPI
+  tcGpPin<GPIOE_BASE,  6> mCS_SPI; // Chip select SPI
 
   //Inputs
   tcGpPin<GPIOE_BASE,  3> mCD;  // Carrier Detected // CD and AM are n.A. So just put it to DR.
@@ -388,37 +371,51 @@ class cNRF905_Pins
 
   void vInit()
   {
-    ////LL_EXTI_InitTypeDef EXTI_InitStruct;
+    // DR (Data Ready) is connected to PE05
+
+    // Tell system that you will use PE05 for EXTI_Line5
+    // EXTI->EXTICR[0] EXTI0..3
+    // EXTI->EXTICR[0] EXTI4..7
+    // EXTI->EXTICR[0] EXTI8..11
+    // EXTI->EXTICR[0] EXTI12..15
+    //
+    //
+    // EXTI_Line5 => EXTI->EXTICR[1] 2nd Byte
+    // PA = 0; PB = 1, PC = 2, PD = 3
+    // => PE = 4
+
+    //u32 lu32Temp;
+    //lu32Temp  = EXTI->EXTICR[1] & 0xFFFF00FF;
+    //lu32Temp &= 4 << 8;
+    //EXTI->EXTICR[1] = lu32Temp;
+
+    LL_EXTI_SetEXTISource(LL_EXTI_EXTI_PORTE, LL_EXTI_EXTI_LINE5);
+
     ////
-    ////// Enable clock for SYSCFG
-    ////__HAL_RCC_SYSCFG_CLK_ENABLE();
-    ////
-    ////// Tell system that you will use PB13 for EXTI_Line13
-    ////SYSCFG->EXTICR[3] = 0x0010;
-    //////SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource15);
-    ////
-    ////// PB13 is connected to EXTI_Line13
-    ////EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_13;
-    ////EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
-    ////EXTI_InitStruct.LineCommand = ENABLE;
-    ////EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
-    ////EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
-    ////LL_EXTI_Init(&EXTI_InitStruct);
-    ////
-    ////// Add IRQ vector to NVIC
-    ////HAL_NVIC_SetPriority(EXTI15_10_IRQn, 9, 8);  // Niedere Prio, wegen busy waiting
-    ////HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+    ////// PE05 is connected to EXTI_Line5
+    LL_EXTI_InitTypeDef EXTI_InitStruct;
+    LL_EXTI_StructInit(&EXTI_InitStruct);
+
+    EXTI_InitStruct.Line_0_31   = LL_EXTI_LINE_5;
+    EXTI_InitStruct.LineCommand = ENABLE;
+    EXTI_InitStruct.Mode        = LL_EXTI_MODE_IT;
+    EXTI_InitStruct.Trigger     = LL_EXTI_TRIGGER_RISING;
+    LL_EXTI_Init(&EXTI_InitStruct);
+
+    // Add IRQ vector to NVIC
+    HAL_NVIC_SetPriority(EXTI5_IRQn, 9, 8);  // Niedere Prio, wegen busy waiting
+    HAL_NVIC_EnableIRQ(EXTI5_IRQn);
   }
 
   inline void vEnableIrqDR()
   {
-    ////EXTI->IMR1 |= (1<<15);
+    EXTI->IMR1 |= (1<<5);
   }
 
   inline void vDisableIrqDR()
   {
-    ////EXTI->IMR1 &= ~(1<<15);
-    ////LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_15);
+    EXTI->IMR1 &= ~(1<<5);
+    LL_EXTI_DisableIT_0_31(LL_EXTI_LINE_5);
   }
 };
 

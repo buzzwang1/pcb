@@ -329,9 +329,14 @@ projects = {
    
     'STM/U5/STM32U585CIT/Mini/Test/OSpi'               : project('STM32U585CIT_Mini_Test_OSpi',          True,     '', {'Release' : 'Config_STM32U5xx'}),
 
-    'STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/INA3221'     : project('STM32U585CIT_Mini_MBv28b2_I2C_INA3221',True,     '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/INA3221'     : project('STM32U585CIT_Mini_MBv28b2_I2C_INA3221', True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/TPS55288'    : project('STM32U585CIT_Mini_MBv28b2_I2C_TPS55288',True,    '', {'Release' : 'Config_STM32U5xx'}),
-    'STM/U5/STM32U585CIT/Mini/MBv28b2/Main01'          : project('STM32U585CIT_Mini_MBv28b2_Main01',    True,      '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/Main01'          : project('STM32U585CIT_Mini_MBv28b2_Main01',      True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/Test01'          : project('STM32U585CIT_Mini_MBv28b2_Test01',      True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/Sys/BL'                  : project('STM32U585CIT_Mini_Sys_BL',              True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_nrf905'       : project('STM32U585CIT_Mini_Sys_BLU_MB_nrf905',   True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_I2c'          : project('STM32U585CIT_Mini_Sys_BLU_MB_I2c',      True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),
+
 
 
     #--- STM32H7B0 -------
@@ -365,7 +370,8 @@ projects = {
     #'PcSim/H7/STM32H7B0/WasMini/CNC/Test01'            : project('PcSim_STM32H7B0_WasMini_CNC_Test01',             True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
 
     #--- STM32L433CCT/BluePill --------------------------------------------------
-    #'PcSim/L4/STM32L433CCT/BluePill/Bootloader/Test01'    : project('PcSim_STM32L433CCT_Bootloader_Test01',        True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
+    'PcSim/L4/STM32L433CCT/BluePill/Bootloader/Test01'  : project('PcSim_STM32L433CCT_Bootloader_Test01',           True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
+    'PcSim/L4/STM32L433CCT/BluePill/Test/Cpp01'         : project('PcSim_STM32L433CCT_Test_Cpp01',                  True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
 
     #--- STM32L552ZET/NUCLEO --------------------------------------------------
     'PcSim/L5/STM32L552ZET/L552_Nucleo/Safety/Test01'     : project('PcSim_STM32L552ZET_L552_Nucleo_Safety_Test01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),

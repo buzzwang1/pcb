@@ -11,7 +11,7 @@ cSysPkgCom::cSysPkgCom()
     mcBn(&mcMyBotNetCfg),
     mcNRF905(0x00010110, 0x00010100),
     mcSideLinkRf(&mcNRF905),
-    mcSideLink(&mcSideLinkRf, &mcBn, 0),
+    mcSideLink(&mcSideLinkRf, &mcBn, 1), // 1x10ms warten bis zum Start vom Ping, weil NRF905 erst in bAddedToBn initialisiert wird
     mcSideLinkBotCom(&mcComPort2),
     mcDownLinks_0x1000_to_0x1100(&mcI2C1_BnMaster),
     mcDownLinks_0x1000_to_0x1200(&mcI2C1_BnMaster),
@@ -120,7 +120,7 @@ bool cSysPkgCom::isReadyForSleep(cStr& lcStatus)
   bool lbRet = True;
   cStr_Create(lszStrBuf, 32);
 
-  // Warten bis SPOP fertig ist  
+  // Warten bis SPOP fertig ist
   if (mcBn.mcSpop.isBusy())
   {
     lszStrBuf.Setf((rsz)"Spop");
@@ -215,7 +215,7 @@ void I2C1_ER_IRQHandler(void)
 
 // ---------------------------- RF ---------------------------
 
-  void EXTI15_10_IRQHandler(void)
+  void EXTI5_IRQHandler(void)
   {
     ////#ifdef PCB_PROJECTCFG_Test
     ////  #ifdef TESTRFIRQ
@@ -225,9 +225,9 @@ void I2C1_ER_IRQHandler(void)
     ////  #endif
     ////#endif
 
-    if(__HAL_GPIO_EXTI_GET_IT(LL_EXTI_LINE_13) != 0x00u)
+    if(__HAL_GPIO_EXTI_GET_IT(LL_EXTI_LINE_5) != 0x00u)
     {
-      __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_13);
+      __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_5);
       mcSys.mcCom.mcSideLink.bEventHandler(cNRF905::NRF905_EvDataReady);
     }
 
@@ -245,7 +245,8 @@ void I2C1_ER_IRQHandler(void)
   }
 
 
-void DMA1_Channel2_IRQHandler(void)
+
+void SPI1_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTRFIRQ
@@ -255,38 +256,23 @@ void DMA1_Channel2_IRQHandler(void)
   ////  #endif
   ////#endif
 
-  // SPI RX
-  GPDMA1_Channel8->CCR &= ~DMA_CCR_EN;
-  GPDMA1_Channel8->CFCR  = DMA_CFCR_TCF;
-  mcSys.mcCom.mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaRxReady);
+  if (SPI1->SR & SPI_FLAG_EOT)
+  {
+    SPI1->CR1 &= ~(SPI_CR1_SPE);
+    SPI1->IFCR = 0xFFFF; // Clear all flags
+  }
 
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTRFIRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[5].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[5].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
-}
+  #ifndef PCB_PROJECTCFG_Test
+    if (mcSys.mcCom.mcNRF905.mSpi.mu8ModeTx == 1)
+    {
+      mcSys.mcCom.mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaTxReady);
+    }
+    else
+    {
+      mcSys.mcCom.mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaRxReady);
+    }
+  #endif
 
-void DMA1_Channel3_IRQHandler(void)
-{
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTRFIRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
-  // SPI TX
-  GPDMA1_Channel9->CCR &= ~DMA_CCR_EN;
-  GPDMA1_Channel9->CFCR = DMA_CFCR_TCF;
-  mcSys.mcCom.mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaTxReady);
 
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTRFIRQ

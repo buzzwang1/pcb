@@ -582,7 +582,6 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
                 vOnSync();
 
                 mSmRadio = StAlive_UpWaitSessionSync_DoneAck;
-                lenEvent = cNRF905::NRF905_EvLoop;
 
                 u16 lu16BnAdr = (mcNRF905->mstNRF905.mui8RxPayLoad[22] << 8) +
                                  mcNRF905->mstNRF905.mui8RxPayLoad[23];
@@ -644,6 +643,7 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
               mcMsgRx.muiLen = 25;
               mcMsgRx.vDecode(0, 0);
               mcBotnet->bCallMsgHandler(mcMsgRx);
+              mcNRF905->vStartReceive();
               break;
 
             case StAlive_UpWait:

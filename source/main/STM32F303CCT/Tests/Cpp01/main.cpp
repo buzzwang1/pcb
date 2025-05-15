@@ -1,13 +1,19 @@
 
 #include "main.h"
 
+/*#include <cstdint>
+#include <array>
+#include <span>
+#include <concepts>
+#include <iostream>
+#include <iterator>
+#include <string>*/
+
 
 // STM32F303
 // ARM®-based Cortex®-M4 32b MCU, (72 MHz max)
 // Rom 256KB
 // Ram 48KB
-
-
 
 void NMI_Handler(void)
 {
@@ -79,207 +85,153 @@ void SysTick_Handler(void)
 {
 }
 
-
-template <uintptr_t mpstPort>
-class tcPort
+/*
+using GPIODEF = \
+struct IODefStruct
 {
-public:
-  tcPort(uint32 lui32PortRCC)
-  {
-    /* GPIO Periph clock enable */
-    RCC_AHBPeriphClockCmd(lui32PortRCC, ENABLE);
-  }
-
-  inline volatile GPIO_TypeDef* Port()
-  {
-    return (volatile GPIO_TypeDef*)mpstPort;
-  }
+  GPIO_TypeDef* GPIO;
+  u32 PinNumber;
+  enum IOFUNCTION :u32 {INPUT = 0, OUTPUT = 1, ALT = 2, ANALOG = 3} Functions;
+  u32 ALTFunc;
+  enum IOTYPE : u32 { NORMAL = 0, OPENDRAIN = 1} Type;
+  enum IOSPEED: u32 { LOW = 0, MEDIUM = 1, HIGH = 2, VERYHIGH = 3} Speed;
+  enum IOPULL:  u32 { NONE = 0, PULLUP = 1, PULLDOWN = 2 } Bias;
+  enum IOSTATE: u32 { LOGIC_LOW, LOGIC_HIGH, DONT_CARE} InitialState;
 };
 
-template <const uintptr_t mpstPort, const uint16 mui16Pin>
-class tcGPIN : public tcPort<mpstPort>
+
+static const std::array<GPIODEF, 1> gpiodefs =
+{
+  {
+    GPIOB, 0,
+    GPIODEF::IOFUNCTION::OUTPUT, 1,
+    GPIODEF::IOTYPE::NORMAL,
+    GPIODEF::IOSPEED::LOW,
+    GPIODEF::IOPULL::NONE,
+    GPIODEF::IOSTATE::LOGIC_LOW
+  }
+}*/
+
+
+
+
+template <typename tySizeType, const tySizeType mSize>
+#ifdef __GNUC__
+class __attribute__((packed)) cBAryT
+#else
+class cBAryT
+#endif
 {
 public:
-  tcGPIN(uint32 lui32PortRCC,
-         GPIOMode_TypeDef lenMode,
-         GPIOOType_TypeDef lenOType,
-         GPIOPuPd_TypeDef lenPuPd,
-         GPIOSpeed_TypeDef lenSpeed,
-         uint8 lui8InitValue)
-    : tcPort<mpstPort>(lui32PortRCC)
-  {
-    GPIO_InitTypeDef  GPIO_InitStructure;
+  u8         mu8Data[mSize];
+  tySizeType mLen;
 
-    vSet(lui8InitValue);
-    /* Configure GPIO_Pin */
-    GPIO_InitStructure.GPIO_Pin   = PinBitMask();
-    GPIO_InitStructure.GPIO_Mode  = lenMode;
-    GPIO_InitStructure.GPIO_OType = lenOType;
-    GPIO_InitStructure.GPIO_PuPd  = lenPuPd;
-    GPIO_InitStructure.GPIO_Speed = lenSpeed;
-    GPIO_Init((GPIO_TypeDef*)this->Port(), &GPIO_InitStructure);
+  cBAryT()
+  {
+    mLen = 0;
   }
 
-  inline uint8 ui8Get()
+  void vSet(tySizeType lLen, u8 lu8Value)
   {
-    if (this->Port()->IDR & PinBitMask())
-    {
-      return 1;
-    }
-    return 0;
-  }
+    tySizeType lIdx;
 
-  inline void vSet(uint8 lui8Value)
-  {
-    if (lui8Value == 0)
+    mLen = lLen;
+
+    if (mLen > mSize) mLen = mSize;
+
+    for (lIdx = 0; lIdx < mLen; lIdx++)
     {
-      vSet0();
-    }
-    else
-    {
-      vSet1();
+      mu8Data[lIdx] = lu8Value;
     }
   }
 
-  inline void vSet1(void)
+  void vAdd(u8 lu8Value)
   {
-    this->Port()->BSRR = PinBitMask();
+    if (mLen < mSize)
+    {
+      mu8Data[mLen] = lu8Value;
+      mLen++;
+    }
   }
 
-  inline void vSet0(void)
-  {
-    this->Port()->BRR = PinBitMask();
-  }
-
-  inline void vToggle(void)
-  {
-    this->Port()->ODR ^= PinBitMask();
-  }
-
-private:
-  inline constexpr u32 PinBitMask()
-  {
-    return (1 << mui16Pin);
-  }
+  tySizeType Size() { return mSize; }
+  u8*        Data() { return mu8Data; }
 };
 
 
 
-
-class cGPPIN
+#ifdef __GNUC__
+class __attribute__((packed)) cBAry
+#else
+class cBAry
+#endif
 {
 public:
+  u16 mSize;
+  u16 mLen;
+  u8  *mu8Data;
 
-  cGPPIN(uint32 lui32PortRCC,
-    GPIO_TypeDef* lpstPort,
-    uint16 lui16Pin,
-    GPIOMode_TypeDef lenMode,
-    GPIOOType_TypeDef lenOType,
-    GPIOPuPd_TypeDef lenPuPd,
-    GPIOSpeed_TypeDef lenSpeed,
-    uint8 lui8InitValue)
+  cBAry(u8* lu8Data, u16 lSize)
   {
-    GPIO_InitTypeDef  GPIO_InitStructure;
-
-    mpstPort = lpstPort;
-    mui16Pin = lui16Pin;
-
-    /* GPIO Periph clock enable */
-    RCC_AHBPeriphClockCmd(lui32PortRCC, ENABLE);
-
-    vSet(lui8InitValue);
-
-    /* Configure GPIO_Pin */
-    GPIO_InitStructure.GPIO_Pin   = lui16Pin;
-    GPIO_InitStructure.GPIO_Mode  = lenMode;
-    GPIO_InitStructure.GPIO_OType = lenOType;
-    GPIO_InitStructure.GPIO_PuPd  = lenPuPd;
-    GPIO_InitStructure.GPIO_Speed = lenSpeed;
-    GPIO_Init(lpstPort, &GPIO_InitStructure);
+    mu8Data = lu8Data;
+    mSize   = lSize;
+    mLen = 0;
   }
 
-  ~cGPPIN()
+  void vSet(u16 lLen, u8 lu8Value)
   {
-  }
+    u16 lIdx;
 
-  inline uint8 ui8Get()
-  {
-    if (mpstPort->IDR & mui16Pin)
-      return 1;
-    else
-      return 0;
-  }
+    mLen = lLen;
 
-  inline void vSet(uint8 lui8Value)
-  {
-    if (lui8Value == 0)
+    if (mLen > mSize) mLen = mSize;
+
+    for (lIdx = 0; lIdx < mLen; lIdx++)
     {
-      vSet0();
-    }
-    else
-    {
-      vSet1();
+      mu8Data[lIdx] = lu8Value;
     }
   }
 
-  inline void vSet1(void)
+  void vAdd(u8 lu8Value)
   {
-    mpstPort->BSRR = mui16Pin;
+    if (mLen < mSize)
+    {
+      mu8Data[mLen] = lu8Value;
+      mLen++;
+    }
   }
-
-  inline void vSet0(void)
-  {
-    mpstPort->BRR = mui16Pin;
-  }
-
-  inline void vToggle(void)
-  {
-    mpstPort->ODR ^= mui16Pin;
-  }
-
-private:
-  GPIO_TypeDef* mpstPort;
-  uint16        mui16Pin;
 };
 
 
-cGPPIN mcLed(RCC_AHBPeriph_GPIOE, GPIOE, GPIO_Pin_14, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0);
-tcGPIN<GPIOE_BASE, 14> mtyLed(RCC_AHBPeriph_GPIOE, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0);
+                               //   988, 104, 28
 
+cBAryT<u16, 5> lcTmplt1;     //  1032, 108, 35
+cBAryT<u16, 6> lcTmplt2;     //  1056, 108, 43
+cBAryT<u16, 7> lcTmplt3;     //  1080, 108, 52
+cBAryT<u16, 8> lcTmplt4;     //  1104, 108, 62 
+
+//u8 lu8Test1_Buf[5]; cBAry lcTest1(lu8Test1_Buf, sizeof(lu8Test1_Buf)); // 1088, 108, 41
+//u8 lu8Test2_Buf[6]; cBAry lcTest2(lu8Test2_Buf, sizeof(lu8Test2_Buf)); // 1180, 108, 55
+//u8 lu8Test3_Buf[7]; cBAry lcTest3(lu8Test3_Buf, sizeof(lu8Test3_Buf)); // 1192, 108, 70
+//u8 lu8Test4_Buf[8]; cBAry lcTest4(lu8Test4_Buf, sizeof(lu8Test4_Buf)); // 1236, 108, 86
 
 int main(void)
 {
 
   while (1)
   {
+    lcTmplt1.vSet(2, 1); lcTmplt1.vAdd(2);
+    lcTmplt2.vSet(2, 1); lcTmplt2.vAdd(2);
+    lcTmplt3.vSet(2, 1); lcTmplt3.vAdd(2);
+    lcTmplt4.vSet(2, 1); lcTmplt4.vAdd(2);
+
+
+    //lcTest1.vSet(2, 1); lcTest1.vAdd(2);
+    //lcTest2.vSet(2, 1); lcTest2.vAdd(2);
+    //lcTest3.vSet(2, 1); lcTest3.vAdd(2);
+    //lcTest4.vSet(2, 1); lcTest4.vAdd(2);
+
     asm( "nop" );
-    asm( "nop" );
-    asm( "nop" );
-    asm( "nop" );
-
-    mcLed.vSet0();
-    mcLed.vSet1();
-
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
-
-    mtyLed.vSet0();
-    mtyLed.vSet1();
-
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
-
-    GPIOE->BRR  = GPIO_Pin_14;
-    GPIOE->BSRR = GPIO_Pin_14;
-
-    asm("nop");
-    asm("nop");
-    asm("nop");
-    asm("nop");
   }
 }
 

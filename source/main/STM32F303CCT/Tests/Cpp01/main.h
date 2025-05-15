@@ -1,13 +1,13 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+
 #ifdef __cplusplus
   extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "TypeDef.h"
-#include "stm32f30x.h"
 #include "stm32f30x.h"
 #include "stm32f30x_rcc.h"
 #include "stm32f30x_gpio.h"

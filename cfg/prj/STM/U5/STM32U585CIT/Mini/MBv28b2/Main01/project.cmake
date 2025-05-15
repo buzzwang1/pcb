@@ -90,11 +90,9 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/TPS55288/v01.00.01
 
 
+    APP/LED/v00.00.01:STM32U5_HAL
     System/CyclicCaller/v00.00.02_mini:stm32u5xx_TIM6
     System/STM32/ClockInfo/v00.00.01:stm32u5xx
-
-
-    APP/LED/v00.00.01:STM32U5_HAL
     APP/Job/JobHdl/v00.00.01
 
 

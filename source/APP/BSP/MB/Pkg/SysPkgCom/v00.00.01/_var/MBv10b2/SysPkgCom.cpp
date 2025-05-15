@@ -11,7 +11,7 @@ cSysPkgCom::cSysPkgCom()
     mcBn(&mcMyBotNetCfg),
     mcNRF905(0x00010110, 0x00010100),
     mcSideLinkRf(&mcNRF905),
-    mcSideLink(&mcSideLinkRf, &mcBn, 0),
+    mcSideLink(&mcSideLinkRf, &mcBn, 1), // 1x10ms warten bis zum Start vom Ping, weil NRF905 erst in bAddedToBn initialisiert wird
     mcSideLinkBotCom(&mcComPort2),
     mcDownLinks_0x1000_to_0x1100(&mcI2C1_BnMaster),
     mcDownLinks_0x1000_to_0x1200(&mcI2C1_BnMaster),

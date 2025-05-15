@@ -5,6 +5,7 @@ set(gen_pkg_name "main")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
+	./TestCpp01.cpp
 	./main.cpp
 	./syscalls.c
 )
@@ -13,6 +14,7 @@ set (gen_files
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
+	./TestCpp01.h
 	./main.h
 )
 
