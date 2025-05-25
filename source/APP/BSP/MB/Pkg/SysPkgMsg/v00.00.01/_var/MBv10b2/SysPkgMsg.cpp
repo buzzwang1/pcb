@@ -980,12 +980,12 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
                   if (lu8EnableMode)
                   {
                     mcPoMo->vEnable();
-					if (mcPoMo == mcSys.mcBoard.mcLipoMon.mcPowerOut)
-					{
+                    if (mcPoMo == mcSys.mcBoard.mcLipoMon.mcPowerOut)
+                    {
                       mcFastPolling_s = 5;
                       mcBn->mu16DownLinkSyncCnt_ms = 0;
                       mcBn->mu16DownLinkSyncCntReload_ms = 100;
-					}
+                    }
                   }
                   else
                   {

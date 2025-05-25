@@ -227,6 +227,8 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
 
   u16          mu16StartUpDelay_10ms;
 
+  bool         mbFirstPingDone;
+
   cBotNet_UpLinknRf905Net(cBotNet_UpLinknRf905* lcUpLinknRf905, cBotNet* lcBotNet, u16 lu16StartUpDelay_10ms = cBotNet_ComLinknRf905Net::Cnt1s)
     #ifdef cNRF905_SYNC_DEBUG_NET
      : mcUart(9600, USART1_IRQn, GPIO_AF_7, 128, 128),
@@ -255,6 +257,7 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
     mu8SendStatus = 0;
     mu8SendStatusIdx = 0;
     mu8KeepReceiverOnWhileWaiting = 0;
+    mbFirstPingDone = False;
 
     cMemTools::vMemSet(mu8SendStatusData, 0, 16);
     cMemTools::vMemSet(mu8SendStatusPing, 0, 14);
@@ -370,6 +373,7 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
           if (lenEvent == cBotNet_ComLinknRf905Net::EvPingPowerOnTimeOut)
           {
             mSmMain = cBotNet_ComLinknRf905Net::StAlive_UpWait;
+            mbFirstPingDone = True;
             vPowerDown();
           }
           break;
@@ -395,7 +399,7 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
 
   bool isReadyForSleep()
   {
-    return ((mSmMain == cBotNet_ComLinknRf905Net::StAlive_UpWait) || (mSmMain == cBotNet_ComLinknRf905Net::StIdle));
+    return (mbFirstPingDone);
   }
 
   virtual void vOnEnterOffline() override
@@ -580,6 +584,7 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
                   (mcNRF905->mstNRF905.mui8RxPayLoad[3] == 0x01))
               {
                 vOnSync();
+                mbFirstPingDone = True;
 
                 mSmRadio = StAlive_UpWaitSessionSync_DoneAck;
 

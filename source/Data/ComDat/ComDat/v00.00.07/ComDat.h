@@ -81,6 +81,7 @@ class cComNode
     // Irqs
     enEvAdress,
     enEvDma,
+    enEvDmaTc, // Transmission Complete
     enEvDmaRxTc, // Transmission Complete
     enEvDmaRxEr, // Error
     enEvDmaTxTc, // Transmission Complete

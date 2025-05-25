@@ -4,31 +4,31 @@
 
 cSysPkgCom::cSysPkgCom()
   : mcMyBotNetCfg((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr),
-    mcI2c1_SCL_Bn(GPIOB_BASE, 6, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
-    mcI2c1_SDA_Bn(GPIOB_BASE, 7, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
-    mcI2C1_BnMaster(I2C1, &mcI2c1_SCL_Bn, &mcI2c1_SDA_Bn, 2, 16, u16GetRomConstBaudDownLink1() * 1000),
-    mcComPort2(38400, GPIO_AF7_USART2, 16, 16),
+    mcI2c3_SCL_Bn(GPIOC_BASE, 0, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
+    mcI2c3_SDA_Bn(GPIOC_BASE, 1, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
+    mcI2C3_BnMaster(I2C3, &mcI2c3_SCL_Bn, &mcI2c3_SDA_Bn, 4, 16, u16GetRomConstBaudDownLink1() * 1000),
+    mcComPort1(38400, GPIO_AF7_USART1, 16, 16),
     mcBn(&mcMyBotNetCfg),
     mcNRF905(0x00010110, 0x00010100),
     mcSideLinkRf(&mcNRF905),
     mcSideLink(&mcSideLinkRf, &mcBn, 1), // 1x10ms warten bis zum Start vom Ping, weil NRF905 erst in bAddedToBn initialisiert wird
-    mcSideLinkBotCom(&mcComPort2),
-    mcDownLinks_0x1000_to_0x1100(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1200(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1300(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1400(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1500(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1600(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1700(&mcI2C1_BnMaster),
-    mcDownLinks_0x1000_to_0x1800(&mcI2C1_BnMaster),
-    mcU1TxRx(GPIOA_BASE, 9, GPIO_MODE_OUTPUT_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1),
-    mcMasterUartMpHdU1(USART1, cBotNet::enCnstSlaveCnt, u16GetRomConstBaudDownLink2() * 1000, &mcU1TxRx, 5),
-    mcDownLinks_0x1000_to_0x1900(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1000_to_0x1A00(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1000_to_0x1B00(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1000_to_0x1C00(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1000_to_0x1D00(&mcMasterUartMpHdU1),
-    mcDownLinks_0x1000_to_0x1E00(&mcMasterUartMpHdU1)
+    mcSideLinkBotCom(&mcComPort1),
+    mcDownLinks_0x1000_to_0x1100(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1200(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1300(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1400(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1500(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1600(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1700(&mcI2C3_BnMaster),
+    mcDownLinks_0x1000_to_0x1800(&mcI2C3_BnMaster),
+    mcU2TxRx(GPIOA_BASE, 2, GPIO_MODE_OUTPUT_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1),
+    mcMasterUartMpHdU2(USART2, cBotNet::enCnstSlaveCnt, u16GetRomConstBaudDownLink2() * 1000, &mcU2TxRx, 5),
+    mcDownLinks_0x1000_to_0x1900(&mcMasterUartMpHdU2),
+    mcDownLinks_0x1000_to_0x1A00(&mcMasterUartMpHdU2),
+    mcDownLinks_0x1000_to_0x1B00(&mcMasterUartMpHdU2),
+    mcDownLinks_0x1000_to_0x1C00(&mcMasterUartMpHdU2),
+    mcDownLinks_0x1000_to_0x1D00(&mcMasterUartMpHdU2),
+    mcDownLinks_0x1000_to_0x1E00(&mcMasterUartMpHdU2)
   {
   }
 
@@ -105,7 +105,7 @@ bool cSysPkgCom::isError(cStr& lszErrorInfo)
     }
   #endif
 
-  if (mcI2C1_BnMaster.mSm == cComNode::enStError)
+  if (mcI2C3_BnMaster.mSm == cComNode::enStError)
   {
     lszErrorInfo += (rsz)" ErrI2cBn";
     lbRet = True;
@@ -163,7 +163,7 @@ void cSysPkgCom::vTick1000msLp(void)
 }
 
 
-void I2C1_EV_IRQHandler(void)
+void I2C3_EV_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTI2C1IRQ
@@ -173,7 +173,7 @@ void I2C1_EV_IRQHandler(void)
   ////  #endif
   ////#endif
 
-  mcSys.mcCom.mcI2C1_BnMaster.I2C_EV_IRQHandler();
+  mcSys.mcCom.mcI2C3_BnMaster.I2C_EV_IRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTI2C1IRQ
@@ -188,7 +188,7 @@ void I2C1_EV_IRQHandler(void)
   ////#endif
 }
 
-void I2C1_ER_IRQHandler(void)
+void I2C3_ER_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTI2C1IRQ
@@ -198,7 +198,7 @@ void I2C1_ER_IRQHandler(void)
   ////  #endif
   ////#endif
 
-  mcSys.mcCom.mcI2C1_BnMaster.I2C_ER_IRQHandler();
+  mcSys.mcCom.mcI2C3_BnMaster.I2C_ER_IRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTI2C1IRQ
@@ -320,7 +320,7 @@ void TIM7_IRQHandler(void)
 
 // ---------------------------- U1 ---------------------------
 
-void DMA2_Channel6_IRQHandler(void)
+void GPDMA1_Channel5_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU1IRQ
@@ -333,7 +333,7 @@ void DMA2_Channel6_IRQHandler(void)
   // USART1 TX
   GPDMA1_Channel5->CCR &= ~DMA_CCR_EN;
   GPDMA1_Channel5->CFCR = DMA_CFCR_TCF;
-  mcSys.mcCom.mcMasterUartMpHdU1.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTxTc);
+  mcSys.mcCom.mcMasterUartMpHdU2.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaTc);
 
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU1IRQ
@@ -349,7 +349,7 @@ void DMA2_Channel6_IRQHandler(void)
 }
 
 
-void DMA2_Channel7_IRQHandler(void)
+void USART2_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU1IRQ
@@ -359,43 +359,15 @@ void DMA2_Channel7_IRQHandler(void)
   ////  #endif
   ////#endif
 
-  // USART1 RX
-  GPDMA1_Channel5->CCR &= ~DMA_CCR_EN;
-  GPDMA1_Channel5->CFCR = DMA_CFCR_TCF;
-  mcSys.mcCom.mcMasterUartMpHdU1.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvDmaRxTc);
-
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTU1IRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[9].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[9].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
-}
-
-void USART1_IRQHandler(void)
-{
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTU1IRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
-  if (USART1->ISR & LL_USART_ISR_TC)
+  if (USART2->ISR & LL_USART_ISR_TC)
   {
-    USART1->ICR = LL_USART_ISR_TC;
-    mcSys.mcCom.mcMasterUartMpHdU1.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
+    USART2->ICR = LL_USART_ISR_TC;
+    mcSys.mcCom.mcMasterUartMpHdU2.ComIrqHandler(cComNode::tenEventType::enEvTyIrq, cComNode::tenEvent::enEvUsartTc);
   }
-  if (USART1->ISR & 0xF)
+  if (USART2->ISR & 0xF)
   {
-    USART1->ICR = LL_USART_ISR_ORE;
-    mcSys.mcCom.mcMasterUartMpHdU1.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
+    USART2->ICR = LL_USART_ISR_ORE;
+    mcSys.mcCom.mcMasterUartMpHdU2.ComIrqHandler(cComNode::tenEventType::enEvTyError, cComNode::tenEvent::enEvUsartErOre);
   }
 
   ////#ifdef PCB_PROJECTCFG_Test
@@ -411,7 +383,7 @@ void USART1_IRQHandler(void)
   ////#endif
 }
 
-void TIM1_UP_TIM16_IRQHandler(void)
+void TIM16_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU1IRQ
@@ -425,7 +397,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
   {
     TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
     TIM16->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
-    mcSys.mcCom.mcMasterUartMpHdU1.TIM_EV_IRQHandler();
+    mcSys.mcCom.mcMasterUartMpHdU2.TIM_EV_IRQHandler();
   }
 
   ////#ifdef PCB_PROJECTCFG_Test
@@ -441,9 +413,9 @@ void TIM1_UP_TIM16_IRQHandler(void)
   ////#endif
 }
 
-//---------------------------------- U2 --------------------------------
+//---------------------------------- U1 --------------------------------
 
-void USART2_IRQHandler(void)
+void USART1_IRQHandler(void)
 {
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU2IRQ
@@ -453,7 +425,7 @@ void USART2_IRQHandler(void)
   ////  #endif
   ////#endif
 
-  mcSys.mcCom.mcComPort2.vIRQHandler();
+  mcSys.mcCom.mcComPort1.vIRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test
   ////  #ifdef TESTU2IRQ

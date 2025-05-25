@@ -32,19 +32,17 @@ class cSysPkgCom
 
   cBotNetCfg mcMyBotNetCfg;
 
-  // I2C1:
-  cGpPin     mcI2c1_SCL_Bn;
-  cGpPin     mcI2c1_SDA_Bn;
-  cI2cMaster mcI2C1_BnMaster;
+  // DownLink I2C3:
+  cGpPin     mcI2c3_SCL_Bn;
+  cGpPin     mcI2c3_SDA_Bn;
+  cI2cMaster mcI2C3_BnMaster;
 
-  tcUart<USART2_BASE, GPIOA_BASE, 2, GPIOA_BASE, 3> mcComPort2;
+  // Debug Port U1
+  tcUart<USART1_BASE, GPIOA_BASE, 9, GPIOA_BASE, 10> mcComPort1;
 
 
   // BotNet
   cBotNet               mcBn;
-  //  0x1000 Masternode for 011[x] all nodes, e.g. downstream to 0111
-  // 0 CmdPort
-  // 1 ComPort (PA2: USART2_TX; PA3: USART2_RX; 9600)
 
 
   // --- 0xE000 SideLink => PC
@@ -66,8 +64,9 @@ class cSysPkgCom
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1700;
   cBotNet_DownLinkI2c        mcDownLinks_0x1000_to_0x1800;
 
-  cGpPin                     mcU1TxRx;
-  cUartMpHdMaster            mcMasterUartMpHdU1;
+  // DownLink U2:
+  cGpPin                     mcU2TxRx;
+  cUartMpHdMaster            mcMasterUartMpHdU2;
   cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1900;
   cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1A00;
   cBotNet_DownLinkUsartMpHd  mcDownLinks_0x1000_to_0x1B00;
@@ -96,25 +95,37 @@ class cSysPkgCom
 extern "C" {
 #endif
 
-extern void I2C1_EV_IRQHandler(void);
-extern void I2C1_ER_IRQHandler(void);
 
-// ---------------------------- RF ---------------------------
+// ---------------------------- UpLinks -----------------------------
+// 
+// ---------------------------- RF-UpLink ---------------------------
 
 extern void EXTI5_IRQHandler(void);
 extern void SPI1_IRQHandler(void);
 extern void TIM7_IRQHandler(void);
 
-// ---------------------------- U1 ---------------------------
+// ---------------------------- I2C-UpLink ---------------------------
 
-extern void USART1_IRQHandler(void);
-extern void DMA2_Channel6_IRQHandler(void); // DMA USART1 TX
-extern void DMA2_Channel7_IRQHandler(void); // DMA USART1 RX
-extern void TIM1_UP_TIM16_IRQHandler(void);  //Botnet USART2 Timer
+extern void I2C4_EV_IRQHandler(void);
+extern void I2C4_ER_IRQHandler(void);
+
+// ---------------------------- DownLinks -----------------------------
+// 
+// ---------------------------- I2C-DownLink ---------------------------
+
+extern void I2C3_EV_IRQHandler(void);
+extern void I2C3_ER_IRQHandler(void);
+
 
 // ---------------------------- U2 ---------------------------
 
 extern void USART2_IRQHandler(void);
+extern void GPDMA1_Channel5_IRQHandler(void); // DMA Rx/TX
+extern void TIM16_IRQHandler(void);  //Botnet USART2 Timer
+
+// ---------------------------- U1 ---------------------------
+
+extern void USART1_IRQHandler(void);
 
 #ifdef __cplusplus
 }

@@ -166,20 +166,13 @@ cGpPin mTPS62125_PG(GPIOE_BASE,  9, GPIO_MODE_INPUT,     GPIO_NOPULL, GPIO_SPEED
 cGpPin mMX22917_S1(GPIOC_BASE, 5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
 cGpPin mMX22917_S2(GPIOC_BASE, 4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
 
+cGpPin mcWakeup(GPIOA_BASE,  0, GPIO_MODE_INPUT,     GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
 
-cGpPin mTPS55288_EN(GPIOB_BASE, 12, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
+LED<GPIOB_BASE, 9> mcLed;
+LED<GPIOA_BASE, 4> mcLed4;
+LED<GPIOA_BASE, 5> mcLed5;
 
 cClockInfo mcClkInfo;
-
-cGpPin     mcI2c2_SCL_Board(GPIOB_BASE, 13, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin     mcI2c2_SDA_Board(GPIOB_BASE, 14, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-
-cI2cMaster mcI2C2_Board(I2C2, &mcI2c2_SCL_Board, &mcI2c2_SDA_Board, 1, 8);
-
-cINA3221  mcINA3221_1(&mcI2C2_Board, INA3221_I2C_ADDRESS_CONF_0, 10, 10, 10);
-cINA3221  mcINA3221_2(&mcI2C2_Board, INA3221_I2C_ADDRESS_CONF_1, 10, 10, 10);
-cTPS55288 mcTPS55288(&mcI2C2_Board, TPS55288_I2C_ADDRESS_CONF_0);
-
 
 
 //SRAM1: 192k: 0x2000.0000 - 0x2002.FFFF
@@ -201,7 +194,6 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
-  cErr::munErr->stErr.isHardFault = 1;
   while (1)
   {
   }
@@ -211,7 +203,6 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* Go to infinite loop when Memory Manage exception occurs */
-  cErr::munErr->stErr.isMemManage = 1;
   while (1)
   {
   }
@@ -220,7 +211,6 @@ void MemManage_Handler(void)
 
 void BusFault_Handler(void)
 {
-  cErr::munErr->stErr.isBusFault = 1;
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
   {
@@ -230,7 +220,6 @@ void BusFault_Handler(void)
 
 void UsageFault_Handler(void)
 {
-  cErr::munErr->stErr.isUsageFault = 1;
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
   {
@@ -240,7 +229,6 @@ void UsageFault_Handler(void)
 
 void SVC_Handler(void)
 {
-  cErr::munErr->stErr.isSVC = 1;
   while (1)
   {
   }
@@ -248,7 +236,6 @@ void SVC_Handler(void)
 
 void DebugMon_Handler(void)
 {
-  cErr::munErr->stErr.isDebugMon = 1;
   while (1)
   {
   }
@@ -257,7 +244,6 @@ void DebugMon_Handler(void)
 
 void PendSV_Handler(void)
 {
-  cErr::munErr->stErr.isPendSV = 1;
   while (1)
   {
   }
@@ -300,99 +286,675 @@ void assert_failed(u8 *file, uint32_t line)
 #endif
 
 
+class cSystemPowerDown
+{
+public:
+  virtual bool bContinue() = 0;           // Continue after PowerDown
+  virtual bool bExitRun() = 0;            // 1. stage PowerDown. Should be used to inform connected devices to go to powerdown
+  virtual bool bPreparePowerdown() = 0;   // 2. stage. Stop communication
+  virtual bool bGotoPowerDown() = 0;      // 3. goto powerdeon. Turn everything off, that is not needed.
+                                          //    Bring everything to a defined/safe state
+                                          //    Set WakeUp Sources
+
+  virtual void vEnterPowerDown(u16 lu16WakeUpTime) = 0;
+};
+
+class cPowerManager
+{
+public:
+  typedef enum
+  {
+    nStIdle = 0,
+    nStWaitForRun,
+    nStWaitForExitRun,
+    nStWaitForPreparePowerdown,
+    nStWaitForGotoPowerDown
+  }tenStates;
+
+  typedef enum
+  {
+    nStInit = 0,
+    nStRun,
+    nStPreparePowerDown,
+    nStWaitForPowerDown,
+  }tenSysStates;
 
 
-//u32 mu32SystemTime = 0;
-//
-//void MAIN_vTick1msLp(void)
-//{
-//  mcI2C2_Board.bStartNext();
-//  //mcI2C2_Board.vTick1ms();
-//}
-//
-//
-//void MAIN_vTick10msHp(void)
-//{
-//}
-//
-//void MAIN_vTick1msHp(void)
-//{
-//}
-//
-//void MAIN_vTick10msLp(void)
-//{
-//  mcI2C2_Board.vTick10ms();
-//
-//  for (u8 lui8i = 1; lui8i <= 3; lui8i++)
-//  {
-//    mcINA3221_1.i8ReadVShunt_digit(lui8i);
-//    mcINA3221_1.i8ReadVBus_digit(lui8i);
-//
-//    mcINA3221_2.i8ReadVShunt_digit(lui8i);
-//    mcINA3221_2.i8ReadVBus_digit(lui8i);
-//  }
-//}
+  u16      mu16WakeUpTime;
+  u16      mu16DRunTimer;
+  u16      mu16DRunTimerReload;
+  u16      mu16DExitRunTimer;
+  u16      mu16DExitRunTimerReload;
+  u16      mu16PreparePowerDownTimer;
+  u16      mu16PreparePowerDownTimerReload;
 
 
-//void MAIN_vTick1000msLp(void)
-//{
-//  mcLedRed.Toggle();
-//  static volatile u16 lu16Test = 5000;
-//  mcTPS55288.i8SetVoltage_mV(lu16Test);
-//}
+  cSystemPowerDown* mcPowerDown;
+
+  tenStates    enSm;
+  tenSysStates enSysState;
+
+
+  cPowerManager(u16 lu16DRunTimer, u16 lu16DExitRunTimer,
+    u16 lu16PreparePowerDownTimer, u16 lu16WakeUpTime,
+    cSystemPowerDown* lcPowerDown);
+
+  void vContinueAfterWakeup();
+
+
+  void vStart();
+  void vStart(u16 lu16DRunTimerReload);
+
+  void vTick10ms();
+};
+
+
+class cMySystemPowerDown : public cSystemPowerDown
+{
+public:
+  u32   mu32NoSleepCounter;
+  u32   mu32NoSleepCounterReload;
+  char8 mszNoSleepReason_Buf[128];
+  cStr  mszNoSleepReason;
+
+  cMySystemPowerDown()
+    : mszNoSleepReason((const char8*)mszNoSleepReason_Buf, 0, sizeof(mszNoSleepReason_Buf))
+  {
+
+  }
+
+
+  void vInit();
+
+  void vTick1000ms();
+
+  void EnableRTC(void);
+  void vPreparePA0_Exti_For_Stop();
+  void vPreparePA0_Exti_For_StandBy();
+  void vSetRtcPC13();
+  void vPrepareRtc_Exti(u16 lu16WakeUpTime);
+
+  // 1. stage PowerDown. Should be used to inform connected
+  //    devices to go to powerdown
+  bool bExitRun() override;
+
+  // 2. stage. Stop communication
+  bool bPreparePowerdown() override;
+
+  // 3. goto PowerDown. Turn everything off, that is not needed.
+  //    Bring everything to a defined/safe state
+  bool bGotoPowerDown() override;
+
+  // 4. Set WakeUp Sources
+  void vEnterPowerDown(u16 lu16WakeUpTime);
+
+  // Continue after PowerDown
+  bool bContinue() override;
+};
+
+
+class cSysPkgSMan
+{
+public:
+
+  cMySystemPowerDown     mcMySystemPowerDown;
+  cPowerManager          mcPowerManager;
+  cWufHandler            mcWufHandler;
+
+  cSysPkgSMan();
+
+  void vInit1(void);
+  void vInit2(void);
+
+  void vTick1msHp(void);
+  void vTick1msLp(void);
+  void vTick10msLp(void);
+  void vTick100msLp(void);
+  void vTick1000msLp(void);
+};
+
+
+cPowerManager::cPowerManager(u16 lu16DRunTimer, u16 lu16DExitRunTimer,
+                             u16 lu16PreparePowerDownTimer, u16 lu16WakeUpTime,
+                             cSystemPowerDown* lcPowerDown)
+{
+  enSm = nStIdle;
+  enSysState = nStInit;
+
+  mu16DRunTimer = lu16DRunTimer;
+  mu16DRunTimerReload = mu16DRunTimer;
+  mu16DExitRunTimer = lu16DExitRunTimer;
+  mu16DExitRunTimerReload = mu16DExitRunTimer;
+  mu16PreparePowerDownTimer = lu16PreparePowerDownTimer;
+  mu16PreparePowerDownTimerReload = mu16PreparePowerDownTimer;
+
+  mu16WakeUpTime = lu16WakeUpTime;
+
+  mcPowerDown = lcPowerDown;
+}
+
+void cPowerManager::vContinueAfterWakeup()
+{
+  if (mcPowerDown->bContinue())
+  {
+    enSm = nStWaitForRun;
+    vStart();
+  }
+}
+
+
+void cPowerManager::vStart()
+{
+  if ((enSm == nStIdle) || 
+      (enSm == nStWaitForRun) ||
+      (enSm == nStWaitForExitRun))
+  {
+    mu16DRunTimer = mu16DRunTimerReload;
+    enSm = nStWaitForRun;
+  }
+}
+
+void cPowerManager::vStart(u16 lu16DRunTimer)
+{
+  if ((enSm == nStIdle) || 
+      (enSm == nStWaitForRun) ||
+      (enSm == nStWaitForExitRun))
+  {
+    if (mu16DRunTimer < lu16DRunTimer)
+    {
+      mu16DRunTimer = lu16DRunTimer;
+    }
+    enSm = nStWaitForRun;
+  }
+}
+
+void cPowerManager::vTick10ms()
+{
+  bool lbLoop = True;
+
+  while (lbLoop)
+  {
+    lbLoop = False;
+    switch (enSm)
+    {
+    case nStIdle:
+      break;
+    case nStWaitForRun:
+      enSysState = nStRun;
+
+      if (mu16DRunTimer)
+      {
+        mu16DRunTimer--;
+      }
+      else
+      {
+        if (mcPowerDown->bExitRun())
+        {
+          enSm = nStWaitForExitRun;
+          mu16DExitRunTimer = mu16DExitRunTimerReload;
+        }
+      }
+      break;
+    case nStWaitForExitRun:
+      if (mu16DExitRunTimer)
+      {
+        mu16DExitRunTimer--;
+      }
+      else
+      {
+        enSysState = nStPreparePowerDown;
+        if (mcPowerDown->bPreparePowerdown())
+        {
+          enSm = nStWaitForPreparePowerdown;
+          mu16PreparePowerDownTimer = mu16PreparePowerDownTimerReload;
+        }
+      }
+      break;
+    case nStWaitForPreparePowerdown:
+      if (mu16PreparePowerDownTimer)
+      {
+        mu16PreparePowerDownTimer--;
+      }
+      else
+      {
+        enSysState = nStWaitForPowerDown;
+        if (mcPowerDown->bGotoPowerDown())
+        {
+          enSm = nStWaitForGotoPowerDown;
+          lbLoop = True;
+        }
+      }
+      break;
+    case nStWaitForGotoPowerDown:
+
+      mcPowerDown->vEnterPowerDown(mu16WakeUpTime);
+
+      if (mcPowerDown->bContinue())
+      {
+        enSm = nStWaitForRun;
+        vStart();
+      }
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+
+
+void cMySystemPowerDown::vInit()
+{
+  mu32NoSleepCounterReload = 1 * 10; // 60s * 10
+  //if (mcWakeup.ui8Get() == 1)
+  {
+    mu32NoSleepCounter = mu32NoSleepCounterReload;
+  }
+  //else
+  //{
+  //  mu32NoSleepCounter = 0;
+  //}
+}
+
+void cMySystemPowerDown::vTick1000ms()
+{
+  if (mu32NoSleepCounter) mu32NoSleepCounter--;
+}
+
+void cMySystemPowerDown::EnableRTC(void)
+{
+  LL_AHB3_GRP1_EnableClock(LL_AHB3_GRP1_PERIPH_PWR);
+  LL_APB3_GRP1_EnableClock(LL_APB3_GRP1_PERIPH_RTCAPB);
+  LL_PWR_EnableBkUpAccess();
+}
+
+
+void cMySystemPowerDown::vPreparePA0_Exti_For_StandBy()
+{
+  // Configurate Wakeup Pin
+  {cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0); }
+
+  // Disable all used wakeup sources: WKUP pin
+  HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
+
+  // Clear wake up Flag
+  __HAL_PWR_CLEAR_FLAG(PWR_WAKEUP_FLAG1);
+
+
+  PWR->WUCR1 |= 1; // WUPEN1
+  PWR->WUCR2 = 0; // all rising esge
+  PWR->WUCR3 = 0; // PA01
+}
+
+void cMySystemPowerDown::vSetRtcPC13()
+{
+  LL_RTC_DisableWriteProtection(RTC);
+  LL_RTC_SetAlarmOutEvent(RTC, LL_RTC_ALARMOUT_ALMB);
+  LL_RTC_SetAlarmOutputType(RTC, LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL);
+  LL_RTC_SetOutputPolarity(RTC, LL_RTC_OUTPUTPOLARITY_PIN_LOW); // LOW sets PC13 indirect to high
+}
+
+void cMySystemPowerDown::vPrepareRtc_Exti(u16 lu16WakeUpTime_s)
+{
+  if (lu16WakeUpTime_s)
+  {
+    /* Configure wakeup timer clock source: RTC/2 clock is selected  */
+    LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_DIV_16);
+
+    /* Configure the Wake up timer to periodically wake up the system every 3 seconds.
+     * Wakeup timer auto-reload value (WUT[15:0] in RTC_WUTR) is calculated as follow:
+     * If LSE is used as RTC clock source and RTC/2 clock is selected (prescaler = 2): auto-reload = (3u * (32768u / 2u)) - 1 = 49151.
+     * If LSI is used as RTC clock source and RTC/2 clock is selected (prescaler = 2): auto-reload = (3u * (32000u / 2u)) - 1 = 47999.
+     * Wakeup auto-reload output clear value (WUTOCLR[15:0] in RTC_WUTR) is set in order to
+     * automatically clear wakeup timer flag (WUTF) by hardware.(Please refer to reference manual for further details)*/
+    u32 lu32WutTime = lu16WakeUpTime_s * (32768u / 16u);
+    LL_RTC_WAKEUP_SetAutoReload(RTC, (uint32_t)((u16)lu32WutTime | ((u16)lu32WutTime << RTC_WUTR_WUTOCLR_Pos)));
+
+
+    /* Clear all wake up Flag */
+    LL_PWR_ClearFlag_WU();
+
+    // WKUP7.WKUPx_3 (WUSELx = 11) => RTC_ALRA, RTC_ALRB, RTC_WUT or RTC_TS
+    /* Set the wakeup pin selection 3 */
+    LL_PWR_SetWakeUpPinSignal3Selection(LL_PWR_WAKEUP_PIN7);
+    /* Set wakeup pin polarity */
+    LL_PWR_SetWakeUpPinPolarityHigh(LL_PWR_WAKEUP_PIN7);
+    /* Enable wakeup pin */
+    LL_PWR_EnableWakeUpPin(LL_PWR_WAKEUP_PIN7);
+
+
+    /* ######## ENABLE WUT #################################################*/
+    /* Disable RTC registers write protection */
+    LL_RTC_DisableWriteProtection(RTC);
+
+    /* Enable wake up counter and wake up interrupt */
+    /* Note: Periodic wakeup interrupt should be enabled to exit the device
+       from low-power modes.*/
+    LL_RTC_EnableIT_WUT(RTC);
+    LL_RTC_WAKEUP_Enable(RTC);
+
+    /* Enable RTC registers write protection */
+    LL_RTC_EnableWriteProtection(RTC);
+  }
+}
+
+
+
+
+bool cMySystemPowerDown::bExitRun()
+{
+  bool lbRet = True;
+  cStr_Create(lszStrBuf, 32);
+
+  mszNoSleepReason = "";
+
+  //Warten bis WakeUp Pin Pa01 low ist
+  if (mcWakeup.ui8Get() == 1)
+  {
+    lbRet = False;
+    if (mu32NoSleepCounter < mu32NoSleepCounterReload)
+    {
+      mu32NoSleepCounter = mu32NoSleepCounterReload;
+    }
+    if (mszNoSleepReason.Len() > 0) mszNoSleepReason += (rsz)", ";
+    mszNoSleepReason += (rsz)"Wup Pin";
+  }
+
+
+
+  //if (lbRet)
+  //{
+  //  lbRet = mcClock.isReadyForSleep(mszNoSleepReason);
+  //}
+
+  //if (lbRet)
+  //{
+  //  lbRet = mcSys.mcCom.isReadyForSleep(mszNoSleepReason);
+  //}
+  //
+  //if (lbRet)
+  //{
+  //  lbRet = mcSys.mcBoard.isReadyForSleep(mszNoSleepReason);
+  //}
+
+  //Warten bis Counter abgelaufen ist
+  if (mu32NoSleepCounter)
+  {
+    lbRet = False;
+    if (mszNoSleepReason.Len() > 0) mszNoSleepReason += (rsz)", ";
+    lszStrBuf.Setf((rsz)"NoSlp-TO: %d", mu32NoSleepCounter);
+    mszNoSleepReason += lszStrBuf;
+  }
+
+  mszNoSleepReason.ToString();
+
+  return lbRet;
+}
+
+// 2. stage. Stop communication
+bool cMySystemPowerDown::bPreparePowerdown()
+{
+  return True;
+}
+
+// 3. goto PowerDown. Turn everything off, that is not needed.
+//    Bring everything to a defined/safe state
+bool cMySystemPowerDown::bGotoPowerDown()
+{
+  HAL_SuspendTick();
+  //mcSys.mcBoard.mcStatusLed.Off();
+  //mcSys.mcBoard.mcDigiPower.vPowerOff();
+
+  return True;
+}
+
+
+void cMySystemPowerDown::vEnterPowerDown(u16 lu16WakeUpTime)
+{
+  vSetRtcPC13();
+  vPreparePA0_Exti_For_StandBy();
+  vPrepareRtc_Exti(lu16WakeUpTime);
+
+  // LSI wird im Shutdown deaktiviert, LSE geht noch im Shutdown
+  //          | LSI | LSE | IWDG
+  // ---------+-----+-----+-----
+  // Standby  |  x  |  X  |  X
+  // Shutdown |  -  |  X  |  -
+  //
+  // IWDG kann in den Option Bytes im Standby deaktiviert werden
+  //
+  //
+  //
+  __HAL_FLASH_PREFETCH_BUFFER_DISABLE();
+
+  HAL_PWR_EnterSTANDBYMode();
+}
+
+bool cMySystemPowerDown::bContinue()
+{
+  return True;
+}
+
+
+
+cSysPkgSMan::cSysPkgSMan()
+  : mcMySystemPowerDown(),
+    mcPowerManager(1 /* *[10ms] RunTimer */,
+      0 /* *[10ms] ExitRunTimer*/,
+      0 /* *[10ms] PreparePowerDownTimer*/,
+      15 /* [s] WakeUpTime*/, &mcMySystemPowerDown),
+    mcWufHandler()
+{
+  // Debugger pause
+  // Wenn man zu schnell Schlafen geht, dann kann der Debugger nicht mehr connected
+  // Daher nach POR etwas länger warten
+  if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
+      (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst))
+  {
+    mcPowerManager.mu16DRunTimer = 1000; /* *[10ms] = 10s */
+    mcPowerManager.mu16DRunTimerReload = 1000; /* *[10ms] = 10s */
+  }
+};
+
+
+void cSysPkgSMan::vInit1(void)
+{
+  if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
+      (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst))
+  {
+    // Software oder Hardwarereset
+    mcPowerManager.vStart();
+
+    // WakeUp Counter zurücksetzen
+    cBuRam::mBuRam->u32WakeupCnt = 0;
+  }
+  else
+  {
+    if ((cWufHandler::munWakeupSources->stWakeupSources.isWuTimerRtc) ||
+        (cWufHandler::munWakeupSources->stWakeupSources.isWuStandBy))
+    {
+      // WakeUp nach Sleep, entweder von Clock oder WakeUp-Pin
+      mcPowerManager.vContinueAfterWakeup();
+      // WakeUp Counter um eins erhöhen
+      cBuRam::mBuRam->u32WakeupCnt++;
+    }
+    else
+    {
+      // keine Ahnung
+      mcPowerManager.vStart();
+    }
+  }
+
+  // Return PC13 control to gpio
+  mcMySystemPowerDown.EnableRTC();
+  LL_RTC_DisableWriteProtection(RTC);
+  LL_RTC_SetAlarmOutEvent(RTC, LL_RTC_ALARMOUT_DISABLE);
+
+  mcMySystemPowerDown.vInit();
+}
+
+
+void cSysPkgSMan::vInit2(void)
+{
+}
+
+
+void cSysPkgSMan::vTick1msHp(void)
+{
+}
+
+void cSysPkgSMan::vTick1msLp(void)
+{
+}
+
+void cSysPkgSMan::vTick10msLp(void)
+{
+  mcPowerManager.vTick10ms();
+}
+
+void cSysPkgSMan::vTick100msLp(void)
+{
+}
+
+void cSysPkgSMan::vTick1000msLp(void)
+{
+  mcMySystemPowerDown.vTick1000ms();
+}
+
+cSysPkgSMan  mcSMan;  // SMan vorne, weil hier BuRam und WUF geladen werden
+
+
+void MAIN_vInit1()
+{
+  cClockInfo::Update();
+  SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
+
+
+  bool lu8Reset = False;
+  if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
+      (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst)) lu8Reset = True;
+
+  if (lu8Reset)
+  {
+    mcLed4.Toggle();
+    LL_RCC_ForceBackupDomainReset();
+    LL_RCC_ReleaseBackupDomainReset();
+    LL_RCC_LSE_Enable();
+
+    while (!LL_RCC_LSE_IsReady()) {};
+
+    LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
+
+    /*##-3- Enable RTC peripheral Clocks #######################################*/
+    /* Enable RTC Clock */
+    LL_RCC_EnableRTC();
+
+    LL_RTC_InitTypeDef lstRtc;
+    LL_RTC_StructInit(&lstRtc);
+
+    lstRtc.HourFormat = LL_RTC_HOURFORMAT_24HOUR;
+
+    // 32768 = 256*128
+    // ck_apre = LSEFreq / (ASYNC prediv + 1) = 256Hz
+    // ck_apre = 32768Hz / (127 + 1)          = 256Hz
+    lstRtc.AsynchPrescaler = ((uint32_t)0x7F);
+
+    // ck_spre = ck_apre / (SYNC prediv + 1) = 1 Hz
+    // ck_spre = 256Hz   / (255 + 1)         = 1 Hz
+    lstRtc.SynchPrescaler = ((uint32_t)0x00FF);
+    LL_RTC_Init(RTC, &lstRtc);
+  }
+
+
+  mcSMan.vInit1(); // State Manager vorne wegen Wakeup handling
+  //mcClock.vInit1();
+}
+
+
+void MAIN_vInit2()
+{
+  //mcClock.vInit2();
+  mcSMan.vInit2();
+}
+
 
 void MAIN_vTick1msHp(void)
 {
-  mcSys.vTick1msHp();
+  //mcClock.vTick1msHp();
+  mcSMan.vTick1msHp();
+}
+
+void MAIN_vTick1000msLp(void)
+{
+  //mcClock.vTick1000msLp();
+  mcSMan.vTick1000msLp();
+  mcLed.vToggle();
+}
+
+
+void MAIN_vTick100msLp(void)
+{
+  //mcClock.vTick100msLp();
+  mcSMan.vTick100msLp();
+}
+
+void MAIN_vTick10msLp(void)
+{
+  //mcClock.vTick10msLp();
+  mcSMan.vTick10msLp();
 }
 
 
 void MAIN_vTick1msLp(void)
 {
-  //static u8 lu8Tick1msCnt = 0;
-  mcSys.vTick1msLp();
+  static u16 lu16_1ms = 0;
 
-  //lu8Tick1msCnt++;
-  //if ((lu8Tick1msCnt % 10) == 0)
-  //{
-  //  mcData.vTick10ms();
-  //}
+  //mcClock.vTick1msLp();
+  mcSMan.vTick1msLp();
+
+  lu16_1ms++;
+  if ((lu16_1ms % 10) == 0)
+  {
+    MAIN_vTick10msLp();
+
+    if ((lu16_1ms % 100) == 0)
+    {
+      MAIN_vTick100msLp();
+
+      if ((lu16_1ms % 1000) == 0)
+      {
+        MAIN_vTick1000msLp();
+        lu16_1ms = 0;
+      }
+    }
+  }
 }
 
 
 void MAIN_vInitSystem(void)
 {
-  mcSys.vInit1();
+  MAIN_vInit1();
 
-  //mcBnMsgHandlerApp.vAddMsgSys();
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
 
-  mcSys.vInit2();
+  MAIN_vInit2();
 
-  //    Time required after VCC is stable before the device can accept commands. 100 µs
-  // u8 lu8EepRetrys = 10;
-  // while ((mcData.mbError) && (lu8EepRetrys > 0))
-  // {
-  //   mcData.mbError = False;
-  //   while ((mcData.mbLoad) && (!mcData.mbError))
-  //   {
-  //     CycCall_vIdle();
-  //   }
-  //   lu8EepRetrys--;
-  // }
 
-  if (mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter > 10)
-  {
-    mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounterReload = 10; // 10
-    mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter = mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounterReload;
-  }
+  //if (mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter > 10)
+  //{
+  //  mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounterReload = 10; // 10
+  //  mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter = mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounterReload;
+  //}
 }
 
 /* Main functions ---------------------------------------------------------*/
 int main(void)
 {
   MAIN_vInitSystem();
+
+  // Uncomment to avoid losing connection with debugger after wakeup from Standby (Consumption will be increased)
+  SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBY);
 
   while (1)
   {
@@ -410,100 +972,6 @@ void SysError_Handler()
     __asm("nop");
   }
 }
-
-/*
-//@brief  System Clock Configuration
-//         The system Clock is configured as follows :
-//            System Clock source            = PLL (MSI)
-//            SYSCLK(Hz)                     = 160000000
-//            HCLK(Hz)                       = 160000000
-//            AHB Prescaler                  = 1
-//            APB1 Prescaler                 = 1
-//            APB2 Prescaler                 = 1
-//            MSI Frequency(Hz)              = 4000000
-//            PLL_MBOOST                     = 1
-//            PLL_M                          = 1
-//            PLL_N                          = 80
-//            PLL_Q                          = 2
-//            PLL_R                          = 2
-//            PLL_P                          = 2
-//            Flash Latency(WS)              = 4
-
-static void SystemClock_Config_160Mhz(void)
-{
-  // Enable PWR clock
-  LL_AHB3_GRP1_EnableClock(LL_AHB3_GRP1_PERIPH_PWR);
-
-  // Set the regulator supply output voltage
-  LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
-  while (LL_PWR_IsActiveFlag_VOS() == 0)
-  {
-  }
-
-  // Switch to SMPS regulator instead of LDO
-  //LL_PWR_SetRegulatorSupply(LL_PWR_SMPS_SUPPLY);
-  //while (LL_PWR_IsActiveFlag_REGULATOR() != 1)
-  //{
-  //}
-
-  // Enable MSI oscillator
-  LL_RCC_MSIS_SetRange(LL_RCC_MSISRANGE_4); // => 4Mhz
-  LL_RCC_MSI_SetCalibTrimming(10, LL_RCC_MSI_OSCILLATOR_0);
-  LL_RCC_MSIS_Enable();
-  while (LL_RCC_MSIS_IsReady() != 1)
-  {
-  }
-
-  // Set FLASH latency
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
-
-  // Configure PLL clock source
-  LL_RCC_PLL1_SetMainSource(LL_RCC_PLL1SOURCE_MSIS);
-
-  // Enable the EPOD to reach max frequency
-  LL_PWR_EnableEPODBooster();
-  while (LL_PWR_IsActiveFlag_BOOST() == 0)
-  {
-  }
-
-  // Main PLL configuration and activation
-  // 4Mhz (MSI)  * 80 / 2 => 160Mhz
-  LL_RCC_PLL1_EnableDomain_SYS();
-  LL_RCC_PLL1FRACN_Disable();
-  LL_RCC_PLL1_SetVCOInputRange(LL_RCC_PLLINPUTRANGE_4_8);
-  LL_RCC_SetPll1EPodPrescaler(LL_RCC_PLL1MBOOST_DIV_1);
-  LL_RCC_PLL1_SetDivider(1);
-  LL_RCC_PLL1_SetN(80);
-  LL_RCC_PLL1_SetP(2);
-  LL_RCC_PLL1_SetQ(2);
-  LL_RCC_PLL1_SetR(2);
-
-  LL_RCC_PLL1_Enable();
-  while (LL_RCC_PLL1_IsReady() != 1)
-  {
-  }
-
-  // Set AHB, APB1, APB2 and APB3 prescalers
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
-  LL_RCC_SetAPB3Prescaler(LL_RCC_APB3_DIV_1);
-
-  // Set PLL1 as System Clock Source
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL1);
-  while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL1)
-  {
-  }
-
-  // Set systick to 1ms with frequency set to 160MHz
-  LL_Init1msTick(160000000);
-
-  // Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function)
-  LL_SetSystemCoreClock(160000000);
-
-  LL_ICACHE_SetMode(LL_ICACHE_1WAY);
-  LL_ICACHE_Enable();
-}*/
 
 
 

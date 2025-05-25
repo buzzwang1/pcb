@@ -791,6 +791,7 @@ class cSmLightBrightness
   tenSmLedMode menMode = enModeDay;
   i16 mu16SollBrigthness = 0;
   i16 mu16IstBrigthness = 0;
+  u16 mu16OnSettleTime_ms;
   u32 mu32ChangeTimeout_ms;
   bool mbUserChange;
 
@@ -799,6 +800,7 @@ class cSmLightBrightness
     mState = stOff;
     mbNewState = False;
     mbUserChange = False;
+    mu16OnSettleTime_ms = 0;
   }
 
   void vSm()
@@ -834,12 +836,33 @@ class cSmLightBrightness
             if (mbNewState) // Entry
             {
               mbNewState = False;
+              mu32ChangeTimeout_ms = mu16OnSettleTime_ms = 2000;
+            }
+
+            if (mu16OnSettleTime_ms)
+            {
+              // Eine Einschalt-Verzögerung bis sich alles stabilisiert hat.
+              // Dieser Teil wird nur die ersten mu16OnSettleTime_ms nachdem Einschalten gemacht
               vPSwitchReqMsgSetChn(0x1100, 1, 1, 1);
              
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
                 vPSwitchReqMsgSetLed(0x1110 + 0x10 * lu8Node, mstLedStateSoll[lu8Node].u8Enable, mstLedStateSoll[lu8Node].u8RotSwitch, mstLedStateSoll[lu8Node].u8AnimIdx);
               }
+
+              u8 lu8SLedEnable = 0;
+              if (mu16IstBrigthness > 0)
+              {
+                lu8SLedEnable = 100;
+              }
+
+              vPwrReqMsgSetChn(0x1200, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
+              vPwrReqMsgSetChn(0x1150, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
+              vPwrReqMsgSetLed(0x1200, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
+              vPwrReqMsgSetLed(0x1150, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
+
+              if (mu16OnSettleTime_ms > 100) mu16OnSettleTime_ms -= 100;
+              else mu16OnSettleTime_ms = 0;
             }
 
             if (mu32ChangeTimeout_ms == 0)

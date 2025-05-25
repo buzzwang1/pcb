@@ -198,108 +198,78 @@ void cMySystemPowerDown::vTick1000ms()
 
 void cMySystemPowerDown::EnableRTC(void)
 {
-  /*##-1- Enables the PWR Clock and Enables access to the backup domain #######*/
-  /* To change the source clock of the RTC feature (LSE, LSI), you have to:
-      - Enable the power clock
-      - Enable write access to configure the RTC clock source (to be done once after reset).
-      - Reset the Back up Domain
-      - Configure the needed RTC clock source */
-  ////LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-  ////LL_PWR_EnableBkUpAccess();
+  LL_AHB3_GRP1_EnableClock(LL_AHB3_GRP1_PERIPH_PWR);
+  LL_APB3_GRP1_EnableClock(LL_APB3_GRP1_PERIPH_RTCAPB);
+  LL_PWR_EnableBkUpAccess();
 }
 
-void cMySystemPowerDown::vPreparePA0_Exti_For_Stop()
-{
-  //// // Configurate Wakeup Pin
-  //// {cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL,   GPIO_SPEED_FREQ_LOW, 0); }
-  //// //{cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_PULLDOWN, GPIO_SPEED_FREQ_LOW, 0); } // Only in case of no external Pull Down Resistor
-  //// 
-  //// __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_0);
-  //// 
-  //// // Enable clock for SYSCFG
-  //// __HAL_RCC_SYSCFG_CLK_ENABLE();
-  //// // Tell system that you will use PA0 for EXTI_Line0
-  //// LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE0);
-  //// 
-  //// //EXTI init
-  //// LL_EXTI_InitTypeDef EXTI_InitStruct;
-  //// // PA0 is connected to EXTI_Line0
-  //// EXTI_InitStruct.Line_0_31   = LL_EXTI_LINE_0;
-  //// EXTI_InitStruct.Line_32_63  = LL_EXTI_LINE_NONE;
-  //// EXTI_InitStruct.LineCommand = ENABLE;
-  //// EXTI_InitStruct.Mode        = LL_EXTI_MODE_IT;
-  //// EXTI_InitStruct.Trigger     = LL_EXTI_TRIGGER_RISING;
-  //// LL_EXTI_Init(&EXTI_InitStruct);
-  //// 
-  //// //NVIC init
-  //// // Add IRQ vector to NVIC
-  //// HAL_NVIC_SetPriority(EXTI0_IRQn, 15, 15);  // Niedere Prio, wegen busy waiting
-  //// HAL_NVIC_EnableIRQ(EXTI0_IRQn);
-}
 
 void cMySystemPowerDown::vPreparePA0_Exti_For_StandBy()
 {
-  //// // Configurate Wakeup Pin
-  //// {cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0); }
-  //// 
-  //// /* Disable all used wakeup sources: WKUP pin */
-  //// HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
-  //// 
-  //// /* Clear wake up Flag */
-  //// __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
-  //// 
-  //// PWR->CR3 |= PWR_CR3_EWUP1; // Enable Wakeup pin WKUP1 (PA0)
+  // Configurate Wakeup Pin
+  {cGpPin Dummy(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0); }
+
+  // Disable all used wakeup sources: WKUP pin
+  HAL_PWR_DisableWakeUpPin(PWR_WAKEUP_PIN1);
+
+  // Clear wake up Flag
+  __HAL_PWR_CLEAR_FLAG(PWR_WAKEUP_FLAG1);
+
+
+  PWR->WUCR1 |= 1; // WUPEN1
+  PWR->WUCR2 = 0; // all rising esge
+  PWR->WUCR3 = 0; // PA01
 }
 
 void cMySystemPowerDown::vSetRtcPC13()
 {
-  //// LL_RTC_DisableWriteProtection(RTC);
-  //// LL_RTC_SetAlarmOutEvent(RTC, LL_RTC_ALARMOUT_ALMB);
-  //// LL_RTC_SetAlarmOutputType(RTC, LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL);
-  //// LL_RTC_SetOutputPolarity(RTC, LL_RTC_OUTPUTPOLARITY_PIN_LOW); // LOW sets PC13 indirect to high
+  LL_RTC_DisableWriteProtection(RTC);
+  LL_RTC_SetAlarmOutEvent(RTC, LL_RTC_ALARMOUT_ALMB);
+  LL_RTC_SetAlarmOutputType(RTC, LL_RTC_ALARM_OUTPUTTYPE_PUSHPULL);
+  LL_RTC_SetOutputPolarity(RTC, LL_RTC_OUTPUTPOLARITY_PIN_LOW); // LOW sets PC13 indirect to high
 }
 
-void cMySystemPowerDown::vPrepareRtc_Exti(u16 lu16WakeUpTime)
+void cMySystemPowerDown::vPrepareRtc_Exti(u16 lu16WakeUpTime_s)
 {
-  if (lu16WakeUpTime)
+  if (lu16WakeUpTime_s)
   {
-    //// // EXTI init for WakeupTimer WUT -> EXTI line 20
-    //// LL_EXTI_InitTypeDef EXTI_InitStruct;
-    //// // PA0 is connected to EXTI_Line0
-    //// EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_20;
-    //// EXTI_InitStruct.Line_32_63 = LL_EXTI_LINE_NONE;
-    //// EXTI_InitStruct.LineCommand = ENABLE;
-    //// EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
-    //// EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_RISING;
-    //// LL_EXTI_Init(&EXTI_InitStruct);
-    //// 
-    //// //EXTI->SWIER1 |= 1 << 20; // Software interrupt on EXTI20
-    //// 
-    //// // NVIC init
-    //// // Add IRQ vector to NVIC
-    //// HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 15, 15);  // Niedere Prio, wegen busy waiting
-    //// HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
-    //// 
-    //// LL_RTC_DisableWriteProtection(RTC);
-    //// 
-    //// // Disable wake up timer to modify it
-    //// LL_RTC_WAKEUP_Disable(RTC);
-    //// 
-    //// while (LL_RTC_IsActiveFlag_WUTW(RTC) != 1) {}
-    //// 
-    //// LL_RTC_WAKEUP_SetAutoReload(RTC, lu16WakeUpTime);
-    //// LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_CKSPRE);
-    //// 
-    //// LL_RTC_WAKEUP_Enable(RTC);
-    //// LL_RTC_EnableIT_WUT(RTC);
-    //// 
-    //// // Enable RTC registers write protection
-    //// LL_RTC_EnableWriteProtection(RTC);
-    //// 
-    //// LL_RTC_ClearFlag_WUT(RTC);
-    //// 
-    //// //__HAL_RCC_RTCAPB_CLK_SLEEP_ENABLE();   // RTC APB clock enabled by the clock gating(1) during Sleep and Stop modes
-    //// //__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
+    /* Configure wakeup timer clock source: RTC/2 clock is selected  */
+    LL_RTC_WAKEUP_SetClock(RTC, LL_RTC_WAKEUPCLOCK_DIV_16);
+
+    /* Configure the Wake up timer to periodically wake up the system every 3 seconds.
+     * Wakeup timer auto-reload value (WUT[15:0] in RTC_WUTR) is calculated as follow:
+     * If LSE is used as RTC clock source and RTC/2 clock is selected (prescaler = 2): auto-reload = (3u * (32768u / 2u)) - 1 = 49151.
+     * If LSI is used as RTC clock source and RTC/2 clock is selected (prescaler = 2): auto-reload = (3u * (32000u / 2u)) - 1 = 47999.
+     * Wakeup auto-reload output clear value (WUTOCLR[15:0] in RTC_WUTR) is set in order to
+     * automatically clear wakeup timer flag (WUTF) by hardware.(Please refer to reference manual for further details)*/
+    u32 lu32WutTime = lu16WakeUpTime_s * (32768u / 16u);
+    LL_RTC_WAKEUP_SetAutoReload(RTC, (uint32_t)((u16)lu32WutTime | ((u16)lu32WutTime << RTC_WUTR_WUTOCLR_Pos)));
+
+
+    /* Clear all wake up Flag */
+    LL_PWR_ClearFlag_WU();
+
+    // WKUP7.WKUPx_3 (WUSELx = 11) => RTC_ALRA, RTC_ALRB, RTC_WUT or RTC_TS
+    /* Set the wakeup pin selection 3 */
+    LL_PWR_SetWakeUpPinSignal3Selection(LL_PWR_WAKEUP_PIN7);
+    /* Set wakeup pin polarity */
+    LL_PWR_SetWakeUpPinPolarityHigh(LL_PWR_WAKEUP_PIN7);
+    /* Enable wakeup pin */
+    LL_PWR_EnableWakeUpPin(LL_PWR_WAKEUP_PIN7);
+
+
+    /* ######## ENABLE WUT #################################################*/
+    /* Disable RTC registers write protection */
+    LL_RTC_DisableWriteProtection(RTC);
+
+    /* Enable wake up counter and wake up interrupt */
+    /* Note: Periodic wakeup interrupt should be enabled to exit the device
+       from low-power modes.*/
+    LL_RTC_EnableIT_WUT(RTC);
+    LL_RTC_WAKEUP_Enable(RTC);
+
+    /* Enable RTC registers write protection */
+    LL_RTC_EnableWriteProtection(RTC);
   }
 }
 

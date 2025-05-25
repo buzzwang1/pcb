@@ -112,13 +112,13 @@
 //      0:
 //      1: I2C2 Board
 //      2: I2C4 In
-//      3: Uartx In
+//      3: Uart3 In
 //      4: I2C3 Out
-//      5: Uartx Out
-//      6: Uartx Rx Debug
-//      7: Uartx Tx Debug
-//      8: SPI Rx nRf905
-//      9: SPI Tx nRf905
+//      5: Uart2 Out
+//      6: Uart1 Rx Debug
+//      7: Uart1 Tx Debug
+//      8: SPI1 Rx nRf905
+//      9: SPI1 Tx nRf905
 //     10:
 //     11:
 //
@@ -382,6 +382,9 @@ void MAIN_vInitSystem(void)
 int main(void)
 {
   MAIN_vInitSystem();
+
+  // Uncomment to avoid losing connection with debugger after wakeup from Standby (Consumption will be increased)
+  SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBY);
 
   while (1)
   {
