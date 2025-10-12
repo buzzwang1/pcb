@@ -410,10 +410,7 @@ void cBotNetMsgPortSpop::vProcess(u32 lu32TimeDiff_us)
     }
   }
 
-
   /*
-
-
   else
   if (mbIsChecksumInProgress)
   {

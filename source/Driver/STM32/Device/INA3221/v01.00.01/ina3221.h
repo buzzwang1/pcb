@@ -345,8 +345,8 @@ class cINA3221: public cComNode
 
   cI2cMaster*        mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenIna3221_Cmd     menCmd;
 

@@ -1,0 +1,592 @@
+#ifndef __BOTNET_MSG_POOL_H__
+#define __BOTNET_MSG_POOL_H__
+
+#include "Typedef.h"
+#include "cChr8.h"
+#include "cBnCfg.h"
+#include "ComDat.h"
+#include "cbArrayExtT.h"
+#include "cRingBufT.h"
+#include "cBnMsg.h"
+
+
+class cRingBuf816
+  //#endif
+{
+public:
+  u8 mau8Buf[16];
+  u8 mu8Size;
+  u8 mu8Head;
+  u8 mu8Cnt;
+  u8 mu8Tail;
+
+  cRingBuf816()
+  {
+    reset();
+    mu8Size = 16;
+  }
+
+  inline void reset() { mu8Head = mu8Tail = mu8Cnt = 0; }
+
+  bool isEmpty() { return mu8Cnt == 0; }
+  bool isFull() { return (mu8Cnt == mu8Size); }
+  u8 cnt() { return mu8Cnt; }
+  u8 space_left() { return (mu8Size - mu8Cnt); }
+
+  void inc(u8& lu8Val)
+  {
+    lu8Val = (lu8Val + 1) & 15;
+  }
+
+  void put(u8 lu8Item)
+  {
+    if (!isFull())
+    {
+      mau8Buf[mu8Head] = lu8Item;
+      inc(mu8Head);
+      mu8Cnt++;
+    }
+  }
+
+
+  u8 get(void)
+  {
+    u8 lu8Zwerg;
+
+    if (isEmpty())
+    {
+      return 0;
+    }
+
+    //Read data and advance the tail (we now have a free space)
+    lu8Zwerg = mau8Buf[mu8Tail];
+    inc(mu8Tail);
+    mu8Cnt--;
+
+    return lu8Zwerg;
+  }
+};
+
+
+class cBnMsgPool
+{
+public:
+
+  enum MsgConst
+  {
+    nCnt16B = cBotNet_MsgPool16B,
+    nCnt32B = cBotNet_MsgPool32B,
+    nCnt64B = cBotNet_MsgPool64B,
+  };
+
+  struct MsgStatus
+  {
+    u8 Decoded  : 1;
+    u8 CheckSum : 1;
+  };
+
+  typedef union
+  {
+    u8 u8Stat;
+    MsgStatus stStat;
+  }tunStat;
+
+  class cMsg
+  {
+    public:
+      u8 muCnt;
+      tunStat munStat;
+
+      cMsg()
+      {
+        muCnt = 0;
+        //muLen = 0;
+        munStat.u8Stat = 0;
+      }
+  };
+
+
+  #if cBotNet_MsgPool16B > 0
+
+    class Msg16B : public cMsg
+    {
+      public:
+        u8 mu8Buf[(cBotNet_MsgSize / 4)];
+        cBotNetMsg_Base mcMsgBase;
+
+        Msg16B()
+          : cMsg(),
+            mcMsgBase(mu8Buf, sizeof(mu8Buf))
+        {
+        }
+    };
+
+    static Msg16B mcMsg16B_Pool[nCnt16B];
+    static u8 mcMsg16BBuf[nCnt16B];
+    static cRingBufT<uint8, uint16> mcMsg16B;
+  #endif
+
+  #if cBotNet_MsgPool32B > 0
+    class Msg32B : public cMsg
+    {
+      public:
+        u8 mu8Buf[(cBotNet_MsgSize / 2)];
+        cBotNetMsg_Base mcMsgBase;
+
+        Msg32B()
+          : cMsg(),
+            mcMsgBase(mu8Buf, sizeof(mu8Buf))
+        {
+        }
+    };
+
+    static Msg32B mcMsg32B_Pool[nCnt32B];
+    static u8 mcMsg64BBuf[nCnt64B];
+    static cRingBufT<uint8, uint16> mcMsg64B;
+  #endif
+
+  #if cBotNet_MsgPool64B > 0
+    class Msg64B : public cMsg
+    {
+      public:
+        u8 mu8Buf[(cBotNet_MsgSize + 1)]; // + 1 für Checksumme
+        cBotNetMsg_Base mcMsgBase;
+
+        Msg64B()
+          : cMsg(),
+            mcMsgBase(mu8Buf, sizeof(mu8Buf))
+        {
+        }
+    };
+
+    static Msg64B mcMsg64B_Pool[nCnt64B];  
+    static u8 mcMsg32BBuf[nCnt32B];   
+    static cRingBufT<uint8, uint16> mcMsg32B;
+  #endif  
+
+  cBnMsgPool()
+  {
+  }
+
+  static void vInit()
+  {
+    u8 lu8t;
+    // Alle RingBuffer initialisieren
+    //  - Idx.  32..:  16 Byte Memory
+    //  - Idx.  64..:  32 Byte Memory
+    //  - Idx. 128..:  64 Byte Memory
+    #if cBotNet_MsgPool16B > 0
+      for (lu8t = 32;  lu8t <  32 + nCnt16B; lu8t++) mcMsg16B.put_unsafe(lu8t);
+    #endif  
+
+    #if cBotNet_MsgPool32B > 0
+      for (lu8t = 64;  lu8t <  64 + nCnt32B; lu8t++) mcMsg32B.put_unsafe(lu8t);
+    #endif  
+
+    #if cBotNet_MsgPool64B > 0
+      for (lu8t = 128; lu8t < 128 + nCnt64B; lu8t++) mcMsg64B.put_unsafe(lu8t);
+    #endif  
+  }
+
+  static u8 DecodeIdx(u8 lu8PoolIdx, u8 &lu8IdxMsg)
+  {
+    #if cBotNet_MsgPool64B > 0
+      if (lu8PoolIdx >= 128)
+      {
+        lu8IdxMsg  = lu8PoolIdx - 128;
+        return 3;
+      }
+    #endif 
+
+    #if cBotNet_MsgPool32B > 0
+      if (lu8PoolIdx >= 64)
+      {
+        lu8IdxMsg = lu8PoolIdx - 64;
+        return 2;
+      }
+    #endif 
+
+    #if cBotNet_MsgPool16B > 0
+      if (lu8PoolIdx >= 32)
+      {
+        lu8IdxMsg = lu8PoolIdx - 32;
+        return 1;
+      }
+    #endif 
+
+    return 0;
+  }
+
+  static u8 u8ReqMsg(u16 lu16ReqLen)
+  {
+    u8 lu8PoolIdx = 0;
+
+    #if cBotNet_MsgPool16B > 0
+      if (lu16ReqLen <= (cBotNet_MsgSize / 4))
+      {
+        lu8PoolIdx = mcMsg16B.get();
+        if (lu8PoolIdx)
+        {
+          mcMsg16B_Pool[lu8PoolIdx - 16].muCnt++;
+          mcMsg16B_Pool[lu8PoolIdx - 16].mcMsgBase.muiLen = 0;
+          mcMsg16B_Pool[lu8PoolIdx - 16].mcMsgBase.vClearAge();
+          mcMsg16B_Pool[lu8PoolIdx - 16].munStat.u8Stat = 0;
+          return lu8PoolIdx;
+        }
+      }
+    #endif
+
+    #if cBotNet_MsgPool32B > 0
+      if (lu16ReqLen <= (cBotNet_MsgSize / 2))
+      {
+        lu8PoolIdx = mcMsg32B.get();
+        if (lu8PoolIdx)
+        {
+          mcMsg32B_Pool[lu8PoolIdx - 64].muCnt++;
+          mcMsg32B_Pool[lu8PoolIdx - 64].mcMsgBase.muiLen = 0;
+          mcMsg32B_Pool[lu8PoolIdx - 64].mcMsgBase.vClearAge();
+          mcMsg32B_Pool[lu8PoolIdx - 64].munStat.u8Stat = 0;
+          return lu8PoolIdx;
+        }
+      }
+    #endif
+
+    #if cBotNet_MsgPool64B > 0
+      if (lu16ReqLen <= (cBotNet_MsgSize + 1))
+      {
+        lu8PoolIdx = mcMsg64B.get();
+        if (lu8PoolIdx)
+        {
+          mcMsg64B_Pool[lu8PoolIdx - 128].muCnt++;
+          mcMsg64B_Pool[lu8PoolIdx - 128].mcMsgBase.muiLen = 0;
+          mcMsg64B_Pool[lu8PoolIdx - 128].mcMsgBase.vClearAge();
+          mcMsg64B_Pool[lu8PoolIdx - 128].munStat.u8Stat = 0;
+          return lu8PoolIdx;
+        }
+      }
+    #endif
+
+    return lu8PoolIdx;
+  }
+
+  static void vReleaseMsg(u8 &lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+      switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+      {
+        #if cBotNet_MsgPool16B > 0
+        case 1:  // 16 Byte
+          if (mcMsg16B_Pool[lu8IdxMsg].muCnt)
+          {
+            mcMsg16B_Pool[lu8IdxMsg].muCnt--;
+            if (mcMsg16B_Pool[lu8IdxMsg].muCnt == 0)
+            {
+              mcMsg16B.put(lu8IdxMsg + 64);
+              lu8PoolIdx = 0;
+            }
+          }
+          break;
+        #endif
+        #if cBotNet_MsgPool16B > 0
+        case 2:  // 32 Byte
+          if (mcMsg32B_Pool[lu8IdxMsg].muCnt)
+          {
+            mcMsg32B_Pool[lu8IdxMsg].muCnt--;
+            if (mcMsg32B_Pool[lu8IdxMsg].muCnt == 0)
+            {
+              mcMsg32B.put(lu8IdxMsg + 64);
+              lu8PoolIdx = 0;
+            }
+          }
+          break;
+        #endif
+        #if cBotNet_MsgPool16B > 0
+        case 3:  // 65 Byte
+          if (mcMsg64B_Pool[lu8IdxMsg].muCnt)
+          {
+            mcMsg64B_Pool[lu8IdxMsg].muCnt--;
+            if (mcMsg64B_Pool[lu8IdxMsg].muCnt == 0)
+            {
+              mcMsg64B.put(lu8IdxMsg + 128);
+              lu8PoolIdx = 0;
+            }
+          }
+          break;
+        #endif
+      }
+  }
+
+  static void vDeleteMsg(u8 &lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      #if cBotNet_MsgPool16B > 0
+      case 1:  // 16 Byte
+        if (mcMsg16B_Pool[lu8IdxMsg].muCnt)
+        {
+          mcMsg16B_Pool[lu8IdxMsg].muCnt = 0;
+          mcMsg16B.put(lu8IdxMsg + 64);
+        }
+        break;
+      #endif
+      #if cBotNet_MsgPool32B > 0
+      case 2:  // 32 Byte
+        if (mcMsg32B_Pool[lu8IdxMsg].muCnt)
+        {
+          mcMsg32B_Pool[lu8IdxMsg].muCnt = 0;
+          mcMsg32B.put(lu8IdxMsg + 64);
+        }
+        break;
+      #endif
+      #if cBotNet_MsgPool64B > 0
+      case 3:  // 65 Byte
+        if (mcMsg64B_Pool[lu8IdxMsg].muCnt)
+        {
+          mcMsg64B_Pool[lu8IdxMsg].muCnt = 0;
+          mcMsg64B.put(lu8IdxMsg + 128);
+        }
+        break;
+      #endif
+    }
+    lu8PoolIdx = 0;
+  }
+
+
+  static void vSetLen(u8 lu8PoolIdx, u16 lu16ReqLen)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      #if cBotNet_MsgPool16B > 0
+      case 1:  // 16 Byte
+        mcMsg16B_Pool[lu8IdxMsg].mcMsgBase.muiLen = lu16ReqLen;
+        break;
+      #endif
+      #if cBotNet_MsgPool32B > 0
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen = lu16ReqLen;
+        break;
+      #endif
+      #if cBotNet_MsgPool64B > 0
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen = lu16ReqLen;
+        break;
+      #endif
+    }
+  }
+
+  static u8 u8Len(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      #if cBotNet_MsgPool16B > 0
+      case 1:  // 16 Byte
+        return mcMsg16B_Pool[lu8IdxMsg].mcMsgBase.muiLen;
+        break;
+      #endif
+      #if cBotNet_MsgPool32B > 0
+      case 2:  // 32 Byte
+        return mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen;
+        break;
+      #endif
+      #if cBotNet_MsgPool64B > 0
+      case 3:  // 65 Byte
+        return mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen;
+        break;
+      #endif
+    }
+    return 0;
+  }
+
+  static void vPutMsg(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 1:  // 32 Byte
+        mcMsg16B_Pool[lu8IdxMsg].muCnt++;
+        break;
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].muCnt++;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].muCnt++;
+        break;
+    }
+  }
+
+
+  static void vPutMsgChk(u8 lu8PoolIdx)
+  {
+    vAddChecksum(lu8PoolIdx);
+    vPutMsg(lu8PoolIdx);
+  }
+
+
+  static void vGetMsgBAry(u8 lu8PoolIdx, cbArrayExtT<uint16>* lcMsg)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        lcMsg->muiLen   = mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen;
+        lcMsg->mpu8Data = mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.mpu8Data;
+        lcMsg->muiSize  = mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiSize;
+        break;
+      case 3:  // 65 Byte
+        lcMsg->muiLen   = mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen;
+        lcMsg->mpu8Data = mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.mpu8Data;
+        lcMsg->muiSize  = mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiSize;
+        break;
+      default:
+       lcMsg->muiLen   = 0;
+       lcMsg->mpu8Data = null;
+       lcMsg->muiSize  = 0;
+    }
+  }
+
+  static bool isDecoded(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        return mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.Decoded;
+        break;
+      case 3:  // 65 Byte
+        return mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.Decoded;
+        break;
+    }
+    return False;
+  }
+
+  static void vSetDecoded(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.Decoded = 1;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.Decoded = 1;
+        break;
+    }
+  }
+
+  static void vDecode(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+
+    if (isDecoded(lu8PoolIdx)) return;
+
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.vDecode();
+        mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.Decoded = 1;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.vDecode();
+        mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.Decoded = 1;
+        break;
+    }
+  }
+
+
+  static void vGetMsg(u8 lu8PoolIdx, cBotNetMsg_Base** lcMsg)
+  {
+    u8 lu8IdxMsg;
+
+    vRemoveChecksum(lu8PoolIdx);
+
+    vDecode(lu8PoolIdx);
+
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        *lcMsg = &mcMsg32B_Pool[lu8IdxMsg].mcMsgBase;
+        break;
+      case 3:  // 65 Byte
+        *lcMsg = &mcMsg64B_Pool[lu8IdxMsg].mcMsgBase;
+        break;
+      default:
+        *lcMsg = null;
+    }
+  }
+
+  static bool HasChecksum(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        return mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.CheckSum;
+        break;
+      case 3:  // 65 Byte
+        return mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.CheckSum;
+        break;
+    }
+    return False;
+  }
+
+
+  static void vRemoveChecksum(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+
+    if (!HasChecksum(lu8PoolIdx)) return;
+
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen--;
+        mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 0;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen--;
+        mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 0;
+        break;
+    }
+  }
+
+
+  static void vAddChecksum(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+
+    if (HasChecksum(lu8PoolIdx)) return;
+
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].mu8Buf[mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen] = 0xCC;
+        mcMsg32B_Pool[lu8IdxMsg].mcMsgBase.muiLen++;
+        mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 1;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].mu8Buf[mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen] = 0xCC;
+        mcMsg64B_Pool[lu8IdxMsg].mcMsgBase.muiLen++;
+        mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 1;
+        break;
+    }
+  }
+
+  static void vSetChecksum(u8 lu8PoolIdx)
+  {
+    u8 lu8IdxMsg;
+    switch (DecodeIdx(lu8PoolIdx, lu8IdxMsg))
+    {
+      case 2:  // 32 Byte
+        mcMsg32B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 1;
+        break;
+      case 3:  // 65 Byte
+        mcMsg64B_Pool[lu8IdxMsg].munStat.stStat.CheckSum = 1;
+        break;
+    }
+  }
+};
+
+#endif // __BOTNET_MSG_POOL_H__

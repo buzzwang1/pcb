@@ -59,7 +59,7 @@ set(PCB_ProjectPackageList
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
     Resource/Gen/Gfx/Screens/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
 
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
@@ -107,7 +107,7 @@ set(PCB_ProjectPackageList
     # Treiber auf -Ofast kompilieren
     Driver/STM32/L4/HAL/GPPin/v01.00.02${lFastDriver}
     Driver/STM32/L4/HAL/cUart/Int/v01.00.01${lFastDriver}
-    Driver/STM32/L4/HAL/cI2C/v01.00.06${lFastDriver}
+    Driver/STM32/L4/HAL/cI2C/v01.00.09${lFastDriver}
     Driver/STM32/Device/Com/nRF905/Int/v01.00.00:TB01_STM32L433CCT${lFastDriver}
     Driver/STM32/Device/INA219/v01.00.01${lFastDriver}
     Driver/STM32/Device/Displays/HX8347/v00.00.01:L433CCT_SPI2_DMA${lFastDriver}

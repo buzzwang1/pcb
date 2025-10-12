@@ -20,7 +20,7 @@
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:RiscV
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
 
     Data/Mem/MemTools/v00.00.03:default
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02 #|-Ofast

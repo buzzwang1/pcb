@@ -66,8 +66,8 @@ class cHTU21D : public cComNode
 
   cI2cMaster*   mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenHTU21D_Cmd      menCmd;
   uint8              mIdx;

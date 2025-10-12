@@ -427,7 +427,8 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
           (lcMsg.u8Len() == 25))
       {
         u16 lu16SourceAdr = (lcMsg.mcPayload[0] << 8) + lcMsg.mcPayload[1];
-        if (lu16SourceAdr == 0x08) // Clock Device Adress
+        if ((lu16SourceAdr == 0x08) &&     // Clock Device Adress
+            (lcMsg.mcPayload[2] == 0x10))  // Clock Signal
         {
           ////#ifdef PCB_PROJECTCFG_Test
             ////mcTestClassTim[8].vSetMaxTimer(cDiffTimerHw::u32GetTimer());

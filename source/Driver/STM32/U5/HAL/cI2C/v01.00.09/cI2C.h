@@ -12,25 +12,6 @@
 #include "ComDat.h"
 #include "ClockInfo.h"
 
-class cComNodeI2c_Slave : public cComNode
-{
-public:
-  cComDatMsg mpcMsg;
-
-  cComNodeI2c_Slave(uint32 lui32TxDataSize, uint32 lui32RxDataSize)
-  {
-    mpcMsg.vMemAlloc(lui32TxDataSize, lui32RxDataSize);
-  };
-
-  //~cComNodeI2c_Slave() {};
-
-  inline uint32 SizeOf()
-  {
-    return mpcMsg.SizeOf() -
-           sizeof(mpcMsg) +
-           sizeof(cComNodeI2c_Slave);
-  }
-};
 
 
 class cI2cMaster_ComNodeList :public cComNodeList
@@ -142,8 +123,21 @@ class cI2c
     mstDmaCh->CCR |= DMA_CCR_EN;
   }
 
+  void vFlushRx()
+  {
+    // In case there is still something in the RX Register
+    // Flush RXDR, else DMA will have offset
+    if (mI2C->ISR & I2C_ISR_RXNE)
+    {
+      volatile u8 lu8Dummy = mI2C->RXDR;
+      UNUSED(lu8Dummy);
+    }
+  }
+
   void vStartDMARx(uint8* pBuffer, uint32 BufferSize)
   {
+    vFlushRx();
+
     mstDmaCh->CFCR = DMA_CFCR_TCF;
     mstDmaCh->CCR &= ~DMA_CCR_EN;
     mstDmaCh->CBR1 = BufferSize;
@@ -588,7 +582,7 @@ class cI2cMaster : public cI2c
   u8                   mu8Lock;
   bool                 isNoErrorHandling;
 
-  cI2cMaster(I2C_TypeDef *lstI2c, cGpPin *lcScl, cGpPin *lcSda, u8 lu8DmaCh, uint32 lui32Slaves, u32 lu32Baud = 400000)
+  cI2cMaster(I2C_TypeDef *lstI2c, cGpPin *lcScl, cGpPin *lcSda, u8 lu8DmaCh, uint32 lui32Slaves, u32 lu32Baud = 400000, bool lbInitHw = True)
     : cI2c(lstI2c, lcScl, lcSda, lu8DmaCh, True), mcSlaves(lui32Slaves)
   {
     mSm  = cComNode::tenState::enStIdle;
@@ -608,7 +602,10 @@ class cI2cMaster : public cI2c
     mu16ComStuckTicksReload = 2000;
     mu16ComStuckTicks = mu16ComStuckTicksReload;
 
-    vInitHw();
+    if (lbInitHw)
+    {
+      vInitHw();
+    }
   }
 
   ~cI2cMaster()

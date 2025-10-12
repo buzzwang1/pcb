@@ -31,7 +31,8 @@ bool cBotNetMsgPortRRpt::bMsg(cBotNetMsg_MsgProt& lcMsg)
           {
             if (!mcSlot[lu8i].mu8Enabled)
             {
-              mcSlot[lu8i].mcMsg.CopyFrom(lcMsg);
+              //                                                                   + 1, weil mcPayload[0] das Kommando ist
+              cMemTools::vMemCpy(mcSlot[lu8i].mu8Payload, lcMsg.mcPayload.mpu8Data + 1, (u8)cBotNetMsgPortRRptSlot::cByte::nLast);
               mcSlot[lu8i].mu8Cnt = lcMsg.mcPayload[7]; // CT = Cycle Time
               mcSlot[lu8i].mu8Enabled = 1;
               mu8SlotCnt++;
@@ -56,19 +57,16 @@ void cBotNetMsgPortRRpt::vProcess10ms()
     {
       if (mcSlot[lu8i].bProcess10ms())
       {
+        cBotNetMsg_Static_MsgProt_Create(lcMsgTx, 16);
         // Sende Nachricht an mich selbst
-        u8 lu8Data[3];
-        mcMsgTx.vPrepare((mcSlot[lu8i].mcMsg.mcPayload[5] << 8) + mcSlot[lu8i].mcMsg.mcPayload[6], // DH.DL = Destination Botnet Adr
+        lcMsgTx.vPrepare((mcSlot[lu8i].mu8Payload[(u8)cBotNetMsgPortRRptSlot::cByte::nDH] << 8) +
+                          mcSlot[lu8i].mu8Payload[(u8)cBotNetMsgPortRRptSlot::cByte::nDL],         // DH.DL = Destination Botnet Adr
                           mcBn->mcAdr.Get(),
-                          mcSlot[lu8i].mcMsg.mcPayload[1]);                                        // MI = Message Index
+                          mcSlot[lu8i].mu8Payload[(u8)cBotNetMsgPortRRptSlot::cByte::nMI]);        // MI = Message Index
 
-        lu8Data[0] = mcSlot[lu8i].mcMsg.mcPayload[2]; // R1
-        lu8Data[1] = mcSlot[lu8i].mcMsg.mcPayload[3]; // S1
-        lu8Data[2] = mcSlot[lu8i].mcMsg.mcPayload[4]; // S2
-
-        mcMsgTx.mcPayload.Set(lu8Data, sizeof(lu8Data));
-        mcMsgTx.vEncode();
-        mcBn->bCallMsgHandler(mcMsgTx);
+        lcMsgTx.mcPayload.Set((u8*)&mcSlot[lu8i].mu8Payload[(u8)cBotNetMsgPortRRptSlot::cByte::nRI], 3);
+        lcMsgTx.vEncode();
+        mcBn->bCallMsgHandler(lcMsgTx);
       }
     }
   }

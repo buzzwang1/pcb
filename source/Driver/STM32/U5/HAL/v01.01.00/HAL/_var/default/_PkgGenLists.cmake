@@ -42,7 +42,6 @@ set (gen_files
 	./_var/default/Src/stm32u5xx_hal_mdf.c
 	./_var/default/Src/stm32u5xx_hal_mmc.c
 	./_var/default/Src/stm32u5xx_hal_mmc_ex.c
-	./_var/default/Src/stm32u5xx_hal_msp_template.c
 	./_var/default/Src/stm32u5xx_hal_nand.c
 	./_var/default/Src/stm32u5xx_hal_nor.c
 	./_var/default/Src/stm32u5xx_hal_opamp.c
@@ -75,9 +74,6 @@ set (gen_files
 	./_var/default/Src/stm32u5xx_hal_sram.c
 	./_var/default/Src/stm32u5xx_hal_tim.c
 	./_var/default/Src/stm32u5xx_hal_tim_ex.c
-	./_var/default/Src/stm32u5xx_hal_timebase_rtc_alarm_template.c
-	./_var/default/Src/stm32u5xx_hal_timebase_rtc_wakeup_template.c
-	./_var/default/Src/stm32u5xx_hal_timebase_tim_template.c
 	./_var/default/Src/stm32u5xx_hal_tsc.c
 	./_var/default/Src/stm32u5xx_hal_uart.c
 	./_var/default/Src/stm32u5xx_hal_uart_ex.c

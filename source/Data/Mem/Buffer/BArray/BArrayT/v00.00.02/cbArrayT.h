@@ -35,8 +35,8 @@ class cbArrayT
   private:
 
   public:
-    tybArrayIdxT  muiSize;
     uint8         *mpu8Data;
+    tybArrayIdxT  muiSize;
 
     cbArrayT()
     {
@@ -274,18 +274,19 @@ class cbArrayT
     }
 };
 
-template <typename tybArrayIdxT>
+template <typename tybArrayIdxT, size_t tySize>
 class cbArrayStaticT: public cbArrayT<tybArrayIdxT>
 {
   public:
-    cbArrayStaticT(uint8* maui8bArray, tybArrayIdxT ltySize)
-    : cbArrayT<tybArrayIdxT>(maui8bArray, ltySize)
+    u8 mau8Array[tySize];
+    cbArrayStaticT()
+    : cbArrayT<tybArrayIdxT>(mau8Array, tySize)
     {
     }
 
     inline uint32 SizeOf()
     {
-      return cbArrayT<tybArrayIdxT>::SizeOf() + sizeof(cbArrayStaticT<tybArrayIdxT>);
+      return 0;
     }
 };
 

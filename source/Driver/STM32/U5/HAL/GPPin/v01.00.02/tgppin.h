@@ -1,9 +1,12 @@
 #ifndef __TGPPIN_H__
 #define __TGPPIN_H__
 
+
 #include "TypeDef.h"
 #include "stm32U575xx.h"
 #include "stm32U5xx_hal.h"
+
+
 
 template <uintptr_t mu32Port_BaseAdr>
 class tcPort

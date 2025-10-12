@@ -143,6 +143,12 @@ class cBotNetMsg_Base : public cbArrayExtT<uint16>
     vFromBAry(lcBAry);
   }
 
+  cBotNetMsg_Base(u8* lpaArray, u16 luiSize)
+    : cbArrayExtT<uint16>(lpaArray, luiSize)
+  {
+    mu16Age = 0;
+  }
+
   inline void vFromBAry(cbArrayExtT<uint16>* lcBAry)
   {
     this->mpu8Data = lcBAry->mpu8Data;

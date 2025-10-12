@@ -88,11 +88,20 @@ typedef int8    FRet;
 #define INT32MAX 2147483647
 #define INT16MAX 32767
 #define INT8MAX  127
-#define INT32MIN ((int32)(-2147483647))
-#define INT16MIN ((int16)(-32767))
-#define INT8MIN  ((int8)(-127))
+#define INT32MIN ((int32)(-2147483648))
+#define INT16MIN ((int16)(-32768))
+#define INT8MIN  ((int8)(-128))
 
 
+#define U32MAX UINT32MAX
+#define U16MAX UINT16MAX
+#define U8MAX  UINT8MAX
+#define I32MAX INT32MAX
+#define I16MAX INT16MAX
+#define I8MAX  INT8MAX
+#define I32MIN INT32MIN
+#define I16MIN INT16MIN
+#define I8MIN  INT8MIN
 
 // Punkt
 typedef struct { float  x, y; }  stPxlf;
@@ -132,9 +141,13 @@ typedef union
 #define char8 char
 #define rsz   const char8* // Rom String zero ending 
 
-#define UNUSED(x) (void)(x)
-#define false 0
-#define true  (!false)
+#ifndef UNUSED
+  #define UNUSED(x) (void)(x)
+#endif
+#if defined(false)
+  #define false ((bool)0)
+  #define true  (!false)
+#endif
 #define null 0
 #ifndef NULL
   #define NULL null

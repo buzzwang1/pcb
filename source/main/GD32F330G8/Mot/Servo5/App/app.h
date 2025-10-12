@@ -16,6 +16,163 @@
 #include "cFixPti1814.h"
 
 
+
+template <typename T> struct cLowPassT
+{
+  T mValue;
+  T mFactor;
+
+  cLowPassT(const T lFactor)
+  {
+    mFactor = lFactor;
+    mValue = T((const i32)0);
+  }
+
+  T DoProcess(const T lNewValue)
+  {
+    mValue = mFactor * lNewValue + (T((const i32)1) - mFactor) * mValue;
+    return mValue;
+  }
+
+  T operator()(const T lVal)
+  {
+    return DoProcess(lVal);
+  }
+
+  operator float()
+  {
+    return (float)mValue;
+  }
+
+  operator i32()
+  {
+    return (i32)mValue;
+  }
+};
+
+
+template <typename T> struct cClipT
+{
+  T mClip;
+
+  cClipT(const T lClip)
+  {
+    mClip = lClip;
+  }
+
+  T operator()(const T lVal)
+  {
+    if      (lVal >  (mClip)) { return  (mClip);}
+    else if (lVal < (-mClip)) { return (-mClip);}
+    return lVal;
+  }
+};
+
+template <typename T> struct cConvertT
+{
+  T mOffset;
+  T mFactor;
+  cClipT<T> mClip;
+
+  cConvertT(const T lFactor, const T lOffset, const T lClip)
+    : mClip(lClip)
+  {
+    mOffset = lOffset;
+    mFactor = lFactor;
+  }
+
+  T DoProcess(const T lVal)
+  {
+    return mClip((mFactor * lVal - mOffset));
+  }
+
+  T operator()(const T lVal)
+  {
+    return DoProcess(lVal);
+  }
+};
+
+
+template <typename T> struct cPidT
+{
+  T mKp;
+  T mKi;
+  T mKd;
+
+  T mOutputLimit;
+
+  T mErrOld;
+
+  T mErrIntegral;
+  T mDeltaError;
+
+  cPidT(const T lKp, const T lKi, const T lKd, const T lClamp)
+  {
+    mKp = lKp;
+    mKi = lKi;
+    mKd = lKd;
+    mOutputLimit = lClamp;
+
+    mErrOld      = T((i32)0);
+    mErrIntegral = T((i32)0);
+    mDeltaError  = T((i32)0);
+  }
+
+
+  T DoProcess(const T lErr) // __attribute__((optimize("-O0")))
+  {
+    mDeltaError = lErr - mErrOld;
+    mErrOld = lErr;
+
+    // PID
+    T v = mKp * lErr + mErrIntegral + mKd * mDeltaError;
+
+    bool saturating = False;
+
+    if (v >=  mOutputLimit) 
+    { 
+      v =  mOutputLimit; 
+    }
+    else if (v <= -mOutputLimit) 
+    { 
+      v = -mOutputLimit; 
+    }
+
+    if (mErrIntegral >= mOutputLimit)
+    {
+      mErrIntegral = mOutputLimit;
+      saturating = True;
+    }
+    else if (mErrIntegral <= -mOutputLimit)
+    {
+      mErrIntegral = -mOutputLimit;
+      saturating = True;
+    }
+
+    // error and output same sign
+    bool clamp = False;
+    if (saturating)
+    {
+      if (((lErr > T((i32)0)) && (v > T((i32)0)))) clamp = True;
+      if (((lErr < T((i32)0)) && (v < T((i32)0)))) clamp = True;
+    }
+
+    if (!clamp)
+    {
+      mErrIntegral += (mKi * lErr);
+    }
+
+    // output
+    return v;
+  }
+
+  T operator()(const T lVal)
+  {
+    return DoProcess(lVal);
+  }
+};
+
+
 class cServo1_Applikation
 {
 public:
@@ -57,158 +214,45 @@ public:
   i16 mSpeed_Soll; // [in Pwm]
   i16 mPos_Soll;   // [Grad]
   i16 mCur_Soll;   // [mA]
+  i16 mPwm_Soll;   // [mA]
 
-  class cFp1814LowPass
-  {
-    public:
-    cFixPti1814 mValue;
-    cFixPti1814 mFactor;
-
-    cFp1814LowPass(i32 li32Factor)
-    {
-      mFactor.vSetFrac(li32Factor);
-      mValue.vSet(0);
-    }
-
-    cFixPti1814 DoProcess(cFixPti1814 lFpNewValue) // __attribute__((optimize("-O0")))
-    {
-      mValue = mFactor * lFpNewValue + (cFixPti1814(1) - mFactor) * mValue;
-      return mValue;
-    }
-  };
-
-  class cFp1814InputValues
-  {
-    public:
-    cFp1814LowPass mLpPos;
-    cFp1814LowPass mLpI;
-    cFp1814LowPass mLpV;
-    cFp1814LowPass mLpTemp;
-
-    cFixPti1814 mFpPos;
-    cFixPti1814 mFpI;
-    cFixPti1814 mFpV;
-    cFixPti1814 mFpTemp;
+  i32 mPwmPos;
+  i32 mPwmPow;
 
 
-    cFp1814InputValues()
-      : mLpPos(u32GetRomConstLpInputPos()),
-        mLpI(u32GetRomConstLpInputCurrent()),
-        mLpV(u32GetRomConstLpInputSupply()),
-        mLpTemp(u32GetRomConstLpInputTemp())
-    {
-    }
-  };
+  cFixPti1814 mcInputPos_Grad;
+  cFixPti1814 mcInputI_mA;
+  cFixPti1814 mcInputV_mV;
+  cFixPti1814 mcInputTemp1_Grad;
+  cFixPti1814 mcInputTemp2_Grad;
 
-  class cInputValuesi16
-  {
-  public:
-    i16 mPos;
-    i16 mI;
-    i16 mV;
-    i16 mTemp;
-
-    void vSet(cFp1814InputValues* lcInputFp)
-    {
-      mPos  = lcInputFp->mFpPos.mFp.stFp.Int;
-      mI    = lcInputFp->mFpI.mFp.stFp.Int;
-      mV    = lcInputFp->mFpV.mFp.stFp.Int;
-      mTemp = lcInputFp->mFpTemp.mFp.stFp.Int;
-    }
-  };
-
-  cFp1814InputValues mcInputFp;
-  cInputValuesi16 mcInputi16;
+  cLowPassT<cFixPti1814> mcInLpPos;
+  cLowPassT<cFixPti1814> mcInLpI;
+  cLowPassT<cFixPti1814> mcInLpV;
+  cLowPassT<cFixPti1814> mcInLpTemp1;
+  cLowPassT<cFixPti1814> mcInLpTemp2;
 
 
-  class cFpPid
-  {
-    public:
-    cFixPti1814 mFpErrOld;
-
-    cFixPti1814 mFpErrIntegral;
-    cFixPti1814 mFpDeltaError;
-
-    cFp1814LowPass mLpOutput;
-
-    cFixPti1814 mFpKp;
-    cFixPti1814 mFpKi;
-    cFixPti1814 mFpKd;
-
-    i16         mi16OutputLimit;
-
-    cFpPid(u32 lu32LpInitValue)
-      : mLpOutput(lu32LpInitValue)
-    {
-    }
-
-    i16 i16DoProcess(cFixPti1814 lFpErr) // __attribute__((optimize("-O0")))
-    {
-      mFpDeltaError = lFpErr - mFpErrOld;
-      mFpErrOld = lFpErr;
-
-      // PID
-      cFixPti1814 v = mFpKp * lFpErr +
-                      mFpErrIntegral +
-                      mFpKd * mFpDeltaError;
-
-      bool saturating = False;
-
-      if (v.i32Get() >= mi16OutputLimit)       {v = cFixPti1814( mi16OutputLimit); saturating = True;}
-      else if (v.i32Get() <= -mi16OutputLimit) {v = cFixPti1814(-mi16OutputLimit); saturating = True;}
-
-      // error and output same sign
-      bool sign = (lFpErr.i8Sign() * v.i8Sign() > 0);
-      // zero
-      bool clamp = saturating && sign;
-      if(!clamp)
-      {
-        mFpErrIntegral += (mFpKi * lFpErr);
-      }
-
-      // output
-      return mLpOutput.DoProcess(v).i32Get();
-    }
-  };
-
-  class cFpPidPos : public cFpPid
-  {
-    public:
-      cFpPidPos()
-        :cFpPid(u32GetRomConstPidPosLpOutput())
-      {
-        mFpKp.vSetFrac(u32GetRomConstPidPosKp());
-        mFpKi.vSetFrac(u32GetRomConstPidPosKi());
-        mFpKd.vSetFrac(u32GetRomConstPidPosKd());
-        mi16OutputLimit = u16GetRomConstPidPosLimit();
-      }
-  };
-
-  class cFpPidCur : public cFpPid
-  {
-    public:
-      cFpPidCur()
-        :cFpPid(u32GetRomConstPidCurLpOutput())
-      {
-        mFpKp.vSetFrac(u32GetRomConstPidCurKp());
-        mFpKi.vSetFrac(u32GetRomConstPidCurKi());
-        mFpKd.vSetFrac(u32GetRomConstPidCurKd());
-        mi16OutputLimit = u16GetRomConstPidCurLimit();
-      }
-  };
-
-  cFpPidPos mcMyPidPos;
-  cFpPidCur mcMyPidCur;
+  cPidT<cFixPti1814> mcInPidPos;
+  cPidT<cFixPti1814> mcInPidPower;
 
   cServo1_Applikation()
+    : mcInLpPos(Fp1814GetRomConstLpInputPos()),
+      mcInLpI(Fp1814GetRomConstLpInputCurrent()),
+      mcInLpV(Fp1814GetRomConstLpInputSupply()),
+      mcInLpTemp1(Fp1814GetRomConstLpInputTemp1()),
+      mcInLpTemp2(Fp1814GetRomConstLpInputTemp2()),
+      mcInPidPos(Fp1814GetRomConstPidPosKp(),   Fp1814GetRomConstPidPosKi(), Fp1814GetRomConstPidPosKd(), Fp1814GetRomConstPidPosLimit()),
+      mcInPidPower(Fp1814GetRomConstPidCurKp(), Fp1814GetRomConstPidCurKi(), Fp1814GetRomConstPidCurKd(), Fp1814GetRomConstPidCurLimit())
   {
-    mStatus.stStatus.mMotEnable = 0;
+    mStatus.stStatus.mMotEnable = 1;
     mStatus.stStatus.mMode = 0;
     mStatus.stStatus.mAutomatik = 1;
 
     mSpeed_Soll = 0;
     mPos_Soll   = 0;
-    mCur_Soll   = 1000;
+    mCur_Soll   = 100;
+    mPwm_Soll   = 100;
 
     // ------------- gpio_config
     rcu_periph_clock_enable(RCU_GPIOB);
@@ -464,16 +508,15 @@ public:
 
   u8 u8GetLedEnable() { return u8GetRomConstLedEnable(); }
 
-  u16 u16GetSupplyVoltage()
+  u16 u16GetSupplyVoltage_mV()
   {
-    //u32 lu32Zwerg;
-    //lu32Zwerg = ((u32)mAdcResult[nIdx_bat] * 14520)/4096;
-    return (u16)6000;
+    i32 li32V = mcInputV_mV;
+    return li32V;
   }
 
-  i16 i16GetCurrent()
+  i16 i16GetCurrent_mA()
   {
-    return (u16)mcInputFp.mFpI.mFp.stFp.Int;
+    return (u16)((i32)mcInputI_mA);
   }
 
   i16 i16ReadCurrent()
@@ -481,7 +524,7 @@ public:
     u32 lu32Zwerg;
 
     // Falls Motor deaktiviert ist
-    if (!gpio_input_bit_get(GPIOA, GPIO_PIN_0)) // Sleep ?
+    if (!gpio_input_bit_get(GPIOA, GPIO_PIN_4)) // Sleep ?
     {
       return 0;
     }
@@ -518,8 +561,20 @@ public:
     return (i16)lu32Zwerg;
   }
 
+  i16 i16GetIntTemp_Grad()
+  {
+    i32 li32Zwerg;
+    // V25: Vtemperature value at 25°C, the typical value is 1.43 => 1,43V * 4096digit / 3,3V = 1762 digit
+    // Avg_Slope: Average Slope for curve between Temperature vs. Vtemperature, the typical value is 4.3 mV/°C.
+    //
+    //  ((1430 * 10) - ADC * (3300 * 10) / 4096) / (4,3 * 10) + 25
+    //    (14300 - ADC * 8) / 43 + 25
+    //
+    li32Zwerg = (14300 - (i16)mAdcResult[nIdx_temp]*8) / 43 + 25;
+    return (i16)li32Zwerg;
+  }
 
-  i16 i16GetExtTemp()
+  i16 i16GetExtTemp_Grad()
   {
     // Für 10kOhm in Reihe mit 10KOhm NTC, B = 3380K
     const u16 lu16NtcRomTable[25] = {3898, 3839, 3767, 3680, 3577,  // -40°C, -35°C, -30°C, -25°C, -20°C,
@@ -571,18 +626,32 @@ public:
     return lFpZwerg;
   }
 
-  i16  i16GetPosFilteredDegree()      {return mcInputi16.mPos;}
-  i16  i16GetCurrentFilteredDegree()  {return mcInputi16.mI;}
-  i16  i16GetVoltFilteredDegree()     {return mcInputi16.mV;}
-  i16  i16GetTempFilteredDegree()     {return mcInputi16.mTemp;}
+  i16  i16GetPosFilteredDegree()      {return 0;}//mcInputi16.mPos;}
+  i16  i16GetCurrentFilteredDegree()  {return 0;}//mcInputi16.mI;}
+  i16  i16GetVoltFilteredDegree()     {return 0;}//mcInputi16.mV;}
+  i16  i16GetTempFilteredDegree()     {return 0;}//mcInputi16.mTemp;}
 
   void vSetPosDegree(i16 li16Value)  { mPos_Soll = li16Value;}
   void vSetCur_mA(i16 li16Value)     { mCur_Soll = li16Value;}
 
   void vTick1ms()
   {
+    cConvertT<cFixPti1814> lcInCnvrtPos(Fp1814GetRomConstCvrtInputPosF(),     Fp1814GetRomConstCvrtInputPosO(),     Fp1814GetRomConstCvrtInputPosC());
+    cConvertT<cFixPti1814> lcInCnvrtI(Fp1814GetRomConstCvrtInputCurrentF() ,  Fp1814GetRomConstCvrtInputCurrentO(), Fp1814GetRomConstCvrtInputCurrentC());
+    cConvertT<cFixPti1814> lcInCnvrtU(Fp1814GetRomConstCvrtInputSupplyF(),    Fp1814GetRomConstCvrtInputSupplyO(),  Fp1814GetRomConstCvrtInputSupplyC());
+    cConvertT<cFixPti1814> lcInCnvrtTemp1(Fp1814GetRomConstCvrtInputTemp1F(), Fp1814GetRomConstCvrtInputTemp1C(),   Fp1814GetRomConstCvrtInputTemp1F());
+    cConvertT<cFixPti1814> lcInCnvrtTemp2(Fp1814GetRomConstCvrtInputTemp2F(), Fp1814GetRomConstCvrtInputTemp2C(),   Fp1814GetRomConstCvrtInputTemp2F());
+
+
+    mcInputPos_Grad   = lcInCnvrtPos(mcInLpPos((i32)mAdcResult[nIdx_poti]));
+    mcInputI_mA       = lcInCnvrtI(mcInLpI((i32)i16ReadCurrent()));
+    mcInputV_mV       = lcInCnvrtU(mcInLpV((i32)mAdcResult[nIdx_bat]));
+    mcInputTemp1_Grad = lcInCnvrtTemp1(mcInLpTemp1((i32)i16GetIntTemp_Grad()));
+    mcInputTemp2_Grad = lcInCnvrtTemp2(mcInLpTemp2((i32)i16GetExtTemp_Grad()));
+
+
     static u8 lu8PowerFailCounter = 0;
-    if (u16GetSupplyVoltage() < 5500)
+    if (u16GetSupplyVoltage_mV() < 5500)
     {
       mPowerFailCounter++;
       if (lu8PowerFailCounter > 100)
@@ -600,83 +669,96 @@ public:
       lu8PowerFailCounter = 0;
     }
 
-    mcInputFp.mFpPos  = mcInputFp.mLpPos.DoProcess(Fp1814GetPosDegree());
-    mcInputFp.mFpI    = mcInputFp.mLpI.DoProcess(cFixPti1814(i16ReadCurrent()));
-    mcInputFp.mFpV    = mcInputFp.mLpV.DoProcess(cFixPti1814(u16GetSupplyVoltage()));
-    mcInputFp.mFpTemp = mcInputFp.mLpTemp.DoProcess(cFixPti1814(i16GetExtTemp()));
-    mcInputi16.vSet(&mcInputFp);
-
     if (mStatus.stStatus.mMotEnable)
     {
       // Enable motor driver
       gpio_bit_set(GPIOA, GPIO_PIN_0);  // Sleep
 
+      cConvertT<cFixPti1814> lcScalPwmPosClip(cFixPti1814(1.0f), cFixPti1814(0.0f) , cFixPti1814(100.0f));
+
+      if (((cFixPti1814((i32)mPos_Soll) - mcInputPos_Grad) >  Fp1814GetRomConstMinDiffInputPos()) ||
+          ((cFixPti1814((i32)mPos_Soll) - mcInputPos_Grad) < -Fp1814GetRomConstMinDiffInputPos()))
+      {
+        mPwmPos = (i32)lcScalPwmPosClip(mcInPidPos(cFixPti1814((i32)mPos_Soll) - mcInputPos_Grad));
+      }
+      else
+      {
+        mPwmPos = (i32)lcScalPwmPosClip(mcInPidPos(cFixPti1814((i32)0)));
+      }
+
+      cConvertT<cFixPti1814> lcScalPwmCurClip(cFixPti1814(1.0f), cFixPti1814(0.0f), cFixPti1814(100.0f));
+
+      if (((cFixPti1814((i32)mPwmPos) - mcInputI_mA) >  Fp1814GetRomConstMinDiffInputCurrent()) ||
+          ((cFixPti1814((i32)mPwmPos) - mcInputI_mA) < -Fp1814GetRomConstMinDiffInputCurrent()))
+      {
+        mPwmPow = (i32)lcScalPwmCurClip(mcInPidPower(cFixPti1814((i32)mCur_Soll) - mcInputI_mA));
+      }
+      else
+      {
+        mPwmPow = (i32)lcScalPwmCurClip(mcInPidPower(cFixPti1814((i32)0)));
+      }
+
+
       switch(mStatus.stStatus.mMode)
       {
         case 0: // Servo-Modus: Positions-Regelung
           {
-            i32 li32Pwm;
-
-            mcMyPidPos.mi16OutputLimit = u16GetRomConstPidPosLimit();
-            li32Pwm = mcMyPidPos.i16DoProcess(cFixPti1814(mPos_Soll) - mcInputFp.mFpPos);
-
-              //Unter 8 passiert eh nichts
-            if ((li32Pwm > -8) && (li32Pwm < 8))
-            {
-              li32Pwm = 0;
-            }
-            mSpeed_Soll = (i16)li32Pwm;
+            mSpeed_Soll = mPwmPos;
           }
           break;
-        case 1: // Servo-Modus: Positions-Strom-Regelung
+        case 1: // Servo-Modus: Positions-Regelung mit Strombegrenzung
           {
-            cFixPti1814 lFpCurrent_Soll;
-            i32 li32Pwm;
-
-            mcMyPidPos.mi16OutputLimit = mCur_Soll; //mA
-            mcMyPidPos.i16DoProcess(cFixPti1814(mPos_Soll) - mcInputFp.mFpPos);
-            lFpCurrent_Soll = mcMyPidPos.mLpOutput.mValue;
-
-            if ((lFpCurrent_Soll.mFp.stFp.Int <  4) &&
-                (lFpCurrent_Soll.mFp.stFp.Int > -4))
+            mPwmPow = -mPwmPow;
+            mSpeed_Soll = mPwmPos;
+            if (mPwmPow > 0)
             {
-              li32Pwm = 0;
+              if (mSpeed_Soll > 0)
+              {
+                if (mSpeed_Soll >= mPwmPow) mSpeed_Soll -= mPwmPow;
+                                      else  mSpeed_Soll = 0;
+              }
+              if (mSpeed_Soll < 0)
+              {
+                if (-mSpeed_Soll >= mPwmPow) mSpeed_Soll += mPwmPow;
+                                        else mSpeed_Soll = 0;
+              }
             }
-            else
-            {
-              li32Pwm = mcMyPidCur.i16DoProcess(lFpCurrent_Soll - mcInputFp.mFpI);
-            }
-
-            //Unter 8 passiert eh nichts
-            if ((li32Pwm > -8) && (li32Pwm < 8))
-            {
-              li32Pwm = 0;
-            }
-            mSpeed_Soll = (i16)li32Pwm;
           }
           break;
 
         case 4: // Motor PWM-Modus
           {
+            mSpeed_Soll = mPwm_Soll;
           }
           break;
         case 5: // Motor Current-Modus
           {
-            i32 li32Pwm;
-            li32Pwm = mcMyPidCur.i16DoProcess(cFixPti1814(mCur_Soll) - mcInputFp.mFpI);
-
-            // Unter 8 passiert eh nichts
-            if ((li32Pwm > -8) && (li32Pwm < 8))
+            mPwmPow = -mPwmPow;
+            mSpeed_Soll = mPwm_Soll;
+            if (mPwmPow > 0)
             {
-              li32Pwm = 0;
+              if (mSpeed_Soll > 0)
+              {
+                if (mSpeed_Soll >= mPwmPow) mSpeed_Soll -= mPwmPow;
+                else  mSpeed_Soll = 0;
+              }
+              if (mSpeed_Soll < 0)
+              {
+                if (-mSpeed_Soll >= mPwmPow) mSpeed_Soll += mPwmPow;
+                else mSpeed_Soll = 0;
+              }
             }
-            mSpeed_Soll = (i16)li32Pwm;
           }
           break;
       }
 
       if (mStatus.stStatus.mAutomatik)
       {
+        if ((mSpeed_Soll > -u8GetRomConstMinPwm()) && (mSpeed_Soll < u8GetRomConstMinPwm()))
+        {
+          mSpeed_Soll = 0;
+        }
+
         vSetPwm(mSpeed_Soll);
       }
     }

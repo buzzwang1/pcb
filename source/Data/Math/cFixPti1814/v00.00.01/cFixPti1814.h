@@ -1,5 +1,3 @@
-
-
 #ifndef _FIXPTI1814_H
 #define _FIXPTI1814_H
 

@@ -1058,7 +1058,7 @@ class cSysPkgBoard
 
   cStatusLed<GPIOB_BASE, 9> mcStatusLed;
 
-  // I2C2:
+  // I2C3:
   cGpPin mcI2c3_SCL_Board;
   cGpPin mcI2c3_SDA_Board;
 

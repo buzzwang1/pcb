@@ -115,12 +115,55 @@ class cBnMsgHandler : public cBotNet_MsgSysProcess
   bool bMsg(cBotNetMsg_MsgProt& lcMsg);
 };
 
+class cSysPkgMsgWakeup
+{
+  public:
+    u32  mu32Data;
+    u8   mu8WakeupIdx;
+    bool mbRequest;
+
+    cSysPkgMsgWakeup()
+    {
+      vReset();
+    }
+
+    void vReset()
+    {
+      mu8WakeupIdx = 0xFF;
+      mbRequest = False;
+    }
+
+    bool isRequest(u8 lu8Idx = 0)
+    {
+      return (mbRequest) && (lu8Idx == mu8WakeupIdx);
+    }
+
+    bool isRequestAndClear(u8 lu8Idx = 0)
+    {
+      if (isRequest(lu8Idx))
+      {
+        vReset();
+        return True;
+      }
+      return False;
+    }
+
+    void vSet(u8 lu8WakeupIdx, u32 lu32Data)
+    {
+      mu32Data = lu32Data;
+      mu8WakeupIdx = lu8WakeupIdx;
+      mbRequest = True;
+    }
+
+
+};
 
 class cSysPkgMsg
 {
   public:
-  cBnMsgHandler mcBnMsgHandler;
-  cMiniCli      mcMiniCli;
+  cBnMsgHandler    mcBnMsgHandler;
+  cMiniCli         mcMiniCli;
+  cSysPkgMsgWakeup mcWakeupSim;
 
   cSysPkgMsg();
 

@@ -10,8 +10,12 @@
 class cBotNet_LinkBotCom: public cBotNet_LinkBase
 {
   public:
+  u8 mpu8ComBufRx[cBotNet_UpLinkComBufSize];
+  u8 mpu8ComBufTx[cBotNet_UpLinkComBufSize];
 
-  cComDatMsg mpcMsgData;
+  u8 MsgDataRxRBuf[enCnstMaxData];
+  u8 MsgDataTxRBuf[enCnstMaxData];
+  cComDatMsg mpcMsgData; 
 
   i16 mi16TxIdx;
   u16 mu16BytesPer1ms;
@@ -35,12 +39,14 @@ class cBotNet_LinkBotCom: public cBotNet_LinkBase
   cBotNet_LinkBotCom(cUart* lcUart, u32 lu32BytePerSync = 4)
     // lu32BytePerSync: If Sync is called in 1ms context
     //    lu32BytePerSync = (lu32Baudrate / 10000) + 1;
-    : cBotNet_LinkBase(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enSideLink)
+    : cBotNet_LinkBase(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enSideLink), 
+      mpcMsgData(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), MsgDataRxRBuf, sizeof(MsgDataRxRBuf))
   {
     mStatus.IsInit   = 1;
     mStatus.IsOnline = 1;
 
-    mpcMsgData.vMemAlloc(enCnstMaxData,  enCnstMaxData);
+    mpcMsgData.cRxData.muiLen = sizeof(MsgDataRxRBuf);
+    mpcMsgData.cTxData.muiLen = sizeof(MsgDataTxRBuf);
 
     mcUart = lcUart;
 

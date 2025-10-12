@@ -31,126 +31,6 @@
       ]
     },
     {
-      "ProjectName": "CH32V305_Mot_Ledblink",
-      "ProjectLabelName": "CH/V3/CH32V305/Mot/Ledblink",
-      "ProjectFullLabelName": "CH/V3/CH32V305/Mot/Ledblink.Release",
-      "name": "CH/V3/CH32V305/Mot/Ledblink.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Ledblink\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Ledblink\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "CH/V3/CH32V305/Mot/Ledblink"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Ledblink\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccRiscV-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "CH32V305_Mot_Servo5_App",
-      "ProjectLabelName": "CH/V3/CH32V305/Mot/Servo5/App",
-      "ProjectFullLabelName": "CH/V3/CH32V305/Mot/Servo5/App.Release",
-      "name": "CH/V3/CH32V305/Mot/Servo5/App.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\App\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\App\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "CH/V3/CH32V305/Mot/Servo5/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\App\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccRiscV-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "CH32V305_Mot_Servo5_MemTest",
-      "ProjectLabelName": "CH/V3/CH32V305/Mot/Servo5/MemTest",
-      "ProjectFullLabelName": "CH/V3/CH32V305/Mot/Servo5/MemTest.Release",
-      "name": "CH/V3/CH32V305/Mot/Servo5/MemTest.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\MemTest\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\MemTest\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "CH/V3/CH32V305/Mot/Servo5/MemTest"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\MemTest\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccRiscV-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "CH32V305_Mot_Servo5_Blu",
-      "ProjectLabelName": "CH/V3/CH32V305/Mot/Servo5/Blu",
-      "ProjectFullLabelName": "CH/V3/CH32V305/Mot/Servo5/Blu.Release",
-      "name": "CH/V3/CH32V305/Mot/Servo5/Blu.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\Blu\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\Blu\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "CH/V3/CH32V305/Mot/Servo5/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\CH\\V3\\CH32V305\\Mot\\Servo5\\Blu\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccRiscV-Ninja.cmake"
-        }
-      ]
-    },
-    {
       "ProjectName": "CH32V305_LeuchtEi_Ledblink",
       "ProjectLabelName": "CH/V3/CH32V305/LeuchtEi/Ledblink",
       "ProjectFullLabelName": "CH/V3/CH32V305/LeuchtEi/Ledblink.Release",
@@ -601,28 +481,28 @@
       ]
     },
     {
-      "ProjectName": "GD32F1x0_UbTech_Servo1_Tim0",
-      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Tim0",
-      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Tim0.Debug",
-      "name": "STM/F1/GD32F1x0/UbTech/Servo1/Tim0.Debug",
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA_App",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/App",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/App.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LA/App.Release",
       "generator": "Ninja",
-      "configurationType": "Debug",
+      "configurationType": "Release",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Tim0\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Tim0\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\App\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\App\\Release\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F1/GD32F1x0/UbTech/Servo1/Tim0"
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LA/App"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Tim0\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\App\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -631,28 +511,88 @@
       ]
     },
     {
-      "ProjectName": "GD32F1x0_UbTech_Servo1_Usart_HdInt01",
-      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01",
-      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01.Debug",
-      "name": "STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01.Debug",
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA_Debug",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug.Release",
       "generator": "Ninja",
-      "configurationType": "Debug",
+      "configurationType": "Release",
       "inheritEnvironments": [
         "msvc_x86"
       ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Usart\\HdInt01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Usart\\HdInt01\\Debug\\cmake",
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\AppDebug\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\AppDebug\\Release\\cmake",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
       "variables": [
         {
           "name": "PCB_ProjectLabel",
-          "value": "STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01"
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug"
         },
         {
           "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Usart\\HdInt01\\Debug\\gen\\ProjectCfg.cmake"
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\AppDebug\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA_Blu",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\Blu\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\Blu\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA\\Blu\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA8_Debug",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA8\\AppDebug\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA8\\AppDebug\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LA8\\AppDebug\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -833,126 +773,6 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\F3\\HalLib\\v01.11.00\\os\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F3x0_Mot_Ledblink",
-      "ProjectLabelName": "STM/F3/GD32F3x0/Mot/Ledblink",
-      "ProjectFullLabelName": "STM/F3/GD32F3x0/Mot/Ledblink.Release",
-      "name": "STM/F3/GD32F3x0/Mot/Ledblink.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Ledblink\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Ledblink\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F3/GD32F3x0/Mot/Ledblink"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Ledblink\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F3x0_Mot_Servo5_App",
-      "ProjectLabelName": "STM/F3/GD32F3x0/Mot/Servo5/App",
-      "ProjectFullLabelName": "STM/F3/GD32F3x0/Mot/Servo5/App.Release",
-      "name": "STM/F3/GD32F3x0/Mot/Servo5/App.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\App\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\App\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F3/GD32F3x0/Mot/Servo5/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\App\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F3x0_Mot_Servo5_Debug",
-      "ProjectLabelName": "STM/F3/GD32F3x0/Mot/Servo5/AppDebug",
-      "ProjectFullLabelName": "STM/F3/GD32F3x0/Mot/Servo5/AppDebug.Release",
-      "name": "STM/F3/GD32F3x0/Mot/Servo5/AppDebug.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\AppDebug\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\AppDebug\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F3/GD32F3x0/Mot/Servo5/AppDebug"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\AppDebug\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F3x0_Mot_Servo5_Blu",
-      "ProjectLabelName": "STM/F3/GD32F3x0/Mot/Servo5/Blu",
-      "ProjectFullLabelName": "STM/F3/GD32F3x0/Mot/Servo5/Blu.Release",
-      "name": "STM/F3/GD32F3x0/Mot/Servo5/Blu.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\Blu\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\Blu\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F3/GD32F3x0/Mot/Servo5/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F3\\GD32F3x0\\Mot\\Servo5\\Blu\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -1433,36 +1253,6 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\F3\\STM32F303CCT\\BluePill\\LedBlink\\PC13_4Mhz\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32F303CCT_TB01_Gfx_HX8347",
-      "ProjectLabelName": "STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347",
-      "ProjectFullLabelName": "STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347.Debug",
-      "name": "STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F3\\STM32F303CCT\\BluePill\\TB01\\Gfx\\HX8347\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F3\\STM32F303CCT\\BluePill\\TB01\\Gfx\\HX8347\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F3\\STM32F303CCT\\BluePill\\TB01\\Gfx\\HX8347\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -4321,336 +4111,6 @@
       ]
     },
     {
-      "ProjectName": "STM32L433CCT_SolBx_01_App",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/App",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/App.Debug",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/App.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_App",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/App",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/App.Release",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/App.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_App",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/App",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/App.Debug_App",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/App.Debug_App",
-      "generator": "Ninja",
-      "configurationType": "Debug_App",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug_App\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug_App\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Debug_App\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_App",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/App",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/App.Release_App",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/App.Release_App",
-      "generator": "Ninja",
-      "configurationType": "Release_App",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release_App\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release_App\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\App\\Release_App\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_Blu",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu.Debug",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/Blu.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_Blu",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu.Release",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/Blu.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_01_Blu",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/01/Blu.RamRelease",
-      "name": "STM/L4/STM32L433CCT/SolBx/01/Blu.RamRelease",
-      "generator": "Ninja",
-      "configurationType": "RamRelease",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\RamRelease\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\RamRelease\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/01/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\01\\Blu\\RamRelease\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_02_Master_01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/02/Master/01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/02/Master/01.Debug",
-      "name": "STM/L4/STM32L433CCT/SolBx/02/Master/01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/02/Master/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_02_Master_01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/02/Master/01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/02/Master/01.Debug_App",
-      "name": "STM/L4/STM32L433CCT/SolBx/02/Master/01.Debug_App",
-      "generator": "Ninja",
-      "configurationType": "Debug_App",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug_App\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug_App\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/02/Master/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\Master\\01\\Debug_App\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_02_MotBx_01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/02/MotBx/01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/02/MotBx/01.Debug",
-      "name": "STM/L4/STM32L433CCT/SolBx/02/MotBx/01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\MotBx\\01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\MotBx\\01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/02/MotBx/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\MotBx\\01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_SolBx_02_LightBx_01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/SolBx/02/LightBx/01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/SolBx/02/LightBx/01.Debug",
-      "name": "STM/L4/STM32L433CCT/SolBx/02/LightBx/01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\LightBx\\01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\LightBx\\01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/SolBx/02/LightBx/01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\SolBx\\02\\LightBx\\01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
       "ProjectName": "STM32L433CCT_Mini_Sys_BL",
       "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BL",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BL.Release",
@@ -5011,6 +4471,36 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_TmpChk",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TmpChk",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TmpChk.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TmpChk.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TmpChk\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TmpChk\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TmpChk"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TmpChk\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_I2c",
       "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/I2c",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/I2c.Release",
@@ -5131,6 +4621,186 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_SLedDisp",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_SLedDisp",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp.Release_App",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp.Release_App",
+      "generator": "Ninja",
+      "configurationType": "Release_App",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release_App\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release_App\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\SLedDisp\\Release_App\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_TM",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_TM",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM.Release_App",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM.Release_App",
+      "generator": "Ninja",
+      "configurationType": "Release_App",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release_App\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release_App\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TM\\Release_App\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_TS",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_AddOn_PSwitch_v3_TS",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS.Release_App",
+      "name": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS.Release_App",
+      "generator": "Ninja",
+      "configurationType": "Release_App",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release_App\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release_App\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\AddOn\\PSwitch\\v3\\TS\\Release_App\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Mini_LedBlink_PB9Int",
       "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int.Debug",
@@ -5183,6 +4853,36 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\LedBlink\\PB9Ext\\Debug\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MBv10b2_PcIfcNet",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/PcIfcNet",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/PcIfcNet.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/MBv10b2/PcIfcNet.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\PcIfcNet\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\PcIfcNet\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MBv10b2/PcIfcNet"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\PcIfcNet\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -5303,6 +5003,96 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Main01\\Test\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MBv10b2_Flur_01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MBv10b2_Flur_01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Release_App",
+      "name": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Release_App",
+      "generator": "Ninja",
+      "configurationType": "Release_App",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release_App\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release_App\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Release_App\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_MBv10b2_Flur_01",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Test",
+      "name": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Test",
+      "generator": "Ninja",
+      "configurationType": "Test",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Test\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Test\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Flur\\01\\Test\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -5483,306 +5273,6 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Bad\\01\\Test\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_APDS9960_Als",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Als\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Als\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Als\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_APDS9960_Ds",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Ds\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Ds\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Ds\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_APDS9960_Gs",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Gs\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Gs\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\APDS9960\\Gs\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_HTU21D",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/HTU21D",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/HTU21D.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/HTU21D.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\HTU21D\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\HTU21D\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/HTU21D"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\HTU21D\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_INA219",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/INA219",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/INA219.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/INA219.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\INA219\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\INA219\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/INA219"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\INA219\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_OLED",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/OLED",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/OLED.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/OLED.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/OLED"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_I2C_SW6007",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/I2C/SW6007"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\SW6007\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Mot_Test01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test01.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Mot/Test01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Mot/Test01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Mot_Test02",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test02",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test02.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Mot/Test02.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test02\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Mot/Test02"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test02\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Mot_Test02",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test03",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Mot/Test03.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Mot/Test03.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test03\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Mot/Test03"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Mot\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -6091,36 +5581,6 @@
       ]
     },
     {
-      "ProjectName": "STM32L433CCT_PwrBx",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/PwrBx",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/PwrBx.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/PwrBx.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\PwrBx\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\PwrBx\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/PwrBx"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\PwrBx\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
       "ProjectName": "STM32L433CCT_Tests_Usart1Echo",
       "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo.Debug",
@@ -6173,276 +5633,6 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Switch\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_Servo_Test01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_Servo_Test02",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test02\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test02\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_Servo_Test03",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test03\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test03\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_Servo_Test04",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test04\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test04\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\Usart\\Servo\\Test04\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_MAX31855_Test01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/MAX31855/Test01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/MAX31855/Test01.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/MAX31855/Test01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\MAX31855\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\MAX31855\\Test01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/MAX31855/Test01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\MAX31855\\Test01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_LaufSens_Test01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/LaufSens/Test01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/LaufSens/Test01.Release",
-      "name": "STM/L4/STM32L433CCT/BluePill/LaufSens/Test01.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\LaufSens\\Test01\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\LaufSens\\Test01\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/LaufSens/Test01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\LaufSens\\Test01\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_WS2812_Test01",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test01",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test01.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/WS2812/Test01.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test01\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test01\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/WS2812/Test01"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test01\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_WS2812_Test02",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test02",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test02.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/WS2812/Test02.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test02\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test02\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/WS2812/Test02"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test02\\Debug\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "STM32L433CCT_Tests_WS2812_Test03",
-      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test03",
-      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/WS2812/Test03.Debug",
-      "name": "STM/L4/STM32L433CCT/BluePill/WS2812/Test03.Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test03\\Debug\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test03\\Debug\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/L4/STM32L433CCT/BluePill/WS2812/Test03"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\WS2812\\Test03\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -7171,6 +6361,66 @@
       ]
     },
     {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_Main02",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main02",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main02.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main02.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main02\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main02\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main02"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main02\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_Main03",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main03",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main03.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main03.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main03\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main03\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main03"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main03\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32U585CIT_Mini_MBv28b2_Test01",
       "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Test01",
       "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Test01.Release",
@@ -7193,6 +6443,66 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Test01\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_FreeRTOS",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\FreeRTOS\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\FreeRTOS\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\FreeRTOS\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_Usb",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Usb",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Usb.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/Usb.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Usb\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Usb\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/Usb"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Usb\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
@@ -7951,6 +7261,32 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\PcSim\\L5\\STM32L552ZET\\L552_Nucleo\\Safety\\Test01\\Debug\\gen\\ProjectCfg.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "Pc_Test_CppTests",
+      "ProjectLabelName": "Pc/Test/CppTests",
+      "ProjectFullLabelName": "Pc/Test/CppTests.Debug",
+      "name": "Pc/Test/CppTests.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\Pc\\Test\\CppTests\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\Pc\\Test\\CppTests\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "Pc/Test/CppTests"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\Pc\\Test\\CppTests\\Debug\\gen\\ProjectCfg.cmake"
         }
       ]
     }

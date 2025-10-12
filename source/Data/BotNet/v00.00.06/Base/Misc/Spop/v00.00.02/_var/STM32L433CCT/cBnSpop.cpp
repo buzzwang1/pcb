@@ -224,8 +224,13 @@ u32 cBnSpop_vFlash_Program_Start(uint8* lpui8Adress, uint8* lpui8Src, uint32 lui
   uint32 lui32CheckSum;
   uint8  lu8t;
 
-  lui32Size >>= 1;
-  lui32Size <<= 1;
+  // Größe auf 8 Byte aufrunden
+  if (lui32Size & 7)
+  {
+    lui32Size -= (lui32Size & 7);
+    lui32Size += 8;
+  }
+
   lui32CheckSum = 0;
 
   cBnSpop_isFlash_Error();

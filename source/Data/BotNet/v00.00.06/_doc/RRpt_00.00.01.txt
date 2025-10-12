@@ -14,7 +14,7 @@ Msg.: Index 4
 
 Set 1 Kommando
 -> 01 MI RI S1 S2 DH DL CT  // Payload Len: 8;     MI = Message Index
-                            //                     SI = Request Index
+                            //                     RI = Request Index
                             //                     S1 = Sub Index
                             //                     S2 = Sub Index
                             //                     DH.DL = Destination Botnet Adr

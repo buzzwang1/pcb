@@ -2,7 +2,7 @@
 #define __ROM_CONSTS_H__
 
 #ifdef __cplusplus
-extern "C" {
+  extern "C" {
 #endif
 
 #include "Typedef.h"

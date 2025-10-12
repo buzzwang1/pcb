@@ -131,8 +131,8 @@ class cLSM303DLHC_MAG: public cComNode
 
   cI2cMaster*   mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenLSM303DLHC_MAG_Cmd   menCmd;
   uint8                   mIdx;

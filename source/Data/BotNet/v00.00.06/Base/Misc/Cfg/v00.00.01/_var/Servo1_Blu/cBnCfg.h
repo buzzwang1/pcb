@@ -66,7 +66,7 @@ public:
     enCnstWait75us  =  75,
     enCnstWait100us = 100,
     enCnstWaitRSyncUp   = enCnstNoDelay,
-    enCnstWaitRDataUp   = enCnstNoDelay,
+    enCnstWaitRDataUp   = enCnstWait25us,
     enCnstWaitRSyncDwn  = enCnstNoDelay,
     enCnstWaitRDataDwn  = enCnstNoDelay,
     enCnstWaitSyncUp    = enCnstWait30us,
@@ -77,8 +77,6 @@ public:
     enCnstWaitEndDwn    = enCnstWait50us,
   }tenConsts;
 };
-
-
 
 /* Forward Deklaration */
 class cBotNet;

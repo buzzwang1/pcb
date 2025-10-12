@@ -54,7 +54,7 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
     Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default
-    Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.03:default
+    Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.04:default
     Data/BotNet/v00.00.06/BnLinks/BotCom/v00.00.03:default
     #Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default
     #Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default
@@ -76,7 +76,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_24Mhz
     Driver/STM32/L4/HAL/GPPin/v01.00.02
     Driver/STM32/L4/HAL/cUart/Int/v01.00.01
-    Driver/STM32/L4/HAL/cUart/MpHd/v01.00.02_Mini:Tim15
+    Driver/STM32/L4/HAL/cUart/MpHd/v01.00.03_Mini:Tim15
     Driver/STM32/L4/HAL/cI2C/v01.00.09
 
 
@@ -89,7 +89,7 @@ set(PCB_ProjectPackageList
 
 
     APP/LED/v00.00.01:STM32L4_HAL
-    APP/Job/JobHdl/v00.00.01
+    APP/Job/JobHdl/v00.00.01:us
 
     APP/BSP/MB/Pkg/SysPkgClock/v00.00.01:Slave
     APP/BSP/MB/Pkg/SysPkgCom/v00.00.01:PSwitchI2cI2C

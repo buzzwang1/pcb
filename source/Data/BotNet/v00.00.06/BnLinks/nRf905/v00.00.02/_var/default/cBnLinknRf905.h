@@ -66,12 +66,17 @@ class cBotNet_ComLinknRf905: public cBotNet_SyncedLinkBase
     tcUart<USART1_BASE, GPIOA_BASE, 9, GPIOA_BASE, 10> mcUart;
   #endif
 
+  u8 MsgDataRxRBuf[enCnstMaxData];
+  u8 MsgDataTxRBuf[enCnstMaxData];
   cComDatMsg mpcMsgData;
 
-  cBotNet_ComLinknRf905(u32 lu32RxComBufSize, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType, cNRF905 *lcNRF905)
-    : cBotNet_SyncedLinkBase(lu32RxComBufSize, lu32TxComBufSize, lenType)
+  cBotNet_ComLinknRf905(u8* lpu8RxComBuf, u32 lu32RxComBufSize, u8* lpu8TxComBuf, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType, cNRF905 *lcNRF905)
+    : cBotNet_SyncedLinkBase(lpu8RxComBuf, lu32RxComBufSize, lpu8TxComBuf, lu32TxComBufSize, lenType),
+      mpcMsgData(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), MsgDataRxRBuf, sizeof(MsgDataRxRBuf))
   {
     mcNRF905 = lcNRF905;
+    mpcMsgData.cRxData.muiLen = sizeof(MsgDataRxRBuf);
+    mpcMsgData.cTxData.muiLen = sizeof(MsgDataTxRBuf);
   }
 
   virtual bool bAddedToBn(u16 lu16Adr)
@@ -94,17 +99,18 @@ class cBotNet_ComLinknRf905: public cBotNet_SyncedLinkBase
 class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 {
   public:
+    u8 mpu8ComBufRx[cBotNet_DownLinkComBufSize];
+    u8 mpu8ComBufTx[cBotNet_DownLinkComBufSize];
 
   cBotNet_DownLinknRf905(cNRF905 *lcNRF905)
     #ifdef cNRF905_SYNC_DEBUG
      : mcUart(9600, USART1_IRQn, GPIO_AF_7, 128, 128),
-       cBotNet_ComLinknRf905(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enDownLink, lcNRF905)
+       cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enDownLink, lcNRF905)
     #else
-     : cBotNet_ComLinknRf905(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enDownLink, lcNRF905)
+     : cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enDownLink, lcNRF905)
     #endif
   {
     mSm = StIdle;
-    mpcMsgData.vMemAlloc(enCnstMaxData,  enCnstMaxData);
   }
 
 
@@ -502,19 +508,18 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 {
   public:
+    u8 mpu8ComBufRx[cBotNet_UpLinkComBufSize];
+    u8 mpu8ComBufTx[cBotNet_UpLinkComBufSize];
 
   cBotNet_UpLinknRf905(cNRF905 *lcNRF905)
     #ifdef cNRF905_SYNC_DEBUG
      : mcUart(9600, USART1_IRQn, GPIO_AF_7, 128, 128),
-       cBotNet_ComLinknRf905(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enUpLink, lcNRF905)
+       cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enUpLink, lcNRF905)
     #else
-     : cBotNet_ComLinknRf905(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enUpLink, lcNRF905)
+     : cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enUpLink, lcNRF905)
     #endif
   {
     mSm = StIdle;
-
-    mpcMsgData.vMemAlloc(enCnstMaxData,  enCnstMaxData);
-
     mStatus.IsInit   = 1;
   }
 

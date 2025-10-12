@@ -7,6 +7,10 @@
 #include "cWufHandler.h"
 #include "cBuRam.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stm32l433xx.h"
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_ll_bus.h"
@@ -75,8 +79,8 @@ class cClock
     cBuRam::vEnable();
 
     bool lu8Reset = False;
-    if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
-        (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst)) lu8Reset = True;
+    if ((cWufHandler::munWakeupSources.stWakeupSources.isWuPinRst) ||
+        (cWufHandler::munWakeupSources.stWakeupSources.isWuSftRst)) lu8Reset = True;
 
     // Clock valid ?
     if ((cBuRam::mBuRam->u32RtcSyncCnt != 0) && (!lu8Reset))
@@ -210,8 +214,15 @@ class cClock
     }
   }
 
+  bool isInit()
+  {
+    return (mu8WaitForLse_s == 0);
+  }
+
   void vWriteToRtc()
   {
+    if (!isInit()) return;
+
     LL_RTC_DateTypeDef lstDate;
     LL_RTC_DATE_StructInit(&lstDate);
 
@@ -428,7 +439,7 @@ class cClock
     // tSU(LSE)(3) Startup time VDD is stabilized: 2s
     // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
     // reached. This value is measured for a standard crystal and it can vary significantly with the crystal manufacturer
-    // 
+    //
     // Nachdem die Warte abgelaufen ist, überprüfen, ob auf LSE geschaltet werden kann.
     if (mu8WaitForLse_s)
     {
@@ -593,17 +604,31 @@ class cClock
 
   u8* vDeserialize(u8* lpu8Data)
   {
-    mDate.stDate.ui16Year     = *lpu8Data++;
-    mDate.stDate.ui16Year     = (mDate.stDate.ui16Year << 8) + *lpu8Data++;
-    mDate.stDate.ui8Month     = *lpu8Data++;
-    mDate.stDate.ui8Day       = *lpu8Data++;
-    mTime.stTime.ui8Hour      = *lpu8Data++;
-    mTime.stTime.ui8Minute    = *lpu8Data++;
-    mTime.stTime.ui8Second    = *lpu8Data++;
-    mTime.stTime.ui8SubSecond = 0;
-    mValid = 1;
+    tstTime lstTime;
+    tstDate lstDate;
 
-    vWriteToRtc();
+    lstDate.ui16Year     = *lpu8Data++;
+    lstDate.ui16Year     = (lstDate.ui16Year << 8) + *lpu8Data++;
+    lstDate.ui8Month     = *lpu8Data++;
+    lstDate.ui8Day       = *lpu8Data++;
+    lstTime.ui8Hour      = *lpu8Data++;
+    lstTime.ui8Minute    = *lpu8Data++;
+    lstTime.ui8Second    = *lpu8Data++;
+    lstTime.ui8SubSecond = 0;
+
+    if ((lstDate.ui8Month  >= 1) && (lstDate.ui8Month  <= 12) &&
+        (lstDate.ui8Day    >= 1) && (lstDate.ui8Day    <= 31) &&
+                                    (lstTime.ui8Hour   <= 24) &&
+                                    (lstTime.ui8Minute <= 60) &&
+                                    (lstTime.ui8Second <= 60)
+       )
+    {
+      mDate.stDate = lstDate;
+      mTime.stTime = lstTime;
+
+
+      vWriteToRtc();
+    }
 
     return lpu8Data;
   }
@@ -656,6 +681,8 @@ class cClock
   }
 };
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _CCLOCK_H */

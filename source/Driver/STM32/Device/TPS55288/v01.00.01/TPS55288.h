@@ -117,7 +117,7 @@ class cTPS55288 : public cComNode
     enCmdSetCurrent,
     enCmdSetCurrent2,
     enCmdSetMode1,
-    enCmdSetMode2
+    enCmdSetMode2,
   }tenTPS55288_Cmd;
 
 
@@ -126,11 +126,12 @@ class cTPS55288 : public cComNode
 
   u16          mu16Vout_mV;
   u16          mu16ILim_mA;
+  bool         mbOutputEnableState;
 
   cI2cMaster*  mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenTPS55288_Cmd     menCmd;
 
@@ -140,8 +141,7 @@ class cTPS55288 : public cComNode
   bool mbCmdSetMode1;
 
 
-
-  cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr);
+  cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr, bool lbInit);
   #if _WIN32
     ~cTPS55288();
   #endif // _WIN32
@@ -157,6 +157,9 @@ class cTPS55288 : public cComNode
 
   int8  i8SetVoltage_mV(u16 lu16Value, bool lbForce = False);
   int8  i8SetCurrent_mA(u16 lu16Value, bool lbForce = False);
+
+  int8  i8SetOutputEnable(bool lbState, bool lbDisCharge, bool lbForce);
+  bool  isOutputEnable();
 
   int8  i8SetMode(u8 lu8Value);
 };

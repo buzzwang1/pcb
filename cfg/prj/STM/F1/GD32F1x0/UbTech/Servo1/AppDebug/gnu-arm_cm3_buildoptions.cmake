@@ -8,7 +8,7 @@ list(APPEND PCB_ListTargetDefinition
   -DEMBEDDED
   
   -DGD32F130_150
-  -D__NO_SYSTEM_INIT
+# -D__NO_SYSTEM_INIT
 
 #  -DTEST_BnLinkUsartMpHd
 
@@ -18,7 +18,7 @@ list(APPEND PCB_ListTargetDefinition
 #  -D__FPU_PRESENT
 
   -D__STACK_SIZE=0x200 #512Byte
-  -D__HEAP_SIZE=0x600  #1536Byte
+  -D__HEAP_SIZE=0x100  #256Byte
 
 # -DARM_MATH_CM4
 # -DARM_MATH_MATRIX_CHECK

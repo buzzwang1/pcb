@@ -13,11 +13,12 @@
 class cBotNet_ComLinkI2c: public cBotNet_SyncedLinkBase
 {
 public:
+  // Timeout für eine Kommunikation
   u16 mu16TimeoutCounter_ms;
   u16 mu16TimeoutCounterReload_ms;
 
-  cBotNet_ComLinkI2c(u32 lu32RxComBufSize, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
-    : cBotNet_SyncedLinkBase(lu32RxComBufSize, lu32TxComBufSize, lenType)
+  cBotNet_ComLinkI2c(u8* lpu8RxComBuf, u32 lu32RxComBufSize, u8* lpu8TxComBuf, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
+    : cBotNet_SyncedLinkBase(lpu8RxComBuf, lu32RxComBufSize, lpu8TxComBuf, lu32TxComBufSize, lenType)
   {
     mu16TimeoutCounterReload_ms = 100;
   }
@@ -53,12 +54,15 @@ public:
 class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
 {
   public:
+  u8 mpu8ComBufRx[cBotNet_UpLinkComBufSize];
+  u8 mpu8ComBufTx[cBotNet_UpLinkComBufSize];
+
   cI2cMaster*  mcDownLink;
 
-  cComDatMsg mpcMsgSyncR;
-  cComDatMsg mpcMsgSyncT;
-  cComDatMsg mpcMsgDataR;
-  cComDatMsg mpcMsgDataT;
+  cComDatMsg mpcMsgSyncR; u8 MsgSyncRxRBuf[2];
+  cComDatMsg mpcMsgSyncT; u8 MsgSyncTxRBuf[2];
+  cComDatMsg mpcMsgDataR; u8 MsgDataRxRBuf[enCnstMaxDataPlusCheckSum];
+  cComDatMsg mpcMsgDataT; u8 MsgDataTxRBuf[enCnstMaxDataPlusCheckSum];
 
   u8   mu8WaitForSlave;
   bool mbSBusy;
@@ -66,16 +70,16 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
   cBotNet_SyncedLinkBase::tenStates   menSm;
 
   cBotNet_DownLinkI2c(cI2cMaster* lcDownLink)
-    : cBotNet_ComLinkI2c(cBotNet_DownLinkComBufSize, cBotNet_DownLinkComBufSize, cBotNet_LinkBase::enDownLink)
+    : cBotNet_ComLinkI2c(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enDownLink),
+      mpcMsgSyncR(null,                              0, MsgSyncRxRBuf, sizeof(MsgSyncRxRBuf)),
+      mpcMsgSyncT(MsgSyncTxRBuf, sizeof(MsgSyncTxRBuf), null,          0),
+      mpcMsgDataR(null,                              0, MsgDataRxRBuf, sizeof(MsgDataRxRBuf)),
+      mpcMsgDataT(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), null,          0)
   {
     mcDownLink = lcDownLink;
 
-    mpcMsgSyncR.vMemAlloc(0, 2);
-    mpcMsgSyncT.vMemAlloc(2, 0);
-    mpcMsgDataR.vMemAlloc(0, enCnstMaxDataPlusCheckSum);
-    mpcMsgDataT.vMemAlloc(enCnstMaxDataPlusCheckSum, 0);
-
-    vOnResetCom();
+    mpcMsgSyncR.cRxData.muiLen = sizeof(MsgSyncRxRBuf);
+    mpcMsgSyncT.cTxData.muiLen = sizeof(MsgSyncTxRBuf);
 
     vSetTimeoutReload(lcDownLink->mu32Baud);
   }
@@ -88,6 +92,7 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
   {
     bool lbRet = cBotNet_ComLinkI2c::bAddedToBn(lu16Adr);
     mcDownLink->vAddSlave((cComNode*)this);
+    vOnResetCom();
     return lbRet;
   }
 
@@ -98,7 +103,6 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
 
   void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override // __attribute__((optimize("-O0")))
   {
-    UNUSED(lenError);
     UNUSED(lenState);
 
     switch(lenError)
@@ -184,8 +188,8 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
         case cBotNet_SyncedLinkBase::tenStates::enStSyncStartTx:
           if (lenEvent == cComNode::tenEvent::enEvPrepareToSendData)
           {
-           u8 lu8NoCheck = 0;
-           u8 lu8OneWay = 0;
+            u8 lu8NoCheck = 0;
+            u8 lu8OneWay = 0;
 
             // Wurden vorherige Daten Acknowledged ?
             if ((IsAckTx()) || (mpcMsgDataT.cTxData.muiLen == 0))
@@ -554,6 +558,7 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
   void vSync() override
   {
     mStatus.IsStartRequested = 1;
+    vSyncStart();
   }
 };
 
@@ -563,28 +568,31 @@ class cBotNet_DownLinkI2c: public cBotNet_ComLinkI2c
 class cBotNet_UpLinkI2c:public cBotNet_ComLinkI2c
 {
   public:
+  u8 mpu8ComBufRx[cBotNet_UpLinkComBufSize];
+  u8 mpu8ComBufTx[cBotNet_UpLinkComBufSize];
+
   cI2cSlave *mcUpLink;
 
-  cComDatMsg mpcMsgSyncR;
-  cComDatMsg mpcMsgSyncT;
-  cComDatMsg mpcMsgDataR;
-  cComDatMsg mpcMsgDataT;
+  cComDatMsg mpcMsgSyncR; u8 MsgSyncRxRBuf[2];
+  cComDatMsg mpcMsgSyncT; u8 MsgSyncTxRBuf[2];
+  cComDatMsg mpcMsgDataR; u8 MsgDataRxRBuf[enCnstMaxDataPlusCheckSum];
+  cComDatMsg mpcMsgDataT; u8 MsgDataTxRBuf[enCnstMaxDataPlusCheckSum];
 
   cBotNet_SyncedLinkBase::tenStates   menSm;
 
   bool mbMBusy;
 
   cBotNet_UpLinkI2c(cI2cSlave* lcUpLink)
-  : cBotNet_ComLinkI2c(cBotNet_UpLinkComBufSize, cBotNet_UpLinkComBufSize, cBotNet_LinkBase::enUpLink)
+  : cBotNet_ComLinkI2c(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enUpLink),
+    mpcMsgSyncR(null,                              0, MsgSyncRxRBuf, sizeof(MsgSyncRxRBuf)),
+    mpcMsgSyncT(MsgSyncTxRBuf, sizeof(MsgSyncTxRBuf), null,          0),
+    mpcMsgDataR(null,                              0, MsgDataRxRBuf, sizeof(MsgDataRxRBuf)),
+    mpcMsgDataT(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), null,          0)
   {
     vSet(lcUpLink);
 
-    mpcMsgSyncR.vMemAlloc(0, 2);
-    mpcMsgSyncT.vMemAlloc(2, 0);
-    mpcMsgDataR.vMemAlloc(0, enCnstMaxDataPlusCheckSum);
-    mpcMsgDataT.vMemAlloc(enCnstMaxDataPlusCheckSum, 0);
-
-    vOnResetCom();
+    mpcMsgSyncR.cRxData.muiLen = sizeof(MsgSyncRxRBuf);
+    mpcMsgSyncT.cTxData.muiLen = sizeof(MsgSyncTxRBuf);
 
     vSetTimeoutReload(lcUpLink->mu32Baud);
   }
@@ -593,6 +601,7 @@ class cBotNet_UpLinkI2c:public cBotNet_ComLinkI2c
   {
     bool lbRet = cBotNet_ComLinkI2c::bAddedToBn(lu16Adr);
     mcUpLink->vSetNode((cComNode*)this);
+    vOnResetCom();
     return lbRet;
   }
 
@@ -636,7 +645,7 @@ class cBotNet_UpLinkI2c:public cBotNet_ComLinkI2c
   // Aufgerufen nach 300ms Offline
   void vOnResetCom() override
   {
-    mcUpLink->vReInitHw(cComNode::tenConsts::enResetHwDma);
+    mcUpLink->vResetCom();
     cBotNet_SyncedLinkBase::vOnResetCom();
 
     mStatus.IsInit        = 1;
@@ -714,7 +723,6 @@ class cBotNet_UpLinkI2c:public cBotNet_ComLinkI2c
       }
     }
   }
-
 
   void  vSm(cComNode::tenEvent lenEvent)  // __attribute__((optimize("-O0")))
   {
@@ -1063,6 +1071,7 @@ class cBotNet_UpLinkI2c:public cBotNet_ComLinkI2c
   void vTick1ms() override
   {
     mcUpLink->vTick1ms();
+    vSyncStart();
   }
 };
 

@@ -14,6 +14,7 @@ class cDiffTimerHw
 {
 public:
   // Tim2 32Bit Timer. Set to 1us
+  // 1us * 32Bit: 4294967296 us => 4295s => 71min
   static void InitTimer(u32 lu32InitCnt = 0)
   {
     TIM_HandleTypeDef TimHandle = {};

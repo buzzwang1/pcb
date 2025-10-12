@@ -14,11 +14,9 @@ void cSysPkgClock::vInit1(void)
 
 void cSysPkgClock::vInit2(void)
 {
-  // Funk-Empfänger vorhanden
   if (mClock.bResync())
   {
     mu32ClockResyncTimeout_s = 3 * 60;
-    //mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
     mClock.vSetSyncAttempt();
   }
 }
@@ -63,12 +61,33 @@ void cSysPkgClock::vTick1000msLp(void)
   if (mClock.bResync())
   {
     mu32ClockResyncTimeout_s = 3 * 60;
-    //mcSys.mcCom.mcSideLink.vKeepReceiverOnWhileWaiting(True);
     mClock.vSetSyncAttempt();
   }
 
   if (mu32ClockResyncTimeout_s)
   {
     mu32ClockResyncTimeout_s--;
+  }
+
+  if (mu32ClockResyncTimeout_s)
+  {
+    // Nur alle 4s machen, sonst kommt man mit den 2s-Timeout nach dem übernehmen
+    // der Zeit in Konflikt
+    if ((mu32ClockResyncTimeout_s & 3) == 0)
+    {
+      if (mcSys.mcCom.mcBn.mcAdr.Get() != 0x1000) // Nicht an sich selbst schicken
+      {
+        // Request Zeit
+        cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgReqClock, 16, mcSys.mcCom.mcBn.mcAdr.Get(), 0x1000, 32);
+
+        // TX 02 | 00 | 00 | RM.1M.2M.3M
+        lcMsgReqClock.mcPayload[0] = 1;
+        lcMsgReqClock.mcPayload[1] = 0;
+        lcMsgReqClock.mcPayload[2] = 0;
+
+        lcMsgReqClock.vEncode();
+        mcSys.mcCom.mcBn.bSendMsg(&lcMsgReqClock);
+      }
+    }
   }
 }

@@ -2093,7 +2093,7 @@ class cSysPkgBoard
   public:
 
   /*Test*/
-  cGpPin mcWakeup;
+  cGpPin mcWakeupPin;
 
   /*PA8 im Testmode für Interrupt Timing */
   cStatusLed<GPIOB_BASE, 9> mcStatusLed;
@@ -2116,6 +2116,8 @@ class cSysPkgBoard
 
   bool isError(cStr& lszErrorInfo);
   bool isReadyForSleep(cStr& lcStatus);
+
+  bool isWakeUp();
 
   void vTick1msHp(void);
   void vTick1msLp(void);

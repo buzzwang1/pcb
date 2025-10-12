@@ -388,6 +388,7 @@ typedef struct
   u8 u8Enable;
   u8 u8RotSwitch;
   u8 u8AnimIdx;
+  u8 u8Updated;
 }tstSLedState;
 
 #define MAIN_ROTSWITCHCNT 2
@@ -790,6 +791,7 @@ class cSmLightBrightness
 
   tenSmLedMode menMode = enModeDay;
   i16 mu16SollBrigthness = 0;
+  i16 mu16SollBrigthnessSave = 0;
   i16 mu16IstBrigthness = 0;
   u16 mu16OnSettleTime_ms;
   u32 mu32ChangeTimeout_ms;
@@ -820,12 +822,16 @@ class cSmLightBrightness
             // Entry
             for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
             {
-              vPSwitchReqMsgSetLed(0x1110 + 0x10 * lu8Node, 0, 0, mstLedStateSoll[lu8Node].u8AnimIdx);
+              //                   BnDstAdr,                lu8Enable, lu8RotSwtchPos, lu8AnimIdx
+              vPSwitchReqMsgSetLed(0x1110 + 0x10 * lu8Node, 0,         0,              mstLedStateSoll[lu8Node].u8AnimIdx);
             }
-            vPwrReqMsgSetChn(0x1200, 1, 0, 0, 100);
-            vPwrReqMsgSetChn(0x1150, 1, 0, 0, 100);
-            vPwrReqMsgSetLed(0x1200, 0, 0, mstLedStateSoll[0].u8AnimIdx);
-            vPwrReqMsgSetLed(0x1150, 0, 0, mstLedStateSoll[0].u8AnimIdx);
+            //               lu16BnDstAdr, lu8Relais, lu8Chl1, lu8Chl2, lu8Chl3
+            vPwrReqMsgSetChn(0x1200,       1,         0,       0,       100); // Spiegellampe
+            vPwrReqMsgSetChn(0x1150,       1,         0,       0,       100); // Deckenlampe
+
+            //               lu16BnDstAdr, lu8Enable, lu8Brigthness, lu8AnimIdx)
+            vPwrReqMsgSetLed(0x1200,       0,         0,             mstLedStateSoll[0].u8AnimIdx); // Spiegellampe
+            vPwrReqMsgSetLed(0x1150,       0,         0,             mstLedStateSoll[0].u8AnimIdx); // Deckenlampe
           }
           break;
         case stOn:
@@ -842,11 +848,14 @@ class cSmLightBrightness
             if (mu16OnSettleTime_ms)
             {
               // Eine Einschalt-Verzögerung bis sich alles stabilisiert hat.
-              // Dieser Teil wird nur die ersten mu16OnSettleTime_ms nachdem Einschalten gemacht
-              vPSwitchReqMsgSetChn(0x1100, 1, 1, 1);
+              // Dieser Teil wird nur die ersten 2s (mu16OnSettleTime_ms)  nachdem Einschalten gemacht
+              
+              //                  lu16BnDstAdr, lu8Chl1, lu8Chl2, lu8Chl3)
+              vPSwitchReqMsgSetChn(0x1100,      1,       1,       1); // PSwitch
              
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
+                //                   BnDstAdr,                lu8Enable,                         lu8RotSwtchPos,                       lu8AnimIdx
                 vPSwitchReqMsgSetLed(0x1110 + 0x10 * lu8Node, mstLedStateSoll[lu8Node].u8Enable, mstLedStateSoll[lu8Node].u8RotSwitch, mstLedStateSoll[lu8Node].u8AnimIdx);
               }
 
@@ -867,16 +876,16 @@ class cSmLightBrightness
 
             if (mu32ChangeTimeout_ms == 0)
             {
+              // Schauen, ob sich Istzustand verändert hat.
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
-                if ((mstLedStateIst[lu8Node].u8Enable    != mstLedStateSoll[lu8Node].u8Enable) ||
-                    (mstLedStateIst[lu8Node].u8RotSwitch != mstLedStateSoll[lu8Node].u8RotSwitch) ||
-                    (mstLedStateIst[lu8Node].u8AnimIdx   != mstLedStateSoll[lu8Node].u8AnimIdx))
+                if (mstLedStateIst[lu8Node].u8Updated)
                 {
+                  mstLedStateIst[lu8Node].u8Updated = 0;
                   lbDoUpdate = True;
                   lu8DiffNode = lu8Node;
                   mu16SollBrigthness  = u8RotSwitchToBrigthnessDigit(mstLedStateIst[lu8Node].u8RotSwitch);
-                  mu16SollBrigthness *= mstLedStateIst[lu8Node].u8Enable;
+                  mu16SollBrigthness *= mstLedStateIst[lu8Node].u8Enable;                  
                   mbUserChange = True;
                   mu32ChangeTimeout_ms = 200;
                   break;
@@ -894,11 +903,13 @@ class cSmLightBrightness
             {
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
+                mstLedStateSoll[lu8Node].u8Updated   = mstLedStateIst[lu8DiffNode].u8Updated;
                 mstLedStateSoll[lu8Node].u8Enable    = mstLedStateIst[lu8DiffNode].u8Enable;
                 mstLedStateSoll[lu8Node].u8RotSwitch = mstLedStateIst[lu8DiffNode].u8RotSwitch;
                 mstLedStateSoll[lu8Node].u8AnimIdx   = mstLedStateIst[lu8DiffNode].u8AnimIdx;
                 if (lu8DiffNode != lu8Node)
                 {
+                  //                   BnDstAdr,                lu8Enable,                         lu8RotSwtchPos,                       lu8AnimIdx
                   vPSwitchReqMsgSetLed(0x1110 + 0x10 * lu8Node, mstLedStateSoll[lu8Node].u8Enable, mstLedStateSoll[lu8Node].u8RotSwitch, mstLedStateSoll[lu8Node].u8AnimIdx);
                 }
               }
@@ -982,6 +993,7 @@ class cSmLightBrightness
     {
       for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
       {
+        mstLedStateIst[lu8Node].u8Updated   = mstLedStateSoll[lu8Node].u8Updated   = 0;
         mstLedStateIst[lu8Node].u8Enable    = mstLedStateSoll[lu8Node].u8Enable    = 1;
         mstLedStateIst[lu8Node].u8RotSwitch = mstLedStateSoll[lu8Node].u8RotSwitch = u8BrigthnessDigitToRotSwitch(mcData.mData.u8BrigthnessNigth);
         mstLedStateIst[lu8Node].u8AnimIdx   = mstLedStateSoll[lu8Node].u8AnimIdx   = mcData.mData.u8LedAnimationIdxNigth;
@@ -992,6 +1004,7 @@ class cSmLightBrightness
     {
       for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
       {
+        mstLedStateIst[lu8Node].u8Updated   = mstLedStateSoll[lu8Node].u8Updated   = 0;
         mstLedStateIst[lu8Node].u8Enable    = mstLedStateSoll[lu8Node].u8Enable    = 1;
         mstLedStateIst[lu8Node].u8RotSwitch = mstLedStateSoll[lu8Node].u8RotSwitch = u8BrigthnessDigitToRotSwitch(mcData.mData.u8BrigthnessDay);
         mstLedStateIst[lu8Node].u8AnimIdx   = mstLedStateSoll[lu8Node].u8AnimIdx   = mcData.mData.u8LedAnimationIdxDay;
@@ -1013,11 +1026,15 @@ class cSmLightBrightness
   }
 
   void vEnable()
-  {
-    mState = stOn;
+  {    
+    
     mbNewState = True;
     mu32ChangeTimeout_ms = 200;
-    vSetDayNigthMode();
+    if (mState != stOn)
+    {
+      vSetDayNigthMode();
+    }
+    mState = stOn;
     mbUserChange = False;
   }
 
@@ -1120,12 +1137,14 @@ class cSmLight
 
           if (mu32PirCnt_ms == 0)
           {
+            mcLightCntrl.mu16SollBrigthnessSave = mcLightCntrl.mu16SollBrigthness;
             mcLightCntrl.mu16SollBrigthness = mcLightCntrl.mu16SollBrigthness / 2;
             mState = stOnHold;
             lbLoop = True;
           }
 
           if ((mcPinPIR.ui8Get()) ||
+              (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1)) ||
               (mcLightCntrl.isUserChange()))
           {
             mu32PirCnt_ms = 1000 * 60 * 10;
@@ -1149,8 +1168,10 @@ class cSmLight
           }
 
           if ((mcPinPIR.ui8Get()) ||
+              (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1)) ||
               (mcLightCntrl.isUserChange()))
           {
+            mcLightCntrl.mu16SollBrigthness = mcLightCntrl.mu16SollBrigthnessSave;
             mu32PirCnt_ms = 1000 * 60 * 10;
             mState = stOn;
             lbLoop = True;
@@ -1172,6 +1193,7 @@ class cSmLight
           }
 
           if ((mcPinPIR.ui8Get()) ||
+              (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1)) ||
               (mcLightCntrl.isUserChange()))
           {
             mu32PirCnt_ms = 1000 * 60 * 10;
@@ -1192,7 +1214,8 @@ class cSmLight
 
   void vTick100ms()
   {
-    bool lbPIR = mcPinPIR.ui8Get(); // High aktive
+    bool lbPIR = (mcPinPIR.ui8Get() || // High aktive
+                 (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1))); 
 
     if (lbPIR)
     {
@@ -1277,6 +1300,7 @@ public:
                   mstLedStateIst[lu8Node].u8Enable    = lcMsg.mcPayload[3];
                   mstLedStateIst[lu8Node].u8RotSwitch = lcMsg.mcPayload[4];
                   mstLedStateIst[lu8Node].u8AnimIdx   = lcMsg.mcPayload[5];
+                  mstLedStateIst[lu8Node].u8Updated   = 1;
                   break;
                 }
               }

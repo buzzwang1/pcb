@@ -181,7 +181,7 @@ void cPowerManager::vTick10ms()
 void cMySystemPowerDown::vInit()
 {
   mu32NoSleepCounterReload = 60 * 10; // 60s * 10
-  if (mcSys.mcBoard.mcWakeup.ui8Get() == 1)
+  if (mcSys.mcBoard.isWakeUp())
   {
     mu32NoSleepCounter = mu32NoSleepCounterReload;
   }
@@ -318,7 +318,7 @@ bool cMySystemPowerDown::bExitRun()
   ////#endif
 
   //Warten bis WakeUp Pin Pa01 low ist
-  if (mcSys.mcBoard.mcWakeup.ui8Get() == 1)
+  if (mcSys.mcBoard.isWakeUp())
   {
     lbRet = False;
     if (mu32NoSleepCounter < mu32NoSleepCounterReload)
@@ -433,8 +433,8 @@ cSysPkgSMan::cSysPkgSMan()
   // Debugger pause
   // Wenn man zu schnell Schlafen geht, dann kann der Debugger nicht mehr connected
   // Daher nach POR etwas länger warten
-  if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
-      (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst))
+  if ((cWufHandler::munWakeupSources.stWakeupSources.isWuPinRst) ||
+      (cWufHandler::munWakeupSources.stWakeupSources.isWuSftRst))
   {
     mcPowerManager.mu16DRunTimer       = 1000; /* *[10ms] = 10s */
     mcPowerManager.mu16DRunTimerReload = 1000; /* *[10ms] = 10s */
@@ -444,8 +444,8 @@ cSysPkgSMan::cSysPkgSMan()
 
 void cSysPkgSMan::vInit1(void)
 {
-  if ((cWufHandler::munWakeupSources->stWakeupSources.isWuPinRst) ||
-      (cWufHandler::munWakeupSources->stWakeupSources.isWuSftRst))
+  if ((cWufHandler::munWakeupSources.stWakeupSources.isWuPinRst) ||
+      (cWufHandler::munWakeupSources.stWakeupSources.isWuSftRst))
   {
     // Software oder Hardwarereset
     mcSys.mcClock.mClock.vClear();
@@ -456,8 +456,8 @@ void cSysPkgSMan::vInit1(void)
   }
   else
   {
-    if ((cWufHandler::munWakeupSources->stWakeupSources.isWuTimerRtc) ||
-        (cWufHandler::munWakeupSources->stWakeupSources.isWuStandBy))
+    if ((cWufHandler::munWakeupSources.stWakeupSources.isWuTimerRtc) ||
+        (cWufHandler::munWakeupSources.stWakeupSources.isWuStandBy))
     {
       // WakeUp nach Sleep, entweder von Clock oder WakeUp-Pin
       mcPowerManager.vContinueAfterWakeup();

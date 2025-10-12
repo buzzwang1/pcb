@@ -18,20 +18,28 @@ class cDiffTimer: public cDiffTimerHw
 {
   public:
   static u8  mu8Init;
-  char mszString[10];
 
   u32  mu32LastTimerValue;
 
-  cDiffTimer(u32 lu32InitCnt = 0)
+  cDiffTimer(u32 lu32InitCnt = 0, bool mbInit = True)
+  {
+    mu32LastTimerValue = lu32InitCnt;
+    if (mbInit)
+    {
+      vInit();
+    }
+  };
+
+  void vInit()
   {
     if (mu8Init == 0)
     {
       mu8Init = 1;
-      InitTimer(lu32InitCnt);
+      InitTimer(mu32LastTimerValue);
     }
 
     start();
-  };
+  }
 
   void start()
   {
@@ -71,6 +79,7 @@ class cDiffTimer: public cDiffTimerHw
 
   char* toString()
   {
+    static char mszString[10];
     cStrTools::uixItoan(get(), mszString, 10, 10);
     return mszString;
   };

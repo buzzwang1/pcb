@@ -49,22 +49,29 @@ set(PCB_ProjectPackageList
     Data/Mem/BuRam/Def/v00.00.01:STM32U5xx:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32U5xx
 
-    Data/String/CStrT/v00.00.01_NoFpu
+
+    Data/String/Cli/v00.00.01    
+    Data/String/CStrT/v00.00.01
     Data/String/StringTools/v00.00.02
 
-    Data/BotNet/v00.00.06/Base/Main/v00.00.02:Blu:Mini
-    Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
-    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32U5xx
-    Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
+    Data/BotNet/v00.00.06/Base/Main/v00.00.02:UpLinkOnly
+      Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32U5xx
+      Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
-    Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default
-    #Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default
-    #Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default
+      Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default
+      #Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default
+      #Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default
     Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
-    Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
-    Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
+    Data/BotNet/v00.00.06/BnStreamSys/Base/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:Dummy
+
+
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
     Driver/STM32/U5/Hal/v01.01.00/Core
@@ -72,7 +79,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/U5/Hal/v01.01.00/HAL:lib_o3_32Mhz
     Driver/STM32/U5/Hal/GPPin/v01.00.02
     #Driver/STM32/U5/Hal/cUart/Int/v01.00.01
-    #Driver/STM32/L4/HAL/cUart/MpHd/v01.00.02_Mini:Tim15
+    #Driver/STM32/L4/Hal/cUart/MpHd/v01.00.03_Mini:Tim15
     Driver/STM32/U5/Hal/cI2C/v01.00.09
 
     #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv28b2_STM32U5xx
@@ -82,7 +89,7 @@ set(PCB_ProjectPackageList
     System/CyclicCaller/v00.00.01:stm32U5xx_TIM6
     System/STM32/ClockInfo/v00.00.01:stm32u5xx
 
-    APP/Job/JobHdl/v00.00.01
+    APP/Job/JobHdl/v00.00.01:us
  
     main/STM32U585CIT/Mini/Sys/BLU/MB_I2c
 )

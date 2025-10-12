@@ -16,25 +16,6 @@
 #include "ClockInfo.h"
 
 
-class cComNodeUsartMpHd_Slave : public cComNode
-{
-public:
-  cComDatMsg mpcMsg;
-
-  cComNodeUsartMpHd_Slave(uint32 lui32TxDataSize, uint32 lui32RxDataSize)
-  {
-    mpcMsg.vMemAlloc(lui32TxDataSize, lui32RxDataSize);
-  };
-
-  //~cComNodeI2c_Slave() {};
-
-  inline uint32 SizeOf()
-  {
-    return mpcMsg.SizeOf() -
-           sizeof(mpcMsg) +
-           sizeof(cComNodeUsartMpHd_Slave);
-  }
-};
 
 
 class cComNodeListUsartMpHd_Master :public cComNodeList

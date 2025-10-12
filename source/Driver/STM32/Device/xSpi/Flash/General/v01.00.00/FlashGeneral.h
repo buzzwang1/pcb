@@ -42,6 +42,7 @@ class cSpiFlashGeneral
     StInit5,
     StInit6,
     StInit7,
+    StInit8,
 
     StRead1,
     StRead2,
@@ -69,6 +70,7 @@ class cSpiFlashGeneral
   u32 mu32FlashSize;
   u32 mu32FlashSectorCount;
   u32 mu32FlashSectorSize;
+  u32 mu32FlashPageSize;
   u32 mu32FlashBaseAdr;
 
   u8* mu32WorkAdrRam;
@@ -81,7 +83,7 @@ class cSpiFlashGeneral
   u8  mu8Error;
   bool mbInit;
 
-  cSpiFlashGeneral(u32 lu32SectorSize, u32 lu32SectorCount, u32 lu32FlashBaseAdr)
+  cSpiFlashGeneral(u32 lu32SectorSize, u32 lu32FlashPageSize, u32 lu32SectorCount, u32 lu32FlashBaseAdr)
   {
     menState = StInitMissing;
     mbInit   = False;
@@ -89,11 +91,12 @@ class cSpiFlashGeneral
     mu32Delay_us = 0;
     mu8FlashStatus[0] = mu8FlashStatus[1] = mu8FlashStatus[2] = 0;
 
-    mu32FlashID = INIT_ID;
+    mu32FlashID   = INIT_ID;
     mu32FlashSize = lu32SectorCount * lu32SectorSize;
     mu32FlashSectorCount = lu32SectorCount;
     mu32FlashSectorSize  = lu32SectorSize;
     mu32FlashBaseAdr     = lu32FlashBaseAdr;
+    mu32FlashPageSize    = lu32FlashPageSize;
   }
 
   void vSetError()

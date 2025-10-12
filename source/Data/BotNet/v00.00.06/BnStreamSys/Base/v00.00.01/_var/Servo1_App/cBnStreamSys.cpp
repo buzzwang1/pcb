@@ -2,9 +2,9 @@
 #include "cBotnet.h"
 
 cBotNetStreamSystem::cBotNetStreamSystem(cBotNet* lcBn)
-  : mcRxComBuf(cBotNet_StreamSysComBufSize), mcTxComBuf(cBotNet_StreamSysComBufSize),
-    mcMsgRx(cBotNet_MsgSize), mcMsgStreamRx(&mcMsgRx),
-    mcMsgTx(cBotNet_MsgSize), mcMsgStreamTx(&mcMsgTx),
+  : mcRxComBuf(mcRxComBufBuf, sizeof(mcRxComBufBuf)), mcTxComBuf(mcTxComBufBuf, sizeof(mcTxComBufBuf)),
+    mcMsgRx(mcMsgRxBuf, sizeof(mcMsgRxBuf)), mcMsgStreamRx(&mcMsgRx),
+    mcMsgTx(mcMsgTxBuf, sizeof(mcMsgTxBuf)), mcMsgStreamTx(&mcMsgTx),
     mcCmdPort(lcBn)
 {
   mcBotNet = lcBn;

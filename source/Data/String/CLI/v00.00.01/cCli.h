@@ -178,9 +178,6 @@ class cCliCmdList
       mCmdListNext = null;
     }
 
-
-
-
     virtual bool bAddCmd(cCliCmd *mCmd) {UNUSED(mCmd); return False;}
 
     void vAddList(cCliCmdList *lcNextList)

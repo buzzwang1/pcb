@@ -68,7 +68,7 @@ public:
     enCnstWaitRSyncUp   = enCnstWait20us,
     enCnstWaitRDataUp   = enCnstWait30us,
     enCnstWaitRSyncDwn  = enCnstWait30us,
-    enCnstWaitRDataDwn  = enCnstWait30us,
+    enCnstWaitRDataDwn  = enCnstWait50us,
     enCnstWaitSyncUp    = enCnstWait30us,
     enCnstWaitComUp     = enCnstWait75us,
     enCnstWaitEndUp     = enCnstWait50us,

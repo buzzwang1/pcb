@@ -91,7 +91,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
       }
       return *this;
     };
-    
+
     inline cbArrayExtT&  Set(uint8 lbByte)
     {
       if (cbArrayT<tyArrayExtIdxT>::muiSize)
@@ -135,7 +135,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
     {
       if (luiPos < cbArrayT<tyArrayExtIdxT>::muiSize)
       {
-        if (luiPos >= muiLen) 
+        if (luiPos >= muiLen)
         {
           muiLen = luiPos + 1;
         }
@@ -216,7 +216,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
       }
       return *this;
     };
-    
+
     cbArrayExtT& operator+=(uint8 lui8Byte)
     {
       Add(lui8Byte);
@@ -233,7 +233,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
     {
       if (luiSize)
       {
-        if (luiPos >= muiLen) 
+        if (luiPos >= muiLen)
         {
           Add(lpaArray, luiSize);
         }
@@ -277,7 +277,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
     {
       if (cbArrayT<tyArrayExtIdxT>::muiSize)
       {
-        if (luiPos >= muiLen) 
+        if (luiPos >= muiLen)
         {
           Add(lui8Byte);
         }
@@ -316,7 +316,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
         tyArrayExtIdxT luiCnt;
 
         //Eigentlicher Funktionsrumpf für cbArrayExtT_nMid
-        if ((luiPos >= 0) && (luiLen > 0) && (luiPos < muiLen)) 
+        if ((luiPos >= 0) && (luiLen > 0) && (luiPos < muiLen))
         {
           //Ggf. Länge clippen
           if ((luiPos + luiLen) > muiLen)
@@ -352,11 +352,11 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
       tyArrayExtIdxT luij;
       uint8 li8a;
 
-      for (luii = 0, luij = muiLen - 1; luii < luij; luii++, luij--) 
-      { 
-        li8a = cbArrayT<tyArrayExtIdxT>::mpu8Data[luii]; 
-        cbArrayT<tyArrayExtIdxT>::mpu8Data[luii] = cbArrayT<tyArrayExtIdxT>::mpu8Data[luij]; 
-        cbArrayT<tyArrayExtIdxT>::mpu8Data[luij] = li8a; 
+      for (luii = 0, luij = muiLen - 1; luii < luij; luii++, luij--)
+      {
+        li8a = cbArrayT<tyArrayExtIdxT>::mpu8Data[luii];
+        cbArrayT<tyArrayExtIdxT>::mpu8Data[luii] = cbArrayT<tyArrayExtIdxT>::mpu8Data[luij];
+        cbArrayT<tyArrayExtIdxT>::mpu8Data[luij] = li8a;
       }
 
       return *this;
@@ -403,7 +403,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
           }
           lui8PtrRead++;
           luilen--;
-        }    
+        }
         muiLen = lui8PtrWrite - cbArrayT<tyArrayExtIdxT>::mpu8Data;
       }
       return *this;
@@ -475,7 +475,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
     {
       uint8         *lpaArraying;
 
-      if (luiPos >= muiLen) 
+      if (luiPos >= muiLen)
       {
         return cbArrayExtT_UINTMAX;
       }
@@ -497,7 +497,7 @@ class cbArrayExtT : public cbArrayT<tyArrayExtIdxT>
       uint8        *lpaArraying;
       tyArrayExtIdxT luiTokenLen;
 
-      if (luiPos >= muiLen) 
+      if (luiPos >= muiLen)
       {
         return cbArrayExtT_UINTMAX;
       }
@@ -620,7 +620,7 @@ class cbArrayExtDynT: public cbArrayExtT<tyArrayExtIdxT>
 
         //Eigentlicher Funktionsrumpf für Reuse
         // Falls der bestehende String zu klein ist, wieder löschen und neu anlegen
-        if ((cbArrayExtT<tyArrayExtIdxT>::mpu8Data != null) && 
+        if ((cbArrayExtT<tyArrayExtIdxT>::mpu8Data != null) &&
             (cbArrayExtT<tyArrayExtIdxT>::muiSize < luiArrayLen))
         {
           this->~cbArrayExtDynT();
@@ -659,7 +659,7 @@ class cbArrayExtDynT: public cbArrayExtT<tyArrayExtIdxT>
       cbArrayExtDynT<tyArrayExtIdxT> lcReturn(cbArrayExtT<tyArrayExtIdxT>::muiSize);
 
       //Eigentlicher Funktionsrumpf für cbArrayExtT_nMid
-      if ((luiPos >= 0) && (luiLen > 0) && (luiPos < cbArrayExtT<tyArrayExtIdxT>::muiLen)) 
+      if ((luiPos >= 0) && (luiLen > 0) && (luiPos < cbArrayExtT<tyArrayExtIdxT>::muiLen))
       {
         //Ggf. Länge clippen
         if ((luiPos + luiLen) > cbArrayExtT<tyArrayExtIdxT>::muiLen)

@@ -33,9 +33,9 @@ class cSW6007: public cComNode
 
   cI2cMaster*       mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
-  cComDatMsg mpcMsgReadData;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
+  cComDatMsgDyn mpcMsgReadData;
 
   tenAPDS9960_Cmd    menCmd;
   u16                mIdx;

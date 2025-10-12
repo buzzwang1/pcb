@@ -23,16 +23,159 @@ class cComBufEntry : public cbArrayT<uint16>
 
 
 #ifdef __GNUC__
-class __attribute__((packed)) cComBuf : public cRingBufDynT<uint8, uint16>
+class __attribute__((packed)) cComBuf : public cRingBufT<uint8, uint16>
 #else
-class cComBuf : public cRingBufDynT<uint8, uint16>
+class cComBuf : public cRingBufT<uint8, uint16>
 #endif
 {
   public:
 
   uint16 mui16MsgCnt;
 
-  cComBuf(uint16 luSize)
+  cComBuf(u8* lpu8Data, uint16 luSize)
+    : cRingBufT<uint8, uint16>(lpu8Data, luSize)
+  {
+    mui16MsgCnt = 0;
+  }
+
+  virtual void reset()
+  {
+    cRingBufT::reset();
+    mui16MsgCnt = 0;
+  }
+
+  inline uint32 SizeOf()
+  {
+    return sizeof(cComBuf) + cRingBufT<uint8, uint16>::mtySize * sizeof(uint8);
+  }
+
+  inline bool isMsgIn()
+  {
+    return mui16MsgCnt > 0;
+  }
+
+  inline cComBufEntry* GetPtrNextMsg()
+  {
+    if (isMsgIn())
+    {
+      return (cComBufEntry*)(&mtyBuf[mtyTail]);
+    }
+    return null;
+  }
+
+  bool isFitting(cbArrayExtT<uint16> *lcEntry)
+  {
+    return (cRingBufT<uint8, uint16>::space_left() >= (lcEntry->muiLen + 2));  
+  }
+
+
+  void put(cbArrayExtT<uint16> *lcEntry)
+  {
+    if (lcEntry->muiLen > 0)
+    {
+      _dai();
+      cRingBufT<uint8, uint16>::put_unsafe((uint8*)&lcEntry->muiLen,   sizeof(uint16),  False);
+      cRingBufT<uint8, uint16>::put_unsafe((uint8*)lcEntry->mpu8Data , lcEntry->muiLen, False);
+      mui16MsgCnt++;
+      _eai();
+    }
+  }
+
+  uint16 readLenght()
+  {
+    _dai();
+    uint16 luLen;
+    cRingBufT<uint8, uint16>::get_unsafe((uint8*)&luLen, sizeof(uint16));
+    _eai();
+    return luLen;
+  }
+
+  /*
+  u32 getwithsum(cbArrayExtT<uint16>* lcEntry)
+  {
+    uint32 luSum = 0;
+    _dai();
+
+    if (isMsgIn())
+    {
+      uint16 luLen;
+
+      cRingBufT<uint8, uint16>::get_unsafe((uint8*)&luLen, sizeof(uint16));
+
+      lcEntry->muiLen = luLen;
+      if (lcEntry->muiLen > lcEntry->muiSize)
+      {
+        // Not good! Not enough space for the message
+        lcEntry->muiLen = lcEntry->muiSize;
+        luSum = cRingBufT<uint8, uint16>::getwithsum_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+        luLen -= lcEntry->muiLen;
+        while (luLen)
+        {
+          cRingBufT<uint8, uint16>::get_unsafe();
+          luLen--;
+        }
+      }
+      else
+      {
+        luSum = cRingBufT<uint8, uint16>::getwithsum_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+      }
+      mui16MsgCnt--;
+    }
+    else
+    {
+      lcEntry->muiLen = 0;
+    }
+    _eai();
+    return luSum;
+  }*/
+
+  void get(cbArrayExtT<uint16> *lcEntry)
+  {
+    if (isMsgIn())
+    {
+      uint16 luLen;
+
+      _dai();
+      cRingBufT<uint8, uint16>::get_unsafe((uint8*)&luLen, sizeof(uint16));
+
+      lcEntry->muiLen = luLen;
+      if (lcEntry->muiLen > lcEntry->muiSize)
+      {
+        // Not good! Not enough space for the message
+        lcEntry->muiLen = lcEntry->muiSize;
+        cRingBufT<uint8, uint16>::get_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+        luLen -= lcEntry->muiLen;
+        while (luLen)
+        {
+          cRingBufT<uint8, uint16>::get_unsafe();
+          luLen--;
+        }
+      }
+      else
+      {
+        cRingBufT<uint8, uint16>::get_unsafe((uint8*)lcEntry->mpu8Data, lcEntry->muiLen);
+      }
+      mui16MsgCnt--;
+      _eai();
+    }
+    else
+    {
+      lcEntry->muiLen = 0;
+    }
+  }
+};
+
+#ifdef __GNUC__
+class __attribute__((packed)) cComBufDyn : public cRingBufDynT<uint8, uint16>
+#else
+class cComBufDyn : public cRingBufDynT<uint8, uint16>
+#endif
+{
+  public:
+
+  uint16 mui16MsgCnt;
+
+  cComBufDyn(uint16 luSize)
     : cRingBufDynT<uint8, uint16>(luSize)
   {
     mui16MsgCnt = 0;

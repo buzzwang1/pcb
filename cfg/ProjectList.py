@@ -29,12 +29,12 @@ projects = {
     'CH/CH641/Servo/Test'                        : project('CH641_Servo_Test',                        True,      '',   {'Release' : 'Config_CH641'}),
 
     # --- CH32V305 ------------------------------------------------
-    'CH/V3/CH32V305/Mot/Ledblink'                : project('CH32V305_Mot_Ledblink',                   True,      '',   {'Release' : 'Config_CH32V305'}),
-    'CH/V3/CH32V305/Mot/Servo5/App'              : project('CH32V305_Mot_Servo5_App',                 True,      '',   {'Release' : 'Config_CH32V305'}),
+    #'CH/V3/CH32V305/Mot/Ledblink'                : project('CH32V305_Mot_Ledblink',                   True,      '',   {'Release' : 'Config_CH32V305'}),
+    #'CH/V3/CH32V305/Mot/Servo5/App'              : project('CH32V305_Mot_Servo5_App',                 True,      '',   {'Release' : 'Config_CH32V305'}),
     #'CH/V3/CH32V305/Mot/Servo5/AppDebug'         : project('CH32V305_Mot_Servo5_Debug',               True,      '',   {'Release' : 'Config_CH32V305'}),
     #'CH/V3/CH32V305/Mot/Servo5/AppDebugI2c'      : project('CH32V305_Mot_Servo5_DebugI2c',            True,      '',   {'Release' : 'Config_CH32V305'}),
-    'CH/V3/CH32V305/Mot/Servo5/MemTest'          : project('CH32V305_Mot_Servo5_MemTest',             True,      '',   {'Release' : 'Config_CH32V305'}),
-    'CH/V3/CH32V305/Mot/Servo5/Blu'              : project('CH32V305_Mot_Servo5_Blu',                 True,      '',   {'Release' : 'Config_CH32V305'}),
+    #'CH/V3/CH32V305/Mot/Servo5/MemTest'          : project('CH32V305_Mot_Servo5_MemTest',             True,      '',   {'Release' : 'Config_CH32V305'}),
+    #'CH/V3/CH32V305/Mot/Servo5/Blu'              : project('CH32V305_Mot_Servo5_Blu',                 True,      '',   {'Release' : 'Config_CH32V305'}),
 
     'CH/V3/CH32V305/LeuchtEi/Ledblink'           : project('CH32V305_LeuchtEi_Ledblink',              True,      '',   {'Release' : 'Config_CH32V305'}),
     'CH/V3/CH32V305/LeuchtEi/AppDebug'           : project('CH32V305_LeuchtEi_AppDebug',              True,      '',   {'Release' : 'Config_CH32V305'}),
@@ -72,8 +72,10 @@ projects = {
     'STM/F1/GD32F1x0/UbTech/Servo1/App'           : project('GD32F1x0_UbTech_Servo1_App',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
     'STM/F1/GD32F1x0/UbTech/Servo1/AppDebug'      : project('GD32F1x0_UbTech_Servo1_Debug',           True,      '',   {'Release' : 'Config_GD32F1x0'}),
     'STM/F1/GD32F1x0/UbTech/Servo1/Blu'           : project('GD32F1x0_UbTech_Servo1_Blu',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/Tim0'          : project('GD32F1x0_UbTech_Servo1_Tim0',            True,      '',   {'Debug' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/Usart/HdInt01' : project('GD32F1x0_UbTech_Servo1_Usart_HdInt01',   True,      '',   {'Debug' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LA/App'        : project('GD32F1x0_UbTech_Servo1_LA_App',          True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug'   : project('GD32F1x0_UbTech_Servo1_LA_Debug',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu'        : project('GD32F1x0_UbTech_Servo1_LA_Blu',          True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug'  : project('GD32F1x0_UbTech_Servo1_LA8_Debug',       True,      '',   {'Release' : 'Config_GD32F1x0'}),
 
 
     # --- STM32F103RBT/BluePill ------------------------------------------------
@@ -85,10 +87,10 @@ projects = {
     'STM/F3/HalLib/v01.11.00'                     : project('STM32F3_HalLib',                         True,      '',   {'og' : 'Config_STM32F30x', 'o3' : 'Config_STM32F30x', 'os'  : 'Config_STM32F30x'}),
 
     # --- GD32F330G8 ------------------------------------------------
-    'STM/F3/GD32F3x0/Mot/Ledblink'                : project('GD32F3x0_Mot_Ledblink',                  True,      '',   {'Release' : 'Config_GD32F3x0'}),
-    'STM/F3/GD32F3x0/Mot/Servo5/App'              : project('GD32F3x0_Mot_Servo5_App',                True,      '',   {'Release' : 'Config_GD32F3x0'}),
-    'STM/F3/GD32F3x0/Mot/Servo5/AppDebug'         : project('GD32F3x0_Mot_Servo5_Debug',              True,      '',   {'Release' : 'Config_GD32F3x0'}),
-    'STM/F3/GD32F3x0/Mot/Servo5/Blu'              : project('GD32F3x0_Mot_Servo5_Blu',                True,      '',   {'Release' : 'Config_GD32F3x0'}),
+    #'STM/F3/GD32F3x0/Mot/Ledblink'                : project('GD32F3x0_Mot_Ledblink',                  True,      '',   {'Release' : 'Config_GD32F3x0'}),
+    #'STM/F3/GD32F3x0/Mot/Servo5/App'              : project('GD32F3x0_Mot_Servo5_App',                True,      '',   {'Release' : 'Config_GD32F3x0'}),
+    #'STM/F3/GD32F3x0/Mot/Servo5/AppDebug'         : project('GD32F3x0_Mot_Servo5_Debug',              True,      '',   {'Release' : 'Config_GD32F3x0'}),
+    #'STM/F3/GD32F3x0/Mot/Servo5/Blu'              : project('GD32F3x0_Mot_Servo5_Blu',                True,      '',   {'Release' : 'Config_GD32F3x0'}),
 
 
     # --- STM32F302R8/Nucleo -------------------------------------------------
@@ -114,7 +116,7 @@ projects = {
     'STM/F3/STM32F303CCT/BluePill/LedBlink/PC13'         : project('STM32F303CCT_LedBlink_PC13',      True,     '',   {'Debug' : 'Config_STM32F303'}),
     'STM/F3/STM32F303CCT/BluePill/LedBlink/PC13_4Mhz'    : project('STM32F303CCT_LedBlink_PC13_4Mhz', True,     '',   {'Debug' : 'Config_STM32F303', 'Release' : 'Config_STM32F303'}),
 
-    'STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347'       : project('STM32F303CCT_TB01_Gfx_HX8347',    True,     '',    {'Debug' : 'Config_STM32F303'}),
+    #'STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347'       : project('STM32F303CCT_TB01_Gfx_HX8347',    True,     '',    {'Debug' : 'Config_STM32F303'}),
 
     'STM/F3/STM32F303CCT/BluePill/LP/Test01'             : project('STM32F303CCT_LP_Test01', True, '', {'Debug' : 'Config_STM32F303'}),
 
@@ -231,12 +233,12 @@ projects = {
     'STM/L4/HalLib/v01.17.00'                          : project('STM32L4_HalLib',                     True,     '', {'og' : 'Config_STM32L4R9', 'o3' : 'Config_STM32L4R9', 'os'  : 'Config_STM32L4R9'}),
 
     # --- STM32L433CCT/SolBx -----------------------------------------------
-    'STM/L4/STM32L433CCT/SolBx/01/App'                 : project('STM32L433CCT_SolBx_01_App',          True,     '', {'Debug' : 'Config_STM32L4x3', 'Release' : 'Config_STM32L4x3', 'Debug_App'  : 'Config_STM32L4x3_BlApp', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
-    'STM/L4/STM32L433CCT/SolBx/01/Blu'                 : project('STM32L433CCT_SolBx_01_Blu',          True,     '', {'Debug' : 'Config_STM32L4x3', 'Release' : 'Config_STM32L4x3', 'RamRelease' : 'Config_STM32L4x3'}),
+    #bui  'STM/L4/STM32L433CCT/SolBx/01/App'                 : project('STM32L433CCT_SolBx_01_App',          True,     '', {'Debug' : 'Config_STM32L4x3', 'Release' : 'Config_STM32L4x3', 'Debug_App'  : 'Config_STM32L4x3_BlApp', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
+    #'STM/L4/STM32L433CCT/SolBx/01/Blu'                 : project('STM32L433CCT_SolBx_01_Blu',          True,     '', {'Debug' : 'Config_STM32L4x3', 'Release' : 'Config_STM32L4x3', 'RamRelease' : 'Config_STM32L4x3'}),
 
-    'STM/L4/STM32L433CCT/SolBx/02/Master/01'           : project('STM32L433CCT_SolBx_02_Master_01',    True,     '',   {'Debug' : 'Config_STM32L4x3', 'Debug_App' : 'Config_STM32L4x3_BlApp'}),
-    'STM/L4/STM32L433CCT/SolBx/02/MotBx/01'            : project('STM32L433CCT_SolBx_02_MotBx_01',     True,     '',   {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/SolBx/02/LightBx/01'          : project('STM32L433CCT_SolBx_02_LightBx_01',   True,     '',   {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/SolBx/02/Master/01'           : project('STM32L433CCT_SolBx_02_Master_01',    True,     '',   {'Debug' : 'Config_STM32L4x3', 'Debug_App' : 'Config_STM32L4x3_BlApp'}),
+    #'STM/L4/STM32L433CCT/SolBx/02/MotBx/01'            : project('STM32L433CCT_SolBx_02_MotBx_01',     True,     '',   {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/SolBx/02/LightBx/01'          : project('STM32L433CCT_SolBx_02_LightBx_01',   True,     '',   {'Debug' : 'Config_STM32L4x3'}),
 
     #--- STM32L433CCT/Mini --------------------------------------------------
     'STM/L4/STM32L433CCT/Mini/Sys/BL'                  : project('STM32L433CCT_Mini_Sys_BL',           True,      '', {'Release' : 'Config_STM32L4x3', 'Test'        : 'Config_STM32L4x3'}),
@@ -247,31 +249,37 @@ projects = {
     'STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv1/Main'     : project('STM32L433CCT_Mini_AddOn_LedBrdv1_Main',   True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
     'STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv2/Main'     : project('STM32L433CCT_Mini_AddOn_LedBrdv2_Main',   True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
 
+    'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TmpChk' : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_TmpChk', True, '',  {'Release' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/I2c'    : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_I2c', True, '',  {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
     'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLed'   : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_SLed', True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
+    'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/SLedDisp' : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_SLedDisp', True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
+
+    'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TM'     : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_TM', True,   '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
+    'STM/L4/STM32L433CCT/Mini/AddOn/PSwitch/v3/TS'     : project('STM32L433CCT_Mini_AddOn_PSwitch_v3_TS', True,   '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
 
     'STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int'         : project('STM32L433CCT_Mini_LedBlink_PB9Int',  True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/LedBlink/PB9Int'         : project('STM32L433CCT_Mini_LedBlink_PB9Int',  True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/LedBlink/PB9Ext'         : project('STM32L433CCT_Mini_LedBlink_PB9Ext',  True,      '', {'Debug' : 'Config_STM32L4x3'}),
-
+    'STM/L4/STM32L433CCT/Mini/MBv10b2/PcIfcNet'        : project('STM32L433CCT_Mini_MBv10b2_PcIfcNet', True,      '', {'Release' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/MBv10b2/TestEep'         : project('STM32L433CCT_Mini_MBv10b2_TestEep',  True,      '', {'Release' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/MBv10b2/Main01'          : project('STM32L433CCT_Mini_MBv10b2_Main01',   True,      '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp', 'Test' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01'   : project('STM32L433CCT_Mini_MBv10b2_Flur_01',  True,      '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp', 'Test' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Pflanzen/01':project('STM32L433CCT_Mini_MBv10b2_Pflanzen_01', True,   '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp', 'Test' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Bad/01'    : project('STM32L433CCT_Mini_MBv10b2_Bad_01',   True,      '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp', 'Test' : 'Config_STM32L4x3'}),
 
 
     #--- STM32L433CCT/BluePill --------------------------------------------------
-    'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als'    : project('STM32L433CCT_I2C_APDS9960_Als',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds'     : project('STM32L433CCT_I2C_APDS9960_Ds',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs'     : project('STM32L433CCT_I2C_APDS9960_Gs',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/HTU21D'          : project('STM32L433CCT_I2C_HTU21D',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/INA219'          : project('STM32L433CCT_I2C_INA219',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/I2C/SW6007'          : project('STM32L433CCT_I2C_SW6007',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Als'    : project('STM32L433CCT_I2C_APDS9960_Als',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Ds'     : project('STM32L433CCT_I2C_APDS9960_Ds',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs'     : project('STM32L433CCT_I2C_APDS9960_Gs',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/HTU21D'          : project('STM32L433CCT_I2C_HTU21D',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/INA219'          : project('STM32L433CCT_I2C_INA219',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/I2C/SW6007'          : project('STM32L433CCT_I2C_SW6007',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
-    'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Mot/Test02'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Mot/Test03'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Mot/Test02'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Mot/Test03'          : project('STM32L433CCT_Mot_Test02',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/PC13'       : project('STM32L433CCT_LedBlink_PC13',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/All'        : project('STM32L433CCT_LedBlink_All',           True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/LedBlink/All2'       : project('STM32L433CCT_LedBlink_All2',          True,      '', {'Debug' : 'Config_STM32L4x3'}),
@@ -282,22 +290,22 @@ projects = {
     'STM/L4/STM32L433CCT/BluePill/Test/PowTestRtc'     : project('STM32L433CCT_Tests_PowTestRtc',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Test/Loop8Mhz'       : project('STM32L433CCT_Tests_Loop8Mhz',         True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Gfx/ST7735'          : project('STM32L433CCT_Gfx_ST7735',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/PwrBx'               : project('STM32L433CCT_PwrBx',                  True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/PwrBx'               : project('STM32L433CCT_PwrBx',                  True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     'STM/L4/STM32L433CCT/BluePill/Usart/Usart1Echo'    : project('STM32L433CCT_Tests_Usart1Echo',       True,      '', {'Debug' : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Switch'  : project('STM32L433CCT_Tests_Servo_Switch',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01'  : project('STM32L433CCT_Tests_Servo_Test01',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02'  : project('STM32L433CCT_Tests_Servo_Test02',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03'  : project('STM32L433CCT_Tests_Servo_Test03',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04'  : project('STM32L433CCT_Tests_Servo_Test04',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test01'  : project('STM32L433CCT_Tests_Servo_Test01',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test02'  : project('STM32L433CCT_Tests_Servo_Test02',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test03'  : project('STM32L433CCT_Tests_Servo_Test03',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/Usart/Servo/Test04'  : project('STM32L433CCT_Tests_Servo_Test04',     True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
-    'STM/L4/STM32L433CCT/BluePill/MAX31855/Test01'     : project('STM32L433CCT_MAX31855_Test01',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/MAX31855/Test01'     : project('STM32L433CCT_MAX31855_Test01',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
-    'STM/L4/STM32L433CCT/BluePill/LaufSens/Test01'     : project('STM32L433CCT_LaufSens_Test01',        True,      '', {'Release' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/LaufSens/Test01'     : project('STM32L433CCT_LaufSens_Test01',        True,      '', {'Release' : 'Config_STM32L4x3'}),
 
-    'STM/L4/STM32L433CCT/BluePill/WS2812/Test01'       : project('STM32L433CCT_Tests_WS2812_Test01',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/WS2812/Test02'       : project('STM32L433CCT_Tests_WS2812_Test02',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    'STM/L4/STM32L433CCT/BluePill/WS2812/Test03'       : project('STM32L433CCT_Tests_WS2812_Test03',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/WS2812/Test01'       : project('STM32L433CCT_Tests_WS2812_Test01',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/WS2812/Test02'       : project('STM32L433CCT_Tests_WS2812_Test02',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    #'STM/L4/STM32L433CCT/BluePill/WS2812/Test03'       : project('STM32L433CCT_Tests_WS2812_Test03',    True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     #--- STM32L4R9/STM32L4R9IDISCOVERY -------------------------------------
     'STM/L4/STM32L4R9/L4R9AIDISCO/LedBlink/PB13'       : project('STM32L4R9_LedBlink_PB13',             True,      '', {'Debug' : 'Config_STM32L4R9'}),
@@ -332,7 +340,11 @@ projects = {
     'STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/INA3221'     : project('STM32U585CIT_Mini_MBv28b2_I2C_INA3221', True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/TPS55288'    : project('STM32U585CIT_Mini_MBv28b2_I2C_TPS55288',True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/Main01'          : project('STM32U585CIT_Mini_MBv28b2_Main01',      True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/Main02'          : project('STM32U585CIT_Mini_MBv28b2_Main02',      True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/Main03'          : project('STM32U585CIT_Mini_MBv28b2_Main03',      True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/Test01'          : project('STM32U585CIT_Mini_MBv28b2_Test01',      True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS'        : project('STM32U585CIT_Mini_MBv28b2_FreeRTOS',    True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/Usb'             : project('STM32U585CIT_Mini_MBv28b2_Usb',         True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BL'                  : project('STM32U585CIT_Mini_Sys_BL',              True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_nrf905'       : project('STM32U585CIT_Mini_Sys_BLU_MB_nrf905',   True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_I2c'          : project('STM32U585CIT_Mini_Sys_BLU_MB_I2c',      True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),
@@ -380,6 +392,7 @@ projects = {
     #'Pc/Garmin/Test01'                                    : project('Pc_Garmin_Test01',            True,     '',   {'Debug' : 'Config_PcMsWin'}),
     #'Pc/Garmin/Test02'                                    : project('Pc_Garmin_Test02',            True,     '',   {'Debug' : 'Config_PcMsWin'}),
     #'Pc/Test/OverloadOpTest01'                            : project('Pc_Test_OverloadOpTest01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
+    'Pc/Test/CppTests'                                     : project('Pc_Test_CppTests',            True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
     #'Pc/Slicer'                                           : project('Pc_Slicer',                   True,     '',   {'Debug' : 'Config_PcMsWin'}),
 }
 

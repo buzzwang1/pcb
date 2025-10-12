@@ -77,7 +77,7 @@ class cZD25WQ32_HW
     //
 
     mstOSpi.Instance           = OCTOSPI1;
-    mstOSpi.Init.DeviceSize    = 23;      // 8MB = 2^23 = 8388608
+    mstOSpi.Init.DeviceSize    = 22;      // 4MB = 2^22 = 4194304
     mstOSpi.Init.FifoThreshold = 1;
     mstOSpi.Init.DualQuad   = HAL_OSPI_DUALQUAD_DISABLE;
     mstOSpi.Init.MemoryType = HAL_OSPI_MEMTYPE_MICRON;
@@ -85,10 +85,8 @@ class cZD25WQ32_HW
     //mstOSpi.Init.ClockPrescaler        = 2;    // 160Mhz / 2 = 80,00Mhz
     //mstOSpi.Init.ClockPrescaler        = 3;    // 160Mhz / 3 = 53,33Mhz
     //mstOSpi.Init.ClockPrescaler        = 4;    // 160Mhz / 4 = 40,00Mhz
-    mstOSpi.Init.ClockPrescaler = 2;    // 160Mhz / 2 = 80Mhz
-    //mstOSpi.Init.ChipSelectHighTime    = 4;   // t_SHSL2 = 50ns (DS S.89), 160Mhz / 4(Prescale) = 40Mhz    => 25.00ns; 25.00ns * 2 = 50ns
-    //mstOSpi.Init.ChipSelectHighTime    = 3;   // t_SHSL2 = 50ns (DS S.89), 160Mhz / 3(Prescale) = 53,33Mhz => 18.75ns; 18.75ns * 3 = 56ns
-    mstOSpi.Init.ChipSelectHighTime = 4;        // t_SHSL2 = 50ns (DS S.89), 160Mhz / 2(Prescale) = 80Mhz    => 12.50ns; 12.50ns * 4 = 50ns
+    mstOSpi.Init.ClockPrescaler = 0;    // 32Mhz / 1 = 32Mhz
+    mstOSpi.Init.ChipSelectHighTime = 1;        // t_SHSL2 = 50ns (DS S.89), 32Mhz / 1(Prescale) = 32Mhz    => 31.25ns; 31.25ns * 2 = 62.5ns
 
     mstOSpi.Init.FreeRunningClock = HAL_OSPI_FREERUNCLK_DISABLE;
     mstOSpi.Init.ClockMode        = HAL_OSPI_CLOCK_MODE_0; // Mode 0 = Low Level; Mode 3 = High Level; W25Q64JV supports both (DS S.10)

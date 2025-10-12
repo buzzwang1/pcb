@@ -171,7 +171,7 @@ void cDigiPower::vTick_100ms()
 
 
 cSysPkgBoard::cSysPkgBoard()
-  : mcWakeup(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
+  : mcWakeupPin(GPIOA_BASE, 0, GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
     mcStatusLed(False),
     mcDigiPower(1),
     mcI2c2_SCL_Board(GPIOB_BASE, 10, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0),
@@ -192,6 +192,11 @@ void cSysPkgBoard::vInit2()
 {
 }
 
+
+bool cSysPkgBoard::isWakeUp()
+{
+  return ((mcWakeupPin.ui8Get() == 1) || (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear()));
+}
 
 bool cSysPkgBoard::isError(cStr& lszErrorInfo)
 {
@@ -265,10 +270,10 @@ void cSysPkgBoard::vTick10msLp(void)
   {
     mcI2C2_Board.vTick10ms();
 
-    if (mcSys.mcCom.mcBn.mcSpop.mcEep != null)
-    {
-      mcEep.vTick10ms();
-    }
+    //if (mcSys.mcCom.mcBn.mcSpop.mcEep != null)
+    //{
+    //  mcEep.vTick10ms();
+    //}
   }
 }
 

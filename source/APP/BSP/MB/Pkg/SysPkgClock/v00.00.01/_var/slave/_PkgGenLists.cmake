@@ -5,31 +5,31 @@ set(gen_pkg_name "SysPkgClock")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
-	# List of all source files found in Slave_gen_files
-	./_var/Slave/SysPkgClock.cpp
+	# List of all source files found in slave_gen_files
+	./_var/slave/SysPkgClock.cpp
 )
 
 
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
-	# List of all source files found in Slave_gen_headers
-	./_var/Slave/SysPkgClock.h
+	# List of all source files found in slave_gen_headers
+	./_var/slave/SysPkgClock.h
 )
 
 
 # List of all assembler files found in the packages filetree
 set (gen_asmfiles 
 	# List of all source files found in gen_asmfiles
-	# List of all source files found in Slave_gen_asmfiles
+	# List of all source files found in slave_gen_asmfiles
 )
 
 
 # List of all folders containing any header in files the packages filetree
 set (gen_include_directories 
 	# List of all source files found in gen_include_directories
-	# List of all source files found in Slave_gen_include_directories
-	./_var/Slave
+	# List of all source files found in slave_gen_include_directories
+	./_var/slave
 )
 
 

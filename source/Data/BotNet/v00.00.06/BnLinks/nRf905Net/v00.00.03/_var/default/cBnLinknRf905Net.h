@@ -136,6 +136,8 @@ class cBotNet_ComLinknRf905Net: public cBotNet_SyncedLinkBase
     tcUart<USART1_BASE, GPIOA_BASE, 9, GPIOA_BASE, 10> mcUart;
   #endif
 
+  u8 MsgDataRxRBuf[enCnstMaxData];
+  u8 MsgDataTxRBuf[enCnstMaxData];
   cComDatMsg mpcMsgData;
 
   u16                    mu16SessionDAdr;
@@ -145,7 +147,8 @@ class cBotNet_ComLinknRf905Net: public cBotNet_SyncedLinkBase
   bool                   mbSessionStop;
 
   cBotNet_ComLinknRf905Net(cBotNet_ComLinknRf905* lcLinkNRF905, cBotNet_LinkBase::tenType lenType, cBotNet* lcBotNet)
-    : cBotNet_SyncedLinkBase(0/*lu32RxComBufSize*/, 0/*lu32TxComBufSize*/, lenType)
+    : cBotNet_SyncedLinkBase(null, 0/*lu32RxComBufSize*/, null, 0/*lu32TxComBufSize*/, lenType),
+      mpcMsgData(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), MsgDataRxRBuf, sizeof(MsgDataRxRBuf))
   {
     mu16SessionDAdr = 0;
     mu16SessionBnAdr = 0;
@@ -156,6 +159,9 @@ class cBotNet_ComLinknRf905Net: public cBotNet_SyncedLinkBase
     mcLinkNRF905 = lcLinkNRF905;
     mcNRF905 = mcLinkNRF905->mcNRF905;
     mcBotnet = lcBotNet;
+
+    mpcMsgData.cRxData.muiLen = sizeof(MsgDataRxRBuf);
+    mpcMsgData.cTxData.muiLen = sizeof(MsgDataTxRBuf);
   }
 
   void vOnResetCom() override
@@ -219,7 +225,8 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
 
   u8           mu8KeepReceiverOnWhileWaiting;
 
-  cBotNetMsg_BaseDyn     mcMsgRxDyn;
+  u8                     mu8MsgRxBuf[cBotNet_MsgSize];
+  cBotNetMsg_Base        mcMsgRxBase;
   cBotNetMsg_MsgProt     mcMsgRx;
 
   u16          mu16PingIntervall_10ms;
@@ -235,15 +242,14 @@ class cBotNet_UpLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHand
        cBotNet_ComLinknRf905Net((cBotNet_ComLinknRf905*)lcUpLinknRf905, cBotNet_LinkBase::enUpLink, lcBotNet),
        mcCntSendPingIntervall((u16)cBotNet_ComLinknRf905Net::EvPingIntervall),
        mcCntPingTimeout((u16)cBotNet_ComLinknRf905Net::EvPingPowerOnTimeOut),
-       mcMsgRxDyn(cBotNet_MsgSize), mcMsgRx(&mcMsgRxDyn)
+       mcMsgRxBase(mu8MsgRxBuf, sizeof(mu8MsgRxBuf)), mcMsgRx(&mcMsgRxBase)
     #else
      : cBotNet_ComLinknRf905Net((cBotNet_ComLinknRf905*)lcUpLinknRf905, cBotNet_LinkBase::enUpLink, lcBotNet),
        mcCntSendPingIntervall((u16)cBotNet_ComLinknRf905Net::EvPingIntervall),
        mcCntPingTimeout((u16)cBotNet_ComLinknRf905Net::EvPingPowerOnTimeOut),
-       mcMsgRxDyn(cBotNet_MsgSize), mcMsgRx(&mcMsgRxDyn)
+       mcMsgRxBase(mu8MsgRxBuf, sizeof(mu8MsgRxBuf)), mcMsgRx(&mcMsgRxBase)
     #endif
   {
-    mpcMsgData.vMemAlloc(enCnstMaxData, enCnstMaxData);
     mcUpLinknRf905 = lcUpLinknRf905;
     mu16StartUpDelay_10ms = lu16StartUpDelay_10ms;
     vInit();
@@ -687,8 +693,6 @@ class cBotNet_DownLinknRf905Net:public cBotNet_ComLinknRf905Net, public cEventHa
     #endif
   {
     mcDownLinknRf905 = lcUpLinknRf905;
-    mpcMsgData.vMemAlloc(enCnstMaxData,  enCnstMaxData);
-
     vInit();
   }
 

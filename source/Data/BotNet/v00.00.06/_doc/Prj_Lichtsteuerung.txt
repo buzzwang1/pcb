@@ -17,3 +17,37 @@ Mini 1.0.0.0
          |
          |
          \--- Power 2           1.1.5.0
+
+
+
+Weiß:    
+          @5V     @12V
+ 20     900mA    240mA
+ 40    1700mA    600mA  
+ 80    3100mA   1350mA
+120    4600mA   2040mA 
+160    5700mA   2700mA
+200    6750mA   3400mA
+255    8000mA   4400mA
+
+
+Todo
+  - Die ganzen Uhrzeitsachen gehen nicht mehr
+  - Helligkeitssteuerung müsste angepasst werden.
+
+
+
+Mini 1.0.0.0
+ Helligkeitssteuerung:
+
+
+
+PSwitch SLed 1    1.1.1.0
+PSwitch SLed 2    1.1.2.0
+
+Senden eine Statusnachrit an  0x1000 Idx.: 41 on change mit max. 10ms
+ - Single-Click
+ - Double-Click
+ - RotCnt-Change
+
+

@@ -22,7 +22,7 @@
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
     Data/Msg/v00.00.01
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02

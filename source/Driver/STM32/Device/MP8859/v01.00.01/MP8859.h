@@ -119,8 +119,8 @@ class cMP8859 : public cComNode
 
   cI2cMaster*        mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenMP8859_Cmd     menCmd;
 

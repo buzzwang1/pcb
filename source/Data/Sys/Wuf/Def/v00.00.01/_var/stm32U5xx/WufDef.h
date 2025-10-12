@@ -1,6 +1,9 @@
 ﻿#ifndef __SYS_WUF_DEF_H__
 #define __SYS_WUF_DEF_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "typedef.h"
 #include "stm32u5xx.h"
@@ -9,12 +12,6 @@
 #include "stm32u5xx_ll_rcc.h"
 #include "stm32u5xx_ll_rtc.h"
 #include "stm32u5xx_ll_pwr.h"
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 typedef struct
 {

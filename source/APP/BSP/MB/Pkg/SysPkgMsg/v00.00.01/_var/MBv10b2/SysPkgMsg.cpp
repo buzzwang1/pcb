@@ -206,7 +206,7 @@ bool cCliCmd_SleepStatus::bProzessCmd(cStr& lcParam, cCli* lcCli, bool lbFirstCa
   {
     lszStr.Setf((rsz)"ClockResyncTimeout: %d", (u16)mcSys.mcClock.mu32ClockResyncTimeout_s);               lcCli->bPrintLn(lszStr);
     lszStr.Setf((rsz)"NoSleepCounter:     %d", (u16)mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter);  lcCli->bPrintLn(lszStr);
-    lszStr.Setf((rsz)"WakeUp Pin:         %d", (u16)mcSys.mcBoard.mcWakeup.ui8Get());                      lcCli->bPrintLn(lszStr);
+    lszStr.Setf((rsz)"WakeUp Pin:         %d", (u16)mcSys.mcBoard.mcWakeupPin.ui8Get());                      lcCli->bPrintLn(lszStr);
     lszStr.Setf((rsz)"SideLink Status:    %d", (u16)mcSys.mcCom.mcBn.mcSideLink->mStatus.IsOnline); lcCli->bPrintLn(lszStr);
     lszStr.Setf((rsz)"LipoMon:            %d", (u16)mcSys.mcBoard.mcLipoMon.bPowerDown(lszStr));           lcCli->bPrintLn(lszStr);
   }
@@ -427,7 +427,8 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
           (lcMsg.u8Len() == 25))
       {
         u16 lu16SourceAdr = (lcMsg.mcPayload[0] << 8) + lcMsg.mcPayload[1];
-        if (lu16SourceAdr == 0x08) // Clock Device Adress
+        if ((lu16SourceAdr == 0x08) &&     // Clock Device Adress
+            (lcMsg.mcPayload[2] == 0x10))  // Clock Signal
         {
           ////#ifdef PCB_PROJECTCFG_Test
             ////mcTestClassTim[8].vSetMaxTimer(cDiffTimerHw::u32GetTimer());
@@ -910,9 +911,9 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
       case 34: // Set message
         switch (lcMsg.mcPayload[0])
         {
-          case 0: // Sys: Alive
-            // Power.Status
-            if ((lcMsg.mcPayload[1] == 1) && (lcMsg.mcPayload[2] == 0))
+          case 0: // Sys
+            // Sys: Alive
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 0))
             {
 
               u16 lu16NoSleepCnt = (lcMsg.mcPayload[3] << 8) + lcMsg.mcPayload[4];
@@ -922,6 +923,14 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
                 mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter = lu16NoSleepCnt;
               }
 
+              lbConsumed = True;
+            }
+            else
+            // Sys: Wakeup Sim
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 1))
+            {
+              u32 lu32Data = (lcMsg.mcPayload[4] << 24) + (lcMsg.mcPayload[5] << 16) + (lcMsg.mcPayload[6] << 8) + lcMsg.mcPayload[7];
+              mcSys.mcSMsg.mcWakeupSim.vSet(lcMsg.mcPayload[4], lu32Data);
               lbConsumed = True;
             }
             break;

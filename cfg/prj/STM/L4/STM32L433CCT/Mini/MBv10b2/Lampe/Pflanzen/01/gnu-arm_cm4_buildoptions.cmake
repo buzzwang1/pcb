@@ -21,7 +21,7 @@ list(APPEND PCB_ListTargetDefinition
   -D__FPU_PRESENT
 
   -D__STACK_SIZE=0x800 #2kb
-  -D__HEAP_SIZE=0x8000 #32kb
+  -D__HEAP_SIZE=0x2000 #8kb
 
   -DARM_MATH_CM4
   -DARM_MATH_MATRIX_CHECK

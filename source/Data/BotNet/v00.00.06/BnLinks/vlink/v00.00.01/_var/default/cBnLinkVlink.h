@@ -10,9 +10,11 @@
 class cBotNet_LinkVLink: public cBotNet_LinkBase
 {
   public:
+  u8 mpu8ComBufRx[cBotNet_DownLinkComBufSize];
+  u8 mpu8ComBufTx[cBotNet_DownLinkComBufSize];
 
   cBotNet_LinkVLink(cBotNet_LinkBase::tenType lenLink)
-    : cBotNet_LinkBase(cBotNet_DownLinkComBufSize, cBotNet_DownLinkComBufSize, lenLink)
+    : cBotNet_LinkBase(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), lenLink)
   {
     mStatus.IsInit   = 1;
   }

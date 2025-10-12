@@ -52,7 +52,8 @@ const char* cWorkMode::ToString()
 
 
 cSysPkgSMan::cSysPkgSMan()
-  : mcOpMode()
+  : mcOpMode(), 
+    mcWufHandler()
 {
 };
 

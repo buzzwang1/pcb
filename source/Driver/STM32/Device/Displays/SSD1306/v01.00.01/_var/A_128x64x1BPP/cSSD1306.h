@@ -72,8 +72,8 @@ class cSSD1306 : public cComNode
 
   cI2cMaster*           mI2C;
 
-  cComDatMsg mpcWriteCmd;
-  cComDatMsg mpcWriteData;
+  cComDatMsgDyn mpcWriteCmd;
+  cComDatMsgDyn mpcWriteData;
 
   uint8      mui8WriteCmd[6];
   uint8      mui8Offset;

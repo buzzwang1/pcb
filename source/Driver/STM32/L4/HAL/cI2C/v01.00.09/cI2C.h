@@ -12,25 +12,6 @@
 #include "ComDat.h"
 #include "ClockInfo.h"
 
-class cComNodeI2c_Slave : public cComNode
-{
-public:
-  cComDatMsg mpcMsg;
-
-  cComNodeI2c_Slave(uint32 lui32TxDataSize, uint32 lui32RxDataSize)
-  {
-    mpcMsg.vMemAlloc(lui32TxDataSize, lui32RxDataSize);
-  };
-
-  //~cComNodeI2c_Slave() {};
-
-  inline uint32 SizeOf()
-  {
-    return mpcMsg.SizeOf() -
-           sizeof(mpcMsg) +
-           sizeof(cComNodeI2c_Slave);
-  }
-};
 
 
 class cI2cMaster_ComNodeList :public cComNodeList
@@ -994,7 +975,6 @@ class cI2cMaster : public cI2c
       {
         lbStart = bCheckBus();
       }
-
 
       if (lbStart)
       {

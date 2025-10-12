@@ -229,8 +229,8 @@ class cComDatMsg
   cComDatMsg_DataStatus enDataStatus;
   cComDatMsg_Status     enStatus;
 
-  cbArrayExtDynT<uint16>   cTxData;
-  cbArrayExtDynT<uint16>   cRxData;
+  cbArrayExtT<uint16>   cTxData;
+  cbArrayExtT<uint16>   cRxData;
 
   void vSetTx(cbArrayExtT<uint16> &lcTxData)      {cTxData.Set(lcTxData);}
   void vSetTx(uint8* lpaui8Data, uint16 lui16Len) {cTxData.mpu8Data = lpaui8Data; cTxData.muiLen = cTxData.muiSize = lui16Len;}
@@ -244,17 +244,30 @@ class cComDatMsg
   }
 
   cComDatMsg()
+    : cTxData(), cRxData()
   {
     enStatus = enFree;
     enDataStatus = enDataUndef;
+
+    vUnset();
+  }
+
+  cComDatMsg(u8* lpu8TxData, u16 lui16TxSize, u8* lpu8RxData, u16 lui16RxSize)
+    : cTxData(lpu8TxData, lui16TxSize),
+      cRxData(lpu8RxData, lui16RxSize)
+  {
+    enStatus     = enFree;
+    enDataStatus = enDataUndef;
+
+    vUnset();
   }
 
   inline uint32 SizeOf()
   {
-    return cRxData.SizeOf() + cTxData.SizeOf() - 2 * sizeof(cbArrayExtDynT<uint16>) + sizeof(cComDatMsg);
+    return 0;
   }
 
-  uint8 u8Checksum(cbArrayExtDynT<uint16> *lcBuf)
+  uint8 u8Checksum(cbArrayExtT<uint16> *lcBuf)
   {
     uint8 lu8ChkSum;
     u8*   lu8Buf = lcBuf->mpu8Data;
@@ -291,22 +304,6 @@ class cComDatMsg
     return u8Checksum(&cTxData);
   }
 
-  void vMemAlloc(uint16 lui16TxLen, uint32 lui16RxLen)
-  {
-    cTxData.Create(lui16TxLen);
-    cRxData.Create(lui16RxLen);
-    cTxData.muiLen = cTxData.muiSize;
-    cRxData.muiLen = cRxData.muiSize;
-    vUnset();
-  }
-
-  void vMemFree()
-  {
-    cTxData.~cbArrayExtDynT();
-    cTxData.~cbArrayExtDynT();
-    vFree();
-  }
-
   void vFree()   {enStatus = enFree;  enDataStatus = enDataUndef;}
   void vUnset()  {enStatus = enUnset; enDataStatus = enDataUndef;}
   void vSet()    {enStatus = enSet;   enDataStatus = enDataUndef;}
@@ -326,8 +323,47 @@ class cComDatMsg
   bool isBusy()  {return (enStatus == enBusy);}
   bool isDone()  {return (enStatus == enDone);}
   bool isError() {return (enStatus == enError);}
+};
 
-  ~cComDatMsg() {vMemFree();}
+
+class cComDatMsgDyn : public cComDatMsg
+{
+  public:
+
+
+  //cbArrayExtDynT<uint16>   cTxData;
+  //cbArrayExtDynT<uint16>   cRxData;
+
+  cComDatMsgDyn()
+    : cComDatMsg()
+  {
+  }
+
+  void vMemAlloc(uint16 lui16TxLen, uint32 lui16RxLen)
+  {
+    cTxData.mpu8Data = (u8*)cbArrayExtT_pui8GETMEM(lui16RxLen);
+    cRxData.mpu8Data = (u8*)cbArrayExtT_pui8GETMEM(lui16RxLen);   
+    cTxData.muiLen = cTxData.muiSize = lui16TxLen;
+    cRxData.muiLen = cRxData.muiSize = lui16RxLen;
+    vUnset();
+  }
+
+  void vMemFree()
+  {
+    if (cTxData.mpu8Data != null)
+    {
+      cbArrayExtT_vFREEMEM(cTxData.mpu8Data);
+      cTxData.mpu8Data = null;
+    }
+    if (cRxData.mpu8Data != null)
+    {
+      cbArrayExtT_vFREEMEM(cRxData.mpu8Data);
+      cRxData.mpu8Data = null;
+    }
+    vFree();
+  }
+
+  ~cComDatMsgDyn() {vMemFree();}
 };
 
 

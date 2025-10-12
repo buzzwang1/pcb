@@ -44,8 +44,8 @@ class cTmp102 : public cComNode
 
   cI2cMaster*   mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenCmd     menCmd;
 
@@ -53,14 +53,21 @@ class cTmp102 : public cComNode
   bool mbReadTemp;
 
 
-  cTmp102(cI2cMaster* lpcI2C, u8 lui8Adr)
+  cTmp102(cI2cMaster* lpcI2C, u8 lui8Adr, bool lbInit = True)
   {
     UNUSED(lui8Adr);
 
     mI2C = lpcI2C;
     mAdr = lui8Adr;
 
+    if (lbInit)
+    {
+      vInit();
+    }
+  }
 
+  void vInit()
+  {
     mpcMsgWrite.vMemAlloc(2, 0);
     mpcMsgRead.vMemAlloc(1, 2);
 
@@ -160,8 +167,9 @@ class cTmp102 : public cComNode
     }
   }
 
-  // /128: Resolution in 0.5°C
-  // /256: Resolution in 1.0°C
+  // The on-chip 12-bit ADC offers resolutions down to 0.0625°C.
+  // Das 1 Byte enthält den Vorkomma-Temperaturwert
+  // Das 2 Byte enthält den Nachkomma-Temperaturwert
   i16 i16GetTemp()
   {
     return (mi16Temp_digit / 256);

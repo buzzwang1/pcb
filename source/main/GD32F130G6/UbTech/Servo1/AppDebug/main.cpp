@@ -41,266 +41,390 @@
 #endif
 
 
-void vLedInit()
-{
-  // PA0
-  rcu_periph_clock_enable(RCU_GPIOB);
-  GPIO_CTL(GPIOB) |= 1<<2;  // Output Mode
-}
-
-void vLedOff()
-{
-  gpio_bit_reset(GPIOB, GPIO_PIN_1);
-}
-
-void vLedOn()
-{
-  gpio_bit_set(GPIOB, GPIO_PIN_1);
-}
-
-void vLedToggle()
-{
-  if (gpio_input_bit_get(GPIOB, GPIO_PIN_1))
-  {
-    vLedOff();
-  }
-  else
-  {
-    vLedOn();
-  }
-}
-
 cServo1_Applikation mcMotor;
-
-
-class cBn_MsgProcess : public cBotNet_MsgSysProcess
-{
-  public:
-
-  void vSendStatus(cBotNet* lpcBn, u16 lu16DestAdress)
-  {
-    cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgStatusMsg, 24, lpcBn->mcAdr.Get(), lu16DestAdress, 0x90);
-
-    i16* lpi16Data;
-    lpi16Data = (i16*)lcMsgStatusMsg.mcPayload.mpu8Data;
-
-                                                       // Idx
-    *lpi16Data++ = (i16)mcMotor.i16GetPosDegree();     // 0, 1
-    *lpi16Data++ = (i16)mcMotor.u16GetSupplyVoltage(); // 2, 3
-    *lpi16Data++ = (i16)mcMotor.i16GetCurrent();       // 4, 5
-    *lpi16Data++ = (i16)mcMotor.i16GetExtTemp();       // 6, 7
-    *(u8*)lpi16Data = (u8)mcMotor.mStatus.u8Status;       // 8
-    lcMsgStatusMsg.mcPayload.muiLen = 9;
-
-
-    lcMsgStatusMsg.vEncode();
-    lpcBn->bSendMsg(&lcMsgStatusMsg);
-  }
-
-  bool bMsg(cBotNetMsg_MsgProt &lcMsg, cBotNet* lpcBn)
-  {
-    switch (lcMsg.mu16Idx)
-    {
-      case 80: // i16 Sollpos
-        {
-          i16* lpi16PosSoll;
-          //i16* lpi16Strom;
-          if (lcMsg.mcPayload.muiLen >= 2)
-          {
-            lpi16PosSoll = (i16*)lcMsg.mcPayload.mpu8Data;
-            mcMotor.vSetMotMode_ServoPos();
-            mcMotor.vSetPosDegree(*lpi16PosSoll);
-
-            if (*lpi16PosSoll <= 0)  *lpi16PosSoll-=*lpi16PosSoll;
-            if (*lpi16PosSoll > 360)
-            {
-              mcMotor.vSetMotDisable();
-            }
-            else
-            {
-              mcMotor.vSetMotEnable();
-            }
-            vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
-          }
-        }
-        break;
-      case 81: // i16 Sollpos + i16Strombegrenzung
-      {
-        i16* lpi16Payload;
-        i16  lpi16PosSoll;
-        i16  lpi16PosCur;
-        if (lcMsg.mcPayload.muiLen >= 2)
-        {
-          mcMotor.vSetMotMode_ServoPosCur();
-          lpi16Payload = (i16*)lcMsg.mcPayload.mpu8Data;
-          lpi16PosSoll = *lpi16Payload++;
-          lpi16PosCur  = *lpi16Payload;
-          mcMotor.vSetPosDegree(lpi16PosSoll);
-          mcMotor.vSetCur_mA(lpi16PosCur);
-
-          if (lpi16PosSoll <= 0)  lpi16PosSoll -= lpi16PosSoll;
-          if ((lpi16PosSoll > 360) && (lpi16PosCur > 4))
-          {
-            mcMotor.vSetMotDisable();
-          }
-          else
-          {
-            mcMotor.vSetMotEnable();
-          }
-          vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
-        }
-      }
-      break;
-      case 84: // i16 Sollpwm
-        {
-          i16* lpi16PwmSoll;
-          //i16* lpi16Strom;
-          if (lcMsg.mcPayload.muiLen >= 2)
-          {
-            lpi16PwmSoll = (i16*)lcMsg.mcPayload.mpu8Data;
-            mcMotor.vSetMotMode_MotorPwm();
-            mcMotor.vSetSpeed(*lpi16PwmSoll);
-            if (*lpi16PwmSoll != 0)
-            {
-              mcMotor.vSetMotEnable();
-            }
-            else
-            {
-              mcMotor.vSetMotDisable();
-            }
-            vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
-          }
-        }
-        break;
-      case 85: // Motor mit i16Strombegrenzung
-      {
-        i16* lpi16CurSoll;
-        //i16* lpi16Strom;
-        if (lcMsg.mcPayload.muiLen >= 2)
-        {
-          lpi16CurSoll = (i16*)lcMsg.mcPayload.mpu8Data;
-          mcMotor.vSetMotMode_MotorCur();
-          mcMotor.vSetCur_mA(*lpi16CurSoll);
-          if (*lpi16CurSoll != 0)
-          {
-            mcMotor.vSetMotEnable();
-          }
-          else
-          {
-            mcMotor.vSetMotDisable();
-          }
-          vSendStatus(lpcBn, lcMsg.cGetSAdr().Get());
-        }
-      }
-      break;
-      case 90: // Fp1814 Kp, Fp1814 Ki, Fp1814 Kd
-        {
-          i32* lpi32Para;
-          if (lcMsg.mcPayload.muiLen >= 3*4)
-          {
-            lpi32Para = (i32*)lcMsg.mcPayload.mpu8Data;
-
-            mcMotor.mcMyPidPos.mFpKp.vSetFrac(*lpi32Para++);
-            mcMotor.mcMyPidPos.mFpKi.vSetFrac(*lpi32Para++);
-            mcMotor.mcMyPidPos.mFpKd.vSetFrac(*lpi32Para++);
-          }
-        }
-        break;
-      case 95: // Fp1814 Kp, Fp1814 Ki, Fp1814 Kd
-        {
-          i32* lpi32Para;
-          if (lcMsg.mcPayload.muiLen >= 3*4)
-          {
-            lpi32Para = (i32*)lcMsg.mcPayload.mpu8Data;
-
-            mcMotor.mcMyPidCur.mFpKp.vSetFrac(*lpi32Para++);
-            mcMotor.mcMyPidCur.mFpKi.vSetFrac(*lpi32Para++);
-            mcMotor.mcMyPidCur.mFpKd.vSetFrac(*lpi32Para++);
-          }
-        }
-      break;
-      default:
-      break;
-    }
-    return True;
-  }
-
-};
 
 
 cBotNetCfg mcMyBotNetCfg((const char8*)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr);
 
-cBn_MsgProcess mcBn_MsgProcess;
-
 
 cUartMpHdSlave mcUartMpHdU0;
 //cBotNet_UpLinkUsartMpHd mcUpLink(&mcUartMpHdU0);
-cBotNet_UpLinkUsartMpHd_RMsg mcUpLink(&mcUartMpHdU0);
+cBotNet_UpLinkUsartMpHdNoCheck mcUpLink(&mcUartMpHdU0);
 
-cBotNet mcBn(&mcMyBotNetCfg, &mcBn_MsgProcess);
+cBotNet mcMainBn(&mcMyBotNetCfg);
 
-
-class cCliCmd_SetPwm: public cCliCmd
+class cBn_MsgProcess : public cBotNet_MsgSysProcess
 {
   public:
-
-  cCliCmd_SetPwm():cCliCmd((const char*)"s", (const char*)"pmw a") {}
-
-  bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
+    cBn_MsgProcess()
+      : cBotNet_MsgSysProcess(&mcMainBn)
     {
-      UNUSED(lcParam);
-      UNUSED(lbFirstCall);
-      UNUSED(lCallerAdr);
-
-      char8 lszStrBuf[32];
-      cStr  lszStr(lszStrBuf, 32);
-
-      if (lcParam.Len() != 0)
-      {
-        i16 li16Val = lcParam.Atoi();
-        mcMotor.vSetMotMode_MotorPwm();
-        mcMotor.vSetSpeed(li16Val);
-        if (li16Val != 0) mcMotor.vSetMotEnable();
-                    else  mcMotor.vSetMotDisable();
-      }
-      else
-      {
-        lszStr.Setf("A: %d", mcMotor.mSpeed_Soll);
-        lcCli->bPrintLn(lszStr);
-      }
-      return True;
     }
+
+  bool bMsg(cBotNetMsg_MsgProt &lcMsg)
+  {
+    switch (lcMsg.mu16Idx)
+    {
+      // System
+      case 8: // Request message
+        switch (lcMsg.mcPayload[0])
+        {
+          case 0: // System: Identification
+            // TX 00 | 00 | 10 | RR RR DI DI HW HW RR RR BT : RR: Reserve = 0; DI Device Idx; HW: Hardware Version; BT Board Type
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 10))
+            {
+              u8 lu8Data[12];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 9);
+
+              lu8Data[ 0] =  0; // R1
+              lu8Data[ 1] =  0; // S1
+              lu8Data[ 2] = 10; // S2
+
+              // Reserve
+              lu8Data[ 3] = 0;
+              lu8Data[ 4] = 0;
+              // HV: HW Version
+              lu8Data[ 5] = u16GetRomConstBnDeviceID() >> 8;
+              lu8Data[ 6] = u16GetRomConstBnDeviceID() & 0xFF;;
+
+              // HV: HW Version
+              lu8Data[ 7] = u16GetRomConstHwInfo() >> 8;
+              lu8Data[ 8] = u16GetRomConstHwInfo() & 0xFF;;
+              // SV: SW Version
+              lu8Data[ 9] = 0;
+              lu8Data[10] = 0;
+              // BT Board Type
+              lu8Data[11] = 0; //u8GetRomConstBoardType();
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 16))
+            {
+              u8 lu8Data[5];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 9);
+
+              lu8Data[ 0] =  0; // R1
+              lu8Data[ 1] =  0; // S1
+              lu8Data[ 2] = 16; // S2
+
+              lu8Data[ 3] = cSystem::mAutomatik;
+              lu8Data[ 4] = cSystem::mLed;
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+              return True;
+            }
+            break;
+         }
+         break;
+
+      // MotCntl
+      case 32: // Request message
+        switch (lcMsg.mcPayload[0])
+        {
+          case 1:
+            // MotCntl: Status1
+            // TX 01 | 02 | 01 | SS.PP.PP
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 1))
+            {
+              u8 lu8Data[3];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 40);
+
+              lu8Data[ 0] = mcMotor.mStatus.u8Status;
+              lu8Data[ 1] = (u8)(mcMotor.i16GetPosFiltered_Grad() >> 8);
+              lu8Data[ 2] = (u8)(mcMotor.i16GetPosFiltered_Grad());
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            // MotCntl: Status2
+            // TX 01 | 02 | 02 | SS.DD.DD.VV.VV.PW
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 2))
+            {
+              u8 lu8Data[6];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 41);
+
+              lu8Data[ 0] = mcMotor.mStatus.u8Status;
+              // Distance
+              lu8Data[ 1] = (u8)(0 >> 8);
+              lu8Data[ 2] = (u8)(0);
+              // Speed
+              lu8Data[ 3] = (u8)(0 >> 8);
+              lu8Data[ 4] = (u8)(0);
+              // PWM
+              lu8Data[ 5] = (u8)mcMotor.u8GetPwm_Percent();
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            // MotCntl: Status3
+            // TX 01 | 02 | 03 | UU.UU.II.II.TT
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 3))
+            {
+              u8 lu8Data[5];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 42);
+
+              // Distance
+              lu8Data[ 0] = (u8)(mcMotor.i16GetVoltFiltered_mV() >> 8);
+              lu8Data[ 1] = (u8)(mcMotor.i16GetVoltFiltered_mV());
+              // Speed
+              lu8Data[ 2] = (u8)(mcMotor.i16GetCurrentFiltered_mA() >> 8);
+              lu8Data[ 3] = (u8)(mcMotor.i16GetCurrentFiltered_mA());
+              // Temp
+              i16 li16Temp = mcMotor.i168GetTempFilteredDegree();
+              li16Temp += 64;
+              if (li16Temp < 0) li16Temp = 0;
+              if (li16Temp > 255) li16Temp = 255;
+              lu8Data[ 4] = (u8)li16Temp;
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            // MotCntl: Status4
+            // TX 01 | 02 | 04 | II.II.PO.PO.TT
+            if ((lcMsg.mcPayload[1] == 2) && (lcMsg.mcPayload[2] == 4))
+            {
+              u8 lu8Data[5];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 43);
+
+              // Limit Current
+              lu8Data[ 0] = (u8)(mcMotor.i16Get_SetLimCur_mA() >> 8);
+              lu8Data[ 1] = (u8)(mcMotor.i16Get_SetLimCur_mA());
+              // Limit Power
+              lu8Data[ 2] = (u8)(mcMotor.i16Get_SetLimPow_mW() >> 8);
+              lu8Data[ 3] = (u8)(mcMotor.i16Get_SetLimPow_mW());
+              // Limit Temp
+              i16 li16Temp = mcMotor.i16Get_SetLimTemp_Grad();
+              li16Temp += 64;
+              if (li16Temp < 0) li16Temp = 0;
+              if (li16Temp > 255) li16Temp = 255;
+              lu8Data[ 4] = (u8)li16Temp;
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            // MotCntl: Cfg: Lp
+            // TX 01 | 00 | xx | LP.LP.LP.LP                 // XX: LP Index; LP:
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] <= 4))
+            {
+              u8 lu8Data[7];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 33);
+
+              lu8Data[ 0] =  1; // R1
+              lu8Data[ 1] =  0; // S1
+              lu8Data[ 2] = lcMsg.mcPayload[2]; // S2
+
+              cLowPassT<cFixPti1814>* lcLP;
+
+              switch (lcMsg.mcPayload[2])
+              {
+                case 1: lcLP = &mcMotor.mcInLpI; break;
+                case 2: lcLP = &mcMotor.mcInLpV; break;
+                case 3: lcLP = &mcMotor.mcInLpTempInt; break;
+                case 4: lcLP = &mcMotor.mcInLpTempExt; break;
+                default: lcLP = &mcMotor.mcInLpPos; break;
+              }
+
+              lu8Data[ 3] = (u8)(lcLP->mFactor.mFp.i32Fp >> 24);
+              lu8Data[ 4] = (u8)(lcLP->mFactor.mFp.i32Fp >> 16);
+              lu8Data[ 5] = (u8)(lcLP->mFactor.mFp.i32Fp >>  8);
+              lu8Data[ 6] = (u8)(lcLP->mFactor.mFp.i32Fp);
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+
+            // MotCntl: Cfg: Pid
+            // TX 01 | 01 | xx | PP.PP.PP.PP.II.II.II.II.DD.DD.DD.DD.IL.IL.IL.IL.
+            if ((lcMsg.mcPayload[1] == 1) && (lcMsg.mcPayload[2] <= 1))
+            {
+              u8 lu8Data[19];
+
+              // Response Message
+              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 33);
+
+              lu8Data[ 0] =  1; // R1
+              lu8Data[ 1] =  1; // S1
+              lu8Data[ 2] = lcMsg.mcPayload[2]; // S2
+
+              cPidT<cFixPti1814>* lcPid;
+
+              switch (lcMsg.mcPayload[2])
+              {
+                case 1: lcPid = &mcMotor.mcInPidPower; break;
+                default: lcPid = &mcMotor.mcInPidPos; break;
+              }
+
+              lu8Data[ 3] = (u8)(lcPid->mKp.mFp.i32Fp >> 24);
+              lu8Data[ 4] = (u8)(lcPid->mKp.mFp.i32Fp >> 16);
+              lu8Data[ 5] = (u8)(lcPid->mKp.mFp.i32Fp >>  8);
+              lu8Data[ 6] = (u8)(lcPid->mKp.mFp.i32Fp);
+
+              lu8Data[ 7] = (u8)(lcPid->mKi.mFp.i32Fp >> 24);
+              lu8Data[ 8] = (u8)(lcPid->mKi.mFp.i32Fp >> 16);
+              lu8Data[ 9] = (u8)(lcPid->mKi.mFp.i32Fp >>  8);
+              lu8Data[10] = (u8)(lcPid->mKi.mFp.i32Fp);
+
+              lu8Data[11] = (u8)(lcPid->mKd.mFp.i32Fp >> 24);
+              lu8Data[12] = (u8)(lcPid->mKd.mFp.i32Fp >> 16);
+              lu8Data[13] = (u8)(lcPid->mKd.mFp.i32Fp >>  8);
+              lu8Data[14] = (u8)(lcPid->mKd.mFp.i32Fp);
+
+              lu8Data[15] = (u8)(lcPid->mOutputLimit.mFp.i32Fp >> 24);
+              lu8Data[16] = (u8)(lcPid->mOutputLimit.mFp.i32Fp >> 16);
+              lu8Data[17] = (u8)(lcPid->mOutputLimit.mFp.i32Fp >> 8);
+              lu8Data[18] = (u8)(lcPid->mOutputLimit.mFp.i32Fp);
+
+              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+              lcMsg.vEncode();
+              mcBn->bSendMsg(&lcMsg);
+
+              return True;
+            }
+            break;
+         }
+         break;
+
+      // MotCntl
+      case 34: // Set message
+        switch (lcMsg.mcPayload[0])
+        {
+          case 1:
+            // MotCntl: Cfg: Lp
+            // RX 01 | 00 | xx | LP.LP.LP.LP
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] <= 4))
+            {
+              u8* lu8Data = lcMsg.mcPayload.mpu8Data;
+              cLowPassT<cFixPti1814>* lcLP;
+
+              switch (lcMsg.mcPayload[2])
+              {
+                case 1: lcLP = &mcMotor.mcInLpI; break;
+                case 2: lcLP = &mcMotor.mcInLpV; break;
+                case 3: lcLP = &mcMotor.mcInLpTempInt; break;
+                case 4: lcLP = &mcMotor.mcInLpTempExt; break;
+                default: lcLP = &mcMotor.mcInLpPos; break;
+              }
+
+              lcLP->mFactor.mFp.i32Fp = (lu8Data[ 3] << 24) + (lu8Data[ 4] << 16) + (lu8Data[ 5] << 8) + lu8Data[ 6];
+              return True;
+            }
+
+            // MotCntl: Cfg: Pid
+            // RX 01 | 01 | xx | PP.PP.PP.PP.II.II.II.II.DD.DD.DD.DD.IL.IL.IL.IL.
+            if ((lcMsg.mcPayload[1] == 1) && (lcMsg.mcPayload[2] <= 1))
+            {
+              u8* lu8Data = lcMsg.mcPayload.mpu8Data;
+              cPidT<cFixPti1814>* lcPid;
+
+              switch (lcMsg.mcPayload[2])
+              {
+                case 1: lcPid = &mcMotor.mcInPidPower; break;
+                default: lcPid = &mcMotor.mcInPidPos; break;
+              }
+
+              lcPid->mKp.mFp.i32Fp          = (lu8Data[ 3] << 24) + (lu8Data[ 4] << 16) + (lu8Data[ 5] << 8) + lu8Data[ 6];
+              lcPid->mKi.mFp.i32Fp          = (lu8Data[ 7] << 24) + (lu8Data[ 8] << 16) + (lu8Data[ 9] << 8) + lu8Data[10];
+              lcPid->mKd.mFp.i32Fp          = (lu8Data[11] << 24) + (lu8Data[12] << 16) + (lu8Data[13] << 8) + lu8Data[14];
+              lcPid->mOutputLimit.mFp.i32Fp = (lu8Data[15] << 24) + (lu8Data[16] << 16) + (lu8Data[17] << 8) + lu8Data[18];
+              return True;
+            }
+            break;
+         }
+         break;
+      break;
+
+      case 50: // MotCntl : Mode RX MM
+        {
+          mcMotor.vSetMotMode(lcMsg.mcPayload[0]);
+          return True;
+        }
+        break;
+
+      case 51: // MotCntl: Pos RX PP.PP
+        {
+          i16 li16PosSoll = (i16)((lcMsg.mcPayload[0] << 8) + lcMsg.mcPayload[1]);
+          mcMotor.vSetPos_Grad(li16PosSoll);
+          return True;
+        }
+        break;
+
+      case 52: // MotCntl: Speed RX DD.DD.VV.VV.PW
+        {
+          // Distance
+          i16 li16DistSoll = (i16)((lcMsg.mcPayload[0] << 8) + lcMsg.mcPayload[1]);
+          mcMotor.vSetDist_mm(li16DistSoll);
+
+          // Speed
+          i16 li16SpeedSoll = (i16)((lcMsg.mcPayload[2] << 8) + lcMsg.mcPayload[3]);
+          mcMotor.vSetSpeed_Grads(li16SpeedSoll);
+
+          mcMotor.vSetPwm_Percent((i8)lcMsg.mcPayload[4]);
+          return True;
+        }
+        break;
+
+      case 53: // MotCntl: Limits RX II.II.PO.PO.TT
+        {
+          // Current [mA]
+          i16 li16LimCur = (i16)((lcMsg.mcPayload[0] << 8) + lcMsg.mcPayload[1]);
+          mcMotor.vSetLimCur_mA(li16LimCur);
+
+          // Power [mW]
+          i16 li16LimPow = (i16)((lcMsg.mcPayload[2] << 8) + lcMsg.mcPayload[3]);
+          mcMotor.vSetLimPow_mW(li16LimPow);
+
+
+          i16 li16LimTemp = (i16)((i16)lcMsg.mcPayload[4] - 64);
+          mcMotor.vSetLimTemp_mA(li16LimTemp);
+          return True;
+        }
+        break;
+
+      default:
+        break;
+    }
+    return False;
+  }
 };
 
-class cCliCmd_SetPos: public cCliCmd
-{
-  public:
+cBn_MsgProcess mcBn_MsgProcess;
 
-  cCliCmd_SetPos():cCliCmd((const char*)"p", (const char*)"pos a") {}
 
-  bool bProzessCmd(cStr &lcParam, cCli *lcCli, bool lbFirstCall, void* lCallerAdr) override
-    {
-      UNUSED(lbFirstCall);
-      UNUSED(lCallerAdr);
-
-      char8 lszStrBuf[32];
-      cStr  lszStr(lszStrBuf, 32);
-
-      if (lcParam.Len() != 0)
-      {
-        i16 li16Val = lcParam.Atoi();
-        mcMotor.vSetMotMode_ServoPos();
-        mcMotor.vSetPosDegree(li16Val);
-        mcMotor.vSetMotEnable();
-      }
-      else
-      {
-        lszStr.Setf("A: %d", mcMotor.i16GetPosDegree());
-        lcCli->bPrintLn(lszStr);
-      }
-      return True;
-    }
-};
 
 class cCliCmd_Status: public cCliCmd
 {
@@ -317,15 +441,15 @@ class cCliCmd_Status: public cCliCmd
       UNUSED(lbFirstCall);
       UNUSED(lCallerAdr);
 
-      lszStr.Setf((const char8*)"P: %d", mcMotor.i16GetPosFilteredDegree());
+      lszStr.Setf((const char8*)"P: %d", mcMotor.i16GetPosFiltered_Grad());
       lcCli->bPrintLn(lszStr);
-      lszStr.Setf((const char8*)"U: %d", mcMotor.i16GetVoltFilteredDegree());
+      lszStr.Setf((const char8*)"U: %d", mcMotor.i16GetVoltFiltered_mV());
       lcCli->bPrintLn(lszStr);
-      lszStr.Setf((const char8*)"I: %d", mcMotor.i16GetCurrentFilteredDegree());
+      lszStr.Setf((const char8*)"I: %d", mcMotor.i16GetCurrentFiltered_mA());
       lcCli->bPrintLn(lszStr);
-      lszStr.Setf((const char8*)"Ti: %d", mcMotor.i16GetIntTemp());
+      lszStr.Setf((const char8*)"Ti: %d", mcMotor.i16GetIntTemp_Grad());
       lcCli->bPrintLn(lszStr);
-      lszStr.Setf((const char8*)"Te: %d", mcMotor.i16GetTempFilteredDegree());
+      lszStr.Setf((const char8*)"Te: %d", mcMotor.i168GetTempFilteredDegree());
       lcCli->bPrintLn(lszStr);
       lszStr.Setf((const char8*)"PF: %d\r\n", mcMotor.mPowerFailCounter);
       lcCli->bPrintLn(lszStr);
@@ -344,19 +468,20 @@ class cCliCmd_Status: public cCliCmd
 class cBotNetMotCli
 {
   public:
-  cCliCmd_SetPwm  mcCliCmd_SetPwm;
-  cCliCmd_SetPos  mcCliCmd_SetPos;
   cCliCmd_Status  mcCliCmd_Status;
 
   cBotNetMotCli()
   {
-    mcBn.mcStreamSys.mcCmdPort.bAddCmd(&mcCliCmd_SetPwm);
-    mcBn.mcStreamSys.mcCmdPort.bAddCmd(&mcCliCmd_SetPos);
-    mcBn.mcStreamSys.mcCmdPort.bAddCmd(&mcCliCmd_Status);
+    mcMainBn.mcStreamSys.mcCmdPort.bAddCmd(&mcCliCmd_Status);
   }
 };
 
 cBotNetMotCli mcBnMotCli;
+
+cCliCmd_Status    mcCliCmd_Status;
+
+
+cCliCmdList mcCliCmdListApp((cCliCmd* []) {&mcCliCmd_Status},  1);
 
 
 void NMI_Handler(void)
@@ -579,9 +704,8 @@ void TIMER16_IRQHandler(void)
 }
 
 
-u32 MAIN_u32Counter_10ms;
-u32 MAIN_u32Counter_1000ms;
-u32 MAIN_u32Counter_1000ms_old;
+u32 MAIN_u32Counter_250ms;
+u32 MAIN_u32Counter_250ms_old;
 
 void TIMER2_IRQHandler(void)
 {
@@ -593,9 +717,8 @@ void TIMER2_IRQHandler(void)
   {
     timer_interrupt_flag_clear(TIMER2, TIMER_INT_FLAG_UP);
 
-    MAIN_u32Counter_10ms++;
-    MAIN_u32Counter_1000ms++;
-    mcBn.vTickHp1ms();
+    MAIN_u32Counter_250ms++;
+    mcMainBn.vTickHp1ms();
   }
 
   #ifdef PCB_PROJECTCFG_Test
@@ -636,9 +759,8 @@ void vInitTim2()
 {
   rcu_periph_clock_enable(RCU_TIMER2);
 
-  MAIN_u32Counter_10ms       = 0;
-  MAIN_u32Counter_1000ms     = 0;
-  MAIN_u32Counter_1000ms_old = 0;
+  MAIN_u32Counter_250ms     = 0;
+  MAIN_u32Counter_250ms_old = 0;
 
 
   /*timer_parameter_struct timer_initpara;
@@ -661,7 +783,7 @@ void vInitTim2()
   // Das Gleiche wie oben 1ms-Timer, Autoreload, @8Mhz
   // Braucht aber so 90Byte weniger
   TIMER_DMAINTEN(TIMER2) = 1;
-  TIMER_PSC(TIMER2)      = 7;    //  15 für 16Mhz und 7 für 8Mhz
+  TIMER_PSC(TIMER2)      = 23;    //  23 für 24Mhz, 15 für 16Mhz und 7 für 8Mhz
   TIMER_CAR(TIMER2)      = 0x3E7;
   TIMER_CTL0(TIMER2)     = 0x081;
 
@@ -675,17 +797,14 @@ void MAIN_vInitSystem(void)
   //SystemInit();
   //vSysTickInit();
 
-  vLedInit();
+  cSystem::vInit();
 
   // Add Uplink
-  mcBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
+  mcMainBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
 
-  // Connect the CmdPort's output to external Port (to PC CmdPort 0xE000.0)
-  mcBn.vStreamPortConnect(0, 0xE000, 0);
+  mcBn_MsgProcess.vAddMsgSys();
 
-  // Add MemPort and connect the MemPort's output to external Port  (to PC CmdPort 0xE000.1)
-  // Should be Index 1
-  mcBn.vStreamPortConnect(1, 0xE000, 1);
+  mcMainBn.mcStreamSys.mcCmdPort.bAddCmdList(&mcCliCmdListApp);
 
   /*cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgTestMsg, 16, 0x1100, 0xE000, 0x50);
 
@@ -696,8 +815,8 @@ void MAIN_vInitSystem(void)
     lcMsgTestMsg.mcPayload[t] = t;
   }
   lcMsgTestMsg.vEncode();
-  mcBn.mcUpLink.mStatus.IsOnline = 1;
-  mcBn.bSendMsg(&lcMsgTestMsg);*/
+  mcMainBn.mcUpLink.mStatus.IsOnline = 1;
+  mcMainBn.bSendMsg(&lcMsgTestMsg);*/
 
   vInitTim2();
 }
@@ -708,38 +827,23 @@ int main(void)
   fwdgt_counter_reload();
   MAIN_vInitSystem();
 
-  #ifndef TEST_BnLinkUsartMpHd
-    u8 lu8LedEnable = mcMotor.u8GetLedEnable();
-  #endif
-
   while (1)
   {
-    if (MAIN_u32Counter_1000ms_old != MAIN_u32Counter_1000ms)
+    if (MAIN_u32Counter_250ms_old != MAIN_u32Counter_250ms)
     {
-      MAIN_u32Counter_1000ms_old = MAIN_u32Counter_1000ms;
+      MAIN_u32Counter_250ms_old = MAIN_u32Counter_250ms;
       mcMotor.vTick1ms();
+      mcMainBn.vProcess(1000);
     }
 
-    if (MAIN_u32Counter_10ms >= 10)
+    // Im Testmodues wird die Led als Testpin benutzt
+    if (MAIN_u32Counter_250ms >= 250)
     {
-      mcBn.vTickLp10ms();
-      MAIN_u32Counter_10ms = 0;
+      #ifndef TEST_BnLinkUsartMpHd
+        cSystem::vLedTick250ms();
+      #endif
+      MAIN_u32Counter_250ms = 0;
     }
-
-    #ifndef TEST_BnLinkUsartMpHd
-      // Im Testmodues wird die Led als Testpin benutzt
-      if (MAIN_u32Counter_1000ms >= 1000)
-      {
-        //static i16 li16Pos = 30;
-        //mcMotor.vSetPosDegree(li16Pos);
-        //li16Pos = -li16Pos;
-
-        if (lu8LedEnable) vLedToggle();
-                     else vLedOff();
-        MAIN_u32Counter_1000ms = 0;
-      }
-    #endif
-    mcBn.vProcess10ms();
 
     fwdgt_counter_reload();
 
@@ -757,7 +861,11 @@ void MainSystemInit(void)
   #endif
 
   /* configure system clock */
-  //system_clock_16m_irc8m();
+  // Externe 24Mhz
+  rcu_osci_on(RCU_HXTAL);
+  while (RESET == rcu_flag_get(RCU_FLAG_HXTALSTB));
+  rcu_system_clock_source_config(RCU_CKSYSSRC_HXTAL);
+
   #ifdef  VECT_TAB_OFFSET
     nvic_vector_table_set(NVIC_VECTTAB_FLASH, VECT_TAB_OFFSET);
   #endif

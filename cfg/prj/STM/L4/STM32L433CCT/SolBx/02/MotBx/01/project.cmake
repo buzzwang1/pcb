@@ -36,7 +36,7 @@ set(PCB_ProjectPackageList
     Resource/Base/v00.00.01
     Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
-    Data/ComDat/ComDat/v00.00.06
+    Data/ComDat/ComDat/v00.00.07
 
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.00.02
@@ -77,7 +77,7 @@ set(PCB_ProjectPackageList
 
     Driver/STM32/L4/HAL/GPPin/v01.00.02
     Driver/STM32/L4/HAL/cUart/Int/v01.00.01
-    Driver/STM32/L4/HAL/cI2C/v01.00.06
+    Driver/STM32/L4/HAL/cI2C/v01.00.09
 
     Driver/STM32/Device/Com/nRF905/Int/v01.00.00:SOL2_STM32L433CCT
     Driver/STM32/Device/LSM303DLHC/Acc/v01.00.00

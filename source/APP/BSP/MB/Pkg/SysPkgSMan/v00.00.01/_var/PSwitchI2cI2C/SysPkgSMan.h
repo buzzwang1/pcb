@@ -55,6 +55,7 @@ class cSysPkgSMan
   public:
 
   cWorkMode              mcOpMode;
+  cWufHandler            mcWufHandler;
 
   cSysPkgSMan();
 

@@ -538,7 +538,8 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
               lu8Data[4] = 0;
               lu8Data[5] = 0;
 
-              mcSys.mcClock.mClock.vSerializeLastSync(&lu8Data[6]);
+              mcSys.mcClock.mClock.vSerializeLastSync(&lu8Data[5]);
+              lu8Data[12] = mcSys.mcClock.mClock.IsValid();
 
               lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
               lcMsg.vEncode();
@@ -830,9 +831,43 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
         }
         break;
 
+      case 33: // Response message
+        switch (lcMsg.mcPayload[0])
+        {
+          case 1: // Clock message
+            //      0    1    2   3  4  5  6  7  8  9  10 11 12
+            //  TX 01 | 00 | 00 | VV.CS.DS.YH.YL.MM.DD HH.MM.SS : DateTime : VV = Valid  CS = Clocksource SD = diff to sync
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            {
+              if (lcMsg.mcPayload[3]) // Valid ?
+              {
+                if (mcSys.mcClock.mClock.isInit())
+                {
+                  mcSys.mcClock.mClock.vDeserialize(&lcMsg.mcPayload[6]);
+                  // Noch 2 sekunden bis zum Schlafen, damit noch die 1s Task mindestens einmal drankommen kann
+                  mcSys.mcClock.mu32ClockResyncTimeout_s = 2;
+                }
+              }
+              lbConsumed = True;
+            }
+        }
+        break;
+
+
       case 34: // Set message
         switch (lcMsg.mcPayload[0])
         {
+          case 1: // DateTime
+            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            {
+              mcSys.mcClock.mClock.vDeserialize(&lcMsg.mcPayload[6]);
+
+              // Noch 2 sekunden bis zum Schlafen, damit noch die 1s Task mindestens einmal drankommen kann
+              mcSys.mcClock.mu32ClockResyncTimeout_s = 2;
+
+              lbConsumed = True;
+            }
+            break;
           case 2: // Power Status
             // Pwr:  Status
             if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))

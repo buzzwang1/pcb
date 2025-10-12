@@ -13,8 +13,8 @@ Adressen und Device Adressen:
   0014 1000 : Solbox 2
 
   0021 1000 : Lampe  1
-  0022 1000 : Bad
-  0023 1000 : Lampe  3
+  0022 1000 : Bad    2
+  0023 1000 : Flur   3
   0024 1000 : Lampe  4
   0025 1000 : Lampe  5
   0026 1000 : Lampe  6
@@ -31,6 +31,17 @@ Adressen und Device Adressen:
   0061 1000 : Gerät 1
   ...
   00A0 1000 : Gerät 64
+
+  00A1 1000 : Servo1 UBTech GD32F130G6
+  00C0 1000 : Servo31
+
+  00C1 1000 : PSwitch1
+  00E0 1000 : PSwitch31
+
+  00E1 1000 : Power1
+  0110 1000 : Power31
+
+
 
 
 BH = 21 Byte: BN Msg Protocol Message mit 5Byte BN Frame => Ganze Nachricht 25 Byte

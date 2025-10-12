@@ -191,7 +191,10 @@ class cNRF905
   typedef enum
   {
     NRF905_EvDummy = 0,
+    NRF905_EvError,
+    NRF905_EvDone,
     NRF905_EvLoop,
+    NRF905_EvStart,
     NRF905_EvStartCmd,
     NRF905_EvDataReady,
     NRF905_EvSpiDmaRxReady,
@@ -361,7 +364,7 @@ class cNRF905
     return False;
   }
 
-  bool bEventHandler(tenCmdEvents lenEvent) __attribute__((optimize("-O0")))
+  bool bEventHandler(tenCmdEvents lenEvent) // __attribute__((optimize("-O0")))
   {
     do
     {

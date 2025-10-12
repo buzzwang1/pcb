@@ -1,6 +1,10 @@
 #ifndef _BURAM_H
 #define _BURAM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "typedef.h"
 #include "BuRamDef.h"
 
@@ -23,6 +27,8 @@ class cBuRam
   static void vEnable();
 };
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _BURAM_H */

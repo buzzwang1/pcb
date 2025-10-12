@@ -33,7 +33,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   public:
 
   cZD25WQ32()
-    : cSpiFlashGeneral(4096, 64 * 16, 0x90000000)
+    : cSpiFlashGeneral(4096, 256, 64 * 16, 0x90000000)
   {
 
   }
@@ -312,7 +312,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
 
   i32 i32SetupDummyCycles()
   {
-    // NA for W25Q64JV
+    // NA for ZD25WQ32
 
     // Fast Read(0Bh)
     //   The Fast Read instruction is similar to the Read Data instruction except that it can operate at the highest
@@ -329,7 +329,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
 
   i32 i32SetupQuadDDRMode()
   {
-    // NA for W25Q64JV
+    // NA for ZD25WQ32 don't Double Data Rate/Mode
     // DTR not need to be activated. It is controlled via Cmd.
     // DTR Fast Read Quad: EDh:  24Bit Adr: 8Bit Dummy: nx 8 Bit Data
     return 0;
@@ -338,6 +338,9 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
 
   i32 i32EnableMemoryMappedMode()
   {
+    // Memory Mapped Mode can be used only for read only
+    // If writing or erasing is needed, this Mode cannot be used
+
     OSPI_MemoryMappedTypeDef s_mem_mapped_cfg;
     OSPI_RegularCmdTypeDef sCommand;
 
@@ -386,6 +389,9 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
 
   i32 i32Write_Start(u8* buffer, u32 address, u32 buffer_size)
   {
+    // Note: This is page write
+    // It is limited to page size 256 Byte for ZD25WQ32
+    // If more then 256 are written, it uses only the last 256 Byte
 
     OSPI_RegularCmdTypeDef  sCommand;
     cMemTools::vMemSet((u8*)&sCommand, 0, sizeof(sCommand));
@@ -452,7 +458,6 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
     return 0;
   }
 
-
   i32 i32EraseSectorStart(u32 u32PageAddr)
   {
     OSPI_RegularCmdTypeDef  sCommand;
@@ -514,34 +519,65 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
           }
           break;
         case StInit4:
-          i32SetupQuadSpi();
+          i32ReadId();
           menState = StInit5;
           break;
         case StInit5:
-          i32SetupDummyCycles();
+          i32SetupQuadSpi();
           menState = StInit6;
           break;
         case StInit6:
-          i32SetupQuadDDRMode();
-          lbLoop = True;
+          i32SetupDummyCycles();
           menState = StInit7;
           break;
         case StInit7:
+          i32SetupQuadDDRMode();
+          lbLoop = True;
+          menState = StInit8;
+          break;
+        case StInit8:
           mbInit = True;
           menState = StIdle;
           break;
 
         case StWrite1:
-          i32Write_Start(mu32WorkAdrRam, mu32WorkAdrFlash, mu32WorkSize);
+          if (mu32WorkSize > mu32FlashPageSize)
+          {
+            i32Write_Start(mu32WorkAdrRam, mu32WorkAdrFlash, mu32FlashPageSize);
+          }
+          else
+          {
+            i32Write_Start(mu32WorkAdrRam, mu32WorkAdrFlash, mu32WorkSize);
+          }
           menState = StWrite2;
           break;
         case StWrite2:
           if (!isBusy())
           {
-            menState = StIdle;
+            if (mu32WorkSize > mu32FlashPageSize)
+            {
+              mu32WorkSize     -= mu32FlashPageSize;
+              mu32WorkAdrFlash += mu32FlashPageSize;
+              mu32WorkAdrRam   += mu32FlashPageSize;
+            }
+            else
+            {
+              mu32WorkSize      = 0;
+            }
+
+            if (mu32WorkSize > 0)
+            {
+              menState = StWrite1;
+            }
+            else
+            {
+              menState = StWrite3;
+            }
+            lbLoop = True;
           }
           break;
         case StWrite3:
+          menState = StIdle;
           break;
         case StWrite4:
           break;
@@ -564,7 +600,8 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
         case StEraseSector2:
           if (!isBusy())
           {
-            mu32WorkSize -= mu32FlashSectorSize;
+            mu32WorkSize     -= mu32FlashSectorSize;
+            mu32WorkAdrFlash += mu32FlashSectorSize;
             if (mu32WorkSize > 0)
             {
               menState = StEraseSector1;
@@ -611,6 +648,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   i8 i8StartInit()
   {
     if ((menState == StIdle) ||
+        (menState == StInitMissing) ||
         (menState == StError))
     {
       menState = StInit1;
@@ -622,7 +660,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   {
     if (isIdle())
     {
-      if (lu32StartAdr > mu32FlashBaseAdr)
+      if (lu32StartAdr >= mu32FlashBaseAdr)
       {
         lu32StartAdr    -= mu32FlashBaseAdr;
         mu32WorkAdrFlash = lu32StartAdr & 0xFFFFF000;
@@ -639,7 +677,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   {
     if (isIdle())
     {
-      if (lu32SrcAdr > mu32FlashBaseAdr)
+      if (lu32SrcAdr >= mu32FlashBaseAdr)
       {
         lu32SrcAdr      -= mu32FlashBaseAdr;
         mu32WorkAdrFlash = lu32SrcAdr;
@@ -657,7 +695,7 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   {
     if (isIdle())
     {
-      if (lu32DstAdr > mu32FlashBaseAdr)
+      if (lu32DstAdr >= mu32FlashBaseAdr)
       {
         lu32DstAdr -= mu32FlashBaseAdr;
         mu32WorkAdrFlash = lu32DstAdr;

@@ -69,7 +69,8 @@ Idx
                                                                                 // TH.TL: Temperature value (°C,  int16)
 
 34: Set Message
-      Sys: Alive                  RX 00 | 01 | 00 | TT.TT.                      // Request for keeping the system alive; tt tt - time in [s]
+      Sys: Alive                  RX 00 | 02 | 00 | TT.TT.                      // Request for keeping the system alive; tt tt - time in [s]
+      Sys: Wakeup                 RX 00 | 02 | 01 | WS.SD.SD.SD.SD              // Simulate a HW-Wakeup-Event; WS: Idx WakeUp source; SD: Some data
       Clk: DateTime: Sync         RX 01 | 00 | 00 | VV.00.00.YH.YL.MM.DD HH.MM.SS: DateTime VV = Valid
       PoMo: Mod X: Set            RX 04 | 01 | 0X | 01.ST.IM.IV.IV.II.II.OM.OV.OV.OI.OI.TH.TL
                                                                                 // ST: Enable state 0xFF: No Change

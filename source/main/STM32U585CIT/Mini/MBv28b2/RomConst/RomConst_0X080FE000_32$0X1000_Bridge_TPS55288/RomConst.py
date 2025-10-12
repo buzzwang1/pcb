@@ -381,7 +381,7 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     lAdr = Setu16_ArmCm4(lAdr,    400, "ModulOutSetCurrInput","Soll Input Strom des Output Moduls [mA]",                                                                                                    llstListElements);
     lAdr = Setu16_ArmCm4(lAdr,   5000, "ModulOutSetVoltOutput","Soll Output Spannung des Output Moduls [mV]",                                                                                               llstListElements);
     lAdr = Setu16_ArmCm4(lAdr,    400, "ModulOutSetCurrOutput","Soll Output Strom des Output Moduls [mA]",                                                                                                  llstListElements);
-    lAdr = Setu16_ArmCm4(lAdr,   2500, "ModulOutVoltMinSupply","Minimal Eingangsspannung. Minimal Spannung, damit das Modul aktiviert wird [mV]",                                                           llstListElements);
+    lAdr = Setu16_ArmCm4(lAdr,   3000, "ModulOutVoltMinSupply","Minimal Eingangsspannung. Minimal Spannung, damit das Modul aktiviert wird [mV]",                                                           llstListElements);
     lAdr = Setu16_ArmCm4(lAdr,  18000, "ModulOutVoltMax",      "Maximale Ausgangsspannung. [mV]",                                                                                                           llstListElements);
     lAdr = SetRes_ArmCm4(lAdr,     16, "Reserve9",             "",                                                                                                                                          llstListElements);
 

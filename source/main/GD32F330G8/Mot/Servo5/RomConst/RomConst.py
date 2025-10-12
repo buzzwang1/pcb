@@ -1,5 +1,22 @@
+import numpy as np
+import struct
 
-RomConst = [0x00] * 0x400 # 1024
+RomConst = [0xFF] * 1024
+
+
+
+
+                          
+                          
+#         Name               0       1       2       3       4       5       6       7       8       9      10      11      12      13      14      15
+Calib = ["PowerInVout;    4255;   4944;   5949;   6951;   7965;   8970;   9959;  10982;  11984;  12955;  13996;  14996;  15967;  17123;  18147;  19169",
+         "PowerInDac;     4095;   3840;   3584;   3328;   3072;   2816;   2560;   2304;   2048;   1792;   1536;   1280;   1024;    768;    512;    256",
+         "Table3;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+         "Table4;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+         "Table5;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+         "Table6;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+         "Table7;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+         "Table8;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0"]
 
 
 class cElementEntry:
@@ -17,22 +34,35 @@ class cElementEntry:
             lszComment = ":"
         else:
             lszComment = ""
-        if (self.mszType == "u8"):    lszRet = ((("#define u8GetRomConst"  + self.mszName+"()").ljust(44) +" (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + "      + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
-        if (self.mszType == "u16"):   lszRet = ((("#define u16GetRomConst" + self.mszName+"()").ljust(44) +" (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + "     + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
-        if (self.mszType == "u32"):   lszRet = ((("#define u32GetRomConst" + self.mszName+"()").ljust(44) +" (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + "     + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
-        if (self.mszType == "float"): lszRet = ((("#define fGetRomConst"   + self.mszName+"()").ljust(44) +" (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + "   + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
-        if (self.mszType == "rsz"):   lszRet = ((("#define rszGetRomConst" + self.mszName+"()").ljust(44) +" ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + "        + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
-        if (self.mszType == "u16*"):  lszRet = ((("#define u16GetRomConst" + self.mszName+"()").ljust(44) +" ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + "       + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "u8*"):    lszRet = ((("#define u8GetRomConst"     + self.mszName+"()").ljust(44) +" (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + "           + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "u8"):     lszRet = ((("#define u8GetRomConst"     + self.mszName+"()").ljust(44) +" (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + "          + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "u16"):    lszRet = ((("#define u16GetRomConst"    + self.mszName+"()").ljust(44) +" (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + "         + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "u32"):    lszRet = ((("#define u32GetRomConst"    + self.mszName+"()").ljust(44) +" (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + "         + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "float"):  lszRet = ((("#define fGetRomConst"      + self.mszName+"()").ljust(44) +" (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + "       + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "rsz"):    lszRet = ((("#define rszGetRomConst"    + self.mszName+"()").ljust(44) +" ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + "            + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "u16*"):   lszRet = ((("#define u16GetRomConst"    + self.mszName+"()").ljust(44) +" ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + "           + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        if (self.mszType == "Fp1814"): lszRet = ((("#define Fp1814GetRomConst" + self.mszName+"()").ljust(44) +" (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
         return lszRet
 
+
+def SetRes_ArmCm4(Adr, lu8Cnt, lszName = "", lszComment = "", llstList = None):
+    while (lu8Cnt):
+        RomConst[Adr] = 0xFF
+        Adr    = Adr + 1;
+        lu8Cnt = lu8Cnt - 1;
+
+    if ((lszName != "") and (llstList != None)):
+        lcEntry = cElementEntry(Adr, "u8*", 0xFF, lszName, lszComment)
+        llstList.append(lcEntry)
+    return Adr
 
 def Setu8_ArmCm4(Adr, lu8Value, lszName = "", lszComment = "", llstList = None):
     lu8Value = lu8Value & 0xFF
     RomConst[Adr]     = lu8Value & 0xFF
-    RomConst[Adr + 1] = lu8Value >> 8
     if ((lszName != "") and (llstList != None)):
         lcEntry = cElementEntry(Adr, "u8", lu8Value, lszName, lszComment)
         llstList.append(lcEntry)
+    return Adr + 1
 
 def Setu16_ArmCm4(Adr, lu16Value, lszName = "", lszComment = "", llstList = None):
     lu16Value = lu16Value & 0xFFFF
@@ -41,6 +71,7 @@ def Setu16_ArmCm4(Adr, lu16Value, lszName = "", lszComment = "", llstList = None
     if ((lszName != "") and (llstList != None)):
         lcEntry = cElementEntry(Adr, "u16", lu16Value, lszName, lszComment)
         llstList.append(lcEntry)
+    return Adr + 2
 
 def Setu32_ArmCm4(Adr, lu32Value, lszName = "", lszComment = "", llstList = None):
     lu32Value = lu32Value & 0xFFFFFFFF
@@ -51,6 +82,7 @@ def Setu32_ArmCm4(Adr, lu32Value, lszName = "", lszComment = "", llstList = None
     if ((lszName != "") and (llstList != None)):
         lcEntry = cElementEntry(Adr, "u32", lu32Value, lszName, lszComment)
         llstList.append(lcEntry)
+    return Adr + 4
 
 def SetFloat_ArmCm4(Adr, lfValue, lszName = "", lszComment = "", llstList = None):
     a = np.float32(lfValue)
@@ -61,12 +93,25 @@ def SetFloat_ArmCm4(Adr, lfValue, lszName = "", lszComment = "", llstList = None
     RomConst[Adr + 3] = hex_str[3]
     if ((lszName != "") and (llstList != None)):
         lcEntry = cElementEntry(Adr, "float", lfValue, lszName, lszComment)
-        llstList.append(lcEntry)	
-	
-	
+        llstList.append(lcEntry)
+    return Adr + 4
+
+def SetFp1814_ArmCm4(Adr, lfValue, lszName = "", lszComment = "", llstList = None):    
+    a = np.float32(lfValue)
+    hex_str=struct.pack('<f', a)
+
+    lu32Value = int(round(lfValue * 16384))
+    RomConst[Adr]     = lu32Value & 0xFF
+    RomConst[Adr + 1] = (lu32Value >> 8) & 0xFF
+    RomConst[Adr + 2] = (lu32Value >> 16) & 0xFF
+    RomConst[Adr + 3] = (lu32Value >> 24) & 0xFF
+    if ((lszName != "") and (llstList != None)):
+        lcEntry = cElementEntry(Adr, "Fp1814", lfValue, lszName, lszComment)
+        llstList.append(lcEntry)
+    return Adr + 4
+
 def SetString(Adr, lszString, liMaxSize, lszName = "", lszComment = "", llstList = None):
     liChrIdx = 0
-
     while (liChrIdx < liMaxSize) and (liChrIdx < len(lszString)):
         RomConst[Adr+liChrIdx] = ord(lszString[liChrIdx])
         liChrIdx += 1
@@ -77,6 +122,7 @@ def SetString(Adr, lszString, liMaxSize, lszName = "", lszComment = "", llstList
     if ((lszName != "") and (llstList != None)):
         lcEntry = cElementEntry(Adr, "rsz", lszString, lszName, lszComment, liMaxSize)
         llstList.append(lcEntry)
+    return Adr + liMaxSize
 
 def SetArrayU16(liAdr, lu16Values, lszName = "", lszComment = "", llstList = None):
     liAdr2 = liAdr
@@ -89,44 +135,95 @@ def SetArrayU16(liAdr, lu16Values, lszName = "", lszComment = "", llstList = Non
         lcEntry = cElementEntry(liAdr2, "u16*", lu16Values, lszName, lszComment, len(lu16Values))
         llstList.append(lcEntry)
 
-
-def SetHeader(lszDeviceName, lszPlatformName, lszPlatformInfo, lu16BnDeviceID, lu16BnAdr, lu8PartitionCnt, lu32IapRamSize, llstList = None):
-    lAdr = 0
-
-    SetString(lAdr, lszDeviceName,   16, "DeviceName",   "", llstList); lAdr += 16
-    SetString(lAdr, lszPlatformName, 16, "PlatformName", "", llstList); lAdr += 16
-    SetString(lAdr, lszPlatformInfo, 32, "PlatformInfo", "", llstList); lAdr += 32
-
-    Setu16_ArmCm4(lAdr, lu16BnDeviceID, "BnDeviceID",    "", llstList); lAdr += 2
-    Setu16_ArmCm4(lAdr, lu16BnAdr,      "BnAdr",         "", llstList); lAdr += 2
-    lAdr += 4
-
-    Setu8_ArmCm4(lAdr, lu8PartitionCnt, "PartitionCnt",  "", llstList); lAdr += 1
-    lAdr += 3
-    Setu32_ArmCm4(lAdr, lu32IapRamSize, "IapRamSize",    "", llstList); lAdr += 4
+    return liAdr
 
 
-def PartitionIdx2Adr(liIdx):
-    return 0x50 + liIdx * 32
+def SetHeader(lAdr, 
+              lszDeviceName,      lszPlatformName,    lszPlatformInfo, lu16BnDeviceID, lu16BnAdr, 
+              lu32IapRamSize,     lu8RomConstPageCnt, lu8PartitionCnt, lu8TablesCnt,   lu8HwInfo,       
+              lu8RomConstVersion, llstList = None):
+   
+    lAdr = SetString(lAdr, lszDeviceName,   16, "DeviceName",   "", llstList);
+    lAdr = SetString(lAdr, lszPlatformName, 16, "PlatformName", "", llstList);
+    lAdr = SetString(lAdr, lszPlatformInfo, 32, "PlatformInfo", "", llstList);
+
+    lAdr = Setu16_ArmCm4(lAdr, lu16BnDeviceID,     "BnDeviceID",      "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, lu16BnAdr,          "BnAdr",           "", llstList);
+    lAdr = Setu32_ArmCm4(lAdr, lu32IapRamSize,     "IapRamSize",      "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  lu8RomConstPageCnt, "RomConstPageCnt", "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  lu8PartitionCnt,    "PartitionCnt",    "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  lu8TablesCnt,       "TablesCnt",       "", llstList);
+    lAdr = SetRes_ArmCm4(lAdr, 1,                  "Reserve1",        "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, lu8HwInfo,          "HwInfo",          "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, lu8RomConstVersion, "RomConstVersion", "", llstList);
+
+    return lAdr
+
+def SetConfig(lAdr, 
+              u8DateTimeSyncTimeout_s,  u8DateTimeSyncHour_s, 
+              u8DateTimeValidTimeout_d,
+              u16RadioPingIntervall_s,  u16RadioPingTimeoutSessionReq_ms,
+              u16BaudUpLink,            u16BaudSideLink,
+              u16BaudDownLink1,         u16BaudDownLink2,
+              llstList = None):
+
+    u8Reserve = 0
+
+    lAdr = Setu8_ArmCm4(lAdr,  u8DateTimeSyncTimeout_s,          "DateTimeSyncTimeout_s",             "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  u8DateTimeSyncHour_s,             "DateTimeSyncHour_s",                "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  u8DateTimeValidTimeout_d,         "DateTimeValidTimeout_d",            "", llstList);
+    lAdr = Setu8_ArmCm4(lAdr,  u8Reserve,                        "Reserve",                           "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16RadioPingIntervall_s,          "RadioPingIntervall_s",              "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16RadioPingTimeoutSessionReq_ms, "RadioPingTimeoutSessionReq_ms",     "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16BaudUpLink,                    "BaudUpLink",                        "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16BaudSideLink,                  "BaudSideLink",                      "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16BaudDownLink1,                 "BaudDownLink1",                     "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, u16BaudDownLink2,                 "BaudDownLink2",                     "", llstList);
+
+    return lAdr
 
 
-def SetPartition(liIdx, lszName, lu16Sort, lu16Type, lu32Start_Adr, lu32Size, lu32BlockSize, llstList = None):
-    lAdr = PartitionIdx2Adr(liIdx)
+def SetPartition(lAdr, liIdx, lszName, lu16Sort, lu16Type, lu32Start_Adr, lu32Size, lu32BlockSize, llstList = None):
 
-    SetString(lAdr, lszName, 16, "Partition" + str(liIdx) + "Name", "", llstList)
-    lAdr += 16
+    lAdr = SetString(lAdr, lszName, 16, "Partition" + str(liIdx) + "Name", "", llstList)
 
-    Setu16_ArmCm4(lAdr, lu16Sort, "Partition" + str(liIdx) + "Sort", "", llstList); lAdr += 2
-    Setu16_ArmCm4(lAdr, lu16Type, "Partition" + str(liIdx) + "Type", "", llstList); lAdr += 2
+    lAdr = Setu16_ArmCm4(lAdr, lu16Sort, "Partition" + str(liIdx) + "Sort", "", llstList);
+    lAdr = Setu16_ArmCm4(lAdr, lu16Type, "Partition" + str(liIdx) + "Type", "", llstList);
 
-    Setu32_ArmCm4(lAdr, lu32Start_Adr, "Partition" + str(liIdx) + "BaseAdr",   "", llstList); lAdr += 4
-    Setu32_ArmCm4(lAdr, lu32Size,      "Partition" + str(liIdx) + "Size",      "", llstList); lAdr += 4
-    Setu32_ArmCm4(lAdr, lu32BlockSize, "Partition" + str(liIdx) + "BlockSize", "", llstList); lAdr += 4
+    lAdr = Setu32_ArmCm4(lAdr, lu32Start_Adr, "Partition" + str(liIdx) + "BaseAdr",   "", llstList);
+    lAdr = Setu32_ArmCm4(lAdr, lu32Size,      "Partition" + str(liIdx) + "Size",      "", llstList);
+    lAdr = Setu32_ArmCm4(lAdr, lu32BlockSize, "Partition" + str(liIdx) + "BlockSize", "", llstList);
+
+    return lAdr
 
 
+def WriteCalib(liAdr, llstList = None):
+    lszName = ""
+    for lszlines in Calib:
+        lszValues = lszlines.split(";")
 
-def SetFooter(lAdr, lszMagicPattern, llstList = None):
-    SetString(lAdr, lszMagicPattern, 4, "MagicPattern", "", llstList)
+        liIdx = 0
+        lu16Values = list()
+        for lszValue in lszValues:
+            if (liIdx == 0):
+                lszName = lszValue.strip()
+            else:
+                lu16Values.append(int(lszValue.strip()))
+            liIdx += 1
+
+        liAdr = SetArrayU16(liAdr, lu16Values, lszName, "", llstList)
+    return liAdr
+
+def SetPid(lAdr, lszName, lfLpIn, lfKp, lfKi, lfKiCut, lfKd, lfLpOut, llstList = None):
+    lAdr = SetFloat_ArmCm4(lAdr, lfKp,    lszName + "Kp",       "Kp",     llstList);
+    lAdr = SetFloat_ArmCm4(lAdr, lfKi,    lszName + "Ki",       "Ki",     llstList);
+    lAdr = SetFloat_ArmCm4(lAdr, lfKiCut, lszName + "KiCut",    "KiCut",  llstList);
+    lAdr = SetFloat_ArmCm4(lAdr, lfKd,    lszName + "Kd",       "Kd",     llstList);
+    return lAdr
+
+
+def SetMagic(lAdr, lszMagicPattern, llstList = None):
+    return SetString(lAdr, lszMagicPattern, 4, "MagicPattern", "", llstList)
 
 
 def convert_byte_to_ascii(lu8Byte):
@@ -136,64 +233,144 @@ def convert_byte_to_ascii(lu8Byte):
         return "."
     return lszStr
 
-def ToFp1814(lfValue):
-  return int(round(lfValue * 16384))
 
-
-def GenerateRomConst(liBaseAdr, liAdr):
+def GenerateRomConst(liBaseAdr, liBnAdr):
     llstListElements = list()
 
-    liIdx = 0
-    for u8Byte in RomConst:
-        RomConst[liIdx] = liIdx & 0xFF
-        liIdx+=1
+    #liIdx = 0
+    #for u8Byte in RomConst:
+    #    RomConst[liIdx] = liIdx & 0xFF
+    #    liIdx+=1
 
-    SetHeader("Servo5", "GD32F330G8", "Cortex-M4,Rom 64KB,Ram 8KB",  0, liAdr, 5, 256, llstListElements)
+    lAdr = 0
+    
+    # BotNet Info
+    #                                                                      Bn-DAdr   Bn-Adr   Ram    Pages  Partitions Tables  HwVer  RomConst-Ver
+    lAdr = SetHeader(lAdr, "Servo5", "GD32F330G8", "CM4,Rom 64KB,Ram 8KB",   100,   liBnAdr,  256,   1,       5,        5,    28,       2,        llstListElements)
 
-    SetPartition(0, "Flash Bl",   16, 0, 0x08000000,                       16*1024, 0x0400, llstListElements)
-    SetPartition(1, "Flash APP",  16, 0, 0x08000000 +  16 * 1024,          47*1024, 0x0400, llstListElements)
-    SetPartition(2, "Flash IAP",  16, 0, 0x08000000 +  16 * 1024,          47*1024, 0x0400, llstListElements)
-    SetPartition(3, "Flash EEP",  16, 0, 0x08000000 +  (16 + 47) * 1024,    1*1024, 0x0400, llstListElements)
-
-    SetPartition(4, "Ram",         0, 0, 0x20000000,                        8*1024,      1, llstListElements)
-
-    liIdx = 0x150
-
-    # Input Filter
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "LpInputPos",        "LpInputPos",        llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "LpInputCurrent",    "LpInputCurrent",    llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "LpInputSupply",     "LpInputSupply",     llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "LpInputTemp",       "LpInputTemp",       llstListElements); liIdx += 4
-
-    # PID für Positionregelung
-    Setu32_ArmCm4(liIdx, ToFp1814(7.5),      "PidPosKp",          "PidPosKp",          llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(0.015625), "PidPosKi",          "PidPosKi",          llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(250.0),    "PidPosKd",          "PidPosKd",          llstListElements); liIdx += 4
-    Setu16_ArmCm4(liIdx,            100,     "PidPosLimit",       "PidPosLimit",       llstListElements); liIdx += 2
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "PidPosLpOutput",    "PidPosLpOutput",    llstListElements); liIdx += 4
-
-    # PID für Stromregelung
-    Setu32_ArmCm4(liIdx, ToFp1814(100.0),    "PidCurKp",          "PidCurKp",          llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(1.0),      "PidCurKi",          "PidCurKi",          llstListElements); liIdx += 4
-    Setu32_ArmCm4(liIdx, ToFp1814(0.0),      "PidCurKd",          "PidCurKd",          llstListElements); liIdx += 4
-    Setu16_ArmCm4(liIdx,           1000,     "PidCurLimit",       "PidCurLimit",       llstListElements); liIdx += 2
-    Setu32_ArmCm4(liIdx, ToFp1814(0.12),     "PidCurLpOutput",    "PidCurLpOutput",    llstListElements); liIdx += 4
+    # BotNet Config
+    #                       u8DateTimeSyncTimeout_s u8DateTimeSyncHour_s u8DateTimeValidTimeout_d   u16RadioPingIntervall_s   u16RadioPingTimeoutSessionReq_ms  u16BaudUpLink  u16BaudSideLink  u16BaudDownLink1  u16BaudDownLink2
+    #                              3min                    02h00                 2 days                     15s                          50ms                       400khz          100khz          400khz             200khz
+    lAdr = SetConfig(lAdr,         3*60,                     2,                    2,                       15,                           50,                       400,            100,            400,               200,        llstListElements)
 
 
+    # Botnet Link Config
+    #   0: Disable
+    # !=0: Enable
+    lAdr = Setu8_ArmCm4(lAdr, 1, "UpLink",     "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "SideLink",   "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink1",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink2",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink3",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink4",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink5",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink6",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink7",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink8",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink9",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink10",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink11",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink12",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink13",  "", llstListElements)
+    lAdr = Setu8_ArmCm4(lAdr, 1, "DownLink14",  "", llstListElements)
 
-    Setu8_ArmCm4(liIdx,              1,      "LedEnable",         "LedEnable",         llstListElements); liIdx += 1
+    # BotNet-Partitions
+    #
+    # Sort:
+    #   0 = Internal Ram
+    #   1 = External Ram
+    #  16 = Internal Flash
+    #  17 = External Flash
+    #  32 = Internal EEP
+    #  33 = External EEP
+    #
+    #                       liIdx,    lszName, lu16Sort,  lu16Type, lu32Start_Adr,                           lu32Size, lu32BlockSize
+    lAdr = SetPartition(lAdr,   0, "Flash Bl",       16,         0,    0x08000000,                            16*1024,       0x0400, llstListElements)
+    lAdr = SetPartition(lAdr,   1, "Flash APP",      16,         0,    0x08000000 +  16 * 1024,               47*1024,       0x0400, llstListElements)
+    lAdr = SetPartition(lAdr,   2, "Flash IAP",      16,         0,    0x08000000 +  16 * 1024,               47*1024,       0x0400, llstListElements)
+    lAdr = SetPartition(lAdr,   3, "Flash EEP",      16,         0,    0x08000000 +  (16 + 47) * 1024,         1*1024, 0x0400, llstListElements)
+    lAdr = SetPartition(lAdr,   4, "Ram",             0,         0,    0x20000000,                             8*1024,            1, llstListElements)
+    lAdr = SetPartition(lAdr,   5, "Dummy",           0,         0,    0x40002850,                               4*32,            1, llstListElements)
+    lAdr = SetPartition(lAdr,   6, "Dummy",           0,         0,    0x00000000,                                  0,            1, llstListElements)
+    lAdr = SetPartition(lAdr,   7, "Dummy",           0,         0,    0x00000000,                                  0,            1, llstListElements)
 
-    print("Bytes used : " + str(liIdx + 8) + ", Frei " + str(len(RomConst) - liIdx - 8))
-
-    SetFooter(len(RomConst) - 4,"FLKA", llstListElements)
+    # RomConst End of Part 1
+    lAdr = SetRes_ArmCm4(lAdr,  8, "Reserve4", "", llstListElements);
 
     lu32Checksum = 1
-    for u8Byte in RomConst[0:len(RomConst)-8]:
+    for u8Byte in RomConst[0:lAdr]:
         lu32Checksum += int(u8Byte)
-    print("Checksumme : " + str(lu32Checksum) + " (" + hex(lu32Checksum) + ")")
+    print("Checksumme1 : " + str(lu32Checksum) + " (" + hex(lu32Checksum) + ")")
 
-    Setu32_ArmCm4(len(RomConst) - 8, lu32Checksum, "Checksum", "", llstListElements)
+    lAdr = Setu32_ArmCm4(lAdr, lu32Checksum, "Checksum1",     "", llstListElements)
+    lAdr = SetString(lAdr,     "FLKA",    4, "MagicPattern1", "", llstListElements)
 
+    
+    # Tables: Analog Calibration
+    lAdr = WriteCalib(lAdr, llstListElements)
+
+    # Input Filter
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputPos",        "LpInputPos",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputCurrent",    "LpInputCurrent",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputSupply",     "LpInputSupply",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp1",       "LpInputTemp1",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp2",       "LpInputTemp2",     llstListElements)
+
+    # Input Skalierung
+    lAdr = SetFp1814_ArmCm4(lAdr, (-280.0/4096.0), "CvrtInputPosF",     "CvrtInputPosF",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (-140.0),        "CvrtInputPosO",     "CvrtInputPosO",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, ( 140),          "CvrtInputPosC",     "CvrtInputPosC",     llstListElements)
+                                                      
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputCurrentF", "CvrtInputCurrentF",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputCurrentO", "CvrtInputCurrentO",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),        "CvrtInputCurrentC", "CvrtInputCurrentC",  llstListElements)
+ 
+    lAdr = SetFp1814_ArmCm4(lAdr, 14520.0/4096.0,  "CvrtInputSupplyF",  "CvrtInputSupplyF",   llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputSupplyO",  "CvrtInputSupplyO",   llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (20000.0),       "CvrtInputSupplyC",  "CvrtInputSupplyC",   llstListElements)
+                                                        
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputTemp1O",   "CvrtInputTemp1O",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputTemp1C",   "CvrtInputTemp1C",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),         "CvrtInputTemp1F",   "CvrtInputTemp1F",    llstListElements)
+                                                        
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputTemp2F",   "CvrtInputTemp2F",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputTemp2O",   "CvrtInputTemp2O",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),         "CvrtInputTemp2C",   "CvrtInputTemp2C",    llstListElements)
+
+
+    # Minimal Änderungen
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.5),      "MinDiffInputPos",      "MinDiffInputPos",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (4.0),      "MinDiffInputCurrent",  "MinDiffInputCurrent",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputSupply",   "MinDiffInputSupply",   llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputTemp",     "MinDiffInputTemp",     llstListElements)
+
+    # PID für Positionregelung
+    lAdr = SetFp1814_ArmCm4(lAdr, (25.0),     "PidPosKp",          "PidPosKp",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0/32.0), "PidPosKi",          "PidPosKi",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (250.0),    "PidPosKd",          "PidPosKd",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidPosLimit",       "PidPosLimit",       llstListElements)
+
+
+    # PID für Stromregelung
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidCurKp",          "PidCurKp",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "PidCurKi",          "PidCurKi",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),      "PidCurKd",          "PidCurKd",          llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),   "PidCurLimit",       "PidCurLimit",       llstListElements)
+
+    lAdr = Setu8_ArmCm4(lAdr,              8,      "MinPwm",            "MinPwm",            llstListElements)
+
+    lAdr = Setu8_ArmCm4(lAdr,              1,      "LedEnable",         "LedEnable",         llstListElements)
+
+    
+    # RomConst End of Part 2
+    lAdr = 0x03F8
+    lu32Checksum = 1
+    for u8Byte in RomConst[0:lAdr]:
+        lu32Checksum += int(u8Byte)
+    print("Checksumme2 : " + str(lu32Checksum) + " (" + hex(lu32Checksum) + ")")
+
+    lAdr = Setu32_ArmCm4(lAdr, lu32Checksum, "Checksum2",     "", llstListElements)
+    lAdr = SetString(lAdr,     "FLKA",    4, "MagicPattern2", "", llstListElements)
 
     t = 0
     print('       0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F')
@@ -214,7 +391,7 @@ def GenerateRomConst(liBaseAdr, liAdr):
 
 
     newFileByteArray = bytearray(RomConst)
-    newFile = open("RomConst_"+"0x{0:08X}".format(liBaseAdr).upper()+"_"+"0x{0:04X}".format(liAdr).upper()+".bin", "wb")
+    newFile = open("RomConst_"+"0x{0:08X}".format(liBaseAdr).upper()+"_"+"0x{0:04X}".format(liBnAdr).upper()+".bin", "wb")
     newFile.write(newFileByteArray)
     newFile.close()
 
@@ -223,19 +400,19 @@ def GenerateRomConst(liBaseAdr, liAdr):
     for lcElement in llstListElements:
         lszDefine += lcElement.ToString() + "\n";
 
-    newFile = open("RomConst_"+"0x{0:08X}".format(liBaseAdr).upper()+"_"+"0x{0:04X}".format(liAdr).upper()+".txt", "w")
+    newFile = open("RomConst_"+"0x{0:08X}".format(liBaseAdr).upper()+"_"+"0x{0:04X}".format(liBnAdr).upper()+".txt", "w")
     newFile.write(lszDefine)
     newFile.close()
 
 
 
 
-liAdr = 0x1E10
-liAdrAdd = 0x0010
+liAdr = 0x1100
+liAdrAdd = 0x0100
 liAdrCnt = 14
 
 while (liAdrCnt > 0):
-    GenerateRomConst(0x0800FC00, liAdr)
+    GenerateRomConst(0x08007C00, liAdr)
     liAdr += liAdrAdd
     liAdrCnt -= 1
 

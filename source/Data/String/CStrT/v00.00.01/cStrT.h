@@ -7,6 +7,7 @@
 #ifndef _CSTR_H
   #define _CSTR_H
 
+
   #include <stdarg.h>
   #include "TYPEDEF.h"
   #include "cbArrayExtT.h"
@@ -1765,8 +1766,6 @@
     lszTemp += lpcStr2;
     return lszTemp;
   }
-
-
 
 
 #endif

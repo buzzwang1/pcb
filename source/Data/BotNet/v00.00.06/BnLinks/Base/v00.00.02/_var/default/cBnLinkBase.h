@@ -48,8 +48,8 @@ public:
 
   cBotNet_LinkBase::tenType menType;
 
-  cBotNet_LinkBase(u32 lu32RxComBufSize, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
-    : mcRxComBuf(lu32RxComBufSize), mcTxComBuf(lu32TxComBufSize)
+  cBotNet_LinkBase(u8* lpu8RxComBuf, u32 lu32RxComBufSize, u8* lpu8TxComBuf, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
+    : mcRxComBuf(lpu8RxComBuf, lu32RxComBufSize), mcTxComBuf(lpu8TxComBuf, lu32TxComBufSize)
   {
     mu8MsgCntTx      = 0;
     mu8MsgCntRx      = 0;
@@ -217,6 +217,11 @@ public:
     return (*((cBotNetMsgFrame::tstControl*)lpu8Source)).NoCheck;
   }
 
+  void vSetDataNoCheck(u8* lpu8Source)
+  {
+    (*((cBotNetMsgFrame::tstControl*)lpu8Source)).NoCheck = 1;
+  }
+
   bool IsDataOneWay(u8* lpu8Source)
   {
     return (*((cBotNetMsgFrame::tstControl*)lpu8Source)).OneWay;
@@ -349,8 +354,8 @@ public:
     enStEndWaitForTimer
   }tenStates;
 
-  cBotNet_SyncedLinkBase(u32 lu32RxComBufSize, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
-    : cBotNet_LinkBase(lu32RxComBufSize, lu32TxComBufSize, lenType)
+  cBotNet_SyncedLinkBase(u8* lpu8RxComBuf, u32 lu32RxComBufSize, u8* lpu8TxComBuf, u32 lu32TxComBufSize, cBotNet_LinkBase::tenType lenType)
+    : cBotNet_LinkBase(lpu8RxComBuf, lu32RxComBufSize, lpu8TxComBuf, lu32TxComBufSize, lenType)
   {
     vInit();
   }

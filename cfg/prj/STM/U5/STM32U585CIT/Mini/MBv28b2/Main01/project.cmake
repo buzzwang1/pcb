@@ -49,27 +49,27 @@ set(PCB_ProjectPackageList
 
 
     Data/BotNet/v00.00.06/Base/Main/v00.00.02:default
-    Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
     Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32U5xx
-    Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32U5xx
+      Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.03:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/BotCom/v00.00.03:default
-    Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default|-Ofast
+      Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default|-Ofast
+      Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.04:default|-Ofast
+      Data/BotNet/v00.00.06/BnLinks/BotCom/v00.00.03:default
+      Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default|-Ofast
+      Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default|-Ofast
     Data/BotNet/v00.00.06/BnLinks/vlink/v00.00.01:default
-    Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
-    Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
-    Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:default
-    Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:default
+      Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
     Data/BotNet/v00.00.06/BnStreamSys/Base/v00.00.01:default
-    Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:default
-    Data/BotNet/v00.00.06/BnStreamSys/Ports/Cmd/v00.00.01:default
-    Data/BotNet/v00.00.06/BnStreamSys/Ports/Com/v00.00.01:default
-    Data/BotNet/v00.00.06/BnStreamSys/Ports/Echo/v00.00.01:default
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:default
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Cmd/v00.00.01:default
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Com/v00.00.01:default
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Echo/v00.00.01:default
 
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
@@ -78,7 +78,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/U5/Hal/v01.01.00/HAL:lib_o3_32Mhz
     Driver/STM32/U5/Hal/GPPin/v01.00.02
     Driver/STM32/U5/Hal/cUart/Int/v01.00.01
-    Driver/STM32/U5/Hal/cUart/MpHd/v01.00.02_Mini:Tim16|-Ofast
+    Driver/STM32/U5/Hal/cUart/MpHd/v01.00.03_Mini:Tim16|-Ofast
     Driver/STM32/U5/Hal/cI2C/v01.00.09|-Ofast
     Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv28b2_STM32U5xx
     #Driver/STM32/Device/xSpi/Flash/General/v01.00.00
@@ -95,7 +95,7 @@ set(PCB_ProjectPackageList
 
 
     APP/LED/v00.00.01:STM32U5_HAL
-    APP/Job/JobHdl/v00.00.01
+    APP/Job/JobHdl/v00.00.01:us
 
 
     APP/BSP/MB/Pkg/SysPkgClock/v00.00.01:master

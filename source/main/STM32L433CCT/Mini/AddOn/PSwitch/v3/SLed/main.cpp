@@ -114,8 +114,7 @@ u8 mu8MyLedBitMemory[LEDCTRL_LED_MEMSIZE(LEDMAXLEDCNT)];
 cWs2812 mcWs2812(mu8MyLedRgbMemory, mu8MyLedBitMemory, LEDMAXLEDCNT);
 
 
-cI2cEep     mcEep(&mcSys.mcBoard.mcI2C3_Board, 0xA0);
-
+u16    mu16Data[3] = { 0xFFFF, 0xFFFF, 0xFFFF };
 
 class  __attribute__((__packed__)) cData
 {
@@ -228,28 +227,19 @@ class cLedAnimation
   }
 };
 
-class cEepData: public cData
+class cEepData : public cData
 {
-  public: 
-  typedef enum
-  {
-     nSize = (1 * 1024)
-  }tenCfg;
-
-
-  u16      mu16StoreTimer;
-  u16      mu16LoadTimer;
+public:
+  u16      mu16StoreTimer_ms;
+  u16      mu16LoadTimer_ms;
   cI2cEep* mcEep;
-  bool     mbLoad;
   bool     mbError;
 
   cEepData(cI2cEep* lcEep)
   {
-    mcEep   = lcEep;
-    mbLoad  = True;
-    mbError = False;
-    mu16StoreTimer = 0;
-    mu16LoadTimer  = 0;
+    mcEep = lcEep;
+    mu16StoreTimer_ms = 0;
+    vStartLoad();
   }
 
 
@@ -268,50 +258,59 @@ class cEepData: public cData
 
   void vUpdate()
   {
-    mu16StoreTimer = mData.u16StartTimerReload;
+    mu16StoreTimer_ms = mData.u16StartTimerReload;
   }
 
   void vTick10ms()
   {
-    if (mu16StoreTimer > 0)
+    if (mu16StoreTimer_ms > 0)
     {
-      if (mu16StoreTimer > 10)
+      if (mu16StoreTimer_ms > 10)
       {
-        mu16StoreTimer -= 10;
+        mu16StoreTimer_ms -= 10;
       }
       else
       {
-        mu16StoreTimer = 0;
+        mu16StoreTimer_ms = 0;
         vStore();
       }
     }
 
     // Warten bis Daten gelesen wurden
-    if (mbLoad)
+    if (mu16LoadTimer_ms)
     {
       // Timeout zum warten auf EEPROM
-      if (mu16LoadTimer < 1000)
+      if ((mu16LoadTimer_ms > 10) &&  (!mcEep->mStatus.IsError))
       {
-        mu16LoadTimer += 10;
+        mu16LoadTimer_ms -= 10;
       }
-      else // EEPROM wurde nicht geladen
+      else // EEPROM Timeout oder Fehler
       {
         mbError = True;
-        mbLoad = False;
+        mu16LoadTimer_ms = 0;
         vCheckAndSetDefault();
       }
-      
+
       if (mcEep->mStatus.IsInit)
       {
-        mbLoad = False;
+        mu16LoadTimer_ms = 0;
         vLoad();
         vCheckAndSetDefault();
       }
     }
   }
+
+  void vStartLoad()  
+  {
+    mbError = False;
+    mcEep->vCmdSetup();
+    mu16LoadTimer_ms = mcEep->u32GetSize() / 5;
+  }
+
+  bool isLoading()   {return (mu16LoadTimer_ms > 0);}
 };
 
-cEepData mcData(&mcEep);
+cEepData mcData(&mcSys.mcBoard.mcEep);
 
 class cUserInterface
 {
@@ -380,11 +379,13 @@ class cUserInterface
     u8   mu8RotInv; // Flip rotatory switch's CW<->CCW direction.
                     // Depending on switch, output for CW and CCW are different
     i16  mi16RotCnt;
+    i16  mi16RotCntOld;
     i16  mi16RotCntMin;
     i16  mi16RotCntMax;
     u8   mu8RotCntInc;
     u8   mu8RotSeq;
     u8   mu8Cnt1ms;
+    bool mbRotCntChanged;
 
     u8  mu8RotDsD_State; // 0 pressed; 1 released
     u8  mcRot_State;     // 0, 1, 3, 4
@@ -437,10 +438,10 @@ class cUserInterface
 
       mi8RotDir = 0;
       mu8RotInv = 0;
-      mi16RotCnt    = 0;
       mi16RotCntMin = -100;
       mi16RotCntMax =  100;
       mu8RotCntInc  =    1;
+      vSetRotCnt(0);
 
       mu8BtnState = 0;
 
@@ -451,6 +452,12 @@ class cUserInterface
 
       mu8RotDsD_State = mcRotDsD.ui8Get();
       mcRot_State = (mcRotDsA.ui8Get() << 1) + mcRotDsB.ui8Get();
+    }
+
+    void vSetRotCnt(i16 li16RotCnt)
+    {
+      mbRotCntChanged = False;
+      mi16RotCntOld = mi16RotCnt = li16RotCnt;
     }
 
     void vSetRotInv(u8 lu8RotInv)
@@ -488,6 +495,10 @@ class cUserInterface
               mu8RotDsD_State = 0;
               mu8BtnState++;
             }
+          }
+          else
+          {
+            mu8RotDsD_State = mcRotDsD.ui8Get();
           }
           break;
         case 1: // Wait for Button released
@@ -590,6 +601,11 @@ class cUserInterface
               if (mi16RotCntNew < mi16RotCntMin) mi16RotCntNew = mi16RotCntMin;
               if (mi16RotCntNew > mi16RotCntMax) mi16RotCntNew = mi16RotCntMax;
               mi16RotCnt = mi16RotCntNew;
+              if (mi16RotCnt != mi16RotCntOld)
+              {
+                mi16RotCntOld = mi16RotCnt;
+                mbRotCntChanged = True;
+              }
             }
             break;
         }
@@ -642,6 +658,16 @@ class cUserInterface
     i16 i16GetRotCnt()
     {
       return mi16RotCnt;
+    }
+
+    bool bGetAndResetRotCntChanged()
+    {
+      if (mbRotCntChanged)
+      {
+        mbRotCntChanged = False;
+        return True;
+      }
+      return False;
     }
 
     i8 i8GetRotDir()
@@ -1638,7 +1664,7 @@ public:
       }
       else
       {
-        mcEep.vCmdSetup();
+        mcSys.mcBoard.mcEep.vCmdSetup();
         lszStr.Setf((rsz)"  Eep Init"); lcCli->bPrintLn(lszStr);
       }
     }
@@ -1735,7 +1761,7 @@ public:
               lu8Data[1] = 0;
               lu8Data[2] = 0;
               lu8Data[3] = mcData.mData.u16TurnOnState;  // mcWs2812.mcEn.ui8Get();
-              lu8Data[4] = mcUI.mi16RotCnt; //mcData.mData.u16Brigthness;
+              lu8Data[4] = mcUI.i16GetRotCnt(); //mcData.mData.u16Brigthness;
               lu8Data[5] = mcData.mData.u16LedAnimationIdx;
               lu8Data[6] = mcData.mData.u8CustR;
               lu8Data[7] = mcData.mData.u8CustG;
@@ -1761,7 +1787,7 @@ public:
         //                                                                 //  [7] TH.TL: max. Temperature value (°C,  int16)
           switch (lcMsg.mcPayload[0])
           {
-            case 0: // SLED.Status            
+            case 0: // SLED.Status
               if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
               {
                 u8 lu8AnimCnt;
@@ -1769,8 +1795,9 @@ public:
 
                 mcData.mData.u16TurnOnState = lcMsg.mcPayload[3] & 1;
 
-                if (lcMsg.mcPayload[4] < 12) mcUI.mi16RotCnt = lcMsg.mcPayload[4];
-                                        else mcUI.mi16RotCnt = 12;
+                i16 li16RotCnt = lcMsg.mcPayload[4];
+                if (li16RotCnt > 12) li16RotCnt = 12;
+                mcUI.vSetRotCnt(li16RotCnt);
 
                 mcData.mData.u16LedAnimationIdx = lcMsg.mcPayload[5] % lu8AnimCnt;
                 mcData.mData.u8CustR            = lcMsg.mcPayload[6];
@@ -1785,8 +1812,18 @@ public:
                 }
                 mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.mi16RotCnt);
 
-                mcData.vUpdate();
+                //mcData.vUpdate();
 
+                lbConsumed = True;
+              }
+              break;
+            case 1: //  Set 16Bit Values
+              // RX 01 | 00 | 00 | 01.D0.D0.D1.D1.D2.D2
+              if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+              {
+                mu16Data[0] = (lcMsg.mcPayload[4] << 8) + lcMsg.mcPayload[5];
+                mu16Data[1] = (lcMsg.mcPayload[6] << 8) + lcMsg.mcPayload[7];
+                mu16Data[2] = (lcMsg.mcPayload[8] << 8) + lcMsg.mcPayload[9];
                 lbConsumed = True;
               }
               break;
@@ -1800,7 +1837,37 @@ public:
 
 cBnMsgHandlerApp mcBnMsgHandlerApp;
 
+bool mbSendRotCntUpdate = False;
 
+void vSendStatus()
+{
+  if (mbSendRotCntUpdate)
+  {
+    mbSendRotCntUpdate = False;
+
+    u8 lu8Data[11];
+
+    // Response Message
+    // Status Nachricht alle 100ms senden     Name  Size   S                             D    MsgIdx
+    cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsg, 32, mcSys.mcCom.mcBn.mcAdr.Get(), 0x1000, 41);
+
+    lu8Data[0] = 0;
+    lu8Data[1] = 0;
+    lu8Data[2] = 0;
+    lu8Data[3] = mcData.mData.u16TurnOnState;  // mcWs2812.mcEn.ui8Get();
+    lu8Data[4] = mcUI.i16GetRotCnt(); //mcData.mData.u16Brigthness;
+    lu8Data[5] = mcData.mData.u16LedAnimationIdx;
+    lu8Data[6] = mcData.mData.u8CustR;
+    lu8Data[7] = mcData.mData.u8CustG;
+    lu8Data[8] = mcData.mData.u8CustB;
+    lu8Data[9] = mcTemp.i16GetTemp(0) >> 8;
+    lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
+
+    lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
+    lcMsg.vEncode();
+    mcSys.mcCom.mcBn.bSendMsg(&lcMsg);
+  }
+}
 
 void NMI_Handler(void)
 {
@@ -1911,8 +1978,6 @@ void MAIN_vTick1msLp(void)
 }
 
 
-i16 mi16RotCntOld = 0;
-
 
 void MAIN_vTick10msLp()
 {
@@ -1925,28 +1990,29 @@ void MAIN_vTick10msLp()
   i16 li16RotCnt;
   li16RotCnt = mcUI.i16GetRotCnt();
 
-  if (mi16RotCntOld != li16RotCnt)
+  if (mcUI.bGetAndResetRotCntChanged())
   {
-    mi16RotCntOld = li16RotCnt;
+    mbSendRotCntUpdate = True;
     mLstLedAnims[mu16LedAnimationIdx]->vSetValue(li16RotCnt);
-    mcData.vUpdate();
+    //mcData.vUpdate();
   }
 
   if (mcUI.isBtnSingleClicked())
   {
-    
+    mbSendRotCntUpdate = True;
     if (mcData.mData.u16TurnOnState) mcData.mData.u16TurnOnState = 0;
                                 else mcData.mData.u16TurnOnState = 1;
   }
 
   if ((mcUI.isBtnDoubleClicked()) && (mcData.mData.u16TurnOnState))
   {
+    mbSendRotCntUpdate = True;
     mu16LedAnimationIdx = mu16LedAnimationIdx + 1;
     if (mLstLedAnims[mu16LedAnimationIdx] == NULL) mu16LedAnimationIdx = 0;
     mLstLedAnims[mu16LedAnimationIdx]->vSetValue(li16RotCnt);
     mLstLedAnims[mu16LedAnimationIdx]->vInit();
     mcData.mData.u16LedAnimationIdx = mu16LedAnimationIdx;
-    mcData.vUpdate();
+    //mcData.vUpdate();
   }
 
   u8 lu8Brightness;
@@ -1958,13 +2024,12 @@ void MAIN_vTick10msLp()
   ////  lu8Brightness *= mcUI.isHumanPresent();
   ////}
 
-
   lu16Minute++;
   if (lu16Minute > 6000)
   {
     lu16Minute = 0;
 
-    // Einfache Temperatur Regelung    
+    // Einfache Temperatur Regelung
     // if (mcWs2812.i16GetNtcTemp() > 70) // analog
     if (mcTemp.i16GetTemp(0) > mcData.mData.i16MaxTemp)  // digital
     {
@@ -1988,10 +2053,10 @@ void MAIN_vTick10msLp()
     lu8BrightnessOld = lu8Brightness;
   }
 
+  vSendStatus();
   mLstLedAnims[mu16LedAnimationIdx]->vProcess10ms();
   mcWs2812.vShow();
   mcData.vTick10ms();
-  mcEep.vTick10ms();
 }
 
 
@@ -2012,14 +2077,19 @@ void MAIN_vInitSystem(void)
   // ------ EEP-Daten laden
   // Im Fehlerfall nochmals ein paar mal probieren, weil ...
   //    Time required after VCC is stable before the device can accept commands. 100 μs
-  u8 lu8EepRetrys = 10;
-  while ((mcData.mbError) && (lu8EepRetrys > 0))
+  u8 lu8EepRetrys = 3;
+  while (lu8EepRetrys > 0)
   {
-    mcData.mbError = False;
-    while ((mcData.mbLoad) && (!mcData.mbError))
+    while (mcData.isLoading())
     {
       CycCall_vIdle();
     }
+
+    if (!mcData.mbError)
+    {
+      break;
+    }
+    mcData.vStartLoad();
     lu8EepRetrys--;
   }
 
@@ -2054,34 +2124,34 @@ void MAIN_vInitSystem(void)
   mcUI.vSetRotInc(1);
 
   // Beim einschalten aus. Wird dann über Msg eingeschaltet
-  mi16RotCntOld = mcUI.mi16RotCnt = 0;
-  mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mi16RotCntOld);
+  mcUI.vSetRotCnt(0);
+  mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.i16GetRotCnt());
   mLstLedAnims[mu16LedAnimationIdx]->vInit();
 
   mcWs2812.vEnable();
 
-  // Status Nachricht alle 100ms senden     Name        Side   S        D                    MsgIdx ( 4 => RRpt) 
-  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSLedCyc, 32, 0x1000, mcSys.mcCom.mcBn.mcAdr.Get(), 4);
-
-  //40: Request Messages
-  //  Message Req : Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index 
-  //                                         //                                    S1 = Sub Index1  
-  //                                         //                                    S2 = Sub Index2  
+  //// Status Nachricht alle 100ms senden     Name        Side   S        D                    MsgIdx ( 4 => RRpt)
+  //cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSLedCyc, 32, 0x1000, mcSys.mcCom.mcBn.mcAdr.Get(), 4);
   //
-  //                                         // R1 S1 S2
-  //                                         //  0  0  0:  SLED:     Status
-
-  lcMsgSLedCyc.mcPayload[0] = 1;       // Set Command
-  lcMsgSLedCyc.mcPayload[1] = 40;      // Request Message Index
-  lcMsgSLedCyc.mcPayload[2] = 0;       // RI
-  lcMsgSLedCyc.mcPayload[3] = 0;       // S1
-  lcMsgSLedCyc.mcPayload[4] = 0;       // S2
-  lcMsgSLedCyc.mcPayload[5] = 0x10;    // 0x1000 DAdr HB
-  lcMsgSLedCyc.mcPayload[6] = 0x00;    // 0x1000 DAdr LB
-  lcMsgSLedCyc.mcPayload[7] = 10;     // 10 * 10ms = 100ms cycle time
-
-  lcMsgSLedCyc.vEncode();
-  mcSys.mcCom.mcBn.mcRRpt.bMsg(lcMsgSLedCyc);
+  ////40: Request Messages
+  ////  Message Req : Rx   RI.S1.S2     // Payload Len:  3; Request           SI = Request Index
+  ////                                  //                                    S1 = Sub Index1
+  ////                                  //                                    S2 = Sub Index2
+  ////
+  ////                                         // R1 S1 S2
+  ////                                         //  0  0  0:  SLED:     Status
+  //
+  //lcMsgSLedCyc.mcPayload[0] = 1;       // Set Command
+  //lcMsgSLedCyc.mcPayload[1] = 40;      // Request Message Index
+  //lcMsgSLedCyc.mcPayload[2] = 0;       // RI
+  //lcMsgSLedCyc.mcPayload[3] = 0;       // S1
+  //lcMsgSLedCyc.mcPayload[4] = 0;       // S2
+  //lcMsgSLedCyc.mcPayload[5] = 0x10;    // 0x1000 DAdr HB
+  //lcMsgSLedCyc.mcPayload[6] = 0x00;    // 0x1000 DAdr LB
+  //lcMsgSLedCyc.mcPayload[7] = 10;     // 10 * 10ms = 100ms cycle time
+  //
+  //lcMsgSLedCyc.vEncode();
+  //mcSys.mcCom.mcBn.mcRRpt.bMsg(lcMsgSLedCyc);
 
 
   ////CycCall_Start(MAIN_vTick1msHp,

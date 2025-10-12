@@ -4,8 +4,8 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
  :mcAdr(lcCfg->mu16BnAdr),
   mcDeviceID(lcCfg->mu16BnDeviceID),
   mcStreamSys(this),
-  mcMsgRxDyn(cBotNet_MsgSize), mcMsgRx(&mcMsgRxDyn),
-  mcMsgTxDyn(cBotNet_MsgSize), mcMsgTx(&mcMsgTxDyn),
+  mcMsgRx(mu8MsgRxBuf, sizeof(mu8MsgRxBuf)),
+  mcMsgTx(mu8MsgTxBuf, sizeof(mu8MsgTxBuf)),
   mcBtr(this),
   mcSpop(this),
   mcRRpt(this),
@@ -19,7 +19,7 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
 
   mu16DownLinkSyncCnt_ms = 0;
   mu16DownLinkSyncCntReload_ms = cBotNet_DownLinkSyncAll;
-  
+
   mcpMsgProcess   = null;
   mcBtr.vAddMsgSys();
   mcSpop.vAddMsgSys();
@@ -54,30 +54,7 @@ cBotNet::~cBotNet() {}
 
 uint32 cBotNet::SizeOf()
 {
-  uint32 lui32Size;
-
-  lui32Size = sizeof(cBotNet);
-  lui32Size -= sizeof(cBotNetStreamSystem);
-  lui32Size -= 2 * sizeof(cBotNetMsg_BaseDyn);
-
-  for (int t = 0; t < enCnstSlaveCnt; t++)
-  {
-    if (mcDownLinks[t])
-    {
-      lui32Size += mcDownLinks[t]->SizeOf();
-    }
-  }
-
-  lui32Size += mcMsgRxDyn.SizeOf();
-  lui32Size += mcMsgTxDyn.SizeOf();
-
-  lui32Size += mcStreamSys.SizeOf();
-  if (mcUpLink)
-  {
-    lui32Size += mcUpLink->SizeOf();
-  }
-
-  return lui32Size;
+  return 0;
 }
 
 void cBotNet::vSetHandleHardware(u8 lu8IdxDownLink, bool lbState)
@@ -285,13 +262,8 @@ void cBotNet::vLinkMisc10ms()
   if (mcUpLink   != null) mcUpLink->vTick10ms();
   if (mcSideLink != null) mcSideLink->vTick10ms();
 
-
-  for (lu16t = 0; lu16t < mcStreamSys.mu8PortCnt; lu16t++)
-  {
-    mcStreamSys.mcPorts[lu16t]->vTick10ms();
-  }
+  mcStreamSys.vTick10ms();
 }
-
 
 
 
@@ -306,7 +278,7 @@ bool cBotNet::bCallMsgHandler(cBotNetMsg_MsgProt& lcMsgProt)
     lbMsgConsumed = mcpMsgHandlerWork->bMsg(lcMsgProt);
     mcpMsgHandlerWork = mcpMsgHandlerWork->mcMsgSysNext;
   }
-  
+
   return lbMsgConsumed;
 }
 
@@ -328,10 +300,7 @@ bool cBotNet::bDecodeMsgType(cBotNetMsg_Base *lcMsg)
     break;
 
     case cBotNetMsgFrame::tenType::enStream:
-      if (mcStreamSys.mcRxComBuf.isFitting(lcMsg))
-      {
-        lbMsgConsumed = mcStreamSys.bPut(lcMsg);
-      }
+      lbMsgConsumed = mcStreamSys.bPut(lcMsg);
       break;
 
     case cBotNetMsgFrame::tenType::enPacket: // Noch nicht implementiert
@@ -364,7 +333,7 @@ bool cBotNet::bDecodeAndDispatch()
 {
   mcMsgRx.vDecode(mcAdr.Get(), mcAdr.Get());
 
-  // Echo-Unterdrückung 
+  // Echo-Unterdrückung
   // Nur Nachrichten verarbeiten, die nicht von mir selbst geschickt wurden
   if (!mcAdr.isMe(mcMsgRx.cGetSAdr()))
   {
@@ -585,7 +554,7 @@ void cBotNet::vProcess(u32 lu32DiffTime_us)
 {
   mu32Time_us += lu32DiffTime_us;
 
-  while (mu32Time_us > 1000)
+  while (mu32Time_us >= 1000)
   {
     mu32Time_us -= 1000;
     mu32Time_ms++;

@@ -184,7 +184,7 @@ Config_STM32L4R9['system']['project']['target']['file_svd']   = '${system/dir/ro
 Config_STM32L552['system']['project']['target']['platform']   = 'STM32L552'
 Config_STM32L552['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32L552.svd'
 Config_STM32U5xx['system']['project']['target']['platform']   = 'STM32U5xx'
-Config_STM32U5xx['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32U5xx.svd'
+Config_STM32U5xx['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32U575.svd'
 Config_STM32H7B0['system']['project']['target']['platform']   = 'STM32H7B0'
 Config_STM32H7B0['system']['project']['target']['file_svd']   = '${system/dir/root}/scripts/stm/STM32H7B0x.svd'
 

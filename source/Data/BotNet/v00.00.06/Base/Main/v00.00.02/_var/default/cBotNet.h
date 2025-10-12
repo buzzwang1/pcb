@@ -66,10 +66,10 @@ class cBotNet
 
   cBotNetStreamSystem    mcStreamSys;
 
-  cBotNetMsg_BaseDyn     mcMsgRxDyn;
+  u8                     mu8MsgRxBuf[cBotNet_MsgSize];
   cBotNetMsg_Base        mcMsgRx;
 
-  cBotNetMsg_BaseDyn     mcMsgTxDyn;
+  u8                     mu8MsgTxBuf[cBotNet_MsgSize];
   cBotNetMsg_Base        mcMsgTx;
 
   cBotNet_MsgSysProcess *mcpMsgProcess;

@@ -32,9 +32,9 @@ class cI2cMem:cI2cMaster_Slave
   uint16     mui16DataToTx;
   uint16     mui16DataToRx;
 
-  cComDatMsg mpcMsgSync;
-  cComDatMsg mpcMsgData;
-  cComDatMsg mpcMsgAck;
+  cComDatMsgDyn mpcMsgSync;
+  cComDatMsgDyn mpcMsgData;
+  cComDatMsgDyn mpcMsgAck;
 
   bool mbSync;
 

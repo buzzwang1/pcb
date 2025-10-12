@@ -39,7 +39,7 @@ class cSystem
 
   cSystem()
     : mcClockInfo(),
-	  mcSMan(),
+	    mcSMan(),
       mcClock(),
       mcPMon(),
       mcBoard(),

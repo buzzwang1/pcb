@@ -88,11 +88,17 @@ Idx
 
 
 42: Set messages
-      Set                  TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL        //  ES: Enable status LEDs
+      Set                  RX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL        //  ES: Enable status LEDs
                                                                             //  Px: Channel x PWM/Dimming (0..100%);
                                                                             //  AI: Animation Index
                                                                             //  RGB: RGB value
                                                                             //  TH.TL: max. Temperature value (°C,  int16)
+
+      Set                  RX 01 | 00 | 00 | 01.D0.D0.D1.D1.D2.D2           //  Set 16Bit Values
+                                                                            //  D0: 16Bit Data 0
+                                                                            //  D1: 16Bit Data 1
+                                                                            //  D2: 16Bit Data 2
+
 
 
 

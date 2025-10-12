@@ -28,22 +28,26 @@ set(PCB_ProjectPackageList
     Data/Mem/Buffer/Ring/RingBufT/v00.00.03
     Data/Mem/Buffer/Ring/ComBuf/v00.00.03_unsafe
     Data/Mem/MemPart/v00.00.01
-    Data/Mem/RomConst/v00.00.01:GD32f130G6:Servo1
-    Data/Math/cFixPti1814/v00.00.01
+    Data/Mem/RomConst/v00.00.02:GD32f130G6:Servo1
+    #Data/Math/cFixPti1814/v00.00.01
 
-    Data/BotNet/v00.00.06/Base/Main/v00.00.01:Blu:Servo1
-    Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:Servo1_Blu
-    Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
-    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.01:GD32f130G6
+    Data/BotNet/v00.00.06/Base/Main/v00.00.02:UpLinkOnly
+      Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:Servo1_Blu
+      Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
+      Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:GD32f130G6
     Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
-    Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.03:default
-    Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.01:default
-    Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.01:Servo1:Blu
+      Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.04:default
+    Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
+      Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:Dummy
+      Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:Servo1:Blu
+    Data/BotNet/v00.00.06/BnStreamSys/Base/v00.00.01:Dummy
+      Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:Dummy
 
-    Data/String/Cli/v00.00.01
-    
+
+    Data/String/Cli/v00.00.01_noHist    
     Data/String/CStrT/v00.00.01_NoFpu
     Data/String/StringTools/v00.00.02
 
@@ -52,9 +56,9 @@ set(PCB_ProjectPackageList
     Driver/STM32/F1/STD/v03.01.00/GD32F1x0/STD:default
 
     Driver/STM32/F1/STD/GPPin/v01.00.02_GD
-    Driver/STM32/F1/STD/cUart/MpHd/v01.00.02_GD_Servo1:Tim16
+    Driver/STM32/F1/STD/cUart/MpHd/v01.00.03_GD_Servo1:Tim16
 
-
+    APP/Job/JobHdl/v00.00.01:ms
     APP/LED/v00.00.01:GD32F1_STD
     System/STM32/ClockInfo/v00.00.01:GD32f130_8Mhz
 

@@ -49,7 +49,7 @@ class cSbspUbTech
   {
 
     if ((maui8CmdBuffer[0] == nPreamble1a) &&
-      (maui8CmdBuffer[1] == nPreamble1b))
+        (maui8CmdBuffer[1] == nPreamble1b))
     {
       u8 lu8Checksum;
       lu8Checksum = 0;

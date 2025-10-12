@@ -2,8 +2,6 @@
 #define __BOTNET_STREAM_SYS_H__
 
 #include "Typedef.h"
-
-
 #include "cRingBufT.h"
 #include "cbArrayT.h"
 #include "cbArrayExtT.h"
@@ -25,13 +23,17 @@ class cBotNetStreamSystem
 
   cBotNetStreamPort* mcPorts[cBotNet_StreamSysPortsCnt];
 
+  u8       mcRxComBufBuf[cBotNet_StreamSysComBufSize];
   cComBuf  mcRxComBuf;
+  u8       mcTxComBufBuf[cBotNet_StreamSysComBufSize];
   cComBuf  mcTxComBuf;
 
-  cBotNetMsg_BaseDyn     mcMsgRx;
+  u8                     mcMsgRxBuf[cBotNet_MsgSize];
+  cBotNetMsg_Base        mcMsgRx;
   cBotNetMsg_StreamProt  mcMsgStreamRx;
-
-  cBotNetMsg_BaseDyn     mcMsgTx;
+  
+  u8                     mcMsgTxBuf[cBotNet_MsgSize];
+  cBotNetMsg_Base        mcMsgTx;
   cBotNetMsg_StreamProt  mcMsgStreamTx;
 
   cBotNetStreamPort_BotNetCmdPort mcCmdPort;
@@ -42,6 +44,11 @@ class cBotNetStreamSystem
 
   cBotNetStreamSystem(cBotNet* lcBn);
 
+  u16 AddPort(cBotNetStreamPort* lcPort)
+  {
+    UNUSED(lcPort);
+    return 0xFFFF;
+  }
   void ConnectPort(u8 lu8SourcePortIdx, u16 lu8DestPortAdr,  u8 lu8DestPortIdx)
   {
     if (lu8DestPortAdr != 0) // hier nur externe Connection
@@ -82,6 +89,16 @@ class cBotNetStreamSystem
   inline void get(cbArrayExtT<uint16> *lcEntry)
   {
     mcTxComBuf.get(lcEntry);
+  }
+
+  void vTick10ms()
+  {
+    // CMD-Port hat kein vTick10ms
+    //u16 lu16t;
+    //for (lu16t = 0; lu16t < 1 /*mu8PortCnt*/; lu16t++)
+    //{
+    //  mcPorts[lu16t]->vTick10ms();
+    //}
   }
 
   void vProcess()

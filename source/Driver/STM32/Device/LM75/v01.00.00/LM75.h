@@ -48,8 +48,8 @@ class cLm75 : public cComNode
 
   cI2cMaster*   mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenCmd     menCmd;
 

@@ -1,6 +1,6 @@
 #include "TPS55288.h"
 
-cTPS55288::cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr)
+cTPS55288::cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr, bool lbInit = True)
 {
 
   if (lui8Adr < TPS55288_I2C_ADDRESS_CONF_0)
@@ -16,7 +16,8 @@ cTPS55288::cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr)
   mpcMsgWrite.vMemAlloc(2, 0);
 
   menCmd            = enCmdIdle;
-  mStatus.IsInit    = false;
+  mStatus.IsInit    = False;
+  mbOutputEnableState = False;
 
   //i8Setup(TPS55288_Mode_ShuntAndBusVoltageContinuous,
   //        TPS55288_ShuntConversionTime_1100uS,
@@ -25,7 +26,10 @@ cTPS55288::cTPS55288(cI2cMaster* lpcI2C, uint8 lui8Adr)
   //        True, True, True);
   i8Setup();
 
-  mStatus.IsStartRequested = mbInit;
+  if (lbInit)
+  {
+    mStatus.IsStartRequested = mbInit;
+  }
 
   mI2C->vAddSlave((cComNode*)this);
 }
@@ -184,6 +188,7 @@ void cTPS55288::vComDone()
       vStartWriteReg(TPS55288_MODE);
       break;
     case enCmdSetVoltage4:
+      mbOutputEnableState = mRegs.stRegs.stRegMODE.OE;
       menCmd = enCmdIdle;
       break;
 
@@ -200,6 +205,7 @@ void cTPS55288::vComDone()
       vStartWriteReg(TPS55288_MODE);
       break;
     case enCmdSetMode2:
+      mbOutputEnableState = mRegs.stRegs.stRegMODE.OE;
       menCmd = enCmdIdle;
       break;
 
@@ -325,5 +331,24 @@ int8 cTPS55288::i8SetMode(u8 lu8Value)
   mStatus.IsStartRequested = 1;  
   mbCmdSetMode1 = True;
   return FRET_OK;
+}
+
+
+int8 cTPS55288::i8SetOutputEnable(bool lbState, bool lbDisCharge, bool lbForce)
+{
+  if ((!mRegs.stRegs.stRegMODE.OE != lbState) || (lbForce))
+  {
+    mRegs.stRegs.stRegMODE.OE = lbState;
+    mRegs.stRegs.stRegMODE.DISCHG = lbDisCharge;
+    mStatus.IsStartRequested = 1;
+    mbCmdSetMode1 = True;
+  }
+  return FRET_OK;
+}
+
+
+bool cTPS55288::isOutputEnable() 
+{
+  return mbOutputEnableState;
 }
 

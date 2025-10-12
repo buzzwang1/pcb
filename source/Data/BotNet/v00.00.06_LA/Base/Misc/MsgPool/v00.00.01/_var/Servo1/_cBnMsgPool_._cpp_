@@ -1,0 +1,11 @@
+#include "cBnMsgPool.h"
+
+cBnMsgPool::Msg32B cBnMsgPool::mcMsg32B_Pool[cBnMsgPool::nCnt32B];
+cBnMsgPool::Msg64B cBnMsgPool::mcMsg64B_Pool[cBnMsgPool::nCnt64B];
+
+u8 cBnMsgPool::mcMsg32BBuf[cBnMsgPool::nCnt32B];
+u8 cBnMsgPool::mcMsg64BBuf[cBnMsgPool::nCnt64B];
+
+cRingBufT<uint8, uint16> cBnMsgPool::mcMsg32B = cRingBufT<uint8, uint16>(cBnMsgPool::mcMsg32BBuf, sizeof(cBnMsgPool::mcMsg32BBuf));
+cRingBufT<uint8, uint16> cBnMsgPool::mcMsg64B = cRingBufT<uint8, uint16>(cBnMsgPool::mcMsg64BBuf, sizeof(cBnMsgPool::mcMsg64BBuf));
+

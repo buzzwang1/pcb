@@ -43,8 +43,8 @@ class cI2cEep : public cComNode
 
   cI2cMaster*   mI2C;
 
-  cComDatMsg mpcMsgWrite;
-  cComDatMsg mpcMsgRead;
+  cComDatMsgDyn mpcMsgWrite;
+  cComDatMsgDyn mpcMsgRead;
 
   tenCmd     menCmd;
   u8         mIdx;
@@ -373,10 +373,13 @@ class cI2cEep : public cComNode
 
   void vCmdSetup()
   {
-    mu16Adress = 0;
-    munStartFlags.stFlags.mbInit = true;
-    mStatus.IsError = false;
-    mStatus.IsStartRequested = 1;
+    if (!munStartFlags.stFlags.mbInit)
+    {
+      mu16Adress = 0;
+      munStartFlags.stFlags.mbInit = true;
+      mStatus.IsError = false;
+      mStatus.IsStartRequested = 1;
+    }
   }
 
   void vCmdReadByte(u16 lu16Adress)

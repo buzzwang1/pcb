@@ -138,9 +138,9 @@ public:
     UartHandle.Instance        = (USART_TypeDef*)this->Port();
     UartHandle.Init.BaudRate   = lu32Baudrate;
     UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-    UartHandle.Init.StopBits   = USART_STOPBITS_1;
-    UartHandle.Init.Parity     = USART_PARITY_NONE;
-    UartHandle.Init.Mode       = USART_MODE_TX_RX;
+    UartHandle.Init.StopBits   = UART_STOPBITS_1;
+    UartHandle.Init.Parity     = UART_PARITY_NONE;
+    UartHandle.Init.Mode       = UART_MODE_TX_RX;
     UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
     UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
 
