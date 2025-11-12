@@ -9,13 +9,13 @@
 
 __IO uint32_t TimingDelay = 0;
 
-LED<GPIOC_BASE, 13> mcLedRed;
+LED<GPIOB_BASE, 9> mcLedRed;
 
 cGpPin lcSCL(GPIOB_BASE, 6, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
 cGpPin lcSDA(GPIOB_BASE, 7, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
 
-cI2cMaster   mcI2C1(I2C1, &lcSCL, &lcSDA, 8);
-cSSD1306     mcSSD1306(&mcI2C1, 0x78); //, 0x38);
+cI2cMaster   mcI2C1(I2C1, &lcSCL, &lcSDA, DMA1, DMA1_Channel7, DMA1_Channel6);
+cSSD1306     mcSSD1306((cComNodeMaster*)&mcI2C1, 0x78); // , 0x38);
 
 #define MAIN_nDISPLAY_X cSSD1306_WIDTH
 #define MAIN_nDISPLAY_Y cSSD1306_HEIGHT
@@ -128,19 +128,16 @@ void I2C1_ER_IRQHandler(void)
 }
 
 
-void MAIN_vTick10msHp(void)
+void MAIN_vTick1msLp(void)
 {
-  if (!mcI2C1.bStartNext())
-  {
-    mcI2C1.vSetReInitTicks(1000);
-  }
+  mcI2C1.vTick1ms();
 }
 
 
 
 void MAIN_vTick100msLp(void)
 {
- static  u8 lu8t[8] = {0, 4, 8, 12, 16, 20, 24, 28};
+  static  u8 lu8t[8] = {0, 4, 8, 12, 16, 20, 24, 28};
   static int16 li16RectX = 0;
   static int16 li16RectY = 5;
   static int16 li16RectXDir = 1;
@@ -163,17 +160,17 @@ void MAIN_vTick100msLp(void)
       lu8t[lu8i] = 0;
     }
   }
-
+  
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(10, 10, (char8*)"Spg Solar 1234",  &mcScreen1);
-
+  
   if (li16RectX > 127) li16RectXDir = -1;
   if (li16RectY > 63)  li16RectYDir = -1;
   if (li16RectX < 1)   li16RectXDir = 1;
   if (li16RectY < 1)   li16RectYDir = 1;
-
+  
   li16RectX += li16RectXDir;
   li16RectY += li16RectYDir;
-
+  
   cPaint::vRect(li16RectX, li16RectY, 2, 2, 1, &mcScreen1);
   cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(li16RectX, li16RectY, (char8*)"xyz",  &mcScreen1);
 
@@ -190,20 +187,17 @@ void MAIN_vInitSystem(void)
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
 
+  mcI2C1.vAddNode(&mcSSD1306);
+
   CycCall_Start(NULL /*1ms_HP*/,
-                MAIN_vTick10msHp /*10ms_HP*/,
+                NULL /*10ms_HP*/,
                 NULL /*100ms_HP*/,
                 NULL /*1s_HP*/,
 
-                NULL               /*1ms_LP*/,
+                MAIN_vTick1msLp    /*1ms_LP*/,
                 NULL               /*10ms_LP*/,
                 MAIN_vTick100msLp  /*100ms_LP*/,
                 NULL               /*1s_LP*/);
-
-  if (mcI2C1.bStartNext())
-  {
-    Delay(100);
-  }
 }
 
 

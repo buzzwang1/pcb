@@ -54,13 +54,12 @@ list(APPEND PCB_ListTargetCompileOptionsCpp
   -fsigned-char 
   -fdata-sections 
   -Wextra  
-  -std=gnu++11 
+  -std=gnu++17 
   -fabi-version=6 
   -fno-exceptions 
   -fno-rtti 
   -fno-use-cxa-atexit 
   -fno-threadsafe-statics 
-  -nostdinc++
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC

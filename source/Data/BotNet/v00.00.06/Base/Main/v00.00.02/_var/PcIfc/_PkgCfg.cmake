@@ -2,7 +2,7 @@
 # set(PkgCfg_3rd_party 1)
 
 # Uncomment for link libraries
-set(PkgCfg_ListLinkLibraries cBotNetMsgSysBtr_lib cBotNetMsgSysRRpt_lib cBotNetMsgSysBtr_lib)
+#set(PkgCfg_ListLinkLibraries cBotNetMsgSysBtr_lib cBotNetMsgSysRRpt_lib cBotNetMsgSysBtr_lib)
 
 set(PkgCfg_ListTargetExeFiles "${CMAKE_CURRENT_LIST_DIR}/main.cpp;${CMAKE_CURRENT_LIST_DIR}/syscalls.c")
 

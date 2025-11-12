@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "main.h"
+#include <tuple>
 
 #include "TypeDef.h"
 
@@ -314,118 +315,107 @@ template <typename T> struct cPidT : cProcess<T>
 };
 
 
-//class BArry
-//{
-//  public:
-//  u16 mu16Size;
-//
-//  BArry(u16 lu16Size)
-//  {
-//    mu16Size = lu16Size;
-//  }
-//
-//  virtual const u8* Data() = 0;
-//};
-//
-//template <u16 tu16Size>
-//class SBArry: public BArry
-//{
-//  public:
-//    u8 data[tu16Size];
-//
-//    SBArry()
-//     : BArry(tu16Size)
-//     {}
-//
-//    const u8* Data() // override
-//    {
-//      return data;
-//    }
-//};
-//
-//class BArryExt : public BArry
-//{
-//public:
-//  u16 mu16Len;
-//
-//  BArryExt(u16 lu16Size)
-//   : BArry(lu16Size)
-//  {
-//    mu16Len  = 0;
-//  }
-//};
-//
-//template <u16 tu16Size>
-//class SBArryExt : public BArryExt
-//{
-//public:
-//  u8 data[tu16Size];
-//
-//  SBArryExt()
-//    : BArryExt(tu16Size)
-//  {}
-//
-//  const u8* Data() // override
-//  {
-//    return data;
-//  }
-//};
-
-
-class BArrySize
-{
-public:
-  u16 mSize;
-};
-
-class BArryLen
-{
-public:
-  u16 mu16Len = 0;
-};
-
-class BArryLenSize: public BArryLen, public BArrySize
-{
-public:
-};
-
-
-
-template <u16 tu16Size>
-class BArryData : public BArrySize
-{
-public:
-  u8 mData[tu16Size];
-
-  BArryData()
-  {
-    BArrySize::mSize = tu16Size;
-  }
-};
-
-template <u16 tu16Size>
-class BArryPtr : public BArrySize
+class PBArry
 {
 public:
   u8* mData;
-  BArryPtr()
+  u16 mLen;
+  u16 mSize;
+
+  PBArry()
   {
-    BArrySize::mSize = tu16Size;
+    mLen = 0;
+    mSize = 0;
+    mData = 0;
+  }
+
+  PBArry(u8* lData, u16 lLen, u16 lSize)
+  {
+    mLen  = lLen;
+    mSize = lSize;
+    mData = lData;
+  }
+
+  PBArry& From(u8* lData, u16 lLen, u16 lSize)
+  {
+    mLen = lLen;
+    mSize = lSize;
+    mData = lData;
+    return *this;
   }
 };
+
+template <u16 tu16Size>
+class SBArry
+{
+public:
+  u16 mLen;
+  u8 mData[tu16Size];
+
+  SBArry()
+  {
+    mLen = 0;
+  }
+
+  u16 Size()
+  {
+    return tu16Size;
+  }
+};
+
 
 template <typename T>
 class BArry : public T
 {
-  public:
-};
-
-template <typename T>
-class BArryExt : public BArryLen, public BArry<T>
-{
 public:
+
+  BArry() : T() {}
+
+  BArry& Set(const u8* lpuData, u16 const luLen)
+  {
+    if (luLen > Size()) mLen = Size();
+                   else mLen = luLen; 
+    memcpy(mData, lpuData, mLen);
+    return *this;
+  };
+
+  BArry& Set(u8 lu8Byte)
+  {
+    mData[0] = lu8Byte;
+    mLen = 1;
+    return *this;
+  };
+
+  BArry& Set(PBArry const& lcData)
+  {
+    return Set(lcData.mData, lcData.mLen);
+  };
+
+  //operator PBArry() const
+  //{
+  //  return PBArry((u8*)mData, mLen, Size());
+  //}
+
+  PBArry& To(PBArry& lcPBArry)
+  {
+    return lcPBArry.From((u8*)mData, mLen, Size());
+  }
+
+  BArry& operator=(u8 lu8Byte) { return Set(lu8Byte); };
+  BArry& operator=(PBArry const& lcData) { return Set(lcData); };
 };
 
+class Test
+{
+public: 
+  PBArry* mMsg;
+
+
+  Test(PBArry* lMsg)
+  {
+    mMsg = lMsg;
+  }
+};
 
 void main(void)
 {
@@ -520,15 +510,29 @@ void main(void)
   }
 
 
-  //SBArryExt<16> mcBArryExt;
-  BArry<BArryPtr<16>> mcBArryP;
-  BArry<BArryData<16>> mcBArry16;
-  BArryExt<BArryData<16>> mcBArryExt16;
-  printf("BArryPtr: %i\n", sizeof(mcBArryP));
-  printf("BArryData: %i\n", sizeof(mcBArry16));
-  printf("BArryExt: %i\n", sizeof(mcBArryExt16));
+  
+  BArry<SBArry<2>> lcBarry1;
+  BArry<SBArry<4>> lcBarry2;
 
-  mcBArryExt16.mu16Len = 6;
+  lcBarry1 = 2;
+  lcBarry2 = 4;
+
+  PBArry C;
+  lcBarry1 = lcBarry2.To(C);
+  Test D(&C);
+
+  //lcBarry1 = (PBArry)lcBarry2;
+
+
+  //
+  //SBArry<8> *lcBarry1P = &lcBarry1;
+  //SBArry<2> *lcBarry2P = (SBArry<2>*)&lcBarry1;
+  //
+  //
+  //lcBarry2.vSet(lcBarry1.Get());
+  //lcBarry2 = lcBarry1.Get();
+  //lcBarry2 = (SBArry<2>*) &lcBarry1;
+
   printf("\nEnde\n");
 
   //float lPos = T1(2048.0f);

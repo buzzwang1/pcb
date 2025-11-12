@@ -1,18 +1,24 @@
-
 #include "main.h"
 
-
 // GD32F130G6
-// ARM®-based Cortex®-M3 32b MCU, 8 Mhz(72 MHz max)
+// ARM®-based Cortex®-M3 32b MCU, 8 Mhz (72 MHz max)
 // Rom 32KB
+//   - FBL  12k: 0x0800 0000 - 0x0800 2FFF
+//   - APP  19k: 0x0800 3000 - 0x0800 7BFF
+//   - DATA  1k: 0x0800 7C00 - 0x0800 7FFF
 // Ram  4KB
 // TIM1(32Bit)
 // TIM0, TIM2, TIM13, TIM15, TIM16
 
+// TIM0: Motor PWM(Ch0) und ADC (CH1),
+// TIM2: System Tick
+// TIM13:
+// TIM15: optional (TimeStampArray)
+// TIM16: Uart Timeout
 
 // Servo:
 //
-// PB0: LED:          Tim2_Ch2(AF1); Tim0_Ch1_On(AF2)
+// PB1: LED:          Tim2_Ch3(AF1); Tim13_Ch0(AF0); Tim0_Ch2_On(AF2)
 //
 // PA9: Usart Tx:     USART0_TX(AF1)
 //
@@ -226,7 +232,6 @@ void DMA_Channel1_2_IRQHandler(void)
     mcPA10.vSet1();
     vDtwStart();
   #endif
-
   // USART1 TX
   // Ender der Übertragung wird durch  U0.TC interrupt erledigt
   // Tx DMA Interrupt wird nicht benötigt
@@ -377,9 +382,9 @@ void vInitTim2()
   // Das Gleiche wie oben 1ms-Timer, Autoreload, @8Mhz
   // Braucht aber so 90Byte weniger
   TIMER_DMAINTEN(TIMER2) = 1;
-  TIMER_PSC(TIMER2) = 23;    //  23 für 24Mhz, 15 für 16Mhz und 7 für 8Mhz
-  TIMER_CAR(TIMER2) = 0x3E7;
-  TIMER_CTL0(TIMER2) = 0x081;
+  TIMER_PSC(TIMER2)      = 23;    //  23 für 24Mhz, 15 für 16Mhz und 7 für 8Mhz
+  TIMER_CAR(TIMER2)      = 0x3E7;
+  TIMER_CTL0(TIMER2)     = 0x081;
 
   /*NVIC config*/
   nvic_irq_enable(TIMER2_IRQn, 1, 1);
@@ -530,6 +535,3 @@ void MainSystemInit(void)
     nvic_vector_table_set(NVIC_VECTTAB_FLASH, VECT_TAB_OFFSET);
   #endif
 }
-
-
-

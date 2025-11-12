@@ -76,6 +76,9 @@ projects = {
     'STM/F1/GD32F1x0/UbTech/Servo1/LA/AppDebug'   : project('GD32F1x0_UbTech_Servo1_LA_Debug',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
     'STM/F1/GD32F1x0/UbTech/Servo1/LA/Blu'        : project('GD32F1x0_UbTech_Servo1_LA_Blu',          True,      '',   {'Release' : 'Config_GD32F1x0'}),
     'STM/F1/GD32F1x0/UbTech/Servo1/LA8/AppDebug'  : project('GD32F1x0_UbTech_Servo1_LA8_Debug',       True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App'     : project('GD32F1x0_UbTech_Servo1_LA8Bn7_App',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug': project('GD32F1x0_UbTech_Servo1_LA8Bn7_Debug',    True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu'     : project('GD32F1x0_UbTech_Servo1_LA8Bn7_Blu',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
 
 
     # --- STM32F103RBT/BluePill ------------------------------------------------
@@ -274,7 +277,7 @@ projects = {
     #'STM/L4/STM32L433CCT/BluePill/I2C/APDS9960/Gs'     : project('STM32L433CCT_I2C_APDS9960_Gs',        True,      '', {'Debug' : 'Config_STM32L4x3'}),
     #'STM/L4/STM32L433CCT/BluePill/I2C/HTU21D'          : project('STM32L433CCT_I2C_HTU21D',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
     #'STM/L4/STM32L433CCT/BluePill/I2C/INA219'          : project('STM32L433CCT_I2C_INA219',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
-    #'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/BluePill/I2C/OLED'            : project('STM32L433CCT_I2C_OLED',               True,      '', {'Debug' : 'Config_STM32L4x3'}),
     #'STM/L4/STM32L433CCT/BluePill/I2C/SW6007'          : project('STM32L433CCT_I2C_SW6007',             True,      '', {'Debug' : 'Config_STM32L4x3'}),
 
     #'STM/L4/STM32L433CCT/BluePill/Mot/Test01'          : project('STM32L433CCT_Mot_Test01',             True,      '', {'Debug' : 'Config_STM32L4x3'}),

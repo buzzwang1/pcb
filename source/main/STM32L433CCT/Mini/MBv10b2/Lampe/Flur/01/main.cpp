@@ -273,7 +273,7 @@ void MAIN_vInitSystem(void)
 
   mcSys.vInit2();
 
-  vDoLedBoard();
+  mcSys.mcCom.mcSideLink.vSetTiming(1 * 1000, 50);
 }
 
 /* Main functions ---------------------------------------------------------*/

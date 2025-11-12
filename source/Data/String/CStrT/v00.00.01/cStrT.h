@@ -524,7 +524,6 @@
                 lszStr[lu16StartPosOfFloat] = '0';
               }
             }
-
           }
           else
           {

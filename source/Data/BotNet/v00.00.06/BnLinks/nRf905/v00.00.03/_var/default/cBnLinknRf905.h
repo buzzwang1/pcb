@@ -59,14 +59,19 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
   bool mbSBusy;
 
   cBotNet_DownLinknRf905(cNRF905 *lcNRF905)
-     : cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enDownLink, lcNRF905)
+    : cBotNet_ComLinknRf905(mpu8ComBufRx, sizeof(mpu8ComBufRx), mpu8ComBufTx, sizeof(mpu8ComBufTx), cBotNet_LinkBase::enDownLink, lcNRF905),
+      mpcMsgSyncR(null,                              0, MsgSyncRxRBuf, sizeof(MsgSyncRxRBuf)),
+      mpcMsgSyncT(MsgSyncTxRBuf, sizeof(MsgSyncTxRBuf), null,          0),
+      mpcMsgDataR(null,                              0, MsgDataRxRBuf, sizeof(MsgDataRxRBuf)),
+      mpcMsgDataT(MsgDataTxRBuf, sizeof(MsgDataTxRBuf), null,          0)
   {
-    menSm = StIdle;
+    mpcMsgSyncR.cRxData.muiLen = sizeof(MsgSyncRxRBuf);
+    mpcMsgSyncT.cTxData.muiLen = sizeof(MsgSyncTxRBuf);
   }
 
   virtual bool bAddedToBn(u16 lu16Adr)
   {
-    bool lbRet = cBotNet_ComLinkI2c::bAddedToBn(lu16Adr);
+    bool lbRet = cBotNet_ComLinknRf905::bAddedToBn(lu16Adr);
     vOnResetCom();
     return lbRet;
   }
@@ -110,7 +115,6 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
   {
     cBotNet_SyncedLinkBase::vOnResetCom();
 
-    mStatus.IsInit        = 1;
     mu16TimeoutCounter_ms = 0;
     mbSBusy               = False;
 
@@ -125,7 +129,6 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 
   void vComDone()
   {
-    UNUSED(lenEvent);
   }
 
   void vMasterStartSync()
@@ -138,17 +141,18 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 
   bool bEventHandler(cNRF905::tenCmdEvents lenEvent) // __attribute__((optimize("-O0")))
   {
-    bool lbLoop;
+    bool lbLoop = True;
 
     // Unterliegende Statemaschine wartet noch auf was/ist  noch nicht fertig
-    if (mcNRF905->mSm != NRF905_StIdle)
+    if (mcNRF905->mSm != cNRF905::NRF905_StIdle)
     {
       mcNRF905->bEventHandler(lenEvent);
-      lbLoop = (mcNRF905->mSm == NRF905_StIdle);
+      lbLoop = (mcNRF905->mSm == cNRF905::NRF905_StIdle);
     }
 
     while (lbLoop)
     {
+      lbLoop = False;
       switch (menSm)
       {
         case cBotNet_SyncedLinkBase::tenStates::enStIdle:
@@ -194,18 +198,8 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
         break;
 
         case cBotNet_SyncedLinkBase::tenStates::enStSyncWaitTx:
-          // Nichts zuwarten
           menSm = cBotNet_SyncedLinkBase::tenStates::enStSyncStartTx;
-
-          //WarteZeit vor Sync kann man sich sparen
-          //if (enCnstWaitRSyncDwn)
-          //{
-          //  mcDownLink->mTimer.vStart(enCnstWaitRSyncDwn);
-          //}
-          //else
-          //{
-            lbLoop = True;
-          //}
+          lbLoop = True;
           break;
 
         case cBotNet_SyncedLinkBase::tenStates::enStSyncStartTx:
@@ -267,7 +261,7 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 
               for (u8 lu8t = 0; lu8t < lui8Data2Copy; lu8t++)
               {
-                mcNRF905->mstNRF905.mui8TxPayLoad[lui8Data2Copy] = mpcMsgDataT.cTxData.mpu8Data[mu16DataIdx + lui8Data2Copy];
+                mcNRF905->mstNRF905.mui8TxPayLoad[lu8t] = mpcMsgDataT.cTxData.mpu8Data[mu16DataIdx + lu8t];
               }
               mu16DataIdx += lui8Data2Copy;
 
@@ -280,10 +274,10 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
 
           case cBotNet_SyncedLinkBase::tenStates::enStDataWaitTx:
             {
-              if (mu16DataIdx < mpcMsgDataT.cTxData.mpu8Data)
+              if (mu16DataIdx < mpcMsgDataT.cTxData.muiLen)
               {
                 mcNRF905->mTimer.vStart(cNRF905::NRF905_WAIT_TX_DELAY);
-                menSm = cBotNet_SyncedLinkBase::tenStates::enStDataDoneTx;
+                menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartTx;
               }
               else
               {
@@ -385,9 +379,6 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
         //
         case cBotNet_SyncedLinkBase::tenStates::enStDataPrepareRx:
           {
-            u8  lu8DataLen;
-            lu8DataLen = u8SyncGetMsgLen(mpcMsgSyncR.cRxData.mpu8Data);
-            mpcMsgDataR.cRxData.muiLen = lu8DataLen; // 1 Byte Checksumme ist hier schon inkludiert
             mu16DataIdx = 0;
 
             menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartRx;
@@ -399,16 +390,12 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
           {
             u8 lui8Data2Copy;
 
-            lui8Data2Copy = mpcMsgDataT.cRxData.muiLen - mu16DataIdx;   // Len+1 für Checksumme
+            lui8Data2Copy = mpcMsgDataR.cRxData.muiLen - mu16DataIdx;   // Len+1 für Checksumme
             if (lui8Data2Copy > 32) lui8Data2Copy = 32;
             mcNRF905->mstNRF905.mstConfig.Rx_Payload_Width = lui8Data2Copy;
 
-            mu16DataIdx += lui8Data2Copy;
-
             mcNRF905->vStartReceive();
             mcNRF905->mTimer.vStart(cNRF905::NRF905_WAIT_TIMEOUT_10ms);
-            mSm = StMasterData_Rx_Data_WaitForSlave_RxProcess;
-
             menSm = cBotNet_SyncedLinkBase::tenStates::enStDataWaitForRx;
           }
           break;
@@ -418,13 +405,17 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
             mcNRF905->mTimer.vStop();
             if (lenEvent != cNRF905::NRF905_EvTimer)
             {
+              u8 lui8Data2Copy = mcNRF905->mstNRF905.mstConfig.Rx_Payload_Width;
+
               // Daten holen
-              for (u8 lu8Idx = 0; lu8Idx < mu16DataIdx; lu8Idx++)
+              for (u8 lu8Idx = 0; lu8Idx < lui8Data2Copy; lu8Idx++)
               {
-                mpcMsgDataT.cRxData.mpu8Data[mu16DataIdx + lu8Idx] = mcNRF905->mstNRF905.mui8RxPayLoad[lu8Idx];
+                mpcMsgDataR.cRxData.mpu8Data[mu16DataIdx + lu8Idx] = mcNRF905->mstNRF905.mui8RxPayLoad[lu8Idx];
               }
 
-              if (mu16DataIdx < mpcMsgDataT.cRxData.muiLen)
+              mu16DataIdx += lui8Data2Copy;
+
+              if (mu16DataIdx < mpcMsgDataR.cRxData.muiLen)
               {
                 // Es gibt noch was zu empfangen
                 menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartRx;
@@ -495,7 +486,7 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
         // ----------------------------------- End -----------------------------------
         //
         case enStEndError:
-          mcNRF905->mSm = NRF905_StIdle;
+          mcNRF905->mSm = cNRF905::NRF905_StIdle;
           menSm = cBotNet_SyncedLinkBase::tenStates::enStIdle;
           mu16TimeoutCounter_ms = 0;
           lbLoop = True;
@@ -515,7 +506,6 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
   void vTick10ms() override
   {
     cBotNet_SyncedLinkBase::vTick10ms();
-    mcUpLink->vTick10ms();
 
     if (mu16TimeoutCounter_ms > 0)
     {
@@ -526,16 +516,16 @@ class cBotNet_DownLinknRf905:public cBotNet_ComLinknRf905
       else
       {
         mu16TimeoutCounter_ms = 0;
-        cBnErrCnt::vInc(cBnErrCnt::tenErr::enRxTimeout);
         menSm = cBotNet_SyncedLinkBase::tenStates::enStEndError;
-        bAddedToBn(cComNode::tenEvent::enEvTimer);
+        bEventHandler(cNRF905::NRF905_EvDummy);
+        cBnErrCnt::vInc(cBnErrCnt::tenErr::enRxTimeout);
       }
     }
   }
 
   void vTick1ms() override
   {
-    //mcUpLink->vTick1ms();
+    //mcNRF905->vTick1ms();
     //vSyncStart();
   }
 };
@@ -568,8 +558,7 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
   bool bAddedToBn(u16 lu16Adr)
   {
-    bool lbRet = cBotNet_ComLinkUsartMpHd::bAddedToBn(lu16Adr);
-    mcUpLink->vSetNode((cComNode*)this);
+    bool lbRet = cBotNet_ComLinknRf905::bAddedToBn(lu16Adr);
     vOnResetCom();
     return lbRet;
   }
@@ -607,7 +596,6 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
     //mcNRF905->vReInitHw(cComNode::tenConsts::enResetHwDma);
     cBotNet_SyncedLinkBase::vOnResetCom();
 
-    mStatus.IsInit = 1;
     mbMBusy = False;
     mu16TimeoutCounter_ms = 0;
 
@@ -626,8 +614,8 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
   void vSlaveStartSync()
   {
-    menSm = StSlaveSync_Start;
     vSyncStart();
+    menSm = cBotNet_SyncedLinkBase::tenStates::enStSyncPrepareRx;
     bEventHandler(cNRF905::NRF905_EvDummy);
   }
 
@@ -664,13 +652,13 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
   bool bEventHandler(cNRF905::tenCmdEvents lenEvent)  // __attribute__((optimize("-O0")))
   {
-    bool lbLoop;
+    bool lbLoop = True;
 
     // Unterliegende Statemaschine wartet noch auf was/ist  noch nicht fertig
-    if (mcNRF905->mSm != NRF905_StIdle)
+    if (mcNRF905->mSm != cNRF905::NRF905_StIdle)
     {
       mcNRF905->bEventHandler(lenEvent);
-      lbLoop = (mcNRF905->mSm == NRF905_StIdle);
+      lbLoop = (mcNRF905->mSm == cNRF905::NRF905_StIdle);
     }
 
     while (lbLoop)
@@ -743,9 +731,6 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
           //
         case cBotNet_SyncedLinkBase::tenStates::enStDataPrepareRx:
           {
-            u8  lu8DataLen;
-            lu8DataLen = u8SyncGetMsgLen(mpcMsgSyncR.cRxData.mpu8Data);
-            mpcMsgDataR.cRxData.muiLen = lu8DataLen; // 1 Byte Checksumme ist hier schon inkludiert
             mu16DataIdx = 0;
             menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartRx;
             lbLoop = True;
@@ -756,16 +741,12 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
           {
             u8 lui8Data2Copy;
 
-            lui8Data2Copy = mpcMsgDataT.cRxData.muiLen - mu16DataIdx;   // Len+1 für Checksumme
+            lui8Data2Copy = mpcMsgDataR.cRxData.muiLen - mu16DataIdx;   // Len+1 für Checksumme
             if (lui8Data2Copy > 32) lui8Data2Copy = 32;
             mcNRF905->mstNRF905.mstConfig.Rx_Payload_Width = lui8Data2Copy;
 
-            mu16DataIdx += lui8Data2Copy;
-
             mcNRF905->vStartReceive();
             mcNRF905->mTimer.vStart(cNRF905::NRF905_WAIT_TIMEOUT_10ms);
-            mSm = StMasterData_Rx_Data_WaitForSlave_RxProcess;
-
             menSm = cBotNet_SyncedLinkBase::tenStates::enStDataWaitForRx;
           }
           break;
@@ -775,13 +756,17 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
             mcNRF905->mTimer.vStop();
             if (lenEvent != cNRF905::NRF905_EvTimer)
             {
+              u8 lui8Data2Copy = mcNRF905->mstNRF905.mstConfig.Rx_Payload_Width;
+
               // Daten holen
-              for (u8 lu8Idx = 0; lu8Idx < mu16DataIdx; lu8Idx++)
+              for (u8 lu8Idx = 0; lu8Idx < lui8Data2Copy; lu8Idx++)
               {
-                mpcMsgDataT.cRxData.mpu8Data[mu16DataIdx + lu8Idx] = mcNRF905->mstNRF905.mui8RxPayLoad[lu8Idx];
+                mpcMsgDataR.cRxData.mpu8Data[mu16DataIdx + lu8Idx] = mcNRF905->mstNRF905.mui8RxPayLoad[lu8Idx];
               }
 
-              if (mu16DataIdx < mpcMsgDataT.cRxData.muiLen)
+               mu16DataIdx += lui8Data2Copy;
+
+              if (mu16DataIdx < mpcMsgDataR.cRxData.muiLen)
               {
                 // Es gibt noch was zu empfangen
                 menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartRx;
@@ -830,18 +815,18 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
         case cBotNet_SyncedLinkBase::tenStates::enStSyncWaitForTx:
           menSm = cBotNet_SyncedLinkBase::tenStates::enStSyncStartTx;
           mcNRF905->mTimer.vStart(cNRF905::NRF905_WAIT_TX_DELAY);
+          if (u8SyncGetMsgLen(mpcMsgSyncR.cRxData.mpu8Data))
+          {
+            // Die Wartezeit nutzen und gegebenenfalls
+            // noch die Daten aus der letzten Übertragung übernehmen
+            vSmPutDataRx();
+          }
           break;
 
         case cBotNet_SyncedLinkBase::tenStates::enStSyncStartTx:
           {
             u8 lu8NoCheck = 0;
             u8 lu8OneWay  = 0;
-
-            if (u8SyncGetMsgLen(mpcMsgSyncR.cRxData.mpu8Data))
-            {
-              // Gegebenenfalls noch die Daten aus der letzten Übertragung übernehmen
-              vSmPutDataRx();
-            }
 
             // Wurden vorherige Daten Acknowledged ?
             if ((IsAckTx()) || (mpcMsgDataT.cTxData.muiLen == 0))
@@ -851,7 +836,7 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
               if (mpcMsgDataT.cTxData.muiLen)
               {
-                lui8ChkSum = mpcMsgDataT.u8TxChecksum();
+                u8 lui8ChkSum = mpcMsgDataT.u8TxChecksum();
 
                 mpcMsgDataT.cTxData.mpu8Data[mpcMsgDataT.cTxData.muiLen] = lui8ChkSum;
                 mpcMsgDataT.cTxData.muiLen++; // + 1 für Checksumme
@@ -873,7 +858,6 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
           }
 
         case cBotNet_SyncedLinkBase::tenStates::enStSyncDoneTx:
-          if (lenEvent == cComNode::tenEvent::enEvDone)
           {
             // Sind Daten zu senden ?
             if (mpcMsgDataT.cTxData.muiLen)
@@ -916,7 +900,7 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
             for (u8 lu8t = 0; lu8t < lui8Data2Copy; lu8t++)
             {
-              mcNRF905->mstNRF905.mui8TxPayLoad[lui8Data2Copy] = mpcMsgDataT.cTxData.mpu8Data[mu16DataIdx + lui8Data2Copy];
+              mcNRF905->mstNRF905.mui8TxPayLoad[lu8t] = mpcMsgDataT.cTxData.mpu8Data[mu16DataIdx + lu8t];
             }
             mu16DataIdx += lui8Data2Copy;
 
@@ -929,10 +913,10 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
 
         case cBotNet_SyncedLinkBase::tenStates::enStDataWaitTx:
           {
-            if (mu16DataIdx < mpcMsgDataT.cTxData.mpu8Data)
+            if (mu16DataIdx < mpcMsgDataT.cTxData.muiLen)
             {
               mcNRF905->mTimer.vStart(cNRF905::NRF905_WAIT_TX_DELAY);
-              menSm = cBotNet_SyncedLinkBase::tenStates::enStDataDoneTx;
+              menSm = cBotNet_SyncedLinkBase::tenStates::enStDataStartTx;
             }
             else
             {
@@ -943,7 +927,6 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
           break;
 
         case cBotNet_SyncedLinkBase::tenStates::enStDataDoneTx:
-          if (lenEvent == cComNode::tenEvent::enEvDone)
           {
             menSm = cBotNet_SyncedLinkBase::tenStates::enStEnd;
             lbLoop = True;
@@ -954,7 +937,8 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
         // ----------------------------------- Ende -----------------------------------
         //
         case enStEndError:
-          mcUpLink->vResetCom();
+          mcNRF905->mSm = cNRF905::NRF905_StIdle;
+          //mcNRF905->vResetCom();
           mu16TimeoutCounter_ms = 0;
           ////GPIOB->BSRR = (1 << (16 + 8));
           menSm = cBotNet_SyncedLinkBase::tenStates::enStSyncPrepareRx;
@@ -969,7 +953,7 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
         default:
           break;
       }
-    } 
+    }
 
     return False;
   }
@@ -977,7 +961,7 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
   void vTick10ms() override
   {
     cBotNet_SyncedLinkBase::vTick10ms();
-    mcUpLink->vTick10ms();
+    //mcNRF905->vTick10ms();
 
     if (mu16TimeoutCounter_ms > 0)
     {
@@ -988,16 +972,16 @@ class cBotNet_UpLinknRf905:public cBotNet_ComLinknRf905
       else
       {
         mu16TimeoutCounter_ms = 0;
-        cBnErrCnt::vInc(cBnErrCnt::tenErr::enRxTimeout);
         menSm = cBotNet_SyncedLinkBase::tenStates::enStEndError;
-        bAddedToBn(cComNode::tenEvent::enEvTimer);
+        bEventHandler(cNRF905::NRF905_EvDummy);
+        cBnErrCnt::vInc(cBnErrCnt::tenErr::enRxTimeout);
       }
     }
   }
 
   void vTick1ms() override
   {
-    //mcUpLink->vTick1ms();
+    //mcNRF905->vTick1ms();
     //vSyncStart();
   }
 };

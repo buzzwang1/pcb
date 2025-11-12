@@ -23,20 +23,16 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.07
+    Data/ComDat/ComDat/v00.01.00
     Data/Mem/MemTools/v00.00.03:default_arm
-    Data/Mem/Buffer/BArray/BArrayT/v00.00.02
-    Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01
-    Data/Mem/Buffer/Ring/RingBufT/v00.00.03
-    Data/Mem/Buffer/Ring/ComBuf/v00.00.03
-
+    Data/Mem/Buffer/BArray/BArrayT/v00.01.00
     
-    Data/String/CStrT/v00.00.01
+    Data/String/CStrT/v00.01.00:default
     Data/String/StringTools/v00.00.02
     
     #Driver/STM32/Device/APDS9960/Work_APDS9960
     #Driver/STM32/Device/HTU21D/Work_HTU21D
-    Driver/STM32/Device/Displays/SSD1306/v01.00.01:A_128x64x1BPP
+    Driver/STM32/Device/Displays/SSD1306/v01.01.00:128x64x1BPP
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
     Driver/STM32/L4/Hal/v01.15.01/Core
@@ -44,7 +40,7 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/Hal/v01.15.01/HAL:lib_o3_8Mhz
     
     Driver/STM32/L4/HAL/GPPin/v01.00.02
-    Driver/STM32/L4/HAL/cI2C/v01.00.09
+    Driver/STM32/L4/HAL/cI2C/v01.01.00
 
 
     Resource/Base/v00.00.01
@@ -58,7 +54,7 @@ set(PCB_ProjectPackageList
     Gfx/Paint/Basic/v00.00.01
     Gfx/Sprite/Sprite/v00.00.01
     Gfx/Sprite/SEngine/v00.00.01
-    Gfx/Font/RFont/v00.00.01
+    Gfx/Font/RFont/v00.00.02
 
 
     APP/LED/v00.00.01:STM32L4_HAL

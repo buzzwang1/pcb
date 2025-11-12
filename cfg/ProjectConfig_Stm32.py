@@ -73,6 +73,14 @@ default_buildtool_gcc_cm = {
         'call': '${bin} ${args}',
     },
 
+    # create list file
+    'elf2asm': {
+        'bin': 'arm-none-eabi-objdump',
+        #'args': '-S -h ${system/file/elf} > ${system/file/elf}.lst',
+        'args': '-drwC ${system/file/elf} > ${system/file/elf}.asm',
+        'call': '${bin} ${args}',
+    },
+
     'size': {
         'memreport': {
             'bin': 'arm-none-eabi-size',

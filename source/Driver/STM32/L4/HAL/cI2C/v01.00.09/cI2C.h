@@ -446,7 +446,7 @@ class cI2c
   }
 
   bool bCheckBus()
-    {
+  {
     if (mI2C->ISR & I2C_ISR_BUSY)
     {
       // In case starting a new transmission as long the bus is not stopped, will cause an error

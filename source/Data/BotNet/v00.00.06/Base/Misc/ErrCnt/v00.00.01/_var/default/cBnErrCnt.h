@@ -24,7 +24,8 @@ public:
     enRxChkSum,       // 6
     enRxTimeout,      // 7
     enRxBusy,         // 8
-    enErrCnt          // 9
+    enRxNoMem,        // 9
+    enErrCnt          // 10
   }tenErr;
 
   u16 muErrCnt[enErrCnt];
@@ -59,7 +60,8 @@ public:
       case enRxSync:         lcParam.Setf("%s%d", (rsz)"RxSync: ",    muErrCnt[(u8)lenErr]); break;
       case enRxChkSum:       lcParam.Setf("%s%d", (rsz)"RxChkSum: ",  muErrCnt[(u8)lenErr]); break;
       case enRxTimeout:      lcParam.Setf("%s%d", (rsz)"RxTimeout: ", muErrCnt[(u8)lenErr]); break;
-      case enRxBusy:         lcParam.Setf("%s%d", (rsz)"RxBusyv: ",   muErrCnt[(u8)lenErr]); break;
+      case enRxBusy:         lcParam.Setf("%s%d", (rsz)"RxBusy: ",    muErrCnt[(u8)lenErr]); break;
+      case enRxNoMem:        lcParam.Setf("%s%d", (rsz)"RxNoMem: ",   muErrCnt[(u8)lenErr]); break;
       default:               lcParam = ""; break;
     }
   }

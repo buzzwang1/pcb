@@ -601,6 +601,96 @@
       ]
     },
     {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA8Bn7_App",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\App\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\App\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\App\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA8Bn7_Debug",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\AppDebug\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\AppDebug\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\AppDebug\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_LA8Bn7_Blu",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\Blu\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\Blu\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LABn7\\Blu\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32F103C8T_LedBlink1s",
       "ProjectLabelName": "STM/F1/STM32F103C8T/BluePill/LedBlink/1s",
       "ProjectFullLabelName": "STM/F1/STM32F103C8T/BluePill/LedBlink/1s.Debug",
@@ -5273,6 +5363,36 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Lampe\\Bad\\01\\Test\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_I2C_OLED",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/OLED",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/BluePill/I2C/OLED.Debug",
+      "name": "STM/L4/STM32L433CCT/BluePill/I2C/OLED.Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/BluePill/I2C/OLED"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\BluePill\\I2C\\OLED\\Debug\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
