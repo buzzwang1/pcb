@@ -248,6 +248,7 @@ projects = {
     'STM/L4/STM32L433CCT/Mini/Sys/BLU/MB_nrf905'       : project('STM32L433CCT_Mini_Sys_BLU_MB_nrf905',True,      '', {'Release' : 'Config_STM32L4x3', 'RamRelease'  : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/Sys/BLU/LedBrd_I2c'      : project('STM32L433CCT_Mini_Sys_BLU_LedBrd_I2c',True,     '', {'Release' : 'Config_STM32L4x3', 'RamRelease'  : 'Config_STM32L4x3'}),
     'STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_I2c'     : project('STM32L433CCT_Mini_Sys_BLU_PSwitch_I2c',True,    '', {'Release' : 'Config_STM32L4x3', 'RamRelease'  : 'Config_STM32L4x3'}),
+    'STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd'    : project('STM32L433CCT_Mini_Sys_BLU_PSwitch_MpHd',True,   '', {'Release' : 'Config_STM32L4x3', 'RamRelease'  : 'Config_STM32L4x3'}),
 
     'STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv1/Main'     : project('STM32L433CCT_Mini_AddOn_LedBrdv1_Main',   True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),
     'STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv2/Main'     : project('STM32L433CCT_Mini_AddOn_LedBrdv2_Main',   True, '', {'Release' : 'Config_STM32L4x3', 'Release_App' : 'Config_STM32L4x3_BlApp'}),

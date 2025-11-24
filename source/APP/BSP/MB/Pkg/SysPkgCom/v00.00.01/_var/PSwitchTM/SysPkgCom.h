@@ -34,47 +34,47 @@ class cSysPkgCom
   cBotNet_LinkBotCom         mcSideLinkBotCom;
 
   // Usart: DownLink
-  cUartMpHdMaster  mcU3_BnMaster;
+  //cUartMpHdMaster  mcU3_BnMaster;
 
   // I2C2: DownLink
-  //cGpPin      mcI2c2_SCL_BnDl;
-  //cGpPin      mcI2c2_SDA_BnDl;
-  //cI2cMaster  mcI2C2_BnMaster;
+  cGpPin      mcI2c2_SCL_BnDl;
+  cGpPin      mcI2c2_SDA_BnDl;
+  cI2cMaster  mcI2C2_BnMaster;
 
 
   // BotNet
   cBotNet               mcBn;
 
 
-  cBotNet_DownLinkUsartMpHd        mcDownLinks1;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks2;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks3;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks4;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks5;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks6;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks7;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks8;
-  cBotNet_DownLinkUsartMpHd        mcDownLinks9;
-  cBotNet_DownLinkUsartMpHd        mcDownLinksA;
-  cBotNet_DownLinkUsartMpHd        mcDownLinksB;
-  cBotNet_DownLinkUsartMpHd        mcDownLinksC;
-  cBotNet_DownLinkUsartMpHd        mcDownLinksD;
-  cBotNet_DownLinkUsartMpHd        mcDownLinksE;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks1;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks2;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks3;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks4;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks5;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks6;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks7;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks8;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinks9;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinksA;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinksB;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinksC;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinksD;
+  //cBotNet_DownLinkUsartMpHd        mcDownLinksE;
 
-  //cBotNet_DownLinkI2c        mcDownLinks1;
-  //cBotNet_DownLinkI2c        mcDownLinks2;
-  //cBotNet_DownLinkI2c        mcDownLinks3;
-  //cBotNet_DownLinkI2c        mcDownLinks4;
-  //cBotNet_DownLinkI2c        mcDownLinks5;
-  //cBotNet_DownLinkI2c        mcDownLinks6;
-  //cBotNet_DownLinkI2c        mcDownLinks7;
-  //cBotNet_DownLinkI2c        mcDownLinks8;
-  //cBotNet_DownLinkI2c        mcDownLinks9;
-  //cBotNet_DownLinkI2c        mcDownLinksA;
-  //cBotNet_DownLinkI2c        mcDownLinksB;
-  //cBotNet_DownLinkI2c        mcDownLinksC;
-  //cBotNet_DownLinkI2c        mcDownLinksD;
-  //cBotNet_DownLinkI2c        mcDownLinksE;
+  cBotNet_DownLinkI2c        mcDownLinks1;
+  cBotNet_DownLinkI2c        mcDownLinks2;
+  cBotNet_DownLinkI2c        mcDownLinks3;
+  cBotNet_DownLinkI2c        mcDownLinks4;
+  cBotNet_DownLinkI2c        mcDownLinks5;
+  cBotNet_DownLinkI2c        mcDownLinks6;
+  cBotNet_DownLinkI2c        mcDownLinks7;
+  cBotNet_DownLinkI2c        mcDownLinks8;
+  cBotNet_DownLinkI2c        mcDownLinks9;
+  cBotNet_DownLinkI2c        mcDownLinksA;
+  cBotNet_DownLinkI2c        mcDownLinksB;
+  cBotNet_DownLinkI2c        mcDownLinksC;
+  cBotNet_DownLinkI2c        mcDownLinksD;
+  cBotNet_DownLinkI2c        mcDownLinksE;
 
 
   cSysPkgCom();
@@ -102,8 +102,8 @@ extern void DMA1_Channel3_IRQHandler(void);
 extern void USART3_IRQHandler(void);
 extern void TIM1_BRK_TIM15_IRQHandler(void);
 
-//extern void I2C2_EV_IRQHandler(void);
-//extern void I2C2_ER_IRQHandler(void);
+extern void I2C2_EV_IRQHandler(void);
+extern void I2C2_ER_IRQHandler(void);
 
 // ---------------------------- U2 ---------------------------
 

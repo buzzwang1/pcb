@@ -111,8 +111,6 @@ class cBotNet_LinkBotCom: public cBotNet_LinkBase
         mcUart->vSend((u8)((2 << 5) + (u8Len >> 5)));
       }
     }
-
-
   }
 
   void vBotCom_SendEnd()

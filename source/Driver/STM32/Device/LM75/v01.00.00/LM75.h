@@ -44,12 +44,13 @@ class cLm75 : public cComNode
     enCmdReadTemp2,
   }tenCmd;
 
-  i16        mi16Temp_digit;
+  i16    mi16Temp_digit;
+  u16    muRestart_ms;
 
-  cI2cMaster*   mI2C;
+  cComNodeMaster* mI2C;
 
-  cComDatMsgDyn mpcMsgWrite;
-  cComDatMsgDyn mpcMsgRead;
+  cComMsgS<u16, 8> mpcMsgWrite;
+  cComMsgS<u16, 8> mpcMsgRead;
 
   tenCmd     menCmd;
 
@@ -57,32 +58,34 @@ class cLm75 : public cComNode
   bool mbReadTemp;
 
 
-  cLm75(cI2cMaster* lpcI2C, u8 lui8Adr)
+  cLm75(cComNodeMaster*  lpcI2C, u8 lui8Adr)
+    : mpcMsgWrite(cComNode::enIsTx),
+      mpcMsgRead(cComNode::enIsTxRx)
   {
-    UNUSED(lui8Adr);
-
+    muRestart_ms = 0;
     mI2C = lpcI2C;
     mAdr = lui8Adr;
+  }
 
+  void vInit() override
+  {
+    vRestart();
+  }
 
-    mpcMsgWrite.vMemAlloc(2, 0);
-    mpcMsgRead.vMemAlloc(1, 2);
-
+  void vRestart()
+  {
     menCmd = enCmdIdle;
     mStatus.IsInit = false;
 
     vCmdSetup();
-
-    mI2C->vAddSlave((cComNode*)this);
   }
 
-  void vComError(cComNode::tenError lenError, cComNode::tenState lenState)
+  void vComError(cComNode::tenError lenError, cComNode::tenState lenState) override
   {
     UNUSED(lenError);
     UNUSED(lenState);
 
-    menCmd = enCmdIdle;
-    //mStatus.IsInit = false;
+    muRestart_ms = 100;
   }
 
   void vComStart(cComNode::tenEvent lenEvent)
@@ -120,16 +123,17 @@ class cLm75 : public cComNode
           menCmd = enCmdIdle;
         break;
 
-
       case enCmdReadTemp:
-        menCmd = enCmdReadTemp2;
+        {
+          menCmd = enCmdReadTemp2;
 
-        mpcMsgRead.cTxData.mpu8Data[0] = enRegTemp;
-        mpcMsgRead.vStart();
-        mI2C->vStartMsg(&mpcMsgRead);
+          u8 lu8Data = enRegTemp;
+          mpcMsgRead.vPrepareTxRx(1, 2, (u8*)&lu8Data);
+          mI2C->vStartMsg(&mpcMsgRead);
+        }
         break;
       case enCmdReadTemp2:
-        mi16Temp_digit = ((mpcMsgRead.cRxData.mpu8Data[0] << 8)  + mpcMsgRead.cRxData.mpu8Data[1]);
+        mi16Temp_digit = ((mpcMsgRead.mpu8Data[0] << 8)  + mpcMsgRead.mpu8Data[1]);
         menCmd = enCmdIdle;
         break;
 
@@ -141,9 +145,21 @@ class cLm75 : public cComNode
                                 mbReadTemp);
   }
 
-  void vTick10ms(void)
+  void vTick(u16 lu16Time_ms) override
   {
-  }
+    if (muRestart_ms)
+    {
+      if (muRestart_ms > lu16Time_ms)
+      {
+        muRestart_ms -= lu16Time_ms;
+      }
+      else
+      {
+        muRestart_ms = 0;
+        vRestart();
+      }
+    }
+  };
 
 
   void vCmdSetup()
@@ -167,9 +183,6 @@ class cLm75 : public cComNode
   {
     return (mi16Temp_digit / 128);
   }
-
 };
-
-
 
 #endif // __I2C_LM75_H__

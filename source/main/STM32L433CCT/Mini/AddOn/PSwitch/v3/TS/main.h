@@ -9,14 +9,14 @@
 #include "ClockInfo.h"
 #include "CycleCaller.h"
 #include "Eep.h"
-#include "cSSD1306.h"
-#include "apds9960.h"
-#include "LM75.h"
+//#include "cSSD1306.h"
+//#include "apds9960.h"
+//#include "LM75.h"
 
 //Graphics
-#include "screen.h"
-#include "rfont.h"
-#include "paint.h"
+//#include "screen.h"
+//#include "rfont.h"
+//#include "paint.h"
 
 #ifdef __cplusplus
   extern "C" {
@@ -37,9 +37,9 @@
 #include "stm32l4xx_ll_pwr.h"
 
 //Resource
-#include "ResBase.h"
-#include "RFont01_05x05U_1BPP_1G.h"
-#include "RFont01_06x08_1BPP_1G.h"
+//#include "ResBase.h"
+//#include "RFont01_05x05U_1BPP_1G.h"
+//#include "RFont01_06x08_1BPP_1G.h"
 
 extern void SystemClock_Config();
 extern void MAIN_vInitSystem(void);

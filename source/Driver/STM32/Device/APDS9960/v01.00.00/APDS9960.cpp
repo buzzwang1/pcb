@@ -9,29 +9,22 @@
                                                                  mbSetupGestureSensor |\
                                                                  mbReadGestureSensor)
 
-cAPDS9960::cAPDS9960(cI2cMaster* lpcI2C, uint8 lui8Adr)
+cAPDS9960::cAPDS9960(cComNodeMaster* lpcI2C, uint8 lui8Adr)
+  : mpcMsgWrite(cComNode::enIsTx),
+    mpcMsgRead(cComNode::enIsTxRx)
 {
   mI2C   = lpcI2C;
   mAdr   = lui8Adr;
+}
 
-  mpcMsgRead.vMemAlloc(1, 10);
-  mpcMsgReadData.vMemAlloc(1, 0);
-  mpcMsgWrite.vMemAlloc(2, 0);
-
-  menCmd      = enCmdIdle;
-  mStatus.IsInit    = false;
+void cAPDS9960::vRestart()
+{
+  menCmd = enCmdIdle;
+  mStatus.IsInit = false;
 
   i8Setup();
 
   cAPDS9960_vSetStartRequest();
-
-  mI2C->vAddSlave((cComNode*)this);
-}
-
-cAPDS9960::~cAPDS9960()
-{
-  //mpcMsgRead.vMemFree();
-  //mpcMsgWrite.vMemFree();
 }
 
 void cAPDS9960::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
@@ -56,6 +49,8 @@ void cAPDS9960::vComError(cComNode::tenError lenError, cComNode::tenState lenSta
   {
     mbSetupGestureSensor = true;
   }
+
+  muRestart_ms = 100;
 }
 
 void cAPDS9960::vComStart(cComNode::tenEvent lenEvent)
@@ -113,9 +108,6 @@ void cAPDS9960::vComStart(cComNode::tenEvent lenEvent)
 void cAPDS9960::vComDone()
 {
   uint8  lui8MsgSend;
-  mpcMsgRead.cTxData.muiLen = 1;
-  mpcMsgRead.cRxData.muiLen = 1;
-  mpcMsgWrite.cTxData.muiLen = 2;
 
   switch (menCmd)
   {
@@ -123,19 +115,22 @@ void cAPDS9960::vComDone()
       break;
 
     case enCmdInit:
-      mIdx    = 0;
-      menCmd = enCmdInit2;
-      //Read ID
-      mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_ID;
-      mpcMsgRead.vStart();
-      mI2C->vStartMsg(&mpcMsgRead);
+      {
+        mIdx    = 0;
+        menCmd = enCmdInit2;
+
+        //Read ID
+        u8 lu8Data = nAPDS9960_ID;
+        mpcMsgRead.vPrepareTxRx(1, 2, (u8*)&lu8Data);
+        mI2C->vStartMsg(&mpcMsgRead);
+      }
       break;
     case enCmdInit2:
 
-      if ((mpcMsgRead.cRxData.mpu8Data[0] == nAPDS9960_ID_1) ||
-          (mpcMsgRead.cRxData.mpu8Data[0] == nAPDS9960_ID_2))
+      if ((mpcMsgRead.mpu8Data[0] == nAPDS9960_ID_1) ||
+          (mpcMsgRead.mpu8Data[0] == nAPDS9960_ID_2))
       {
-        stRegSet.ui8ID = mpcMsgRead.cRxData.mpu8Data[0];
+        stRegSet.ui8ID = mpcMsgRead.mpu8Data[0];
         menCmd         = enCmdInit3;
 
         lui8MsgSend = 0;
@@ -147,12 +142,12 @@ void cAPDS9960::vComDone()
             {
               lui8MsgSend = 1;
 
-              mpcMsgWrite.cTxData.mpu8Data[0] = APDS9960_mpaui8RegSetDefault[mIdx];
+              mpcMsgWrite.mpu8Data[0] = APDS9960_mpaui8RegSetDefault[mIdx];
               mIdx++;
               mIdx++;
-              mpcMsgWrite.cTxData.mpu8Data[1] = APDS9960_mpaui8RegSetDefault[mIdx];
+              mpcMsgWrite.mpu8Data[1] = APDS9960_mpaui8RegSetDefault[mIdx];
               mIdx++;
-              mpcMsgWrite.vStart();
+              mpcMsgWrite.muLen = 2;
               mI2C->vStartMsg(&mpcMsgWrite);
             }
             else
@@ -183,12 +178,12 @@ void cAPDS9960::vComDone()
           {
             lui8MsgSend = 1;
 
-            mpcMsgWrite.cTxData.mpu8Data[0] = APDS9960_mpaui8RegSetDefault[mIdx];
+            mpcMsgWrite.mpu8Data[0] = APDS9960_mpaui8RegSetDefault[mIdx];
             mIdx++;
             mIdx++;
-            mpcMsgWrite.cTxData.mpu8Data[1] = APDS9960_mpaui8RegSetDefault[mIdx];
+            mpcMsgWrite.mpu8Data[1] = APDS9960_mpaui8RegSetDefault[mIdx];
             mIdx++;
-            mpcMsgWrite.vStart();
+            mpcMsgWrite.muLen = 2;
             mI2C->vStartMsg(&mpcMsgWrite);
           }
           else
@@ -208,9 +203,9 @@ void cAPDS9960::vComDone()
 
     case enCmdSetMode:
       menCmd = enCmdSetMode2;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_ENABLE;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8ENABLE;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_ENABLE;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8ENABLE;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetMode2:
@@ -219,9 +214,9 @@ void cAPDS9960::vComDone()
 
     case enCmdSetControl:
       menCmd = enCmdSetControl2;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_CONTROL;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8CONTROL;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_CONTROL;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8CONTROL;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetControl2:
@@ -229,13 +224,13 @@ void cAPDS9960::vComDone()
       break;
 
     case enCmdReadAmbientLight:
-      // from 0x93 read 9 bytes Status, CL, CH, RL, RD, GL, GH ,BL, BH
-      menCmd = enCmdReadAmbientLight2;
-      mpcMsgRead.cTxData.muiLen = 1;
-      mpcMsgRead.cRxData.muiLen = 9;
-      mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_STATUS;
-      mpcMsgRead.vStart();
-      mI2C->vStartMsg(&mpcMsgRead);
+      {
+        // from 0x93 read 9 bytes Status, CL, CH, RL, RD, GL, GH ,BL, BH
+        menCmd = enCmdReadAmbientLight2;
+        u8 lu8Data = nAPDS9960_STATUS;
+        mpcMsgRead.vPrepareTxRx(1, 9, (u8*)&lu8Data);
+        mI2C->vStartMsg(&mpcMsgRead);
+      }
       break;
 
     case enCmdReadAmbientLight2:
@@ -243,7 +238,7 @@ void cAPDS9960::vComDone()
         uint8* lpui8Dest = &(this->stRegSet.ui8STATUS);
         for (mIdx = 0; mIdx < 9; mIdx++)
         {
-          lpui8Dest[mIdx] = mpcMsgRead.cRxData.mpu8Data[mIdx];
+          lpui8Dest[mIdx] = mpcMsgRead.mpu8Data[mIdx];
         }
         menCmd = enCmdIdle;
       }
@@ -251,22 +246,24 @@ void cAPDS9960::vComDone()
 
 
     case enCmdReadProximitySensor:
-      menCmd = enCmdReadProximitySensor2;
-      mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_STATUS;
-      mpcMsgRead.vStart();
-      mI2C->vStartMsg(&mpcMsgRead);
+      {
+        menCmd = enCmdReadProximitySensor2;
+        u8 lu8Data = nAPDS9960_STATUS;
+        mpcMsgRead.vPrepareTxRx(1, 1, (u8*)&lu8Data);
+        mI2C->vStartMsg(&mpcMsgRead);
+      }
       break;
 
     case enCmdReadProximitySensor2:
-      this->stRegSet.ui8STATUS = mpcMsgRead.cRxData.mpu8Data[0];
+      this->stRegSet.ui8STATUS = mpcMsgRead.mpu8Data[0];
 
       /* Proximity Valid.Indicates that a proximity cycle has completed since PEN was asserted or
          since PDATA was last read.A read of PDATA automatically clears PVALID*/
       if (this->stRegSet.ui8STATUS & nAPDS9960_PVALID)
       {
         menCmd = enCmdReadProximitySensor3;
-        mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_PDATA;
-        mpcMsgRead.vStart();
+        u8 lu8Data = nAPDS9960_PDATA;
+        mpcMsgRead.vPrepareTxRx(1, 9, (u8*)&lu8Data);
         mI2C->vStartMsg(&mpcMsgRead);
       }
       else
@@ -276,37 +273,37 @@ void cAPDS9960::vComDone()
 
       break;
     case enCmdReadProximitySensor3:
-      this->stRegSet.ui8PDATA = mpcMsgRead.cRxData.mpu8Data[0];
+      this->stRegSet.ui8PDATA = mpcMsgRead.mpu8Data[0];
       menCmd = enCmdIdle;
       break;
 
 
     case enCmdSetupGestureSensor:
       menCmd = enCmdSetupGestureSensor2;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_WTIME;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8WTIME;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_WTIME;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8WTIME;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetupGestureSensor2:
       menCmd = enCmdSetupGestureSensor3;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_PPULSE;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8PPULSE;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_PPULSE;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8PPULSE;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetupGestureSensor3:
       menCmd = enCmdSetupGestureSensor4;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_GCONF2;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8GCONF2;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_GCONF2;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8GCONF2;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetupGestureSensor4:
       menCmd = enCmdSetupGestureSensor5;
-      mpcMsgWrite.cTxData.mpu8Data[0] = nAPDS9960_GCONF4;
-      mpcMsgWrite.cTxData.mpu8Data[1] = this->stRegSet.ui8GCONF4;
-      mpcMsgWrite.vStart();
+      mpcMsgWrite.mpu8Data[0] = nAPDS9960_GCONF4;
+      mpcMsgWrite.mpu8Data[1] = this->stRegSet.ui8GCONF4;
+      mpcMsgWrite.muLen = 2;
       mI2C->vStartMsg(&mpcMsgWrite);
       break;
     case enCmdSetupGestureSensor5:
@@ -316,20 +313,22 @@ void cAPDS9960::vComDone()
 
 
     case enCmdReadGestureSensor:
-      // Check if Gesture availalbe
-      menCmd = enCmdReadGestureSensor2;
-      mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_GSTATUS;
-      mpcMsgRead.vStart();
-      mI2C->vStartMsg(&mpcMsgRead);
+      {
+        // Check if Gesture availalbe
+        menCmd = enCmdReadGestureSensor2;
+        u8 lu8Data = nAPDS9960_GSTATUS;
+        mpcMsgRead.vPrepareTxRx(1, 1, (u8*)&lu8Data);
+        mI2C->vStartMsg(&mpcMsgRead);
+      }
       break;
     case enCmdReadGestureSensor2:
-      this->stRegSet.ui8GSTATUS = mpcMsgRead.cRxData.mpu8Data[0];
+      this->stRegSet.ui8GSTATUS = mpcMsgRead.mpu8Data[0];
 
       if (this->stRegSet.ui8GSTATUS & nAPDS9960_GVALID)
       {
         /* If we have valid data, read in FIFO */
-        mpcMsgRead.cTxData.mpu8Data[0] = nAPDS9960_GFLVL;
-        mpcMsgRead.vStart();
+        u8 lu8Data = nAPDS9960_GFLVL;
+        mpcMsgRead.vPrepareTxRx(1, 1, (u8*)&lu8Data);
         mI2C->vStartMsg(&mpcMsgRead);
         menCmd = enCmdReadGestureSensor3;
       }
@@ -341,7 +340,7 @@ void cAPDS9960::vComDone()
 
 
     case enCmdReadGestureSensor3:
-      this->stRegSet.ui8GFLVL = mpcMsgRead.cRxData.mpu8Data[0];
+      this->stRegSet.ui8GFLVL = mpcMsgRead.mpu8Data[0];
 
       // If there's stuff in the FIFO, read it into our data block
       if (this->stRegSet.ui8GFLVL == 0)
@@ -354,16 +353,21 @@ void cAPDS9960::vComDone()
         this->mstGestureData.total_gestures = this->stRegSet.ui8GFLVL;
         menCmd = enCmdReadGestureSensor4;
 
-        mpcMsgReadData.cRxData.mpu8Data = (uint8*)&(this->mstGestureData.stValues[0]);
-        mpcMsgReadData.cRxData.muiLen = 4 * this->stRegSet.ui8GFLVL;
-        mpcMsgReadData.cTxData.mpu8Data[0] = nAPDS9960_GFIFO_U;
-        mpcMsgReadData.vStart();
-        mI2C->vStartMsg(&mpcMsgReadData);
+        u8 lu8Data = nAPDS9960_GFIFO_U;
+        mpcMsgRead.vPrepareTxRx(1, 4 * this->stRegSet.ui8GFLVL, (u8*)&lu8Data);
+        mI2C->vStartMsg(&mpcMsgRead);
       }
       break;
     case enCmdReadGestureSensor4:
-      bProcessGestureData();
-      menCmd = enCmdIdle;
+      {
+      u8* lu8Dest = (u8*)this->mstGestureData.stValues;
+        for (u8 lu8t = 0; lu8t < mpcMsgRead.Len(); lu8t++)
+        {
+          lu8Dest[lu8t] = mpcMsgRead.mpu8Data[lu8t];
+        }
+        bProcessGestureData();
+        menCmd = enCmdIdle;
+      }
       break;
 
     default:

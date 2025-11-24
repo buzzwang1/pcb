@@ -4441,6 +4441,66 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mini_Sys_BLU_PSwitch_MpHd",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32L433CCT_Mini_Sys_BLU_PSwitch_MpHd",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd.RamRelease",
+      "name": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd.RamRelease",
+      "generator": "Ninja",
+      "configurationType": "RamRelease",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\RamRelease\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\RamRelease\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/Sys/BLU/PSwitch_MpHd"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\Sys\\BLU\\PSwitch_MpHd\\RamRelease\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Mini_AddOn_LedBrdv1_Main",
       "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv1/Main",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/AddOn/LedBrdv1/Main.Release",

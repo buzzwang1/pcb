@@ -96,20 +96,20 @@
 // This is even called before the inlcuded classs in the header
 cClockInfo mcClockInfo;
 
-cSSD1306    mcSSD1306(&mcSys.mcBoard.mcI2C3_Board, 0x78, 56); // == 3C * 2
-cAPDS9960   mcAPDS9960(&mcSys.mcBoard.mcI2C3_Board, nAPDS9960_I2C_ADDR);
-cLm75       mcLm75(&mcSys.mcBoard.mcI2C3_Board, LM75_I2C_ADDRESS_DEFAULT);
-
-
-#define MAIN_nDISPLAY_X cSSD1306_WIDTH
-#define MAIN_nDISPLAY_Y cSSD1306_HEIGHT
-
-uint8                    mDisplayMemory[MAIN_nDISPLAY_X * MAIN_nDISPLAY_Y / 8];
-cBitmap_Bpp1_1G          mcBm(MAIN_nDISPLAY_X, MAIN_nDISPLAY_Y, mDisplayMemory);
-cScreen_Bpp1_1G          mcScreen1(&mcBm);
-cRes8b_Bpp1_1G_SpriteEngine_Bpp1_1G mcSpriteEng(Sprite_nModeOr);
-cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_5x5Ucase(SPRTMST_FontLut_RFont01_05x05U_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_05x05U_1BPP_1G_Bmp, &mcSpriteEng);
-cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_Full(SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp, &mcSpriteEng);
+//cSSD1306    mcSSD1306(&mcSys.mcBoard.mcI2C3_Board, 0x78, 56); // == 3C * 2
+//cAPDS9960   mcAPDS9960(&mcSys.mcBoard.mcI2C3_Board, nAPDS9960_I2C_ADDR);
+//cLm75       mcLm75(&mcSys.mcBoard.mcI2C3_Board, LM75_I2C_ADDRESS_DEFAULT);
+//
+//
+//#define MAIN_nDISPLAY_X cSSD1306_WIDTH
+//#define MAIN_nDISPLAY_Y cSSD1306_HEIGHT
+//
+//uint8                    mDisplayMemory[MAIN_nDISPLAY_X * MAIN_nDISPLAY_Y / 8];
+//cBitmap_Bpp1_1G          mcBm(MAIN_nDISPLAY_X, MAIN_nDISPLAY_Y, mDisplayMemory);
+//cScreen_Bpp1_1G          mcScreen1(&mcBm);
+//cRes8b_Bpp1_1G_SpriteEngine_Bpp1_1G mcSpriteEng(Sprite_nModeOr);
+//cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_5x5Ucase(SPRTMST_FontLut_RFont01_05x05U_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_05x05U_1BPP_1G_Bmp, &mcSpriteEng);
+//cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_Full(SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp, &mcSpriteEng);
 
 u16    mu16Data[3] = { 0xFFFF, 0xFFFF, 0xFFFF };
 
@@ -429,7 +429,8 @@ public:
   {
     bool lbConsumed = False;
 
-    switch (lcMsg.mu16Idx)
+    u8* lpu8PayloadRx = lcMsg.GetPayload().mpu8Data;
+    switch (lcMsg.u16GetIdx())
     {
       // --------------------------- SLED Messages -----------------------------
       case 40: // Request message
@@ -441,15 +442,15 @@ public:
         break;
 
       case 42: // Set message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 1: //  Set 16Bit Values
             // RX 01 | 00 | 00 | 01.D0.D0.D1.D1.D2.D2
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
-              mu16Data[0] = (lcMsg.mcPayload[4] << 8) + lcMsg.mcPayload[5];
-              mu16Data[1] = (lcMsg.mcPayload[6] << 8) + lcMsg.mcPayload[7];
-              mu16Data[2] = (lcMsg.mcPayload[8] << 8) + lcMsg.mcPayload[9];
+              mu16Data[0] = (lpu8PayloadRx[4] << 8) + lpu8PayloadRx[5];
+              mu16Data[1] = (lpu8PayloadRx[6] << 8) + lpu8PayloadRx[7];
+              mu16Data[2] = (lpu8PayloadRx[8] << 8) + lpu8PayloadRx[9];
               lbConsumed = True;
             }
             break;
@@ -568,32 +569,32 @@ void MAIN_vTick1msLp(void)
 }
 
 
-void MAIN_vItoa_HUD21D(int num, char8* str)
-{
-  int32 li32Val1 = 0;
-  int32 li32Val2 = 0;
-  char lszVal1[8] = "";
-  char lszVal2[8] = "x";
-  char lszPkt[] = ",";
-
-  li32Val1 = num / 2;
-  li32Val2 = num - (li32Val1 * 2);
-
-  cStrTools::uixItoa(li32Val1, lszVal1, 10);
-
-  if (li32Val2)
-  {
-    lszVal2[0] = '5';
-  }
-  else
-  {
-    lszVal2[0] = '0';
-  }
-
-  cStrTools::szStrCpy(str, lszVal1);
-  cStrTools::szStrCat(str, lszPkt);
-  cStrTools::szStrCat(str, lszVal2);
-}
+//void MAIN_vItoa_HUD21D(int num, char8* str)
+//{
+//  int32 li32Val1 = 0;
+//  int32 li32Val2 = 0;
+//  char lszVal1[8] = "";
+//  char lszVal2[8] = "x";
+//  char lszPkt[] = ",";
+//
+//  li32Val1 = num / 2;
+//  li32Val2 = num - (li32Val1 * 2);
+//
+//  cStrTools::uixItoa(li32Val1, lszVal1, 10);
+//
+//  if (li32Val2)
+//  {
+//    lszVal2[0] = '5';
+//  }
+//  else
+//  {
+//    lszVal2[0] = '0';
+//  }
+//
+//  cStrTools::szStrCpy(str, lszVal1);
+//  cStrTools::szStrCat(str, lszPkt);
+//  cStrTools::szStrCat(str, lszVal2);
+//}
 
 
 i16 mi16RotCntOld = 0;
@@ -602,139 +603,138 @@ u8   mu8ProxiCnt = 0;
 
 void MAIN_vTick100msLp()
 {
-  char lszValue[16] = "";
-  cStr_Create(lszStrClock, 32);
-  static u8  lu8ProxiLast;
-  static u8  lu8RectsLast;
-  static u16 lu8HoldCnt_ms;
-
-  mcScreen1.vFill(0);
-  //mcScreen1.vLine(0, 0, MAIN_nDISPLAY_X - 1, MAIN_nDISPLAY_Y - 1, 1);
-
-  if (mcAPDS9960.isEnabledProximitySensor())
-  {
-    mcAPDS9960.i8ReadProximitySensor();
-    if (mcAPDS9960.boGetProximitySensor_Valid())
-    {
-      u8 lu8Proxi = mcAPDS9960.ui8GetProximitySensor();
-      cStrTools::uixItoa(lu8Proxi, lszValue, 10);
-      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 55, lszValue,       &mcScreen1);
-
-      // ca. 25 bis 255
-      // (255 - 25) / 12 = 19 digit
-
-      if (lu8ProxiLast >= 10)
-      {
-        if ((lu8Proxi >= (lu8ProxiLast + 10)) || (lu8Proxi <= (lu8ProxiLast - 10)))
-        {
-          lu8ProxiLast = lu8Proxi;
-        }
-      }
-      else
-      {
-        if (lu8Proxi >= (lu8ProxiLast + 5))
-        {
-          lu8ProxiLast = lu8Proxi;
-        }
-      }
-
-      if ((lu8ProxiLast > 50) && (lu8Proxi > 32))
-      {
-        mu8ProxiCnt = lu8ProxiLast;
-        if (mu8ProxiCnt > 50) mu8ProxiCnt -= 50;
-        else mu8ProxiCnt = 0;
-        mu8ProxiCnt /= 17;
-        mbEditMode = True;
-      }
-      else
-      {
-        mu8ProxiCnt = (u8)mi16RotCntOld;
-        mbEditMode = False;
-      }
-
-      if (lu8RectsLast != mu8ProxiCnt)
-      {
-        lu8RectsLast = mu8ProxiCnt;
-        lu8HoldCnt_ms = 0;
-      }
-
-      u8 lu8Rect;
-
-      for (lu8Rect = 0; lu8Rect < 12; lu8Rect++)
-      {
-        if (lu8Rect < mu8ProxiCnt)
-        {
-          cPaint::vRectFull(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
-        }
-        else
-        {
-          cPaint::vRect(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
-        }
-      }
-
-      if (mbEditMode)
-      {
-        cPaint::vRect(28, 44, 11 * 8 + 2, 14, 1, &mcScreen1);
-        if (lu8HoldCnt_ms < 2000)
-        {
-          lu8HoldCnt_ms += 100;
-
-          if (lu8HoldCnt_ms == 2000)
-          {
-            mcUI.mi16RotCnt = mu8ProxiCnt;
-          }
-        }
-
-        cPaint::vRect(28, 39, 80, 4, 1, &mcScreen1);
-        cPaint::vRectFull(28, 40, lu8HoldCnt_ms / 100 * 4, 2, 1, &mcScreen1);
-      }
-    }
-  }
-
-  mcSys.mcClock.mClock.toStringDate(lszStrClock);
-  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
-
-  if (mu16Data[0] != 0xFFFF)
-  {
-    lszStrClock.Setf("%d", mu16Data[0]);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128 - 40, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
-  }
-
-  if (mu16Data[1] != 0xFFFF)
-  {
-    lszStrClock.Setf("%d", mu16Data[1]);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128 - 40, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
-  }
-
-
-  {
-    int32 li32Temp = 0;
-
-    char lszValue[16] = "";
-
-    mcLm75.vCmdReadTemp();
-
-    li32Temp = mcLm75.i16GetTemp();
-
-    MAIN_vItoa_HUD21D(li32Temp, lszValue);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128-50, 30, (char8*)"T:",  &mcScreen1);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128-40, 30, lszValue,      &mcScreen1);
-  }
-
-
-  mcSys.mcClock.mClock.toStringTime(lszStrClock);
-  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
-
-  if (mcSys.mcClock.mu32ClockResyncTimeout_s > 0)
-  {
-    lszStrClock.Setf((rsz)"ReSync: %d", mcSys.mcClock.mu32ClockResyncTimeout_s);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 30, (char8*)lszStrClock.ToString(), &mcScreen1);
-  }
-
-  mcSSD1306.vShowScreen(mcScreen1.mpcBm->mpui8Data);
-  mcSSD1306.Update();
+  //char lszValue[16] = "";
+  //cStr_Create(lszStrClock, 32);
+  //static u8  lu8ProxiLast;
+  //static u8  lu8RectsLast;
+  //static u16 lu8HoldCnt_ms;
+  //
+  //mcScreen1.vFill(0);
+  ////mcScreen1.vLine(0, 0, MAIN_nDISPLAY_X - 1, MAIN_nDISPLAY_Y - 1, 1);
+  //
+  //if (mcAPDS9960.isEnabledProximitySensor())
+  //{
+  //  mcAPDS9960.i8ReadProximitySensor();
+  //  if (mcAPDS9960.boGetProximitySensor_Valid())
+  //  {
+  //    u8 lu8Proxi = mcAPDS9960.ui8GetProximitySensor();
+  //    cStrTools::uixItoa(lu8Proxi, lszValue, 10);
+  //    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 55, lszValue,       &mcScreen1);
+  //
+  //    // ca. 25 bis 255
+  //    // (255 - 25) / 12 = 19 digit
+  //
+  //    if (lu8ProxiLast >= 10)
+  //    {
+  //      if ((lu8Proxi >= (lu8ProxiLast + 10)) || (lu8Proxi <= (lu8ProxiLast - 10)))
+  //      {
+  //        lu8ProxiLast = lu8Proxi;
+  //      }
+  //    }
+  //    else
+  //    {
+  //      if (lu8Proxi >= (lu8ProxiLast + 5))
+  //      {
+  //        lu8ProxiLast = lu8Proxi;
+  //      }
+  //    }
+  //
+  //    if ((lu8ProxiLast > 50) && (lu8Proxi > 32))
+  //    {
+  //      mu8ProxiCnt = lu8ProxiLast;
+  //      if (mu8ProxiCnt > 50) mu8ProxiCnt -= 50;
+  //      else mu8ProxiCnt = 0;
+  //      mu8ProxiCnt /= 17;
+  //      mbEditMode = True;
+  //    }
+  //    else
+  //    {
+  //      mu8ProxiCnt = (u8)mi16RotCntOld;
+  //      mbEditMode = False;
+  //    }
+  //
+  //    if (lu8RectsLast != mu8ProxiCnt)
+  //    {
+  //      lu8RectsLast = mu8ProxiCnt;
+  //      lu8HoldCnt_ms = 0;
+  //    }
+  //
+  //    u8 lu8Rect;
+  //
+  //    for (lu8Rect = 0; lu8Rect < 12; lu8Rect++)
+  //    {
+  //      if (lu8Rect < mu8ProxiCnt)
+  //      {
+  //        cPaint::vRectFull(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
+  //      }
+  //      else
+  //      {
+  //        cPaint::vRect(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
+  //      }
+  //    }
+  //
+  //    if (mbEditMode)
+  //    {
+  //      cPaint::vRect(28, 44, 11 * 8 + 2, 14, 1, &mcScreen1);
+  //      if (lu8HoldCnt_ms < 2000)
+  //      {
+  //        lu8HoldCnt_ms += 100;
+  //
+  //        if (lu8HoldCnt_ms == 2000)
+  //        {
+  //          mcUI.mi16RotCnt = mu8ProxiCnt;
+  //        }
+  //      }
+  //
+  //      cPaint::vRect(28, 39, 80, 4, 1, &mcScreen1);
+  //      cPaint::vRectFull(28, 40, lu8HoldCnt_ms / 100 * 4, 2, 1, &mcScreen1);
+  //    }
+  //  }
+  //}
+  //
+  //mcSys.mcClock.mClock.toStringDate(lszStrClock);
+  //cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
+  //
+  //if (mu16Data[0] != 0xFFFF)
+  //{
+  //  lszStrClock.Setf("%d", mu16Data[0]);
+  //  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128 - 40, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
+  //}
+  //
+  //if (mu16Data[1] != 0xFFFF)
+  //{
+  //  lszStrClock.Setf("%d", mu16Data[1]);
+  //  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128 - 40, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
+  //}
+  //
+  //
+  //{
+  //  int32 li32Temp = 0;
+  //
+  //  char lszValue[16] = "";
+  //
+  //  mcLm75.vCmdReadTemp();
+  //
+  //  li32Temp = mcLm75.i16GetTemp();
+  //
+  //  MAIN_vItoa_HUD21D(li32Temp, lszValue);
+  //  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128-50, 30, (char8*)"T:",  &mcScreen1);
+  //  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128-40, 30, lszValue,      &mcScreen1);
+  //}
+  //
+  //
+  //mcSys.mcClock.mClock.toStringTime(lszStrClock);
+  //cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
+  //
+  //if (mcSys.mcClock.mu32ClockResyncTimeout_s > 0)
+  //{
+  //  lszStrClock.Setf((rsz)"ReSync: %d", mcSys.mcClock.mu32ClockResyncTimeout_s);
+  //  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 30, (char8*)lszStrClock.ToString(), &mcScreen1);
+  //}
+  //
+  //mcSSD1306.vShowScreen(mcScreen1.mpcBm->mpui8Data);
+  //mcSSD1306.Update();
 }
-
 
 
 void MAIN_vTick10msLp()
@@ -797,15 +797,15 @@ void MAIN_vInitSystem(void)
   mi16RotCntOld = mcUI.mi16RotCnt = 0;
 
 
-  mcAPDS9960.i8EnableProximitySensor();
+  //mcAPDS9960.i8EnableProximitySensor();
 
 
   ////CycCall_Start(MAIN_vTick1msHp,
   ////              MAIN_vTick1msLp);
 
-  mcSys.mcBoard.mcI2C3_Board.vAddSlave(&mcSSD1306);
-  mcSys.mcBoard.mcI2C3_Board.vAddSlave(&mcAPDS9960);
-  mcSys.mcBoard.mcI2C3_Board.vAddSlave(&mcLm75);
+  //mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcSSD1306);
+  //mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcAPDS9960);
+  //mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcLm75);
 
   mcSys.vInit2();
 

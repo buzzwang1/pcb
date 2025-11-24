@@ -466,12 +466,12 @@ class cAPDS9960: public cComNode
   int16 mi16Gesture_state;
   int16 mi16Gesture_motion;
 
-  cI2cMaster*              mI2C;
+  cComNodeMaster*        mI2C;
 
-  cComDatMsgDyn mpcMsgWrite;
-  cComDatMsgDyn mpcMsgRead;
-  cComDatMsgDyn mpcMsgReadData;
+  cComMsgS<u16, 16> mpcMsgWrite;
+  cComMsgS<u16, 40> mpcMsgRead;
 
+  u16    muRestart_ms;
 
   tenAPDS9960_Cmd    menCmd;
   uint8              mIdx;
@@ -493,8 +493,14 @@ class cAPDS9960: public cComNode
   bool mbReadGestureSensor;
 
 
-  cAPDS9960(cI2cMaster* lpcI2C, uint8 lui8Adr);
-  ~cAPDS9960();
+  cAPDS9960(cComNodeMaster* lpcI2C, uint8 lui8Adr);
+
+  void vInit() override
+  {
+    vRestart();
+  }
+
+  void vRestart();
 
   int8  i8Setup();
 

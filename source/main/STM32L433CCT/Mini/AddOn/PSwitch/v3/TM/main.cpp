@@ -209,6 +209,7 @@ void MAIN_vTick1msLp(void)
 
 void MAIN_vInitSystem(void)
 {
+  cBnMsgPool::vInit();
   mcSys.vInit1();
 
   CycCall_Start(MAIN_vTick1msHp,

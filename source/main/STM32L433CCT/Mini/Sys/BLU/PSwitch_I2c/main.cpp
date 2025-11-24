@@ -15,6 +15,9 @@
 //    PA01: High side switch for 3V3 
 //
 //  BotNet UpLink
+//    U1
+//      PA09  -> TX
+//
 //    I2C1
 //      PB06  -> I2C1 SCL AF4
 //      PB07  -> I2C1 SDA AF4
@@ -30,6 +33,10 @@
 //      6: I2C1 Tx: UpLink   CS:3 
 //      7: I2C1 Rx: UpLink   CS:3 
 
+//    DMA2:
+//      6: U1 Tx: UpLink   CS:2 
+//      7: U1 Rx: UpLink   CS:2 
+
 __IO uint32_t TimingDelay = 0;
 u32   mu32SpopCounter;
 
@@ -37,6 +44,9 @@ LED<GPIOB_BASE, 9> mcLed;
 cGpPin lcS_3V3(GPIOA_BASE, 1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
 
 
+
+// U1
+//cUartMpHdSlave mcU1_BnSlave(USART1, 200000);
 
 // I2C
 cGpPin     mcI2c1_SCL_BnUl(GPIOB_BASE, 6, GPIO_MODE_AF_OD, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
@@ -48,9 +58,11 @@ cI2cSlave  mcI2C1_BnSlave(I2C1, &mcI2c1_SCL_BnUl, &mcI2c1_SDA_BnUl, DMA1, DMA1_C
 cBotNetCfg mcMyBotNetCfg1((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr);
 cBotNet    mcBn(&mcMyBotNetCfg1);
 
+// U1: UpLink
+//cBotNet_UpLinkUsartMpHdNoCheck     mcUpLink(&mcU1_BnSlave);
+
 // I2C1: UpLink
 cBotNet_UpLinkI2c     mcUpLink(&mcI2C1_BnSlave);
-
 
 void NMI_Handler(void)
 {
@@ -163,69 +175,48 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 
 
+// ---------------------------- U1 ---------------------------
+
+//void DMA2_Channel7_IRQHandler(void)
+//{
+//  // USART1 RX
+//  mcU1_BnSlave.IrqHandler(cComNode::tenEvent::enEvDmaRxTc);
+//}
+
+//void USART1_IRQHandler(void)
+//{
+//  mcU1_BnSlave.IrqHandler(cComNode::tenEvent::enEvUsartTc);
+//}
+
+//void TIM1_BRK_TIM15_IRQHandler(void)
+//{
+//  if (TIM15->SR & TIM_SR_UIF) // if UIF flag is set
+//  {
+//    TIM15->SR &= ~TIM_SR_UIF; // clear UIF flag
+//    TIM15->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
+//    mcU1_BnSlave.TIM_EV_IRQHandler();
+//  }
+//}
+
 // ---------------------------- I2C ---------------------------
 
 void I2C1_EV_IRQHandler(void)
 {
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
   mcI2C1_BnSlave.I2C_EV_IRQHandler();
 
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[0].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[0].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
 }
 
 void I2C1_ER_IRQHandler(void)
 {
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
   mcI2C1_BnSlave.I2C_ER_IRQHandler();
-
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[1].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[1].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
 }
-
-
-void MAIN_vTick1msHp(void)
-{
-  mcBn.vTickHp1ms();
-}
-
 
 
 void MAIN_vTick1msLp(void)
 {
   mcBn.vProcess(1000);
+  //mcU1_BnSlave.vTick1ms();
+  mcI2C1_BnSlave.vTick1ms();
 
   if (mcBn.mcSpop.isEnable()) mu32SpopCounter = 1000 * 60 * 2; // 2 min
 
@@ -263,6 +254,7 @@ void MAIN_vInitSystem(void)
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
   cBnSpop_vResetWdog();
+  cBnMsgPool::vInit();
 
   /* STM32L4xx HAL library initialization:
        - Configure the Flash prefetch
@@ -279,7 +271,7 @@ void MAIN_vInitSystem(void)
   mcBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
   mu32SpopCounter = 1000 * 60 * 2;
 
-  CycCall_Start(MAIN_vTick1msHp /*1ms_HP*/,
+  CycCall_Start(NULL /*1ms_HP*/,
                 NULL /*10ms_HP*/,
                 NULL /*100ms_HP*/,
                 NULL /*1s_HP*/,

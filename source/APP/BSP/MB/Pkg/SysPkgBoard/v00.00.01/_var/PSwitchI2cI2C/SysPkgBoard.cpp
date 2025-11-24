@@ -230,15 +230,12 @@ void cSysPkgBoard::vTick1msHp(void)
 
 void cSysPkgBoard::vTick1msLp(void)
 {
-  mcI2C3_Board.bStartNext();
+  mcI2C3_Board.vTick1ms();
 }
 
 void cSysPkgBoard::vTick10msLp(void)
 {
   mcBoardCntrl.vUpdateAll(mcSys.mcSMan.mcOpMode.IsAuto());
-
-  mcI2C3_Board.vTick10ms();
-  mcEep.vTick10ms();
 }
 
 void cSysPkgBoard::vTick100msLp(void)
