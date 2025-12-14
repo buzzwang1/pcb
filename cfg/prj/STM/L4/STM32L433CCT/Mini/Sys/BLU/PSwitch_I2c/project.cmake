@@ -51,14 +51,14 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.01.00/Base/Main/v00.00.02:UpLinkOnly
       Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:Servo1
+      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default_Blu
       Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:Dummy
       Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
       Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.01.00/BnLinks/Base/v00.00.02:default
       #Data/BotNet/v00.01.00/BnLinks/UsartMpHd/v00.00.04:default
       Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default
-      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.02:default
+      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.03:default
       #Data/BotNet/v00.01.00/BnLinks/nRf905Net/v00.00.03:default
     Data/BotNet/v00.01.00/BnMsgSys/Base/v00.00.02:default
       Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:Dummy
@@ -81,7 +81,7 @@ set(PCB_ProjectPackageList
     #Driver/STM32/L4/HAL/cUart/MpHd/v01.01.00_Mini:Tim15
     Driver/STM32/L4/HAL/cI2C/v01.01.00
 
-    #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv7b2_STM32L433CCT
+    #Driver/STM32/Device/Com/nRF905/Int/v01.01.00:MBv7b2_STM32L433CCT
     Driver/STM32/Device/EEP/v01.00.00:Dummy
 
     APP/LED/v00.00.01:STM32L4_HAL

@@ -63,7 +63,7 @@ list(APPEND PCB_ListTargetCompileOptionsCpp
   -fno-rtti
   -fno-use-cxa-atexit
   -fno-threadsafe-statics
-  -nostdinc++
+  #-nostdinc++
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC

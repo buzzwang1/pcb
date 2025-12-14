@@ -344,20 +344,19 @@ void vDoLedBoard()
             mcSys.mcSMan.mcPowerManager.vStart(100); //  10ms * 100 = 1000s
 
             // Sende Nachricht Relais zu aktivieren
-            cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetPwr, 32, 0x1000, 0x1200, 34);
+            u8 lu8Data[7];
 
             // TX 02 | 00 | 00 | RM.1M.2M.3M
-            lcMsgSetPwr.mcPayload[0] = 2;
-            lcMsgSetPwr.mcPayload[1] = 0;
-            lcMsgSetPwr.mcPayload[2] = 0;
+            lu8Data[0] = 2;
+            lu8Data[1] = 0;
+            lu8Data[2] = 0;
 
-            lcMsgSetPwr.mcPayload[3] =   1; // relais an
-            lcMsgSetPwr.mcPayload[4] =   0; // SLED an
-            lcMsgSetPwr.mcPayload[5] =   0;
-            lcMsgSetPwr.mcPayload[6] =   0;
+            lu8Data[3] = 1; // relais an
+            lu8Data[4] = 0; // SLED an
+            lu8Data[5] = 0;
+            lu8Data[6] = 0;
 
-            lcMsgSetPwr.vEncode();
-            mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetPwr);
+            mcSys.mcCom.mcBn.vSendMsg(0x1000, 0x1200, 42, lu8Data, sizeof(lu8Data));
 
             if (mu8SmLedBoardRetrys > 1)
             {
@@ -398,23 +397,22 @@ void vDoLedBoard()
               mcSys.mcSMan.mcPowerManager.vStart(100); //  10ms * 100 = 1000s
 
               // Sende Nachricht für die LEDs
-              cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetSLed, 32, 0x1000, 0x1200, 42);
+              u8 lu8Data[10];
 
               // Set                  RX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB
-              lcMsgSetSLed.mcPayload[0] = 0;
-              lcMsgSetSLed.mcPayload[1] = 0;
-              lcMsgSetSLed.mcPayload[2] = 0;
+              lu8Data[0] = 0;
+              lu8Data[1] = 0;
+              lu8Data[2] = 0;
 
-              lcMsgSetSLed.mcPayload[3] =  1;  // Enable
-              lcMsgSetSLed.mcPayload[4] = 80;  // % Helligkeit
-              lcMsgSetSLed.mcPayload[5] =  5;  // Pink - nur Rot und Blau, kein Grün
-              lcMsgSetSLed.mcPayload[6] = 255; // R
-              lcMsgSetSLed.mcPayload[7] = 255; // G
-              lcMsgSetSLed.mcPayload[8] = 255; // B
-              lcMsgSetSLed.mcPayload[9] = 100; // Temp
+              lu8Data[3] =  1;  // Enable
+              lu8Data[4] = 80;  // % Helligkeit
+              lu8Data[5] =  5;  // Pink - nur Rot und Blau, kein Grün
+              lu8Data[6] = 255; // R
+              lu8Data[7] = 255; // G
+              lu8Data[8] = 255; // B
+              lu8Data[9] = 100; // Temp
 
-              lcMsgSetSLed.vEncode();
-              mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetSLed);
+              mcSys.mcCom.mcBn.vSendMsg(0x1000, 0x1200, 42, lu8Data, sizeof(lu8Data));
             }
             mu8SmLedBoardRetrys++;
             if (mu8SmLedBoardRetrys > 100) mu8SmLedBoardRetrys = 0;
@@ -435,23 +433,22 @@ void vDoLedBoard()
             mcSys.mcSMan.mcPowerManager.vStart(100); //  10ms * 100 = 1000s
 
             // Sende Nachricht für die LEDs
-            cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetSLed, 32, 0x1000, 0x1200, 42);
+            u8 lu8Data[10];
 
             // Set                  RX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB
-            lcMsgSetSLed.mcPayload[0] = 0;
-            lcMsgSetSLed.mcPayload[1] = 0;
-            lcMsgSetSLed.mcPayload[2] = 0;
+            lu8Data[0] = 0;
+            lu8Data[1] = 0;
+            lu8Data[2] = 0;
 
-            lcMsgSetSLed.mcPayload[3] =  0; // Enable
-            lcMsgSetSLed.mcPayload[4] =  0; // % Helligkeit
-            lcMsgSetSLed.mcPayload[5] =  5; // Pink - nur Rot und Blau, kein Grün
-            lcMsgSetSLed.mcPayload[6] = 255; // R
-            lcMsgSetSLed.mcPayload[7] = 255; // G
-            lcMsgSetSLed.mcPayload[8] = 255; // B
-            lcMsgSetSLed.mcPayload[9] = 100; // Temp
+            lu8Data[3] =  0; // Enable
+            lu8Data[4] =  0; // % Helligkeit
+            lu8Data[5] =  5; // Pink - nur Rot und Blau, kein Grün
+            lu8Data[6] = 255; // R
+            lu8Data[7] = 255; // G
+            lu8Data[8] = 255; // B
+            lu8Data[9] = 100; // Temp
 
-            lcMsgSetSLed.vEncode();
-            mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetSLed);
+            mcSys.mcCom.mcBn.vSendMsg(0x1000, 0x1200, 42, lu8Data, sizeof(lu8Data));
           }
           
           if (mu8SmLedBoardRetrys < 10) mu8SmLedBoardRetrys++;

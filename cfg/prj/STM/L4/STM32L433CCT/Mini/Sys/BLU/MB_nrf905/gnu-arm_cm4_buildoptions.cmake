@@ -7,9 +7,11 @@ list(APPEND PCB_ListTargetDefinition
 # Compile Definitions
 # -----------------------------------------------
   -DPCB_PROJECT_${PCB_Project}
+  -DPCB_PROJECTCFG_${PCB_ProjectCfg}
   -DEMBEDDED
   
   -DSTM32L433xx
+  -DHSE_VALUE=24000000
 #  -D__NO_SYSTEM_INIT
   -DUSE_FULL_LL_DRIVER
 
@@ -19,7 +21,7 @@ list(APPEND PCB_ListTargetDefinition
   -D__FPU_PRESENT
 
   -D__STACK_SIZE=0x800 #2kb
-  -D__HEAP_SIZE=0x2000 #10kb
+  -D__HEAP_SIZE=0x100  #256B
 
   -DARM_MATH_CM4
   -DARM_MATH_MATRIX_CHECK
@@ -61,7 +63,7 @@ list(APPEND PCB_ListTargetCompileOptionsCpp
   -fno-rtti
   -fno-use-cxa-atexit
   -fno-threadsafe-statics
-  -nostdinc++
+  #-nostdinc++
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC

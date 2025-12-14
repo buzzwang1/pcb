@@ -23,21 +23,18 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.07
+    Data/ComDat/ComDat/v00.01.00
 
-    Data/Mem/MemTools/v00.00.03:default_arm
-    Data/Mem/Buffer/BArray/BArrayT/v00.00.02|-Ofast
-    Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01|-Ofast
+    Data/Mem/MemTools/v00.00.03:default
+    Data/Mem/Buffer/BArray/BArrayT/v00.01.00
     Data/Mem/Buffer/Ring/RingBufT/v00.00.03
-    Data/Mem/Buffer/Ring/ComBuf/v00.00.03|-Ofast
     Data/Mem/MemPart/v00.00.01
     Data/Mem/RomConst/v00.00.02:STM32L433CCT:Miniv10b2:default
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
 
-
-    Data/String/Cli/v00.00.01    
-    Data/String/CStrT/v00.00.01
+    Data/String/Cli/v00.01.00:noHist
+    Data/String/CStrT/v00.01.00:default
     Data/String/StringTools/v00.00.02
 
     Data/DateTime/Clock/v00.00.03:STM32L4
@@ -47,29 +44,26 @@ set(PCB_ProjectPackageList
     Data/Sys/Err/Def/v00.00.01:stm32l433
     Data/Sys/Err/cErr/v00.00.01:stm32l433
 
+    Data/BotNet/v00.01.00/Base/Main/v00.00.02:PcIfc
+      Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
+    Data/BotNet/v00.01.00/BnLinks/Base/v00.00.02:default
+      #Data/BotNet/v00.01.00/BnLinks/UsartMpHd/v00.00.04:default
+      #Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default
+      Data/BotNet/v00.01.00/BnLinks/BotCom/v00.00.03:default
+      Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.03:default
+      Data/BotNet/v00.01.00/BnLinks/nRf905Net/v00.00.03:default
+    Data/BotNet/v00.01.00/BnMsgSys/Base/v00.00.02:default
+    #  Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:Dummy
+    #  Data/BotNet/v00.01.00/BnMsgSys/Btr/v00.00.02:default
+    #  Data/BotNet/v00.01.00/BnMsgSys/Spop/v00.00.02:default
+    #Data/BotNet/v00.01.00/BnStreamSys/Base/v00.00.01:Dummy
+    #  Data/BotNet/v00.01.00/BnStreamSys/Ports/Base/v00.00.01:Dummy
 
-    Data/BotNet/v00.00.06/Base/Main/v00.00.02:PcIfc
-    Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:default
-    Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32L433CCT
-    Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
-    Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/UsartMpHd/v00.00.04:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/BotCom/v00.00.03:default
-    Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.03:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default|-Ofast
-    Data/BotNet/v00.00.06/BnLinks/vlink/v00.00.01:default
-    Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
-    #Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
-    #Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:default
-    #Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
-    #Data/BotNet/v00.00.06/BnStreamSys/Base/v00.00.01:default
-    #Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:default
-    #Data/BotNet/v00.00.06/BnStreamSys/Ports/Cmd/v00.00.01:default
-    #Data/BotNet/v00.00.06/BnStreamSys/Ports/Com/v00.00.01:default
-    #Data/BotNet/v00.00.06/BnStreamSys/Ports/Echo/v00.00.01:default
 
     #Gfx/General/GfxDefs/v00.00.01:32Bit
     #Gfx/Bitmap/Bitmap/v00.00.01
@@ -85,32 +79,32 @@ set(PCB_ProjectPackageList
     #Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
-    Driver/STM32/L4/Hal/v01.15.01/Core
-    Driver/STM32/L4/Hal/v01.15.01/Device/stm32l433xx:default|-Ofast
+    Driver/STM32/L4/HAL/v01.15.01/Core
+    Driver/STM32/L4/HAL/v01.15.01/Device/stm32l433xx:default
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_24Mhz
-    Driver/STM32/L4/Hal/GPPin/v01.00.02
-    Driver/STM32/L4/Hal/cUart/Int/v01.00.01
-    Driver/STM32/L4/Hal/cUart/MpHd/v01.00.03_Mini:Tim16|-Ofast
-    Driver/STM32/L4/Hal/cI2C/v01.00.09|-Ofast
-    Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv7b2_STM32L433CCT
-    Driver/STM32/Device/INA3221/v01.00.01
-    Driver/STM32/Device/MP8859/v01.00.01
-    Driver/STM32/Device/EEP/v01.00.00:ZD24C08A
+    Driver/STM32/L4/HAL/GPPin/v01.00.02
+    Driver/STM32/L4/HAL/cUart/Int/v01.00.01
+    #Driver/STM32/L4/HAL/cUart/MpHd/v01.01.00_Mini:Tim15
+    #Driver/STM32/L4/HAL/cI2C/v01.01.00
+    Driver/STM32/Device/Com/nRF905/Int/v01.01.00:MBv7b2_STM32L433CCT
 
-    System/CyclicCaller/v00.00.02_mini:stm32l4xx_TIM6
+    #Driver/STM32/Device/INA3221/v01.01.00
+    #Driver/STM32/Device/MP8859/v01.01.00
+    #Driver/STM32/Device/EEP/v01.01.00:Dummy
+
+    System/CyclicCaller/v00.00.01:stm32l4xx_TIM6
     System/STM32/ClockInfo/v00.00.01:stm32l4xx
-
 
     APP/LED/v00.00.01:STM32L4_HAL
     APP/Job/JobHdl/v00.00.01:us
 
-    APP/BSP/MB/Pkg/SysPkgClock/v00.00.01:slave
-    APP/BSP/MB/Pkg/SysPkgCom/v00.00.01:PcIfc
-    APP/BSP/MB/Pkg/SysPkgMsg/v00.00.01:PcIfc
-    APP/BSP/MB/Pkg/SysPkgPMon/v00.00.01:MBv10b2
-    APP/BSP/MB/Pkg/SysPkgSMan/v00.00.01:MBv10b2
-    APP/BSP/MB/Pkg/SysPkgBoard/v00.00.01:PcIfc
-    APP/BSP/MB/System/v00.00.01:PcIfc
+    #APP/BSP/MB/Pkg/SysPkgClock/v00.01.00:slave
+    #APP/BSP/MB/Pkg/SysPkgCom/v00.01.00:PcIfc
+    #APP/BSP/MB/Pkg/SysPkgMsg/v00.01.00:PcIfc
+    #APP/BSP/MB/Pkg/SysPkgPMon/v00.01.00:MBv10b2
+    #APP/BSP/MB/Pkg/SysPkgSMan/v00.01.00:MBv10b2
+    #APP/BSP/MB/Pkg/SysPkgBoard/v00.01.00:PcIfc
+    #APP/BSP/MB/System/v00.01.00:PcIfc
 
     main/${Main_Location}
 )

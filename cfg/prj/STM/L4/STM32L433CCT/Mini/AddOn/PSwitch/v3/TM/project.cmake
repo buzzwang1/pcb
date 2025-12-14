@@ -33,9 +33,9 @@ set(PCB_ProjectPackageList
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
 
-    Data/String/Cli/v00.01.00:noHist
+    Data/String/Cli/v00.01.00:default   
     Data/String/CStrT/v00.01.00:default
-    Data/String/StringTools/v00.00.02
+    Data/String/StringTools/v00.00.02 
 
     Data/DateTime/Clock/v00.00.03:STM32L4
     Data/Math/Pid/Float/v00.00.01
@@ -44,18 +44,19 @@ set(PCB_ProjectPackageList
     Data/Sys/Err/Def/v00.00.01:stm32l433
     Data/Sys/Err/cErr/v00.00.01:stm32l433
 
+
     Data/BotNet/v00.01.00/Base/Main/v00.00.02:default
       Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
+      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.01.00/BnLinks/Base/v00.00.02:default
       Data/BotNet/v00.01.00/BnLinks/UsartMpHd/v00.00.04:default
-      Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default
+      Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default    
       Data/BotNet/v00.01.00/BnLinks/BotCom/v00.00.03:default
-      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.02:default
+      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.03:default
       #Data/BotNet/v00.01.00/BnLinks/nRf905Net/v00.00.03:default
     Data/BotNet/v00.01.00/BnMsgSys/Base/v00.00.02:default
       Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:default
@@ -92,7 +93,7 @@ set(PCB_ProjectPackageList
     APP/BSP/MB/Pkg/SysPkgClock/v00.01.00:Slave
     APP/BSP/MB/Pkg/SysPkgCom/v00.01.00:PSwitchTM
     APP/BSP/MB/Pkg/SysPkgMsg/v00.01.00:PSwitchI2cI2C
-    #APP/BSP/MB/Pkg/SysPkgPMon/v00.00.01:PSwitchI2cI2C
+    #APP/BSP/MB/Pkg/SysPkgPMon/v00.01.00:PSwitchI2cI2C
     APP/BSP/MB/Pkg/SysPkgSMan/v00.01.00:PSwitchI2cI2C
     APP/BSP/MB/Pkg/SysPkgBoard/v00.01.00:PSwitchI2cI2C
     APP/BSP/MB/System/v00.01.00:PSwitchI2cI2C
@@ -100,6 +101,7 @@ set(PCB_ProjectPackageList
     main/${Main_Location}
 )
 
+message(STATUS "${PCB_ProjectCfg} linker file")
 message(STATUS "Include linker file: ${CMAKE_CURRENT_LIST_DIR}/linker_${PCB_ProjectCfg}.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/linker_${PCB_ProjectCfg}.cmake")
 

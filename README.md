@@ -33,7 +33,7 @@ Mandatory/depending on target: GCC: Compiler for build chain
 #### Programming and Debugging:
 Mandatory/depending on target:
 
-EmBitz v02.63: https://www.embitz.org/: Used as ARM debugger 
+EmBitz v02.65: https://www.embitz.org/: Used as ARM debugger 
   Driver needs to b installed
 
 OpenOcd: https://openocd.org/: Used for flashing

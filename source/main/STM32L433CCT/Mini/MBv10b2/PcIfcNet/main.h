@@ -2,11 +2,19 @@
 #define __MAIN_H__
 
 
-#include "System.h"
+// Driver
+#include "tGPPin.h"
+#include "LED.h"
+//#include "cI2c.h"
 
-//
+//Data
+#include "cRingBufT.h"
+#include "cBnLinkNrf905.h"
+#include "cBnLinkNrf905Net.h"
+#include "cBnLinkBotCom.h"
+#include "cBotnet.h"
+
 //System
-#include "ClockInfo.h"
 #include "CycleCaller.h"
 
 #ifdef __cplusplus
@@ -17,22 +25,9 @@
 #include "TypeDef.h"
 #include "stm32l433xx.h"
 #include "stm32l4xx_hal.h"
-#include "stm32l4xx_ll_bus.h"
-#include "stm32l4xx_ll_rcc.h"
-#include "stm32l4xx_ll_system.h"
-#include "stm32l4xx_ll_utils.h"
-#include "stm32l4xx_ll_cortex.h"
-#include "stm32l4xx_ll_gpio.h"
-#include "stm32l4xx_ll_exti.h"
-#include "stm32l4xx_ll_rtc.h"
-#include "stm32l4xx_ll_pwr.h"
 
 
-extern void SystemClock_Config();
-extern void MAIN_vInitSystem(void);
-
-
-extern void MainSystemInit(void);
+extern void MainSystemInit();
 
 extern void NMI_Handler(void);
 extern void HardFault_Handler(void);
@@ -44,6 +39,17 @@ extern void DebugMon_Handler(void);
 extern void PendSV_Handler(void);
 extern void SysTick_Handler(void);
 
+extern void EXTI15_10_IRQHandler(void);
+extern void TIM7_IRQHandler(void);
+
+extern void TIM3_IRQHandler(void);
+
+extern void DMA1_Channel2_IRQHandler(void); // SPI1 RX
+extern void DMA1_Channel3_IRQHandler(void); // SPI1 TX
+
+// ---------------------------- U2 ---------------------------
+
+extern void USART2_IRQHandler(void);
 
 #ifdef __cplusplus
 }

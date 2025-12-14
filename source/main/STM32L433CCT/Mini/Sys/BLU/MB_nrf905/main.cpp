@@ -1,16 +1,18 @@
 
 #include "main.h"
 
-
-// STM32L433
+// STM32L433CCT
 // ARM®-based Cortex®-M4 32b MCU
 // Rom 256KB
 // Ram 64KB
+// Max: 80Mhz, HSI: 16Mhz, HSE: 24Mhz
 
 
 __IO uint32_t TimingDelay = 0;
 LED<GPIOB_BASE, 9> mcLed;
+LED<GPIOA_BASE, 6> mcLedBar;
 cGpPin lcS1(GPIOC_BASE, 13, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
+cGpPin lcS_3V3(GPIOA_BASE, 10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
 u32   mu32SpopCounter;
 
 
@@ -18,9 +20,8 @@ u32   mu32SpopCounter;
 cBotNetCfg mcMyBotNetCfg((const char8*)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr);
 cBotNet mcBn(&mcMyBotNetCfg);
 
-cNRF905                   mcNRF905(0x00010110, 0x00010100);
-cBotNet_UpLinknRf905      mcSideLinkRf(&mcNRF905);
-cBotNet_UpLinknRf905Net   mcSideLink(&mcSideLinkRf, &mcBn, 0);
+cNRF905Slave              mcNRF905Slave(0x00010110, 0x00010100);
+cBotNet_UpLinknRf905Net   mcSideLink(&mcNRF905Slave, &mcBn);
 
 
 void NMI_Handler(void)
@@ -140,7 +141,7 @@ void EXTI15_10_IRQHandler(void)
   if (__HAL_GPIO_EXTI_GET_IT(LL_EXTI_LINE_13) != 0x00u)
   {
     __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_13);
-    mcSideLink.bEventHandler(cNRF905::NRF905_EvDataReady);
+    mcNRF905Slave.IrqHandler(cComNode::tenEvent::enEvUsartExtiP1);
   }
 }
 
@@ -149,7 +150,7 @@ void DMA1_Channel2_IRQHandler(void)
   // SPI RX
   DMA1_Channel2->CCR &= ~DMA_CCR_EN;
   DMA1->IFCR = DMA_FLAG_TC2;
-  mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaRxReady);
+  mcNRF905Slave.IrqHandler(cComNode::tenEvent::enEvDmaRxTc);
 }
 
 void DMA1_Channel3_IRQHandler(void)
@@ -157,7 +158,7 @@ void DMA1_Channel3_IRQHandler(void)
   // SPI TX
   DMA1_Channel3->CCR &= ~DMA_CCR_EN;
   DMA1->IFCR = DMA_FLAG_TC3;
-  mcSideLink.bEventHandler(cNRF905::NRF905_EvSpiDmaTxReady);
+  mcNRF905Slave.IrqHandler(cComNode::tenEvent::enEvDmaTxTc);
 }
 
 void TIM7_IRQHandler(void)
@@ -166,13 +167,8 @@ void TIM7_IRQHandler(void)
   {
     TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
     TIM7->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
-    mcSideLink.bEventHandler(cNRF905::NRF905_EvTimer);
+    mcNRF905Slave.IrqHandler(cComNode::tenEvent::enEvUsartTimer);
   }
-}
-
-void MAIN_vTick1msHp(void)
-{
-  mcBn.vTickHp1ms();
 }
 
 
@@ -180,6 +176,7 @@ void MAIN_vTick1msHp(void)
 void MAIN_vTick1msLp(void)
 {
   mcBn.vProcess(1000);
+  mcNRF905Slave.vTick1ms();
 
   if (mcBn.mcSpop.isEnable()) mu32SpopCounter = 1000 * 60 * 2; // 2 min
 
@@ -198,6 +195,7 @@ void MAIN_vTick1msLp(void)
 void MAIN_vTick100msLp(void)
 {
   mcLed.Toggle();
+  mcLedBar.Toggle();
   cBnSpop_vResetWdog();
 }
 
@@ -217,6 +215,7 @@ void MAIN_vInitSystem(void)
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
   cBnSpop_vResetWdog();
+  cBnMsgPool::vInit();
 
   /* STM32L4xx HAL library initialization:
        - Configure the Flash prefetch
@@ -230,10 +229,15 @@ void MAIN_vInitSystem(void)
      */
   HAL_Init();
 
+  mcSideLink.vSetTiming(5 * 1000, 50); // 15s Ping Interval, 50ms warten auf eine Session nach Ping.
+
+  // AddLink initialisiert beim Slave auch direkt die HW
+  // Wenn man das zu schnell nach Reset macht, dann kann sein dass der 3 nrf905 noch nicht bereit ist.
+  // Device Switching Times: PWR_DWN -> ST_BY mode: 3 ms
   mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLink, 0xE000);
-  mcSideLink.vSetTiming(15 * 1000, 50); // 15s Ping Interval, 50ms warten auf eine Session nach Ping.
-  
-  mu32SpopCounter = 1000 * 60 * 2;
+
+
+  mu32SpopCounter = 1000 * 60 * 20;
 
   //{
   //  u8 lszData[16];
@@ -246,12 +250,12 @@ void MAIN_vInitSystem(void)
   //  mcSideLink.vSetStatus(0x11, (u8*)lszData);
   //}
 
-  CycCall_Start(MAIN_vTick1msHp /*1ms_HP*/,
+  CycCall_Start(NULL /*1ms_HP*/,
                 NULL /*10ms_HP*/,
                 NULL /*100ms_HP*/,
                 NULL /*1s_HP*/,
 
-                MAIN_vTick1msLp               /*1ms_LP*/,
+                MAIN_vTick1msLp    /*1ms_LP*/,
                 NULL   /*10ms_LP*/,
                 MAIN_vTick100msLp  /*100ms_LP*/,
                 NULL /*1s_LP*/);

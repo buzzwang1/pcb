@@ -8,163 +8,23 @@
 // Max: 80Mhz, HSI: 16Mhz, HSE: 24Mhz
 
 
-
-//  Mainboard01. BotNetId 21 = 0x15
-//  Master:      BnAdr: 1.0.0.0 für I2C
-//  Master:      BnAdr: 1.E.0.0 für MpHd
-//
-//  PB09  -> Status Led
-//
-//  PA00   -> Wakeup (100k Pull Down)
-//
-//  PA08   -> reserve
-//  PA05   -> reserve
-//  PB00   -> reserve
-//
-//  Power Control
-//    Battery Control:
-//      Balancer:
-//      PB02  -> U_Bat2
-//      PA15  -> U_Bat1
-//
-//    Regulator In:
-//      PA04  -> Dac
-//      PA07  -> En
-//
-//    Regulator Out:
-//      PA05  -> Dac
-//      PB08  -> En
-//      PA06  -> U_Sys: ADC_IN11
-//
-//   Switch:
-//      PC13: Battery MainSwitch
-//      PA10: LowPower(3V3, ADC, I2C)
-//      PA06: Led
-//
-//
-// //      PB00  -> U_Bat4
-//
-//
-//
-//  I2C2  -> BotNet 1.0.0.0
-//    PB06  -> I2C2 SCL
-//    PB07  -> I2C2 SDA
-//
-//  U1    -> BotNet 1.E.0.0
-//    PA09  -> U1 Tx/Rx
-//
-//  U2    -> Debug
-//    PA02  -> U2 Tx
-//    PA03  -> U2 Rx
-//
-//  I2C2  -> INA3221 2x, Display (Optional) , Apds9960 (Optional)
-//    PB10  -> I2C2 SCL AF4
-//    PB14  -> I2C2 SDA AF4
-//
-//
-//  nRF905:
-//  PB03: SPI1 Clock
-//  PB04: SPI1 MISO
-//  PB05: SPI1 MOSI
-//  PA12: SPI1 Chip Select
-//  PB12: TX or RX mode
-//  PA11: Standby
-//  PB15: Power up
-//  PB13: Data Ready
-//  PB00 (option)
-//  PB01 (option)
-//  PA15 (option)
-//
-//
-//  Timer Usage:
-//    TIM2  -> DiffTimer (optional)
-//    TIM6  -> CyclicCaller
-//    TIM7  -> BotCom nRf905
-//    TIM16 -> BotCom MpHd
-//
-//  DMA Usage:
-//    DMA1:
-//      0:
-//      1:
-//      2: SPI1 Rx: NRF905 CS:1
-//      3: SPI1 Tx: NRF905 CS:1
-//      4: I2C2 Tx: Mainboard  CS:3
-//      5: I2C2 Rx: Mainboard  CS:3
-//      6: I2C1 Tx: BotNet CS:3 / Usart2 Rx BotNet CS:2
-//      7: I2C1 Rx: BotNet CS:3 / Usart2 Tx BotNet CS:2
-//
-//    DMA2:
-//      0:
-//      1:
-//      2:
-//      3:
-//      4:
-//      5:
-//      6: I2C1 Rx: BotNet CS:5 / Usart1 Tx BotNet CS:2
-//      7: I2C1 Tx: BotNet CS:5 / Usart1 Rx BotNet CS:2
-//
-//  Interrupt Usage:
-//    TIM6_DAC_IRQHandler:      CyclicCaller:  Prio: 15.8 => 1ms SysTick
-//    I2C1_EV_IRQHandler:       BotCom:        Prio:  8.8
-//    I2C1_ER_IRQHandler:       BotCom:        Prio:  8.8
-//    I2C2_EV_IRQHandler:       Board:         Prio:  8.8
-//    I2C2_ER_IRQHandler:       Board:         Prio:  8.8
-//    EXTI15_10_IRQHandler:     BotNet nRF905: Prio:  9.8 => NRF905
-//    DMA1_Channel2_IRQHandler: BotNet nRF905: Prio:  9.8 => NRF905
-//    DMA1_Channel3_IRQHandler: BotNet nRF905: Prio:  9.8 => NRF905
-//    TIM7_IRQHandler:          BotNet nRF905: Prio:  9.8 => NRF905
-//    DMA2_Channel6_IRQHandler: BotNet U1 Tx:  Prio:  6.8 => U1
-//    DMA2_Channel7_IRQHandler: BotNet U1 Rx:  Prio:  6.8 => U1
-//    USART1_IRQHandler:        BotNet U1:     Prio:  6.8 => U1
-//    TIM1_UP_TIM16_IRQHandler: BotCom U1:     Prio:  6.8 => U1
-//    USART2_IRQHandler:        BotCom U2:     Prio:  7.8 => U2
-//
-// Backup-Register Usage:
-//    00: Clock Valid by Clock
-//    01: Wakeup Counter
-//
-//
-//    DiffTimer Max Cycle
-//     0: I2C1_EV_IRQHandler(void)
-//     1: I2C1_ER_IRQHandler(void)
-//     2: I2C2_EV_IRQHandler(void)
-//     3: I2C2_ER_IRQHandler(void)
-//     4: EXTI15_10_IRQHandler(void)
-//     5: DMA1_Channel2_IRQHandler(void)
-//     6: DMA1_Channel3_IRQHandler(void)
-//     7: TIM7_IRQHandler(void)
-//     8: DMA2_Channel6_IRQHandler(void)
-//     9: DMA2_Channel7_IRQHandler
-//    10: USART1_IRQHandler
-//    11: USART2_IRQHandler(void)
-//    12: TIM1_UP_TIM16_IRQHandler(void)
-//    13: MAIN_vTick1msHp
-//    14: MAIN_vTick10msLp
-//    15: MAIN_vTick100msLp
-//    16: MAIN_vTick1000msLp
+__IO uint32_t TimingDelay = 0;
+LED<GPIOB_BASE, 9> mcLed;
+LED<GPIOA_BASE, 6> mcLedBar;
+cGpPin lcS1(GPIOC_BASE, 13, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
+cGpPin lcS_3V3(GPIOA_BASE, 10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
 
 
-//    DiffTimer Timing
-//     0: Nach SystemInit
-//     1: Start von Main
-//     2: Vor I2C Bausteine Initialisieren
-//     3: Nach I2C Bausteine Initialisieren
-//     4: frei
-//     5: frei
-//     6: frei
-//     7: frei
-//     8: Uhrzeit gesetzt
-//     9: frei
-//    10: frei
-//    11: frei
-//    12: Start von bExitRun
-//    13: Start von PreparePowerdown
-//    14: Start von GotoPowerDown
-//    15: vor Sleep
+// BotNet
+cBotNetCfg mcMyBotNetCfg((const char8*)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr);
+cBotNet gcBn(&mcMyBotNetCfg);
 
-cClockInfo mcClockInfo;
+tcUart<USART2_BASE, GPIOA_BASE, 2, GPIOA_BASE, 3> mcComPort2(38400, GPIO_AF7_USART2, 16, 16);
+cBotNet_LinkBotCom         mcUpLinkBotCom(&mcComPort2);
+
+cNRF905Master              mcNRF905Master(0x00010110, 0x00010100);
+cBotNet_DownLinknRf905Net  gcDownLink(&mcNRF905Master, &gcBn);
 bool mbConnected = False;
-
 
 
 void NMI_Handler(void)
@@ -177,7 +37,6 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* Go to infinite loop when Hard Fault exception occurs */
-  cErr::munErr->stErr.isHardFault = 1;
   while (1)
   {
   }
@@ -187,7 +46,6 @@ void HardFault_Handler(void)
 void MemManage_Handler(void)
 {
   /* Go to infinite loop when Memory Manage exception occurs */
-  cErr::munErr->stErr.isMemManage = 1;
   while (1)
   {
   }
@@ -196,7 +54,6 @@ void MemManage_Handler(void)
 
 void BusFault_Handler(void)
 {
-  cErr::munErr->stErr.isBusFault = 1;
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
   {
@@ -206,7 +63,6 @@ void BusFault_Handler(void)
 
 void UsageFault_Handler(void)
 {
-  cErr::munErr->stErr.isUsageFault = 1;
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
   {
@@ -216,7 +72,6 @@ void UsageFault_Handler(void)
 
 void SVC_Handler(void)
 {
-  cErr::munErr->stErr.isSVC = 1;
   while (1)
   {
   }
@@ -224,7 +79,6 @@ void SVC_Handler(void)
 
 void DebugMon_Handler(void)
 {
-  cErr::munErr->stErr.isDebugMon = 1;
   while (1)
   {
   }
@@ -233,81 +87,160 @@ void DebugMon_Handler(void)
 
 void PendSV_Handler(void)
 {
-  cErr::munErr->stErr.isPendSV = 1;
   while (1)
   {
   }
 }
 
+void Delay(__IO uint32_t nTime)
+{
+  TimingDelay = nTime;
+
+  while(TimingDelay != 0);
+}
+
+
+void TimingDelay_Decrement(void)
+{
+  if (TimingDelay != 0x00)
+  {
+    TimingDelay--;
+  }
+}
+
+
 void SysTick_Handler(void)
 {
+  TimingDelay_Decrement();
   HAL_IncTick();
 }
 
 
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-
-
+  /* Infinite loop */
+  while (1)
+  {
+  }
+}
+#endif
 
 class cBnMsgHandlerApp : public cBotNet_MsgSysProcess
 {
 public:
   cBnMsgHandlerApp()
-    : cBotNet_MsgSysProcess(&mcSys.mcCom.mcBn)
+    : cBotNet_MsgSysProcess(&gcBn)
   {
   }
 
   bool bMsg(cBotNetMsg_MsgProt& lcMsg)
   {
-    bool lbConsumed = False;
-
     // Überprüfen,obes eine Session Start/Stop Nachricht ist
     //
     //                 0    1  2    3    4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19    20 21 22 23 24
     // Wait & Start:  11 | DH DL | FE | XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || DA DA E0 00 80 : Versucht mit DH.DL:DA.DA zu verbinden
     // Disconnect:    11 | DH DL | FF | XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || DA DA E0 00 80
-
+    u8* lu8RxPayload = lcMsg.mpu8Data;
     if (lcMsg.u8Len() == 25)
     {
       // Info Nachricht ?
       // Nachricht vom PC
-      if ((lcMsg[24] == 0x80) &&
-           (lcMsg[0] == 0x11))
+      if ((lu8RxPayload[24] == 0x80) &&
+           (lu8RxPayload[0] == 0x11))
       {
         //Start
-        if ((lcMsg[3] == 0xFE) && (mbConnected == False))
+        if ((lu8RxPayload[3] == 0xFE) && (mbConnected == False))
         {
-          mcSys.mcCom.mcDownLink.mu16SessionDAdr = (lcMsg[1] << 8) + lcMsg[2];
-          mcSys.mcCom.mcDownLink.mu16SessionBnAdr = (lcMsg[20] << 8) + lcMsg[21];
+          gcDownLink.mu16SessionDAdr  = (lu8RxPayload[ 1] << 8) + lu8RxPayload[2];
+          gcDownLink.mu16SessionBnAdr = (lu8RxPayload[20] << 8) + lu8RxPayload[21];
 
-          mcSys.mcCom.mcBn.mcAdr.Set((lcMsg[22] << 8) + lcMsg[23]);
-          mcSys.mcCom.mcBn.mcDeviceID.Set((lcMsg[4] << 8) + lcMsg[5]);
+          gcBn.mcAdr.Set((lu8RxPayload[22] << 8) + lu8RxPayload[23]);
+          gcBn.mcDeviceID.Set((lu8RxPayload[4] << 8) + lu8RxPayload[5]);
 
-          mcSys.mcCom.mcDownLink.mbSessionStart = True;
-          mcSys.mcCom.mcDownLink.mbSessionStop = False;
+          gcDownLink.mbSessionStart = True;
+          gcDownLink.mbSessionStop  = False;
           //lcLed2.On();
           //mcTextPort.vAddText((const char8*)"Wait for Connection\r\n");
           //mcDisplayTimer.vReset();
+          return True;
         }
 
         //Stop
         if (lcMsg[3] == 0xFF)
         {
-          mcSys.mcCom.mcDownLink.mbSessionStop = True;
+          gcDownLink.mbSessionStop = True;
           //mcTextPort.vAddText((const char8*)"Abort Connection\r\n");
           //mcDisplayTimer.vReset();
           //lcLed2.Off();
+          return True;
         }
       }
     }
-    return lbConsumed;
+    return False;
   }
 };
 
-cBnMsgHandlerApp mcBnMsgHandlerApp;
+cBnMsgHandlerApp gcBnMsgHandlerApp;
 
+void EXTI15_10_IRQHandler(void)
+{
+  // Adress Match nRF905
+  if (__HAL_GPIO_EXTI_GET_IT(LL_EXTI_LINE_13) != 0x00u)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_13);
+    mcNRF905Master.IrqHandler(cComNode::tenEvent::enEvUsartExtiP1);
+  }
+}
 
+void DMA1_Channel2_IRQHandler(void)
+{
+  // SPI RX
+  DMA1_Channel2->CCR &= ~DMA_CCR_EN;
+  DMA1->IFCR = DMA_FLAG_TC2;
+  mcNRF905Master.IrqHandler(cComNode::tenEvent::enEvDmaRxTc);
+}
 
+void DMA1_Channel3_IRQHandler(void)
+{
+  // SPI TX
+  DMA1_Channel3->CCR &= ~DMA_CCR_EN;
+  DMA1->IFCR = DMA_FLAG_TC3;
+  mcNRF905Master.IrqHandler(cComNode::tenEvent::enEvDmaTxTc);
+}
+
+void TIM7_IRQHandler(void)
+{
+  if (TIM7->SR & TIM_SR_UIF) // if UIF flag is set
+  {
+    TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
+    TIM7->CR1 &= ~(TIM_CR1_CEN); //disable/stop timer
+    mcNRF905Master.IrqHandler(cComNode::tenEvent::enEvUsartTimer);
+  }
+}
+
+//---------------------------------- U2 --------------------------------
+
+void USART2_IRQHandler(void)
+{
+  mcComPort2.vIRQHandler();
+}
+
+void MAIN_vTick1msLp(void)
+{
+  gcBn.vProcess(1000);
+  mcNRF905Master.vTick1ms();
+}
 
 void MAIN_vTick10msLp(void)
 {
@@ -318,7 +251,7 @@ void MAIN_vTick10msLp(void)
   // Wait & Start:  11 | DH DL | FE | SH.SL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || E0 00 DA DA 80
   // Disconnect:    11 | DH DL | FF | SH.SL.XX.XX XX.XX.XX.XX XX.XX.XX.XX XX.XX.XX.XX || E0 00 DA DA 80
 
-  if ((!mbConnected) && (mcSys.mcCom.mcDownLink.IsOnline()))
+  if ((!mbConnected) && (gcDownLink.IsOnline()))
   {
     mbConnected = True;
     //lcLed2.Off();
@@ -326,16 +259,23 @@ void MAIN_vTick10msLp(void)
     //mcDisplayTimer.vReset();
 
     // Send Connection Acknowledge
-    u8 u8MsgData[] = { 0x11, (u8)(mcSys.mcCom.mcDownLink.mu16SessionDAdr >> 8), (u8)mcSys.mcCom.mcDownLink.mu16SessionDAdr, 0xFE,
-                      (u8)(mcSys.mcCom.mcBn.mcDeviceID.Get() >> 8), (u8)mcSys.mcCom.mcBn.mcDeviceID.Get(), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                      (u8)(mcSys.mcCom.mcBn.mcAdr.Get() >> 8), (u8)mcSys.mcCom.mcBn.mcAdr.Get(), (u8)(mcSys.mcCom.mcDownLink.mu16SessionBnAdr >> 8), (u8)mcSys.mcCom.mcDownLink.mu16SessionBnAdr, 0x80 };
+    u8 u8MsgData[] = { 0x11, (u8)(gcDownLink.mu16SessionDAdr >> 8), (u8)gcDownLink.mu16SessionDAdr, 0xFE,
+                             (u8)(gcBn.mcDeviceID.Get() >> 8), (u8)gcBn.mcDeviceID.Get(), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                             (u8)(gcBn.mcAdr.Get() >> 8), (u8)gcBn.mcAdr.Get(), (u8)(gcDownLink.mu16SessionBnAdr >> 8), (u8)gcDownLink.mu16SessionBnAdr, 0x80 };
 
-    cbArrayExtT<uint16> lcMsg(u8MsgData, sizeof(u8MsgData), sizeof(u8MsgData));
-    mcSys.mcCom.mcBn.mcUpLink->bPut(&lcMsg);
+    u8 lu8PoolIdx;
+    cBotNetMsg_MsgProt lcMsgTx; cBnMsgPool::vReqMsg(lcMsgTx, lu8PoolIdx, sizeof(u8MsgData));
+    if (lu8PoolIdx)
+    {
+      lcMsgTx.Set(u8MsgData, sizeof(u8MsgData));
+      cBnMsgPool::vSetLen(lu8PoolIdx, lcMsgTx.Len());
+      mcUpLinkBotCom.bPut(lu8PoolIdx);
+      cBnMsgPool::vReleaseMsg(lu8PoolIdx);
+    }
   }
 
 
-  if ((mbConnected) && (!mcSys.mcCom.mcDownLink.IsOnline()))
+  if ((mbConnected) && (!gcDownLink.IsOnline()))
   {
     mbConnected = False;
     //lcLed2.Off();
@@ -343,53 +283,89 @@ void MAIN_vTick10msLp(void)
     //mcDisplayTimer.vReset();
 
     // Send Dis-Connection Acknowledge
-    u8 u8MsgData[] = { 0x11, (u8)(mcSys.mcCom.mcDownLink.mu16SessionDAdr >> 8), (u8)mcSys.mcCom.mcDownLink.mu16SessionDAdr, 0xFF,
-                      (u8)(mcSys.mcCom.mcBn.mcDeviceID.Get() >> 8), (u8)mcSys.mcCom.mcBn.mcDeviceID.Get(), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                      (u8)(mcSys.mcCom.mcBn.mcAdr.Get() >> 8), (u8)mcSys.mcCom.mcBn.mcAdr.Get(), (u8)(mcSys.mcCom.mcDownLink.mu16SessionBnAdr >> 8), (u8)mcSys.mcCom.mcDownLink.mu16SessionBnAdr, 0x80 };
+    u8 u8MsgData[] = { 0x11, (u8)(gcDownLink.mu16SessionDAdr >> 8), (u8)gcDownLink.mu16SessionDAdr, 0xFF,
+                             (u8)(gcBn.mcDeviceID.Get() >> 8), (u8)gcBn.mcDeviceID.Get(), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                             (u8)(gcBn.mcAdr.Get() >> 8), (u8)gcBn.mcAdr.Get(), (u8)(gcDownLink.mu16SessionBnAdr >> 8), (u8)gcDownLink.mu16SessionBnAdr, 0x80 };
 
-    cbArrayExtT<uint16> lcMsg(u8MsgData, sizeof(u8MsgData), sizeof(u8MsgData));
-    mcSys.mcCom.mcBn.mcUpLink->bPut(&lcMsg);
+    u8 lu8PoolIdx;
+    cBotNetMsg_MsgProt lcMsgTx; cBnMsgPool::vReqMsg(lcMsgTx, lu8PoolIdx, sizeof(u8MsgData));
+    if (lu8PoolIdx)
+    {
+      lcMsgTx.Set(u8MsgData, sizeof(u8MsgData));
+      cBnMsgPool::vSetLen(lu8PoolIdx, lcMsgTx.Len());
+      mcUpLinkBotCom.bPut(lu8PoolIdx);
+      cBnMsgPool::vReleaseMsg(lu8PoolIdx);
+    }
+  }
+}
+void MAIN_vTick100msLp(void)
+{
+  if (mbConnected)
+  {
+    mcLed.Toggle();
+    mcLedBar.Toggle();
   }
 }
 
-
-void MAIN_vTick1msHp(void)
+void MAIN_vTick1000msHp(void)
 {
-  mcSys.vTick1msHp();
 }
 
-
-void MAIN_vTick1msLp(void)
+void MAIN_vTick1000msLp(void)
 {
-  mcSys.vTick1msLp();
-  if (SysTime_u32TimeGetTime_ms() % 10 == 0)
+  if (!mbConnected)
   {
-    MAIN_vTick10msLp();
+    mcLed.Toggle();
+    mcLedBar.Toggle();
   }
 }
 
 
 void MAIN_vInitSystem(void)
 {
-  mcSys.vInit1();
+  //u8 lu8t;
 
-  mcBnMsgHandlerApp.vAddMsgSys();
-  CycCall_Start(MAIN_vTick1msHp,
-                MAIN_vTick1msLp);
+  cClockInfo::Update();
+  SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
+  cBnMsgPool::vInit();
 
-  mcSys.vInit2();
+  /* STM32L4xx HAL library initialization:
+       - Configure the Flash prefetch
+       - Systick timer is configured by default as source of time base, but user
+         can eventually implement his proper time base source (a general purpose
+         timer for example or other time source), keeping in mind that Time base
+         duration should be kept 1ms since PPP_TIMEOUT_VALUEs are defined and
+         handled in milliseconds basis.
+       - Set NVIC Group Priority to 4
+       - Low Level Initialization
+     */
+  HAL_Init();
+
+  mcUpLinkBotCom.menType = cBotNet_LinkBase::tenType::enUpLink;
+  gcBn.bAddLink((cBotNet_LinkBase*)&mcUpLinkBotCom);
+
+  // Nrf905
+  // AddLink initialisiert beim Slave auch direkt die HW
+  // Wenn man das zu schnell nach Reset macht, dann kann sein dass der 3 nrf905 noch nicht bereit ist.
+  // Device Switching Times: PWR_DWN -> ST_BY mode: 3 ms
+  gcBn.bAddLink((cBotNet_LinkBase*)&gcDownLink);
+  gcBnMsgHandlerApp.vAddMsgSys();
+
+  CycCall_Start(NULL /*1ms_HP*/,
+                NULL /*10ms_HP*/,
+                NULL /*100ms_HP*/,
+                NULL /*1s_HP*/,
+
+                MAIN_vTick1msLp    /*1ms_LP*/,
+                MAIN_vTick10msLp   /*10ms_LP*/,
+                MAIN_vTick100msLp  /*100ms_LP*/,
+                MAIN_vTick1000msLp /*1s_LP*/);
 }
+
 
 /* Main functions ---------------------------------------------------------*/
 int main(void)
 {
-  #ifdef PCB_PROJECTCFG_Test
-    #ifdef TESTSYSRUNTIME
-      mcPB00.vSet1();
-      mcTestClassTim[1].vSetMaxTimer(cDiffTimerHw::u32GetTimer());
-    #endif
-  #endif
-
   MAIN_vInitSystem();
 
   while (1)
@@ -403,9 +379,7 @@ int main(void)
 void SysError_Handler()
 {
   while (1)
-  {
-    __asm("nop");
-  }
+  {};
 }
 
 void SystemClock_Config_HSE(void)
@@ -450,66 +424,12 @@ void SystemClock_Config_HSE(void)
   }
 }
 
-
-// This is called from the Startup Code, before the c++ constructors
+// This is called from the Startup Code, before the c++ contructors
 void MainSystemInit()
 {
-  #ifdef PCB_PROJECTCFG_Test
-    // Messung um die PowerUp Starttime zu messen
-    // Wird vor Sleep wieder ausgeschaltet
-    // Set PB01
-  cSysPkgPMon::vPA08_Init();
-  cSysPkgPMon::vPA08_Set1();
-  #endif
-
   SystemInit();
-  #ifdef PCB_PROJECTCFG_Test
-    cSysPkgPMon::vPA08_Set0();
-  #endif
   HAL_Init();
-  #ifdef PCB_PROJECTCFG_Test
-    cSysPkgPMon::vPA08_Set1();
-  #endif
-  SystemClock_Config_HSE();
+  SystemClock_Config_HSE(); // Decomment for 16Mhz HSI
   SystemCoreClockUpdate();
-
-  #ifdef PCB_PROJECTCFG_Test
-    cSysPkgPMon::vPA08_Set0();
-  #endif
-
-  #ifdef PCB_PROJECTCFG_Test
-    // Timer aufziehen nachdem der uC auf 16Mhz ist
-    // Nach dem Reset, braucht der es ~6.3ms bis dieser Punkt
-    //   + 5ms bei einer 10k/1uF Reset-Beschaltung
-    //   + 1,3ms Laufzeit bis hierhin
-    cSysPkgPMon::vInitTimer(6300);
-  #endif
-
-  if (!RomConst_IsValid())
-  {
-    // RomConst Error
-    SysError_Handler();
-  }
-
-  #ifdef PCB_PROJECTCFG_Test
-    cSysPkgPMon::vPA08_Set1();
-  #endif
-
-  cBuRam::vEnable();
-  cErr::vInit();
-
-  // 0x20007800
-  //   Heap 32k
-  // 0x2000F800
-  //   Stack 2k
-  // 0x20010000
-  #ifdef PCB_PROJECTCFG_Test
-    //cMemTools::vMemSet((u8*)0x2000F800, 0x55, 0x800 - 128);
-    //cMemTools::vMemSet((u8*)0x20007800, 0x55, 0x8000);
-  #endif
-
-  #ifdef PCB_PROJECTCFG_Test
-    cSysPkgPMon::vPA08_Set0();
-  #endif
 }
 

@@ -9,6 +9,7 @@
 
 //Data
 #include "cRingBufT.h"
+#include "cI2C.h"
 #include "cBnLinkI2c.h"
 
 #include "cBotnet.h"

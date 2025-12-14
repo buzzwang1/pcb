@@ -46,9 +46,9 @@
 //
 //
 //
-//  I2C2  -> BotNet 1.0.0.0
-//    PB06  -> I2C2 SCL
-//    PB07  -> I2C2 SDA
+//  I2C1  -> BotNet 1.0.0.0
+//    PB06  -> I2C1 SCL
+//    PB07  -> I2C1 SDA
 //
 //  U1    -> BotNet 1.E.0.0
 //    PA09  -> U1 Tx/Rx
@@ -202,7 +202,7 @@ void BusFault_Handler(void)
 
 
 void UsageFault_Handler(void)
-{  
+{
   cErr::munErr->stErr.isUsageFault = 1;
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)

@@ -23,21 +23,19 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.07
+    Data/ComDat/ComDat/v00.01.00
 
-    Data/Mem/MemTools/v00.00.03:default_arm
-    Data/Mem/Buffer/BArray/BArrayT/v00.00.02|-Ofast
-    Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01|-Ofast
+    Data/Mem/MemTools/v00.00.03:default
+    Data/Mem/Buffer/BArray/BArrayT/v00.01.00
     Data/Mem/Buffer/Ring/RingBufT/v00.00.03
-    Data/Mem/Buffer/Ring/ComBuf/v00.00.03|-Ofast
     Data/Mem/MemPart/v00.00.01
     Data/Mem/RomConst/v00.00.02:STM32L433CCT:MiniAddOnPSwitchI2cv3
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
 
-    Data/String/Cli/v00.00.01
-    Data/String/CStrT/v00.00.01
-    Data/String/StringTools/v00.00.02
+    Data/String/Cli/v00.01.00:default   
+    Data/String/CStrT/v00.01.00:default
+    Data/String/StringTools/v00.00.02 
 
     Data/DateTime/Clock/v00.00.03:STM32L4
     Data/Math/Pid/Float/v00.00.01
@@ -51,11 +49,11 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/Device/stm32l433xx:default
     Driver/STM32/L4/HAL/v01.15.01/HAL:lib_o3_24Mhz
     Driver/STM32/L4/HAL/GPPin/v01.00.02
-    Driver/STM32/L4/HAL/cI2C/v01.00.09
+    Driver/STM32/L4/HAL/cI2C/v01.01.00
 
-    Driver/STM32/Device/INA3221/v01.00.01
-    Driver/STM32/Device/LM75/v01.00.00
-    Driver/STM32/Device/Displays/SSD1306/v01.00.01:A_128x64x1BPP
+    Driver/STM32/Device/INA3221/v01.01.00
+    Driver/STM32/Device/LM75/v01.01.00
+    Driver/STM32/Device/Displays/SSD1306/v01.01.00:128x64x1BPP
 
     System/CyclicCaller/v00.00.02_mini:stm32l4xx_TIM6
     System/STM32/ClockInfo/v00.00.01:stm32l4xx
@@ -71,7 +69,7 @@ set(PCB_ProjectPackageList
     Gfx/Paint/Basic/v00.00.01
     Gfx/Sprite/Sprite/v00.00.01
     Gfx/Sprite/SEngine/v00.00.01
-    Gfx/Font/RFont/v00.00.01
+    Gfx/Font/RFont/v00.00.02
 
     APP/LED/v00.00.01:STM32L4_HAL
 

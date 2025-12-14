@@ -33,9 +33,9 @@ set(PCB_ProjectPackageList
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
 
-    Data/String/Cli/v00.01.00:noHist
+    Data/String/Cli/v00.01.00:default   
     Data/String/CStrT/v00.01.00:default
-    Data/String/StringTools/v00.00.02
+    Data/String/StringTools/v00.00.02 
 
     Data/DateTime/Clock/v00.00.03:STM32L4
     Data/Math/Pid/Float/v00.00.01
@@ -44,18 +44,19 @@ set(PCB_ProjectPackageList
     Data/Sys/Err/Def/v00.00.01:stm32l433
     Data/Sys/Err/cErr/v00.00.01:stm32l433
 
+
     Data/BotNet/v00.01.00/Base/Main/v00.00.02:default
       Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
+      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
     Data/BotNet/v00.01.00/BnLinks/Base/v00.00.02:default
       Data/BotNet/v00.01.00/BnLinks/UsartMpHd/v00.00.04:default
-      Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default
+      Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default    
       Data/BotNet/v00.01.00/BnLinks/BotCom/v00.00.03:default
-      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.02:default
+      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.03:default
       #Data/BotNet/v00.01.00/BnLinks/nRf905Net/v00.00.03:default
     Data/BotNet/v00.01.00/BnMsgSys/Base/v00.00.02:default
       Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:default
@@ -81,8 +82,8 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/INA3221/v01.01.00
     Driver/STM32/Device/MP8859/v01.01.00
     Driver/STM32/Device/EEP/v01.01.00:ZD24C08A
-    #Driver/STM32/Device/APDS9960/v01.00.00
-    #Driver/STM32/Device/LM75/v01.00.00
+    #Driver/STM32/Device/APDS9960/v01.01.00:default
+    #Driver/STM32/Device/LM75/v01.01.00
     #Driver/STM32/Device/Displays/SSD1306/v01.01.00:128x64x1BPP
 
     System/CyclicCaller/v00.00.02_mini:stm32l4xx_TIM6

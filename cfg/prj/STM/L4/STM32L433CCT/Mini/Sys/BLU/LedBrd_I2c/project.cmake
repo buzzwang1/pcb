@@ -37,39 +37,39 @@ endif()
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.07
+    Data/ComDat/ComDat/v00.01.00
 
-    Data/Mem/MemTools/v00.00.03:default_arm
-    Data/Mem/Buffer/BArray/BArrayT/v00.00.02
-    Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01
+    Data/Mem/MemTools/v00.00.03:default
+    Data/Mem/Buffer/BArray/BArrayT/v00.01.00
     Data/Mem/Buffer/Ring/RingBufT/v00.00.03
-    Data/Mem/Buffer/Ring/ComBuf/v00.00.03
     Data/Mem/MemPart/v00.00.01
     Data/Mem/RomConst/v00.00.02:STM32L433CCT:Miniv10b2:default
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
 
 
-    Data/BotNet/v00.00.06/Base/Main/v00.00.02:UpLinkOnly
-      Data/BotNet/v00.00.06/Base/Misc/Adr/v00.00.01:default
-      Data/BotNet/v00.00.06/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.00.06/Base/Misc/ErrCnt/v00.00.01:Dummy
-      Data/BotNet/v00.00.06/Base/Misc/Spop/v00.00.02:STM32L433CCT
-      Data/BotNet/v00.00.06/Base/Misc/Msg/v00.00.01:default
-    Data/BotNet/v00.00.06/BnLinks/Base/v00.00.02:default
-      Data/BotNet/v00.00.06/BnLinks/I2c/v00.00.05:default
-      #Data/BotNet/v00.00.06/BnLinks/nRf905/v00.00.02:default
-      #Data/BotNet/v00.00.06/BnLinks/nRf905Net/v00.00.03:default
-    Data/BotNet/v00.00.06/BnMsgSys/Base/v00.00.02:default
-      Data/BotNet/v00.00.06/BnMsgSys/RRpt/v00.00.01:Dummy
-      Data/BotNet/v00.00.06/BnMsgSys/Btr/v00.00.02:default
-      Data/BotNet/v00.00.06/BnMsgSys/Spop/v00.00.02:default
-    Data/BotNet/v00.00.06/BnStreamSys/Base/v00.00.01:Dummy
-      Data/BotNet/v00.00.06/BnStreamSys/Ports/Base/v00.00.01:Dummy
+    Data/BotNet/v00.01.00/Base/Main/v00.00.02:UpLinkOnly
+      Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
+      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default_Blu
+      Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:Dummy
+      Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
+      Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default
+    Data/BotNet/v00.01.00/BnLinks/Base/v00.00.02:default
+      #Data/BotNet/v00.01.00/BnLinks/UsartMpHd/v00.00.04:default
+      Data/BotNet/v00.01.00/BnLinks/I2c/v00.00.05:default
+      #Data/BotNet/v00.01.00/BnLinks/nRf905/v00.00.03:default
+      #Data/BotNet/v00.01.00/BnLinks/nRf905Net/v00.00.03:default
+    Data/BotNet/v00.01.00/BnMsgSys/Base/v00.00.02:default
+      Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:Dummy
+      Data/BotNet/v00.01.00/BnMsgSys/Btr/v00.00.02:default
+      Data/BotNet/v00.01.00/BnMsgSys/Spop/v00.00.02:default
+    Data/BotNet/v00.01.00/BnStreamSys/Base/v00.00.01:Dummy
+      Data/BotNet/v00.01.00/BnStreamSys/Ports/Base/v00.00.01:Dummy
 
 
-    Data/String/Cli/v00.00.01_noHist    
-    Data/String/CStrT/v00.00.01_NoFpu
+    Data/String/Cli/v00.01.00:noHist   
+    Data/String/CStrT/v00.01.00:NoFpu
     Data/String/StringTools/v00.00.02
 
     Driver/ARM/Cmsis/V05.00.08/Core:CM4
@@ -78,10 +78,10 @@ set(PCB_ProjectPackageList
     Driver/STM32/L4/HAL/v01.15.01/HAL:${lLibExtention}
     Driver/STM32/L4/HAL/GPPin/v01.00.02
     #Driver/STM32/L4/HAL/cUart/Int/v01.00.01
-    #Driver/STM32/L4/Hal/cUart/MpHd/v01.00.03_Mini:Tim15
-    Driver/STM32/L4/Hal/cI2C/v01.00.09
+    #Driver/STM32/L4/HAL/cUart/MpHd/v01.01.00_Mini:Tim15
+    Driver/STM32/L4/HAL/cI2C/v01.01.00
 
-    #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv7b2_STM32L433CCT
+    #Driver/STM32/Device/Com/nRF905/Int/v01.01.00:MBv7b2_STM32L433CCT
     Driver/STM32/Device/EEP/v01.00.00:Dummy
 
     APP/LED/v00.00.01:STM32L4_HAL

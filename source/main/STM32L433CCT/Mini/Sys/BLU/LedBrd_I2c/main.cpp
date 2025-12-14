@@ -29,8 +29,10 @@
 //      7: I2C1 Rx: BotNet CS:3 / Usart2 Tx BotNet CS:2
 
 __IO uint32_t TimingDelay = 0;
-LED<GPIOB_BASE, 9> mcLed;
 u32   mu32SpopCounter;
+
+LED<GPIOB_BASE, 9> mcLed;
+
 
 
 
@@ -46,7 +48,6 @@ cBotNet    mcBn(&mcMyBotNetCfg1);
 
 // I2C1: UpLink
 cBotNet_UpLinkI2c     mcUpLink(&mcI2C1_BnSlave);
-
 
 void NMI_Handler(void)
 {
@@ -163,65 +164,20 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 void I2C1_EV_IRQHandler(void)
 {
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
   mcI2C1_BnSlave.I2C_EV_IRQHandler();
 
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[0].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[0].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
 }
 
 void I2C1_ER_IRQHandler(void)
 {
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    u32 lu32TimStart = cDiffTimerHw::u32GetTimer();
-  ////    u32 lu32TimEnd; mu8IntLvl++;
-  ////    mcPA05.vSet1();
-  ////  #endif
-  ////#endif
-
   mcI2C1_BnSlave.I2C_ER_IRQHandler();
-
-  ////#ifdef PCB_PROJECTCFG_Test
-  ////  #ifdef TESTI2C1IRQ
-  ////    mcPA05.vSet0();
-  ////    lu32TimEnd = cDiffTimerHw::u32GetTimer();
-  ////    if (lu32TimEnd > lu32TimStart)
-  ////    {
-  ////      mcTestClassMaxCyc[1].vSetMaxTimer(lu32TimEnd - lu32TimStart);
-  ////    }
-  ////    mcTestClassMaxCyc[1].vSetMaxIntLvl(mu8IntLvl); mu8IntLvl--;
-  ////  #endif
-  ////#endif
 }
-
-
-void MAIN_vTick1msHp(void)
-{
-  mcBn.vTickHp1ms();
-}
-
 
 
 void MAIN_vTick1msLp(void)
 {
   mcBn.vProcess(1000);
+  mcI2C1_BnSlave.vTick1ms();
 
   if (mcBn.mcSpop.isEnable()) mu32SpopCounter = 1000 * 60 * 2; // 2 min
 
@@ -259,6 +215,7 @@ void MAIN_vInitSystem(void)
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
   cBnSpop_vResetWdog();
+  cBnMsgPool::vInit();
 
   /* STM32L4xx HAL library initialization:
        - Configure the Flash prefetch
@@ -275,7 +232,7 @@ void MAIN_vInitSystem(void)
   mcBn.bAddLink((cBotNet_LinkBase*)&mcUpLink);
   mu32SpopCounter = 1000 * 60 * 2;
 
-  CycCall_Start(MAIN_vTick1msHp /*1ms_HP*/,
+  CycCall_Start(NULL /*1ms_HP*/,
                 NULL /*10ms_HP*/,
                 NULL /*100ms_HP*/,
                 NULL /*1s_HP*/,
@@ -358,11 +315,6 @@ void SystemClock_Config_HSE(void)
 // This is called from the Startup Code, before the c++ contructors
 void MainSystemInit()
 {
-  // PB09 zum Test einschalten
-  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
-  GPIOB->MODER &= ~(2 << (2 * 9));
-  GPIOB->BSRR = (1 << 9);
-
   cBnSpop_vResetWdog();
   SystemInit();
   HAL_Init();
