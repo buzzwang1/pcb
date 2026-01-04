@@ -51,6 +51,7 @@ class cWorkMode
 class cSystemPowerDown
 {
   public:
+    bool mbWakeupRequest = True;  
     virtual bool bContinue() = 0;           // Continue after PowerDown
     virtual bool bExitRun() = 0;            // 1. stage PowerDown. Should be used to inform connected devices to go to powerdown
     virtual bool bPreparePowerdown() = 0;   // 2. stage. Stop communication
@@ -107,6 +108,7 @@ class cPowerManager
   void vStart();
   void vStart(u16 lu16DRunTimerReload);
 
+  void vUpdateSysState();
   void vTick10ms();
 };
 

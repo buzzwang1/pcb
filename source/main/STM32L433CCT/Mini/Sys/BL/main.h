@@ -27,4 +27,7 @@ extern void DebugMon_Handler(void);
 extern void PendSV_Handler(void);
 extern void SysTick_Handler(void);
 
+
+extern void MainSystemInit();
+
 #endif /* _MAIN_H_ */

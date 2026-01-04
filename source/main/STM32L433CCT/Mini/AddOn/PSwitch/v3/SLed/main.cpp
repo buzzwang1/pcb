@@ -1456,7 +1456,7 @@ public:
       lcCli->bPrintLn(mcSys.mszErrorInfo);
 
       lcCli->bPrintLn((rsz)"");
-      lszStr.Setf((const char8*)"Mode %s (%d)", mcSys.mcSMan.mcOpMode.ToString(), mcSys.mcSMan.mcOpMode.mCounter);
+      lszStr.Setf((const char8*)"Mode %s (%d)", mcSys.mcSMan.mcOpMode.ToString(), mcSys.mcSMan.mcOpMode.mCounter_s);
       lcCli->bPrintLn(lszStr);
       return True;
     }
@@ -1742,21 +1742,20 @@ public:
   bool bMsg(cBotNetMsg_MsgProt& lcMsg)
   {
     bool lbConsumed = False;
+    u8* lpu8PayloadRx = lcMsg.GetPayload().mpu8Data;
 
-    switch (lcMsg.mu16Idx)
+    switch (lcMsg.u16GetIdx())
     {
       // --------------------------- SLED Messages -----------------------------
       case 40: // Request message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 0: // SLED.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               u8 lu8Data[11];
 
               // Response Message
-              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 41);
-
               lu8Data[0] = 0;
               lu8Data[1] = 0;
               lu8Data[2] = 0;
@@ -1769,9 +1768,7 @@ public:
               lu8Data[9] = mcTemp.i16GetTemp(0) >> 8;
               lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
-              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-              lcMsg.vEncode();
-              mcBn->bSendMsg(&lcMsg);
+              u8PutInt(lcMsg.cGetDAdr(), lcMsg.cGetSAdr(), 41, lu8Data, sizeof(lu8Data));
 
               lbConsumed = True;
             }
@@ -1785,25 +1782,25 @@ public:
         //                                                                 //  [5] AI: Animation Index
         //                                                                 //  [6] RGB: RGB value
         //                                                                 //  [7] TH.TL: max. Temperature value (°C,  int16)
-          switch (lcMsg.mcPayload[0])
+          switch (lpu8PayloadRx[0])
           {
             case 0: // SLED.Status
-              if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+              if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
               {
                 u8 lu8AnimCnt;
                 lu8AnimCnt = ((sizeof(mLstLedAnims) / sizeof(cLedAnimation*)) - 1);
 
-                mcData.mData.u16TurnOnState = lcMsg.mcPayload[3] & 1;
+                mcData.mData.u16TurnOnState = lpu8PayloadRx[3] & 1;
 
-                i16 li16RotCnt = lcMsg.mcPayload[4];
+                i16 li16RotCnt = lpu8PayloadRx[4];
                 if (li16RotCnt > 12) li16RotCnt = 12;
                 mcUI.vSetRotCnt(li16RotCnt);
 
-                mcData.mData.u16LedAnimationIdx = lcMsg.mcPayload[5] % lu8AnimCnt;
-                mcData.mData.u8CustR            = lcMsg.mcPayload[6];
-                mcData.mData.u8CustG            = lcMsg.mcPayload[7];
-                mcData.mData.u8CustB            = lcMsg.mcPayload[8];
-                mcData.mData.i16MaxTemp         = (lcMsg.mcPayload[9] << 8) + lcMsg.mcPayload[10];
+                mcData.mData.u16LedAnimationIdx = lpu8PayloadRx[5] % lu8AnimCnt;
+                mcData.mData.u8CustR            = lpu8PayloadRx[6];
+                mcData.mData.u8CustG            = lpu8PayloadRx[7];
+                mcData.mData.u8CustB            = lpu8PayloadRx[8];
+                mcData.mData.i16MaxTemp         = (lpu8PayloadRx[9] << 8) + lpu8PayloadRx[10];
 
                 if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
                 {
@@ -1819,11 +1816,11 @@ public:
               break;
             case 1: //  Set 16Bit Values
               // RX 01 | 00 | 00 | 01.D0.D0.D1.D1.D2.D2
-              if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+              if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
               {
-                mu16Data[0] = (lcMsg.mcPayload[4] << 8) + lcMsg.mcPayload[5];
-                mu16Data[1] = (lcMsg.mcPayload[6] << 8) + lcMsg.mcPayload[7];
-                mu16Data[2] = (lcMsg.mcPayload[8] << 8) + lcMsg.mcPayload[9];
+                mu16Data[0] = (lpu8PayloadRx[4] << 8) + lpu8PayloadRx[5];
+                mu16Data[1] = (lpu8PayloadRx[6] << 8) + lpu8PayloadRx[7];
+                mu16Data[2] = (lpu8PayloadRx[8] << 8) + lpu8PayloadRx[9];
                 lbConsumed = True;
               }
               break;
@@ -1847,10 +1844,6 @@ void vSendStatus()
 
     u8 lu8Data[11];
 
-    // Response Message
-    // Status Nachricht alle 100ms senden     Name  Size   S                             D    MsgIdx
-    cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsg, 32, mcSys.mcCom.mcBn.mcAdr.Get(), 0x1000, 41);
-
     lu8Data[0] = 0;
     lu8Data[1] = 0;
     lu8Data[2] = 0;
@@ -1863,9 +1856,10 @@ void vSendStatus()
     lu8Data[9] = mcTemp.i16GetTemp(0) >> 8;
     lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
-    lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-    lcMsg.vEncode();
-    mcSys.mcCom.mcBn.bSendMsg(&lcMsg);
+    // Response Message
+    // Status Nachricht alle 100ms senden     
+    //                        S                       D    MsgIdx, Data,   Size   
+    mcSys.mcCom.mcBn.vSendMsg(mcSys.mcCom.mcBn.mcAdr, 0x1000, 41, lu8Data, sizeof(lu8Data));
   }
 }
 

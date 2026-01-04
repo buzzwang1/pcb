@@ -1201,20 +1201,19 @@ public:
   {
     bool lbConsumed = False;
 
-    switch (lcMsg.mu16Idx)
+    u8* lpu8PayloadRx = lcMsg.GetPayload().mpu8Data;
+    switch (lcMsg.u16GetIdx())
     {
       case 32: // Request message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 2: // Power
             // Power.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               u8 lu8Data[19];
 
               // Response Message
-              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 33);
-
               lu8Data[ 0] = 2; // R1
               lu8Data[ 1] = 0; // S1
               lu8Data[ 2] = 0; // S2
@@ -1239,9 +1238,7 @@ public:
               lu8Data[17] = mcSys.mcBoard.mcBoardCntrl.i16GetChCurrentAbs(3) >> 8;
               lu8Data[18] = mcSys.mcBoard.mcBoardCntrl.i16GetChCurrentAbs(3) & 0xFF;
 
-              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-              lcMsg.vEncode();
-              mcBn->bSendMsg(&lcMsg);
+              u8PutInt(lcMsg.cGetDAdr(), lcMsg.cGetSAdr(), 33, lu8Data, sizeof(lu8Data));
 
               lbConsumed = True;
             }
@@ -1250,16 +1247,16 @@ public:
         break;
 
       case 34: // Set message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 2: // Power
             // Power.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
-              if (lcMsg.mcPayload[3] <= 1) mcSys.mcBoard.mcBoardCntrl.vSetRelais(lcMsg.mcPayload[3]);
-              mcWs2812.vSetPwmLed1(lcMsg.mcPayload[4]);
-              mcWs2812.vSetPwmLed2(lcMsg.mcPayload[5]);
-              mcWs2812.vSetPwmLed3(lcMsg.mcPayload[6]);
+              if (lpu8PayloadRx[3] <= 1) mcSys.mcBoard.mcBoardCntrl.vSetRelais(lpu8PayloadRx[3]);
+              mcWs2812.vSetPwmLed1(lpu8PayloadRx[4]);
+              mcWs2812.vSetPwmLed2(lpu8PayloadRx[5]);
+              mcWs2812.vSetPwmLed3(lpu8PayloadRx[6]);
 
               lbConsumed = True;
             }
@@ -1269,16 +1266,14 @@ public:
 
       // --------------------------- SLED Messages -----------------------------
       case 40: // Request message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 0: // SLED.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               u8 lu8Data[11];
 
               // Response Message
-              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 41);
-
               lu8Data[0] = 0; // R1
               lu8Data[1] = 0; // S1
               lu8Data[2] = 0; // S2
@@ -1300,9 +1295,7 @@ public:
               lu8Data[ 9] = mcTemp.i16GetTemp(0) >> 8;
               lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
-              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-              lcMsg.vEncode();
-              mcBn->bSendMsg(&lcMsg);
+              u8PutInt(lcMsg.cGetDAdr(), lcMsg.cGetSAdr(), 41, lu8Data, sizeof(lu8Data));
 
               lbConsumed = True;
             }
@@ -1316,26 +1309,26 @@ public:
         //                                                                 //  [5] AI: Animation Index
         //                                                                 //  [6] RGB: RGB value
         //                                                                 //  [7] TH.TL: max. Temperature value (°C,  int16)
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 0: // SLED.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               u8 lu8Brightness;
               u8 lu8AnimCnt;
 
-              lu8Brightness = lcMsg.mcPayload[3];
+              lu8Brightness = lpu8PayloadRx[3];
               if (lu8Brightness > 1) lu8Brightness = 1;
 
-              mcData.mData.u16Brigthness = lcMsg.mcPayload[4] * lu8Brightness;
+              mcData.mData.u16Brigthness = lpu8PayloadRx[4] * lu8Brightness;
 
               lu8AnimCnt = ((sizeof(mLstLedAnims) / sizeof(cLedAnimation*)) - 1);
 
-              mcData.mData.u16LedAnimationIdx = lcMsg.mcPayload[5] % lu8AnimCnt;
-              mcData.mData.u8CustR            = lcMsg.mcPayload[6];
-              mcData.mData.u8CustG            = lcMsg.mcPayload[7];
-              mcData.mData.u8CustB            = lcMsg.mcPayload[8];
-              mcData.mData.i16MaxTemp         = (lcMsg.mcPayload[9] << 8) + lcMsg.mcPayload[10];
+              mcData.mData.u16LedAnimationIdx = lpu8PayloadRx[5] % lu8AnimCnt;
+              mcData.mData.u8CustR            = lpu8PayloadRx[6];
+              mcData.mData.u8CustG            = lpu8PayloadRx[7];
+              mcData.mData.u8CustB            = lpu8PayloadRx[8];
+              mcData.mData.i16MaxTemp         = (lpu8PayloadRx[9] << 8) + lpu8PayloadRx[10];
 
               if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
               {

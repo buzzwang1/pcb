@@ -98,14 +98,14 @@
 #define u8GetRomConstBoardType()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280)))        // Defaultvalue 0:     Type des Boards
 #define u8GetRomConstChrgCellCount()         (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0281)))        // Defaultvalue 1:     Anzahl Zellen der Lipo
 #define u8GetRomConstChrgModeCharged()       (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0282)))        // Defaultvalue 0:     Verhalten, wenn Laden beendet, 0: Charger aus, 1: Erhaltungsspannung
-#define u8GetRomConstChrgModeStart()         (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0283)))        // Defaultvalue 1:     Verhalten, wenn Laden gestartet wird, 0: Sobald Spannung kleiner ChrgVoltStart, 1: Sobald Eingangsspannung vorhanden
+#define u8GetRomConstChrgModeStart()         (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0283)))        // Defaultvalue 0:     Verhalten, wenn Laden gestartet wird, 0: Sobald Spannung kleiner ChrgVoltStart, 1: Sobald Eingangsspannung vorhanden
 #define u16GetRomConstChrgVoltLipoOff()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284)))       // Defaultvalue 2800:  VoltLipoOff [mV]        Tiefentladeschutz. Bei der Spannung schaltet sich der uC ab. Versorgung zur Lipo wird getrennt
 #define u16GetRomConstChrgVoltSysOff()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0286)))       // Defaultvalue 3000:  VoltSysOff [mV]         Unterspannungsschutz. Bei der Spannung wird der Ausgang ausgeschaltet und der uC geht in  den Stromsparmodus
 #define u16GetRomConstChrgMaxVoltCell()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288)))       // Defaultvalue 4050:  MaxVoltCell [mV]        Ladeschlussspannung. Bei der Spannung ist die Lipo geladen
 #define u16GetRomConstChrgVoltBalance()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028A)))       // Defaultvalue 4200:  VoltBalance [mV]        Balancespannung. Bei der Spannung wird beim Laden der Balancer der Zelle aktiviert.  (0 == Balancer aus)
 #define u16GetRomConstChrgCurrentSave()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C)))       // Defaultvalue 25:    CurrentSave [mA]        Sichere Ladestrom. Ladestrom bei tiefentladener Zelle oder wenn Balancer einer Zelle an ist.
-#define u16GetRomConstChrgCurrentCharged()   (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028E)))       // Defaultvalue 9999:  CurrentCharged [mA]     Laden wird beendet, sobald diese Strom unterschritten ist
-#define u16GetRomConstChrgVoltStart()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290)))       // Defaultvalue 3400:  VoltStart [mV]          Spannung, bei der das Laden gestartet wird
+#define u16GetRomConstChrgCurrentCharged()   (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028E)))       // Defaultvalue 300:   CurrentCharged [mA]     Laden wird beendet, sobald diese Strom unterschritten ist
+#define u16GetRomConstChrgVoltStart()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290)))       // Defaultvalue 3600:  VoltStart [mV]          Spannung, bei der das Laden gestartet wird
 #define u16GetRomConstChrgMaxCurrentBat()    (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0292)))       // Defaultvalue 100:   MaxCurrentBat [mA]      Ladestrombegrenzung. Maximaler Ladestrom der Akku.
 #define u16GetRomConstChrgVoltCellDefect()   (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294)))       // Defaultvalue 1500:  VoltCellDefect [mV]     Defektspannung. Bei dieser Spannung wird die Zelle als defekt erkannt und die Versorgung zur Lipo wird getrennt
 #define u16GetRomConstChrgVoltPowerInCharged() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0296)))     // Defaultvalue 100:   VoltPowerInCharged [mV] Erhaltungsspannung. Sobald Lipo fertig geladen ist, wird diese Spannung eingestellt
@@ -186,5 +186,5 @@
 #define fGetRomConstModulOutOutCurrLpOut()   (*((float*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03BC)))     // Defaultvalue 1.0:   LP_Out
 #define u8GetRomConstReserve10()             (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F0)))         // Defaultvalue 255    
 #define u8GetRomConstReserve11()             (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))         // Defaultvalue 255    
-#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 59724  
+#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 59659  
 #define rszGetRomConstMagicPattern2()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03FC))           // Defaultvalue FLKA   

@@ -180,7 +180,7 @@ void MAIN_vTick1msLp(void)
 
   if (mcBn.mcSpop.isEnable()) mu32SpopCounter = 1000 * 60 * 2; // 2 min
 
-  if (mu32SpopCounter > 10)
+  if (mu32SpopCounter > 0)
   {
     mu32SpopCounter--;
   }
@@ -203,8 +203,31 @@ void MAIN_vTick1000msHp(void)
 {
 }
 
+
+void vSetPingData()
+{
+  tstBuRamDef* lstBuRamDef = (tstBuRamDef*)((RTC_BASE + 0x50));
+  u8 lszData[14];
+  //  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+  // WH.WL EH.EL.00.00 00.00.BR.TS 00.00.00.ID
+  cMemTools::vMemSet(lszData, 0, 14);
+  //lszData[0] = 0;
+  lszData[1] = (u8)lstBuRamDef->u32WuReason;
+  //lszData[2] = 0;
+  lszData[3] = (u8)lstBuRamDef->u32Err;
+  lszData[8] = (u8)lstBuRamDef->u32BluReason;
+
+  if ((mu32SpopCounter/1000) > 255) lszData[9] = 255;
+  else lszData[9] = (u8)((u32)mu32SpopCounter/1000);
+
+  lszData[13] = 1;
+
+  mcSideLink.vSetPingData(lszData);
+}
+
 void MAIN_vTick1000msLp(void)
 {
+  vSetPingData();
 }
 
 
@@ -216,6 +239,10 @@ void MAIN_vInitSystem(void)
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
   cBnSpop_vResetWdog();
   cBnMsgPool::vInit();
+
+  // BuRam-Zugriff freischalten
+  LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
+  LL_PWR_EnableBkUpAccess();
 
   /* STM32L4xx HAL library initialization:
        - Configure the Flash prefetch
@@ -229,6 +256,7 @@ void MAIN_vInitSystem(void)
      */
   HAL_Init();
 
+  vSetPingData();
   mcSideLink.vSetTiming(5 * 1000, 50); // 15s Ping Interval, 50ms warten auf eine Session nach Ping.
 
   // AddLink initialisiert beim Slave auch direkt die HW
@@ -237,7 +265,7 @@ void MAIN_vInitSystem(void)
   mcBn.bAddLink((cBotNet_LinkBase*)&mcSideLink, 0xE000);
 
 
-  mu32SpopCounter = 1000 * 60 * 20;
+  mu32SpopCounter = 1000 * 60 * 2;
 
   //{
   //  u8 lszData[16];
@@ -258,7 +286,7 @@ void MAIN_vInitSystem(void)
                 MAIN_vTick1msLp    /*1ms_LP*/,
                 NULL   /*10ms_LP*/,
                 MAIN_vTick100msLp  /*100ms_LP*/,
-                NULL /*1s_LP*/);
+                MAIN_vTick1000msLp /*1s_LP*/);
   cBnSpop_vResetWdog();
 }
 
@@ -285,50 +313,72 @@ int main(void)
 void SysError_Handler()
 {
   while (1)
-  {};
+  {
+    __asm("nop");
+  };
 }
 
-void SystemClock_Config_HSE(void)
+bool SystemClock_Config_HSE(void)
 {
-  // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
-  // kein Pll
-
-  RCC_OscInitTypeDef RCC_OscInitStruct   = {};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
-
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  u16 lu16Retries = 100;
+  bool lbError = False;
+  while (lu16Retries > 0)
   {
-    SysError_Handler();
+    lbError = False;
+    cBnSpop_vResetWdog();
+
+    // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
+    // kein Pll
+
+    RCC_OscInitTypeDef RCC_OscInitStruct   = {};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
+    RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+      //cErr::munErr->stErr.isInitOscCfg = 1;
+      lbError = True;
+    }
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
+                                  RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+    {
+      //cErr::munErr->stErr.isInitClkCfg = 1;
+      lbError = True;
+    }
+
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_RCC_RTCAPB_CLK_ENABLE();
+
+    // Configure the main internal regulator output voltage
+    if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+    {
+      //cErr::munErr->stErr.isInitVltScl = 1;
+      lbError = True;
+    }
+
+    if (!lbError) break;
+
+    lu16Retries--;
   }
 
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
-                                RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
-  RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  if (lu16Retries == 0) return False;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    SysError_Handler();
-  }
-
-  __HAL_RCC_SYSCFG_CLK_ENABLE();
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_RCC_RTCAPB_CLK_ENABLE();
-
-  // Configure the main internal regulator output voltage
-  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-  {
-    SysError_Handler();
-  }
+  return True;
 }
+
 
 // This is called from the Startup Code, before the c++ contructors
 void MainSystemInit()

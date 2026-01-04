@@ -90,7 +90,7 @@ cRingBufDynT<u8, u16> mcUartDataOut(128);
 cCncAchse mcAX(&mRefX, &mRichtX, &mTaktX);
 cCncAchse mcAY(&mRefY, &mRichtY, &mTaktY);
 cCncAchse mcAZ(&mRefZ, &mRichtZ, &mTaktZ);
-cCnc mcCnc(&mcUartDataOut, TIM15, TIM12, &mcAX, &mcAY, &mcAZ, &mStromAbs);
+cCnc mcCnc(&mcUartDataOut, TIM15, TIM12, &mcAX, &mcAY, &mcAZ, &mStromAbs, &mTaktAbs);
 cPal mcPal(&mcCnc, &mcUartDataIn, &mcUartDataOut);
 
 u16 mu8CncInputLines = 0;

@@ -54,13 +54,14 @@ cPowerManager::cPowerManager(u16 lu16DRunTimer, u16 lu16DExitRunTimer,
                             cSystemPowerDown* lcPowerDown)
 {
   enSm = nStIdle;
+  cBuRam::mBuRam->u32SysStates = enSm;
   enSysState = nStInit;
 
-  mu16DRunTimer = lu16DRunTimer;
-  mu16DRunTimerReload = mu16DRunTimer;
-  mu16DExitRunTimer = lu16DExitRunTimer;
-  mu16DExitRunTimerReload = mu16DExitRunTimer;
-  mu16PreparePowerDownTimer = lu16PreparePowerDownTimer;
+  mu16DRunTimer                   = lu16DRunTimer;
+  mu16DRunTimerReload             = mu16DRunTimer;
+  mu16DExitRunTimer               = lu16DExitRunTimer;
+  mu16DExitRunTimerReload         = mu16DExitRunTimer;
+  mu16PreparePowerDownTimer       = lu16PreparePowerDownTimer;
   mu16PreparePowerDownTimerReload = mu16PreparePowerDownTimer;
 
   mu16WakeUpTime = lu16WakeUpTime;
@@ -73,6 +74,7 @@ void cPowerManager::vContinueAfterWakeup()
   if (mcPowerDown->bContinue())
   {
     enSm = nStWaitForRun;
+    vUpdateSysState();
     vStart();
   }
 }
@@ -86,6 +88,7 @@ void cPowerManager::vStart()
   {
     mu16DRunTimer = mu16DRunTimerReload;
     enSm = nStWaitForRun;
+    vUpdateSysState();
   }
 }
 
@@ -100,8 +103,18 @@ void cPowerManager::vStart(u16 lu16DRunTimer)
       mu16DRunTimer = lu16DRunTimer;
     }
     enSm = nStWaitForRun;
+    vUpdateSysState();
   }
 }
+
+void cPowerManager::vUpdateSysState()
+{
+  cBuRam::mBuRam->u32SysStates <<= 8;
+  cBuRam::mBuRam->u32SysStates &= 0xFFFFFF00;
+  cBuRam::mBuRam->u32SysStates |= ((u8)enSm);
+}
+
+
 
 void cPowerManager::vTick10ms()
 {
@@ -112,66 +125,70 @@ void cPowerManager::vTick10ms()
     lbLoop = False;
     switch (enSm)
     {
-    case nStIdle:
-      break;
-    case nStWaitForRun:
-      enSysState = nStRun;
+      case nStIdle:
+        break;
+      case nStWaitForRun:
+        enSysState = nStRun;
 
-      if (mu16DRunTimer)
-      {
-        mu16DRunTimer--;
-      }
-      else
-      {
-        if (mcPowerDown->bExitRun())
+        if (mu16DRunTimer)
         {
-          enSm = nStWaitForExitRun;
-          mu16DExitRunTimer = mu16DExitRunTimerReload;
+          mu16DRunTimer--;
         }
-      }
-      break;
-    case nStWaitForExitRun:
-      if (mu16DExitRunTimer)
-      {
-        mu16DExitRunTimer--;
-      }
-      else
-      {
-        enSysState = nStPreparePowerDown;
-        if (mcPowerDown->bPreparePowerdown())
+        else
         {
-          enSm = nStWaitForPreparePowerdown;
-          mu16PreparePowerDownTimer = mu16PreparePowerDownTimerReload;
+          if (mcPowerDown->bExitRun())
+          {
+            enSm = nStWaitForExitRun;
+            vUpdateSysState();
+            mu16DExitRunTimer = mu16DExitRunTimerReload;
+          }
         }
-      }
-      break;
-    case nStWaitForPreparePowerdown:
-      if (mu16PreparePowerDownTimer)
-      {
-        mu16PreparePowerDownTimer--;
-      }
-      else
-      {
-        enSysState = nStWaitForPowerDown;
-        if (mcPowerDown->bGotoPowerDown())
+        break;
+      case nStWaitForExitRun:
+        if (mu16DExitRunTimer)
         {
-          enSm = nStWaitForGotoPowerDown;
-          lbLoop = True;
+          mu16DExitRunTimer--;
         }
-      }
-      break;
-    case nStWaitForGotoPowerDown:
+        else
+        {
+          enSysState = nStPreparePowerDown;
+          if (mcPowerDown->bPreparePowerdown())
+          {
+            enSm = nStWaitForPreparePowerdown;
+            vUpdateSysState();
+            mu16PreparePowerDownTimer = mu16PreparePowerDownTimerReload;
+          }
+        }
+        break;
+      case nStWaitForPreparePowerdown:
+        if (mu16PreparePowerDownTimer)
+        {
+          mu16PreparePowerDownTimer--;
+        }
+        else
+        {
+          enSysState = nStWaitForPowerDown;
+          if (mcPowerDown->bGotoPowerDown())
+          {
+            enSm = nStWaitForGotoPowerDown;
+            vUpdateSysState();
+            lbLoop = True;
+          }
+        }
+        break;
+      case nStWaitForGotoPowerDown:
 
-      mcPowerDown->vEnterPowerDown(mu16WakeUpTime);
+        mcPowerDown->vEnterPowerDown(mu16WakeUpTime);
 
-      if (mcPowerDown->bContinue())
-      {
-        enSm = nStWaitForRun;
-        vStart();
-      }
-      break;
-    default:
-      break;
+        if (mcPowerDown->bContinue())
+        {
+          enSm = nStWaitForRun;
+          vUpdateSysState();
+          vStart();
+        }
+        break;
+      default:
+        break;
     }
   }
 }
@@ -329,13 +346,10 @@ bool cMySystemPowerDown::bExitRun()
     mszNoSleepReason += (rsz)"Wup Pin";
   }
 
-
-
   if (lbRet)
   {
     lbRet = mcSys.mcClock.isReadyForSleep(mszNoSleepReason);
   }
-
 
   if (lbRet)
   {
@@ -357,6 +371,8 @@ bool cMySystemPowerDown::bExitRun()
   }
 
   mszNoSleepReason.ToString();
+
+  mbWakeupRequest = lbRet;
 
   return lbRet;
 }
@@ -431,7 +447,7 @@ cSysPkgSMan::cSysPkgSMan()
     mcWufHandler()
 {
   // Debugger pause
-  // Wenn man zu schnell Schlafen geht, dann kann der Debugger nicht mehr connected
+  // Wenn man zu schnell Schlafen geht, dann kann der Debugger nicht mehr connecten
   // Daher nach POR etwas länger warten
   if ((cWufHandler::munWakeupSources.stWakeupSources.isWuPinRst) ||
       (cWufHandler::munWakeupSources.stWakeupSources.isWuSftRst))

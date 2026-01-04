@@ -131,6 +131,7 @@ typedef union
 
 
 // Union für Byteweiser Zugriff auf uint32
+// Bei ARM GCC B3B2B1B0 Byte[0]  lowest byte
 typedef union
 {
   uint32       ui32Data;

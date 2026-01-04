@@ -82,7 +82,6 @@ public:
   i8  mi8Dir;           // -1;0;1
 
   u8  mu8Ref;
-  u8  mu8RefChanged;
 
   i32 mi32StepIst;       // [Ticks]
   i32 mi32StepIst_Last;  // [Ticks]
@@ -108,33 +107,26 @@ public:
     mu32RefSpeed   = 2000;
     mi32PosIst     = 0;             // [Ticks]
     mi8Dir         = 0;
-    mu8Ref         = 0;
-    mu8RefChanged  = 0;
+
+    isRefSwitch();
 
     mbEnable       = True;
   }
 
   bool isRefSwitch()
   {
-    u8 lu8Ref = !mPinRef->ui8Get();
+    u8 lu8Ref = mPinRef->ui8Get() + mPinRef->ui8Get() + mPinRef->ui8Get();
+
+    if (lu8Ref >= 2) lu8Ref = 1;
+    else if (lu8Ref <= 1) lu8Ref = 0;
+    else lu8Ref = mu8Ref;
+
     if (mu8Ref != lu8Ref)
     {
       mu8Ref = lu8Ref;
-      mu8RefChanged = 1;
-    }
-    else
-    {
-      mu8RefChanged = 0;
     }
     return (mu8Ref > 0);
   };
-
-  bool hasRefSwitchChanged()
-  {
-
-    return (mu8RefChanged == 1);
-  }
-
 
   //  Der Richtungsausgang gibt je nach vorgegebener Drehrichtung des Schrittmotors
   //  ein + 5 V - Signal(Drehrichtung CCW) oder ein 0 V - Signal(Drehrichtung CW) aus.
@@ -172,6 +164,7 @@ public:
   u32    mu32TimeNoMove;       // [ms]
   u32    mu32TimeNoMoveReload; // [ms]
   cGpPin* mPinStromAbs;
+  cGpPin* mPinTaktAbs;
 
   u32    mu32Acc;            // [Hz/ms]
 
@@ -235,7 +228,7 @@ public:
 
   cCncControl(TIM_TypeDef* lstTimDelay, TIM_TypeDef* lstTimStep,
               cCncAchse* lcAX, cCncAchse* lcAY, cCncAchse* lcAZ,
-              cGpPin* lPinStromAbs)
+              cGpPin* lPinStromAbs, cGpPin* lPinTaktAbs)
 
   {
     mi32PosSoll    = 0.0;      // [Ticks]
@@ -260,6 +253,7 @@ public:
     mu32RefTimeout = mu32RefTimeoutReload = 1 * 1000 * 60; // 1min
 
     mPinStromAbs = lPinStromAbs;
+    mPinTaktAbs  = lPinTaktAbs;
 
     TIM_HandleTypeDef lhTimX = {};
 
@@ -432,6 +426,19 @@ public:
     LL_TIM_DisableCounter(mstTimStep);
   }
 
+  void vSetFreigabe()
+  {
+    if (mPinStromAbs->ui8Get() == 1)
+    {
+      mPinStromAbs->vSet0();
+      for (u32 x = 0; x < 5000; x++) __asm("nop");
+    }
+    else
+    {
+      mPinStromAbs->vSet0();
+    }
+  }
+
   void vRefSm(tenRefEvents lenEvent)
   {
     bool lbLoop;
@@ -505,7 +512,8 @@ public:
               if (Z->mbActive) { Z->mi32StepIst = mu32StepsIst * Z->mdFactor; if (Z->mi32StepIst > Z->mi32StepIst_Last) { Z->mi32StepIst_Last = Z->mi32StepIst;  Z->mPinTakt->vSet1(); Z->mu8Step = 1; } }
 
               mu32TimeNoMove = mu32TimeNoMoveReload;
-              mPinStromAbs->vSet1();
+              mPinTaktAbs_>vSet1();
+              mPinStromAbs->vSet0();
 
               LL_TIM_EnableCounter(mstTimStep);
               menDriveMode = enDrvModeSteps;
@@ -544,12 +552,15 @@ public:
           Y->mi32StepIst_Last = 0;
           Z->mi32StepIst_Last = 0;
 
+          mPinTaktAbs->vSet1();
+          vSetFreigabe();
+
+
           if (X->mbActive) { X->mi32StepIst = mu32StepsIst * X->mdFactor; if (X->mi32StepIst > X->mi32StepIst_Last) { X->mi32StepIst_Last = X->mi32StepIst;  X->mPinTakt->vSet1(); X->mu8Step = 1; }}
           if (Y->mbActive) { Y->mi32StepIst = mu32StepsIst * Y->mdFactor; if (Y->mi32StepIst > Y->mi32StepIst_Last) { Y->mi32StepIst_Last = Y->mi32StepIst;  Y->mPinTakt->vSet1(); Y->mu8Step = 1; }}
           if (Z->mbActive) { Z->mi32StepIst = mu32StepsIst * Z->mdFactor; if (Z->mi32StepIst > Z->mi32StepIst_Last) { Z->mi32StepIst_Last = Z->mi32StepIst;  Z->mPinTakt->vSet1(); Z->mu8Step = 1; }}
 
           mu32TimeNoMove = mu32TimeNoMoveReload;
-          mPinStromAbs->vSet1();
 
           mu32SpeedSoll = mu32RefSpeed;
 
@@ -606,7 +617,8 @@ public:
             if (Z->mbActive) { Z->mi32StepIst = mu32StepsIst * Z->mdFactor; if (Z->mi32StepIst > Z->mi32StepIst_Last) { Z->mi32StepIst_Last = Z->mi32StepIst;  Z->mPinTakt->vSet1(); Z->mu8Step = 1; } }
 
             mu32TimeNoMove = mu32TimeNoMoveReload;
-            mPinStromAbs->vSet1();
+            mPinTaktAbs->vSet1();
+            vSetFreigabe();
 
             mu32SpeedSoll = mu32RefSpeed;
 
@@ -618,7 +630,7 @@ public:
           }
           break;
 
-        case enMoveOffRefSwitchRun: // Auf Referenzschalter fahren
+        case enMoveOffRefSwitchRun: // Von Referenzschalter runterfahren
           if (lenEvent == evRefSwitch)
           {
             mu32SpeedSoll = 0;
@@ -759,6 +771,7 @@ public:
   {
     mcDrvCmd = lcDrvCmd;
 
+    // Normales bewegen Kommmando
     if ((mcDrvCmd->munCmd.Bit.DrvX) ||
         (mcDrvCmd->munCmd.Bit.DrvY) ||
         (mcDrvCmd->munCmd.Bit.DrvZ))
@@ -827,12 +840,14 @@ public:
       Y->mi32StepIst_Last = 0;
       Z->mi32StepIst_Last = 0;
 
+      mPinTaktAbs->vSet1();
+      vSetFreigabe();
+
       if (X->mbActive) { X->mi32StepIst = 1.0f * X->mdFactor; if (X->mi32StepIst > X->mi32StepIst_Last) { X->mi32StepIst_Last = X->mi32StepIst;  X->mPinTakt->vSet1(); X->mu8Step = 1; } }
       if (Y->mbActive) { Y->mi32StepIst = 1.0f * Y->mdFactor; if (Y->mi32StepIst > Y->mi32StepIst_Last) { Y->mi32StepIst_Last = Y->mi32StepIst;  Y->mPinTakt->vSet1(); Y->mu8Step = 1; } }
       if (Z->mbActive) { Z->mi32StepIst = 1.0f * Z->mdFactor; if (Z->mi32StepIst > Z->mi32StepIst_Last) { Z->mi32StepIst_Last = Z->mi32StepIst;  Z->mPinTakt->vSet1(); Z->mu8Step = 1; } }
 
       mu32TimeNoMove = mu32TimeNoMoveReload;
-      mPinStromAbs->vSet1();
 
       LL_TIM_EnableCounter(mstTimStep);
       if (mu32StepsSoll > 1)
@@ -841,7 +856,7 @@ public:
         vSetDelayCounter();
       }
     }
-    else
+    else // Referenzlauf commando
     {
       if ((mcDrvCmd->munCmd.Bit.RefX) ||
           (mcDrvCmd->munCmd.Bit.RefY) ||
@@ -882,7 +897,8 @@ public:
       {
         // Alle Achsen wurden seit einiger Zeit nicht mehr bewegt.
         // Stromabsenkung
-        mPinStromAbs->vSet0();
+        //mPinTaktAbs->vSet0();
+        mPinStromAbs->vSet1();
       }
     }
   }
@@ -918,7 +934,7 @@ public:
     Y->mPinTakt->vSet0();
     Z->mPinTakt->vSet0();
 
-    X->isRefSwitch();
+    
     Y->isRefSwitch();
     Z->isRefSwitch();
 
@@ -930,9 +946,48 @@ public:
 
     if (mbRefEnable)
     {
-      if ((X->hasRefSwitchChanged()) || (Y->hasRefSwitchChanged()) || (Z->hasRefSwitchChanged()))
+      cCncAchse* lcCncAchse;
+
+      lcCncAchse = X;
+      if (lcCncAchse->mbActive)
       {
-        vRefSm(evRefSwitch);
+        if (menRefMode == enMoveOnRefSwitchRun)
+        {
+          if (lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
+        else
+        if (menRefMode == enMoveOffRefSwitchRun)
+        {
+          if (!lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
+      }
+
+      lcCncAchse = Y;
+      if (lcCncAchse->mbActive)
+      {
+        if (menRefMode == enMoveOnRefSwitchRun)
+        {
+          if (lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
+        else
+        if (menRefMode == enMoveOffRefSwitchRun)
+        {
+          if (!lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
+      }
+
+      lcCncAchse = Z;
+      if (lcCncAchse->mbActive)
+      {
+        if (menRefMode == enMoveOnRefSwitchRun)
+        {
+          if (lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
+        else
+        if (menRefMode == enMoveOffRefSwitchRun)
+        {
+          if (!lcCncAchse->isRefSwitch()) vRefSm(evRefSwitch);
+        }
       }
     }
     else
@@ -1126,8 +1181,8 @@ class cCnc: public cPalCmd, public cCncControl
     cCnc(cRingBufT<uint8, uint16>* lcStreamOut,
          TIM_TypeDef* lstTimDelay, TIM_TypeDef* lstTimStep,
          cCncAchse* lcAX, cCncAchse* lcAY, cCncAchse* lcAZ,
-         cGpPin* lPinStromAbs)
-      : cCncControl(lstTimDelay, lstTimStep, lcAX, lcAY, lcAZ, lPinStromAbs),
+         cGpPin* lPinStromAbs, cGpPin* lPinTaktAbs)
+      : cCncControl(lstTimDelay, lstTimStep, lcAX, lcAY, lcAZ, lPinStromAbs, lPinTaktAbs),
         mcDrvCmds(macDrvCmdBuf, 16)
     {
       mu8AxisCount    = 0;

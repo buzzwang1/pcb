@@ -50,8 +50,8 @@ set(PCB_ProjectPackageList
 
     Data/BotNet/v00.01.00/Base/Main/v00.00.02:UpLinkOnly
       Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default_Blu
+      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default_Blu
+      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:Dummy
       Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
       Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default

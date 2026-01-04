@@ -46,12 +46,16 @@ set(PCB_ProjectPackageList
     Data/Mem/RomConst/v00.00.02:STM32L433CCT:Miniv10b2:default
     Data/Mem/BuRam/Def/v00.00.01:STM32L4:MB
     Data/Mem/BuRam/cBuRam/v00.00.01:STM32L4
+    Data/Sys/Wuf/Def/v00.00.01:stm32l433
+    Data/Sys/Wuf/cWufHandler/v00.00.01:stm32l433
+    Data/Sys/Err/Def/v00.00.01:stm32l433
+    Data/Sys/Err/cErr/v00.00.01:stm32l433
 
 
     Data/BotNet/v00.01.00/Base/Main/v00.00.02:UpLinkOnly
       Data/BotNet/v00.01.00/Base/Misc/Adr/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default
-      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default_Blu
+      Data/BotNet/v00.01.00/Base/Misc/Cfg/v00.00.01:default_Blu
+      Data/BotNet/v00.01.00/Base/Misc/MsgPool/v00.00.01:default
       Data/BotNet/v00.01.00/Base/Misc/ErrCnt/v00.00.01:Dummy
       Data/BotNet/v00.01.00/Base/Misc/Spop/v00.00.02:STM32L433CCT
       Data/BotNet/v00.01.00/Base/Misc/Msg/v00.00.01:default

@@ -173,6 +173,7 @@ void I2C1_EV_IRQHandler(void)
   ////  #endif
   ////#endif
 
+  cBuRam::mBuRam->u32ProgPos = 30;
   mcSys.mcCom.mcI2C1_BnMaster.I2C_EV_IRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test
@@ -197,7 +198,7 @@ void I2C1_ER_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 31;
   mcSys.mcCom.mcI2C1_BnMaster.I2C_ER_IRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test
@@ -224,7 +225,7 @@ void I2C1_ER_IRQHandler(void)
     ////    mcPA05.vSet1();
     ////  #endif
     ////#endif
-
+    cBuRam::mBuRam->u32ProgPos = 32;
     if(__HAL_GPIO_EXTI_GET_IT(LL_EXTI_LINE_13) != 0x00u)
     {
       __HAL_GPIO_EXTI_CLEAR_IT(LL_EXTI_LINE_13);
@@ -254,7 +255,7 @@ void DMA1_Channel2_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 33;
   // SPI RX
   DMA1_Channel2->CCR &= ~DMA_CCR_EN;
   DMA1->IFCR          = DMA_FLAG_TC2;
@@ -282,7 +283,7 @@ void DMA1_Channel3_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 34;
   // SPI TX
   DMA1_Channel3->CCR &= ~DMA_CCR_EN;
   DMA1->IFCR          = DMA_FLAG_TC3;
@@ -310,7 +311,7 @@ void TIM7_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 35;
   if(TIM7->SR & TIM_SR_UIF) // if UIF flag is set
   {
     TIM7->SR &= ~TIM_SR_UIF; // clear UIF flag
@@ -343,7 +344,7 @@ void DMA2_Channel6_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 36;
   // USART1 TX
   DMA2_Channel6->CCR &= ~DMA_CCR_EN;
   DMA2->IFCR = DMA_FLAG_TC6;
@@ -372,7 +373,7 @@ void DMA2_Channel7_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 37;
   // USART1 RX
   DMA2_Channel7->CCR &= ~DMA_CCR_EN;
   DMA2->IFCR = DMA_FLAG_TC7;
@@ -400,7 +401,7 @@ void USART1_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 38;
   if (USART1->ISR & LL_USART_ISR_TC)
   {
     USART1->ICR = LL_USART_ISR_TC;
@@ -434,7 +435,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 39;
   if (TIM16->SR & TIM_SR_UIF) // if UIF flag is set
   {
     TIM16->SR &= ~TIM_SR_UIF; // clear UIF flag
@@ -466,7 +467,7 @@ void USART2_IRQHandler(void)
   ////    mcPA05.vSet1();
   ////  #endif
   ////#endif
-
+  cBuRam::mBuRam->u32ProgPos = 40;
   mcSys.mcCom.mcComPort2.vIRQHandler();
 
   ////#ifdef PCB_PROJECTCFG_Test

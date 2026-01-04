@@ -13,6 +13,9 @@
 #include "cBnLinkNrf905Net.h"
 #include "cBotnet.h"
 
+#include "WufDef.h"
+#include "BuRamDef.h"
+
 //System
 #include "CycleCaller.h"
 

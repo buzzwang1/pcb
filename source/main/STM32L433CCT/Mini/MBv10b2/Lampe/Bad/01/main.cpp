@@ -399,84 +399,79 @@ tcGpPin<GPIOA_BASE, 1> mcPinPIR(GPIO_MODE_INPUT, GPIO_NOPULL, GPIO_SPEED_FREQ_HI
 
 void vPwrReqMsgSetChn(u16 lu16BnDstAdr, u8 lu8Relais, u8 lu8Chl1, u8 lu8Chl2, u8 lu8Chl3)
 {
-  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetPwr2, 32, 0x1000, lu16BnDstAdr, 34);
+  u8 lu8Data[7];
 
   // TX 02 | 00 | 00 | RM.1M.2M.3M
-  lcMsgSetPwr2.mcPayload[0] = 2;
-  lcMsgSetPwr2.mcPayload[1] = 0;
-  lcMsgSetPwr2.mcPayload[2] = 0;
+  lu8Data[0] = 2;
+  lu8Data[1] = 0;
+  lu8Data[2] = 0;
 
-  lcMsgSetPwr2.mcPayload[3] = lu8Relais; // relais an
-  lcMsgSetPwr2.mcPayload[4] = lu8Chl1;   // Ch1: SLED
-  lcMsgSetPwr2.mcPayload[5] = lu8Chl2;   // Ch2: Normale Led
-  lcMsgSetPwr2.mcPayload[6] = lu8Chl3;   // Ch3: Relais2 100=100% PWM => an
+  lu8Data[3] = lu8Relais; // relais an
+  lu8Data[4] = lu8Chl1;   // Ch1: SLED
+  lu8Data[5] = lu8Chl2;   // Ch2: Normale Led
+  lu8Data[6] = lu8Chl3;   // Ch3: Relais2 100=100% PWM => an
 
-  lcMsgSetPwr2.vEncode();
-  mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetPwr2);
+  mcSys.mcCom.mcBn.vSendMsg(0x1000, lu16BnDstAdr, 34, lu8Data, sizeof(lu8Data));
 }
 
 
 void vPwrReqMsgSetLed(u16 lu16BnDstAdr, u8 lu8Enable, u8 lu8Brigthness, u8 lu8AnimIdx)
 {
-  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetSLed, 32, 0x1000, lu16BnDstAdr, 42);
+  u8 lu8Data[11];
 
   // Set                  RX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB
-  lcMsgSetSLed.mcPayload[0] = 0;
-  lcMsgSetSLed.mcPayload[1] = 0;
-  lcMsgSetSLed.mcPayload[2] = 0;
+  lu8Data[0] = 0;
+  lu8Data[1] = 0;
+  lu8Data[2] = 0;
 
-  lcMsgSetSLed.mcPayload[3] = lu8Enable;       // Enable
-  lcMsgSetSLed.mcPayload[4] = lu8Brigthness;   // 0..255 Helligkeit
-  lcMsgSetSLed.mcPayload[5] = lu8AnimIdx;      // Pink - nur Rot und Blau, kein Grün
-  lcMsgSetSLed.mcPayload[6] = 255; // R
-  lcMsgSetSLed.mcPayload[7] = 255; // G
-  lcMsgSetSLed.mcPayload[8] = 255; // B
-  lcMsgSetSLed.mcPayload[9] =   0;
-  lcMsgSetSLed.mcPayload[10] = 100; // Temp
+  lu8Data[3] = lu8Enable;       // Enable
+  lu8Data[4] = lu8Brigthness;   // 0..255 Helligkeit
+  lu8Data[5] = lu8AnimIdx;      // Pink - nur Rot und Blau, kein Grün
+  lu8Data[6] = 255; // R
+  lu8Data[7] = 255; // G
+  lu8Data[8] = 255; // B
+  lu8Data[9] =   0;
+  lu8Data[10] = 100; // Temp
 
-  lcMsgSetSLed.vEncode();
-  mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetSLed);
+  mcSys.mcCom.mcBn.vSendMsg(0x1000, lu16BnDstAdr, 42, lu8Data, sizeof(lu8Data));
 }
 
 void vPSwitchReqMsgSetChn(u16 lu16BnDstAdr, u8 lu8Chl1, u8 lu8Chl2, u8 lu8Chl3)
 {
-  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetPwr, 32, 0x1000, lu16BnDstAdr, 34);
+  u8 lu8Data[6];
 
   // TX 02 | 00 | 00 | 1M.2M.3M
-  lcMsgSetPwr.mcPayload[0] = 2;
-  lcMsgSetPwr.mcPayload[1] = 0;
-  lcMsgSetPwr.mcPayload[2] = 0;
+  lu8Data[0] = 2;
+  lu8Data[1] = 0;
+  lu8Data[2] = 0;
 
-  lcMsgSetPwr.mcPayload[3] = lu8Chl1; // Ch1
-  lcMsgSetPwr.mcPayload[4] = lu8Chl2; // Ch2
-  lcMsgSetPwr.mcPayload[5] = lu8Chl3; // Ch3
+  lu8Data[3] = lu8Chl1; // Ch1
+  lu8Data[4] = lu8Chl2; // Ch2
+  lu8Data[5] = lu8Chl3; // Ch3
 
-  lcMsgSetPwr.vEncode();
-  mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetPwr);
+  mcSys.mcCom.mcBn.vSendMsg(0x1000, lu16BnDstAdr, 34, lu8Data, sizeof(lu8Data));
 }
 
 void vPSwitchReqMsgSetLed(u16 lu16BnDstAdr, u8 lu8Enable, u8 lu8RotSwtchPos, u8 lu8AnimIdx)
 {
-  cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsgSetSLed, 32, 0x1000, lu16BnDstAdr, 42);
+  u8 lu8Data[11];
 
   // TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL
-  lcMsgSetSLed.mcPayload[0] = 0;
-  lcMsgSetSLed.mcPayload[1] = 0;
-  lcMsgSetSLed.mcPayload[2] = 0;
+  lu8Data[0] = 0;
+  lu8Data[1] = 0;
+  lu8Data[2] = 0;
 
-  lcMsgSetSLed.mcPayload[3] = lu8Enable;
-  lcMsgSetSLed.mcPayload[4] = lu8RotSwtchPos; // 1 ... 12
-  lcMsgSetSLed.mcPayload[5] = lu8AnimIdx;   // Animation Index
-  lcMsgSetSLed.mcPayload[6] = 0xFF;
-  lcMsgSetSLed.mcPayload[7] = 0xFF;
-  lcMsgSetSLed.mcPayload[8] = 0xFF;
-  lcMsgSetSLed.mcPayload[9] = 0;
-  lcMsgSetSLed.mcPayload[10] = 100;
+  lu8Data[3] = lu8Enable;
+  lu8Data[4] = lu8RotSwtchPos; // 1 ... 12
+  lu8Data[5] = lu8AnimIdx;   // Animation Index
+  lu8Data[6] = 0xFF;
+  lu8Data[7] = 0xFF;
+  lu8Data[8] = 0xFF;
+  lu8Data[9] = 0;
+  lu8Data[10] = 100;
 
-  lcMsgSetSLed.vEncode();
-  mcSys.mcCom.mcBn.bSendMsg(&lcMsgSetSLed);
+  mcSys.mcCom.mcBn.vSendMsg(0x1000, lu16BnDstAdr, 42, lu8Data, sizeof(lu8Data));
 }
-
 
 
 class cReqSm
@@ -1282,24 +1277,25 @@ public:
   bool bMsg(cBotNetMsg_MsgProt& lcMsg)
   {
     bool lbConsumed = False;
+    u8* lpu8PayloadRx = lcMsg.GetPayload().mpu8Data;
 
-    switch (lcMsg.mu16Idx)
+    switch (lcMsg.u16GetIdx())
     {
       // --------------------------- SLED Messages -----------------------------
       case 41: // Sled Response
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 0: // SLED: Status         TX 00 | 00 | 00 | ES.P1.AI.RR.GG.BB.TH.TL
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               lbConsumed = True;
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
-                if (lcMsg.cGetSAdr() == 0x1110 + 0x10 * lu8Node)
+                if (lcMsg.cGetSAdr() == (0x1110 + 0x10 * lu8Node))
                 {
-                  mstLedStateIst[lu8Node].u8Enable    = lcMsg.mcPayload[3];
-                  mstLedStateIst[lu8Node].u8RotSwitch = lcMsg.mcPayload[4];
-                  mstLedStateIst[lu8Node].u8AnimIdx   = lcMsg.mcPayload[5];
+                  mstLedStateIst[lu8Node].u8Enable    = lpu8PayloadRx[3];
+                  mstLedStateIst[lu8Node].u8RotSwitch = lpu8PayloadRx[4];
+                  mstLedStateIst[lu8Node].u8AnimIdx   = lpu8PayloadRx[5];
                   mstLedStateIst[lu8Node].u8Updated   = 1;
                   break;
                 }
@@ -1343,26 +1339,18 @@ void MAIN_vTick1msLp(void)
 
 void MAIN_vInitSystem(void)
 {
+  cBuRam::vAddLogPos(3);
   mcSys.vInit1();
 
+  cBuRam::vAddLogPos(4);
   mcBnMsgHandlerApp.vAddMsgSys();
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
 
+  cBuRam::vAddLogPos(5);
   mcSys.vInit2();
 
-  //    Time required after VCC is stable before the device can accept commands. 100 μs
-  u8 lu8EepRetrys = 10;
-  while ((mcData.mbError) && (lu8EepRetrys > 0))
-  {
-    mcData.mbError = False;
-    while ((mcData.mbLoad) && (!mcData.mbError))
-    {
-      CycCall_vIdle();
-    }
-    lu8EepRetrys--;
-  }
-
+  cBuRam::vAddLogPos(6);
   vDoGuiControl_100ms();
 
   if (mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter > 10)
@@ -1400,46 +1388,65 @@ void SysError_Handler()
   }
 }
 
-void SystemClock_Config_HSE(void)
+bool SystemClock_Config_HSE(void)
 {
-  // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
-  // kein Pll
-
-  RCC_OscInitTypeDef RCC_OscInitStruct   = {};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
-
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  u16 lu16Retries = 100;
+  bool lbError = False;
+  while (lu16Retries > 0)
   {
-    SysError_Handler();
+    lbError = False;
+    cBnSpop_vResetWdog();
+
+    // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
+    // kein Pll
+
+    RCC_OscInitTypeDef RCC_OscInitStruct   = {};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
+    RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitOscCfg = 1;
+      lbError = True;
+    }
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
+                                  RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitClkCfg = 1;
+      lbError = True;
+    }
+
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_RCC_RTCAPB_CLK_ENABLE();
+
+    // Configure the main internal regulator output voltage
+    if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitVltScl = 1;
+      lbError = True;
+    }
+
+    if (!lbError) break;
+
+    lu16Retries--;
   }
 
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
-                                RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
-  RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  if (lu16Retries == 0) return False;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    SysError_Handler();
-  }
-
-  __HAL_RCC_SYSCFG_CLK_ENABLE();
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_RCC_RTCAPB_CLK_ENABLE();
-
-  // Configure the main internal regulator output voltage
-  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-  {
-    SysError_Handler();
-  }
+  return True;
 }
 
 
@@ -1453,6 +1460,10 @@ void MainSystemInit()
   cSysPkgPMon::vPA08_Init();
   cSysPkgPMon::vPA08_Set1();
   #endif
+
+  //cBuRam::vEnable(); // cBuRam::vEnable() wird auch in cErr::vInit() gemacht
+  cErr::vInit();
+  cBuRam::vAddLogPos(1);
 
   SystemInit();
   #ifdef PCB_PROJECTCFG_Test
@@ -1487,8 +1498,7 @@ void MainSystemInit()
     cSysPkgPMon::vPA08_Set1();
   #endif
 
-  cBuRam::vEnable();
-  cErr::vInit();
+  //cBnSpop_vStartTim15();
 
   // 0x20007800
   //   Heap 32k
@@ -1503,5 +1513,7 @@ void MainSystemInit()
   #ifdef PCB_PROJECTCFG_Test
     cSysPkgPMon::vPA08_Set0();
   #endif
+
+  cBuRam::vAddLogPos(2);
 }
 

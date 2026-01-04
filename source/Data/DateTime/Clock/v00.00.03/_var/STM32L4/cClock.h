@@ -110,6 +110,13 @@ class cClock
   void vRtcInit()
   {
     // --------------- First try LSE ---------------
+    
+    // BURAM vor dem Löschen sichern
+    u32 lu32Backup[32];
+    for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)
+    {
+      lu32Backup[lu8Idx] = ((u32*)(RTC_BASE + 0x50))[lu8Idx];
+    }
 
     /*##-2- Configure LSE/LSI as RTC clock source ###############################*/
     // RTC_CLOCK_SOURCE_LSE
@@ -120,6 +127,12 @@ class cClock
     LL_RCC_ReleaseBackupDomainReset();
 
     LL_RCC_LSE_Enable();
+
+    // BURAM nach dem Löschen restaurieren.
+    for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)
+    {
+      ((u32*)(RTC_BASE + 0x50))[lu8Idx] = lu32Backup[lu8Idx];
+    }
 
     // tSU(LSE)(3) Startup time VDD is stabilized: 2s
     // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
@@ -166,8 +179,10 @@ class cClock
       LL_RCC_LSE_Disable();
 
       LL_RCC_LSI_Enable();
+
       while (LL_RCC_LSI_IsReady() != 1)
       {
+        __asm("nop");
       }
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
 

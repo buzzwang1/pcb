@@ -23,7 +23,7 @@ typedef struct
   u32 u32RtcSyncAttmptDate; // RTC des letzten Sync Versuchs
   u32 u32RtcSyncAttmptTime; // RTC des letzten Sync Versuchs
   
-  u32 u32BluReason;   // 0: kein Blu, 1: u8PartitionCnt < 3, 2: isWuIWdg, 3: isWuIWdg during sleep, , 3: SpopMp
+  u32 u32BluReason;   // 0: kein Blu, 1: u8PartitionCnt < 3, 2: isWuIWdg, 3: isWuIWdg during sleep, , 4: SpopMp
 
 }tstBuRamDef;
 

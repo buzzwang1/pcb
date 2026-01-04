@@ -202,7 +202,7 @@ void BusFault_Handler(void)
 
 
 void UsageFault_Handler(void)
-{  
+{
   cErr::munErr->stErr.isUsageFault = 1;
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
@@ -356,7 +356,7 @@ void vDoLedBoard()
             lu8Data[5] = 0;
             lu8Data[6] = 0;
 
-            mcSys.mcCom.mcBn.vSendMsg(0x1000, 0x1200, 42, lu8Data, sizeof(lu8Data));
+            mcSys.mcCom.mcBn.vSendMsg(0x1000, 0x1200, 34, lu8Data, sizeof(lu8Data));
 
             if (mu8SmLedBoardRetrys > 1)
             {
@@ -486,13 +486,17 @@ void MAIN_vTick1msLp(void)
 
 void MAIN_vInitSystem(void)
 {
+  cBuRam::vAddLogPos(3);
   mcSys.vInit1();
 
+  cBuRam::vAddLogPos(4);
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
 
+  cBuRam::vAddLogPos(5);
   mcSys.vInit2();
 
+  cBuRam::vAddLogPos(6);
   vDoLedBoard();
 }
 
@@ -524,46 +528,65 @@ void SysError_Handler()
   }
 }
 
-void SystemClock_Config_HSE(void)
+bool SystemClock_Config_HSE(void)
 {
-  // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
-  // kein Pll
-
-  RCC_OscInitTypeDef RCC_OscInitStruct   = {};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
-
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  u16 lu16Retries = 100;
+  bool lbError = False;
+  while (lu16Retries > 0)
   {
-    SysError_Handler();
+    lbError = False;
+    cBnSpop_vResetWdog();
+
+    // SystemClock = HSE (== 24Mhz) => witd im Options-file gesetzt => "-DHSE_VALUE=24000000"
+    // kein Pll
+
+    RCC_OscInitTypeDef RCC_OscInitStruct   = {};
+    RCC_ClkInitTypeDef RCC_ClkInitStruct   = {};
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
+    RCC_OscInitStruct.HSIState            = RCC_HSI_ON; // HSI ON für I2C
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitOscCfg = 1;
+      lbError = True;
+    }
+
+    // Initializes the CPU, AHB and APB busses clocks
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
+                                  RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
+    RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitClkCfg = 1;
+      lbError = True;
+    }
+
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_RCC_RTCAPB_CLK_ENABLE();
+
+    // Configure the main internal regulator output voltage
+    if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
+    {
+      cErr::munErr->stErr.isInitVltScl = 1;
+      lbError = True;
+    }
+
+    if (!lbError) break;
+
+    lu16Retries--;
   }
 
-  // Initializes the CPU, AHB and APB busses clocks
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK |
-                                RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_HSE;
-  RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  if (lu16Retries == 0) return False;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    SysError_Handler();
-  }
-
-  __HAL_RCC_SYSCFG_CLK_ENABLE();
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_RCC_RTCAPB_CLK_ENABLE();
-
-  // Configure the main internal regulator output voltage
-  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-  {
-    SysError_Handler();
-  }
+  return True;
 }
 
 
@@ -577,6 +600,10 @@ void MainSystemInit()
   cSysPkgPMon::vPA01_Init();
   cSysPkgPMon::vPA01_Set1();
   #endif
+
+  //cBuRam::vEnable(); // cBuRam::vEnable() wird auch in cErr::vInit() gemacht
+  cErr::vInit();
+  cBuRam::vAddLogPos(1);
 
   SystemInit();
   #ifdef PCB_PROJECTCFG_Test
@@ -611,8 +638,7 @@ void MainSystemInit()
     cSysPkgPMon::vPA01_Set1();
   #endif
 
-  cBuRam::vEnable();
-  cErr::vInit();
+  //cBnSpop_vStartTim15();
 
   // 0x20007800
   //   Heap 32k
@@ -627,5 +653,7 @@ void MainSystemInit()
   #ifdef PCB_PROJECTCFG_Test
     cSysPkgPMon::vPA01_Set0();
   #endif
+
+  cBuRam::vAddLogPos(2);
 }
 

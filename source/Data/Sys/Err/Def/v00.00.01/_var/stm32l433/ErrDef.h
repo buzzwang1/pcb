@@ -25,6 +25,9 @@ typedef struct
   u32 isSVC        : 1;
   u32 isDebugMon   : 1;
   u32 isPendSV     : 1;
+  u32 isInitOscCfg : 1;
+  u32 isInitClkCfg : 1;
+  u32 isInitVltScl : 1;
 }tstErrSources;
 
 typedef union

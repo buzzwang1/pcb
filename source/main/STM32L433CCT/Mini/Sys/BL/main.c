@@ -388,6 +388,7 @@ int main(void)
   // BuRam-Zugriff freischalten
   LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
   LL_PWR_EnableBkUpAccess();
+
   WufDef_vCheckWuReason(&lunWuSources);
   lstBuRamDef->u32WuReason = lunWuSources.u32WakeupSources;
   lstBuRamDef->u32BluReason = 0;
@@ -456,3 +457,13 @@ int main(void)
   run_main(IAP_PARTITION_START_ADRESS_APP);
 }
 
+void MainSystemInit()
+{
+  // Mirrow - Stackcopy  2kb
+  u32* lpu32Dest = (u32*)(0x20000000 + 64 * 1024 - 4 * 1024);
+  u32* lpu32Src = (u32*)(0x20000000 + 64 * 1024 - 2 * 1024);
+  for (u16 lu16Idx = 0; lu16Idx < ((2 * 1024) / 4); lu16Idx++)
+  {
+    *lpu32Dest++ = *lpu32Src++;
+  }
+}
