@@ -59,7 +59,7 @@ void cSysPkgPMon::vPB00_Set0()
 
 void cSysPkgPMon::vPB01_Init()
 {
-  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+  RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
   GPIOB->MODER &= ~(3 << (2 * 1));
   GPIOB->MODER |= (1 << (2 * 1));
 }

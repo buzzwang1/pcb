@@ -31,7 +31,7 @@ class cJobHandler
 
   cJobs      mcJob;
   cJobStates mcState;
-  u32        mu32ExeTime_us;
+  u16        mu16ExeTime_ms;
 
   cJobHandler()
   {
@@ -45,7 +45,7 @@ class cJobHandler
     {
       mcJob   = lcJob;
       mcState = cJobStates::stJobProcessStart;
-      mu32ExeTime_us = 0;
+      mu16ExeTime_ms = 0;
     }
   }
 
@@ -53,22 +53,22 @@ class cJobHandler
   {
     mcJob   = cJobs::nJobNop;
     mcState = cJobStates::stJobNop;
-    mu32ExeTime_us = 0;
+    mu16ExeTime_ms = 0;
   }
 
-  virtual void vProcess(u32 lu32TimeDiff_us)
+  void vProcess(u16 lu16TimeDiff_ms)
   {
-    if ((U32MAX - mu32ExeTime_us) > lu32TimeDiff_us)
+    if ((U16MAX - mu16ExeTime_ms) > lu16TimeDiff_ms)
     {
-      mu32ExeTime_us += lu32TimeDiff_us;
+      mu16ExeTime_ms += lu16TimeDiff_ms;
     }
     else
     {
-      mu32ExeTime_us = U32MAX;
+      mu16ExeTime_ms = U16MAX;
     }
   }
 
-  u32 u32GetTime_us() {return mu32ExeTime_us;}
+  u16 u16GetTime_ms() {return mu16ExeTime_ms;}
 
   bool isReady()
   {

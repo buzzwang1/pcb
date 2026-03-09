@@ -181,6 +181,7 @@ cSysPkgBoard::cSysPkgBoard()
                                     // Den vollen EEPROM (1024 Byte) würde sonst 30ms dauern
     mcLipoMon(&mcI2C2_Board)
 {
+  cBuRam::vAddLogPos(13);
 }
 
 void cSysPkgBoard::vInit1(void)

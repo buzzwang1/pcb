@@ -1,14 +1,14 @@
 File:      in\0x08002000_BLU.bin
-ChkSum:    1997694 0x1e7b7e
-Filesize:  19148 0x4acc
+ChkSum:    1973730 0x1e1de2
+Filesize:  18976 0x4a20
 -----------------------------------------------------------------
 File:      in\0x08002000_BLU.bin.gz
-ChkSum:    1748685 0x1aaecd
-Filesize:  13406 0x345e
+ChkSum:    1753878 0x1ac316
+Filesize:  13553 0x34f1
 -----------------------------------------------------------------
 File:      in\0x08002000_BLU_Int.bin.gz.bin
-ChkSum:    1749484 0x1ab1ec
-ChkSumFile:1751219 0x1ab8b3
-Filesize:  13438 0x347e 70.2%
+ChkSum:    1754403 0x1ac523
+ChkSumFile:1755957 0x1acb35
+Filesize:  13585 0x3511 71.6%
 Dest Adr:  536870912 0x20000000
 Exe Adr:   536870912 0x20000000

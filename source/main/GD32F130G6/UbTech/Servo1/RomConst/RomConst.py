@@ -6,13 +6,25 @@ RomConst = [0xFF] * 1024
 
 
 
-                          
-                          
+
+
 #         Name               0       1       2       3       4       5       6       7       8       9      10      11      12      13      14      15
-Calib = ["PowerInVout;    4255;   4944;   5949;   6951;   7965;   8970;   9959;  10982;  11984;  12955;  13996;  14996;  15967;  17123;  18147;  19169",
-         "PowerInDac;     4095;   3840;   3584;   3328;   3072;   2816;   2560;   2304;   2048;   1792;   1536;   1280;   1024;    768;    512;    256",
-         "Table3;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
-         "Table4;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
+Calib = [# ADC-Werte für Temperatur für NTC 10k bei 3300mV
+         #               -40°C,  -35°C,  -30°C,  -25°C,  -20°C,  -15°C,  -10°C,   -5°C,    0°C,    5°C,   10°C,   15°C,   20°C,   25°C,   30°C,    35°C,  
+         "ExtTempTab1;    3898;   3839;   3767;   3680;   3577;   3458;   3322;   3169;   3002;   2823;   2634;   2439;   2243;   2048;   1859;   1678",
+         #                40°C,   45°C,   50°C,   55°C,   60°C,   65°C,   70°C,   75°C,   80°C,   85°C,   90°C,   95°C,  100°C,  105°C,  110°C,   115°C,
+         "ExtTempTab2;    1508;   1349;   1203;   1071;    951;    843;    748;    662;    587;    520;    462;    410;    364;    324;    289;    258",
+
+         # ADC-Werte für interne Temperatur bei 3300mV
+         # GD32F1x0 User Manual: Temperature (°C) = {(V25 – Vtemperature(digit)) / Avg_Slope} + 25.
+         #    - V25: Vtemperature value at 25°C, the typical value is 1.43 V.
+         #    - Avg_Slope: Average Slope for curve between Temperature vs. Vtemperature, the typical value is 4.3 mV/°C.
+
+         #               -40°C,  -35°C,  -30°C,  -25°C,  -20°C,  -15°C,  -10°C,   -5°C,    0°C,    5°C,   10°C,   15°C,   20°C,   25°C,   30°C,   35°C,  
+         "IntTempTab1;    2122;   2095;   2068;   2042;   2015;   1988;   1962;   1935;   1908;   1882;   1855;   1828;   1802;   1775;   1748;   1722",
+         #                40°C,   45°C,   50°C,   55°C,   60°C,   65°C,   70°C,   75°C,   80°C,   85°C,   90°C,   95°C,  100°C,  105°C,  110°C,   115°C,
+         "IntTempTab2;    1695;   1668;   1642;   1615;   1588;   1561;   1535;   1508;   1481;   1455;   1428;   1401;   1375;   1348;   1321;   1295",
+
          "Table5;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
          "Table6;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
          "Table7;            0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0;      0",
@@ -42,6 +54,18 @@ class cElementEntry:
         if (self.mszType == "rsz"):    lszRet = ((("#define rszGetRomConst"    + self.mszName+"()").ljust(44) +" ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + "            + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
         if (self.mszType == "u16*"):   lszRet = ((("#define u16GetRomConst"    + self.mszName+"()").ljust(44) +" ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + "           + "0x{0:04X}".format(self.miAdr).upper() + "))").ljust(108)  + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
         if (self.mszType == "Fp1814"): lszRet = ((("#define Fp1814GetRomConst" + self.mszName+"()").ljust(44) +" (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + ")))").ljust(108) + " // Defaultvalue " + str(self.maValue) + lszComment).ljust(132) + (" " + self.mszComment).strip()
+        return lszRet
+
+    def ToAdr(self) -> str:
+        lszRet = ""
+        if (self.mszType == "u8*"):    lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "u8"):     lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "u16"):    lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "u32"):    lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "float"):  lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "rsz"):    lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "u16*"):   lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
+        if (self.mszType == "Fp1814"): lszRet = (("#define u8PtrRomConst" + self.mszName+"()").ljust(44) +" ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + " + "0x{0:04X}".format(self.miAdr).upper() + "))").strip()
         return lszRet
 
 
@@ -309,39 +333,77 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     # Tables: Analog Calibration
     lAdr = WriteCalib(lAdr, llstListElements)
 
+    # Init-Werte für Sollwerte
+    lAdr = SetFp1814_ArmCm4(lAdr, (0),        "InitPos_degree",            "InitPos_degree",           llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0),        "InitSpeed_degree_s",        "InitSpeed_degree_s",       llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000),     "InitLimtCurrent_mA",        "InitLimtCurrent_mA",       llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (5000),     "InitLimitPower_mW",         "InitLimitPower_mW",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (5500),     "InitLimitVolt_mV",          "InitLimitVolt_mV",         llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000),     "InitLimitIntTemp_Degree",   "InitLimitIntTemp_Degree",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (5.0),      "InitLimitExtTemp_Degree",   "InitLimitExtTemp_Degree",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),      "InitPwn_percent",           "InitPwn_percent",          llstListElements)
+
     # Input Filter
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputPos",        "LpInputPos",        llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputCurrent",    "LpInputCurrent",    llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputSupply",     "LpInputSupply",     llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp1",       "LpInputTemp1",     llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp2",       "LpInputTemp2",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputPos",         "LpInputPos",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputSpeed",       "LpInputSpeed",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputCurrent",     "LpInputCurrent",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputPower",       "LpInputPower",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputSupply",      "LpInputSupply",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp1",       "LpInputTemp1",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.2),      "LpInputTemp2",       "LpInputTemp2",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.9),      "LpOutputMotor",      "LpOutputMotor",     llstListElements)
 
     # Input Skalierung
+    # Positon Sensor
     lAdr = SetFp1814_ArmCm4(lAdr, (-280.0/4096.0), "CvrtInputPosF",     "CvrtInputPosF",     llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (-140.0),        "CvrtInputPosO",     "CvrtInputPosO",     llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, ( 140),          "CvrtInputPosC",     "CvrtInputPosC",     llstListElements)
-                                                      
+
+    # Speed Sensor
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputSpeedF",   "CvrtInputSpeedF",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputSpeedO",   "CvrtInputSpeedO",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),        "CvrtInputSpeedC",   "CvrtInputSpeedC",    llstListElements)
+
+    # Current Sensor
     lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputCurrentF", "CvrtInputCurrentF",  llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputCurrentO", "CvrtInputCurrentO",  llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),        "CvrtInputCurrentC", "CvrtInputCurrentC",  llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (10000.0),       "CvrtInputCurrentC", "CvrtInputCurrentC",  llstListElements)
+
+    # Power Sensor
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputPowerF",   "CvrtInputPowerF",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputPowerO",   "CvrtInputPowerO",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (65000.0),      "CvrtInputPowerC",   "CvrtInputPowerC",    llstListElements)
  
+    # Supply Voltage Sensor
     lAdr = SetFp1814_ArmCm4(lAdr, 14520.0/4096.0,  "CvrtInputSupplyF",  "CvrtInputSupplyF",   llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputSupplyO",  "CvrtInputSupplyO",   llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (20000.0),       "CvrtInputSupplyC",  "CvrtInputSupplyC",   llstListElements)
-                                                        
+    
+    # Internal Temperature Sensor
     lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputTemp1O",   "CvrtInputTemp1O",    llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputTemp1C",   "CvrtInputTemp1C",    llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (100.0),         "CvrtInputTemp1F",   "CvrtInputTemp1F",    llstListElements)
-                                                        
+    
+    # External Temperature Sensor
     lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtInputTemp2F",   "CvrtInputTemp2F",    llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtInputTemp2O",   "CvrtInputTemp2O",    llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (100.0),         "CvrtInputTemp2C",   "CvrtInputTemp2C",    llstListElements)
 
+    # Output PMW zum Motor Sensor
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),           "CvrtOutputMotorF",  "CvrtOutputMotorF",   llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),           "CvrtOutputMotorO",  "CvrtOutputMotorO",   llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),         "CvrtOutputMotorC",  "CvrtOutputMotorC",   llstListElements)
+
+
     # Minimal Änderungen
-    lAdr = SetFp1814_ArmCm4(lAdr, (0.5),      "MinDiffInputPos",      "MinDiffInputPos",      llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (4.0),      "MinDiffInputCurrent",  "MinDiffInputCurrent",  llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputSupply",   "MinDiffInputSupply",   llstListElements)
-    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputTemp",     "MinDiffInputTemp",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputPos",        "MinDiffInputPos",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "MinDiffInputSpeed",      "MinDiffInputSpeed",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (5.0),      "MinDiffInputCurrent",    "MinDiffInputCurrent",    llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.01),     "MinDiffInputPower",      "MinDiffInputPower",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (5.0),      "MinDiffInputSupply",     "MinDiffInputSupply",     llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (3.0),      "MinDiffInputTemp1",      "MinDiffInputTemp1",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (3.0),      "MinDiffInputTemp2",      "MinDiffInputTemp2",      llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (8.0),      "MinDiffOutputMotor",     "MinDiffOutputMotor",     llstListElements)
 
     # PID für Positionregelung
     lAdr = SetFp1814_ArmCm4(lAdr, (25.0),     "PidPosKp",          "PidPosKp",          llstListElements)
@@ -349,15 +411,26 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     lAdr = SetFp1814_ArmCm4(lAdr, (250.0),    "PidPosKd",          "PidPosKd",          llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidPosLimit",       "PidPosLimit",       llstListElements)
 
+    # PID für Geschwindigkeitsregelung
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidSpeedKp",        "PidSpeedKp",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "PidSpeedKi",        "PidSpeedKi",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),      "PidSpeedKd",        "PidSpeedKd",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),   "PidSpeedLimit",     "PidSpeedLimit",     llstListElements)
+
     # PID für Stromregelung
     lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidCurKp",          "PidCurKp",          llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "PidCurKi",          "PidCurKi",          llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (0.0),      "PidCurKd",          "PidCurKd",          llstListElements)
     lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),   "PidCurLimit",       "PidCurLimit",       llstListElements)
 
-    lAdr = Setu8_ArmCm4(lAdr,              8,      "MinPwm",            "MinPwm",            llstListElements)
+    # PID für Leistungsregelung
+    lAdr = SetFp1814_ArmCm4(lAdr, (100.0),    "PidPowerKp",        "PidPowerKp",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1.0),      "PidPowerKi",        "PidPowerKi",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (0.0),      "PidPowerKd",        "PidPowerKd",        llstListElements)
+    lAdr = SetFp1814_ArmCm4(lAdr, (1000.0),   "PidPowerLimit",     "PidPowerLimit",     llstListElements)
 
-    lAdr = Setu8_ArmCm4(lAdr,           0x0F,      "LedEnable",         "LedEnable",         llstListElements)
+
+    lAdr = Setu8_ArmCm4(lAdr,      0x0F,      "LedEnable",         "LedEnable",         llstListElements)
 
     
     # RomConst End of Part 2
@@ -394,6 +467,11 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     newFile.close()
 
     lszDefine = str()
+
+    for lcElement in llstListElements:
+        lszDefine += lcElement.ToAdr() + "\n";
+
+    lszDefine += "\n" + "\n" + "\n";
 
     for lcElement in llstListElements:
         lszDefine += lcElement.ToString() + "\n";

@@ -33,11 +33,6 @@ cHTU21D::cHTU21D(cI2cMaster* lpcI2C, uint8 lui8Adr)
   mI2C->vAddSlave((cComNode*)this);
 }
 
-cHTU21D::~cHTU21D()
-{
-  //mpcMsgRead.vMemFree();
-  //mpcMsgWrite.vMemFree();
-}
 
 void cHTU21D::vComError(cComNode::tenError lenError, cComNode::tenState lenState)
 {

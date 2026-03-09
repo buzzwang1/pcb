@@ -269,7 +269,7 @@ void vDoLedBoard()
 
   if (mcSys.mcClock.mClock.IsValid())
   {
-    if ((mcSys.mcClock.mClock.mTime.stTime.ui8Hour >= 8) && (mcSys.mcClock.mClock.mTime.stTime.ui8Hour <= 20))
+    if ((mcSys.mcClock.mClock.mTime.stTime.ui8Hour >= 8) && (mcSys.mcClock.mClock.mTime.stTime.ui8Hour <= 21))
     {
       lbNoSleep = True;
     }
@@ -600,6 +600,7 @@ void MainSystemInit()
   cSysPkgPMon::vPA01_Init();
   cSysPkgPMon::vPA01_Set1();
   #endif
+
 
   //cBuRam::vEnable(); // cBuRam::vEnable() wird auch in cErr::vInit() gemacht
   cErr::vInit();

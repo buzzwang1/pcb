@@ -76,7 +76,7 @@ class cLm75 : public cComNode
   {
     menCmd = enCmdIdle;
     mStatus.IsInit = false;
-
+    mStatus.IsError = false;
     vCmdSetup();
   }
 
@@ -84,7 +84,7 @@ class cLm75 : public cComNode
   {
     UNUSED(lenError);
     UNUSED(lenState);
-
+    cComNode::vComError(lenError, lenState);
     muRestart_ms = 100;
   }
 

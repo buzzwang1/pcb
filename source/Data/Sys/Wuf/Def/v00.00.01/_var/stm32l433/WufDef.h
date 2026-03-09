@@ -18,12 +18,12 @@ extern "C" {
 
 typedef struct
 {
-  u32 isWuTimerRtc : 1;
-  u32 isWuStandBy  : 1;
-  u32 isWuPin1     : 1;
-  u32 isWuPinRst   : 1;
-  u32 isWuSftRst   : 1;
-  u32 isWuIWdg     : 1;
+  u32 isWuTimerRtc : 1; // 01
+  u32 isWuStandBy  : 1; // 02
+  u32 isWuPin1     : 1; // 04
+  u32 isWuPinRst   : 1; // 08
+  u32 isWuSftRst   : 1; // 10
+  u32 isWuIWdg     : 1; // 20
 }tstWakeupSources;
 
 typedef union

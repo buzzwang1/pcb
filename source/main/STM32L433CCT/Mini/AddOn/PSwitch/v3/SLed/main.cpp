@@ -113,8 +113,8 @@ u8 mu8MyLedRgbMemory[LEDCTRL_RGB_MEMSIZE(LEDMAXLEDCNT)];
 u8 mu8MyLedBitMemory[LEDCTRL_LED_MEMSIZE(LEDMAXLEDCNT)];
 cWs2812 mcWs2812(mu8MyLedRgbMemory, mu8MyLedBitMemory, LEDMAXLEDCNT);
 
-
 u16    mu16Data[3] = { 0xFFFF, 0xFFFF, 0xFFFF };
+u8     mu8ComInhibitor = 0;
 
 class  __attribute__((__packed__)) cData
 {
@@ -1314,11 +1314,12 @@ public:
 class cLedAnimation_Lampe : public cLedAnimation_Static
 {
 public:
+  i16 SetR, SetG, SetB;
+
   cLedAnimation_Lampe(cWs2812* lcWs2812)
     : cLedAnimation_Static(lcWs2812, mcData.mData.u8CustR, mcData.mData.u8CustG, mcData.mData.u8CustB, (rsz)"Lampe")
   {
   }
-
 
   void vInit() override
   {
@@ -1326,22 +1327,49 @@ public:
   }
 
 
+  u8 u8Dim(i16 Col, i16 SetCol)
+  {
+    if (Col == SetCol)
+    {
+      return Col;
+    }
+    else
+    {
+      if (Col < SetCol)
+      {
+        Col++;
+      }
+      else
+      {
+        Col--;
+      }
+    }
+    return (u8)Col;
+  }
+
   void vProcess10ms() override
   {
     switch(mi16Value)
     {
-      case 1:  R =  64; G =   0; B =   0; break;
-      case 2:  R = 128; G =   0; B =   0; break;
-      case 3:  R = 192; G =   0; B =   0; break;
-      case 4:  R = 255; G =  64; B =  64; break;
-      case 5:  R = 255; G = 128; B = 128; break;
-      case 6:  R = 255; G = 192; B = 192; break;
-      case 7:  R = 255; G = 255; B = 255; break;
-      case 8:  R = 255; G = 255; B = 255; break;
-      case 9:  R = 255; G = 255; B = 255; break;
-      case 10: R = 255; G = 255; B = 255; break;
-      case 11: R = 255; G = 255; B = 255; break;
-      case 12: R = 255; G = 255; B = 255; break;
+      case 1:  SetR =  64; SetG =   0; SetB =   0; break;
+      case 2:  SetR = 128; SetG =   0; SetB =   0; break;
+      case 3:  SetR = 192; SetG =   0; SetB =   0; break;
+      case 4:  SetR = 255; SetG =  64; SetB =  64; break;
+      case 5:  SetR = 255; SetG = 128; SetB = 128; break;
+      case 6:  SetR = 255; SetG = 192; SetB = 192; break;
+      case 7:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 8:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 9:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 10: SetR = 255; SetG = 255; SetB = 255; break;
+      case 11: SetR = 255; SetG = 255; SetB = 255; break;
+      case 12: SetR = 255; SetG = 255; SetB = 255; break;
+    }
+
+    for (u8 lu8t = 0; lu8t < 3; lu8t++)
+    {
+      R = u8Dim(R, SetR);
+      G = u8Dim(G, SetG);
+      B = u8Dim(B, SetB);
     }
 
     cLedAnimation_Static::vProcess10ms();
@@ -1790,26 +1818,33 @@ public:
                 u8 lu8AnimCnt;
                 lu8AnimCnt = ((sizeof(mLstLedAnims) / sizeof(cLedAnimation*)) - 1);
 
-                mcData.mData.u16TurnOnState = lpu8PayloadRx[3] & 1;
-
-                i16 li16RotCnt = lpu8PayloadRx[4];
-                if (li16RotCnt > 12) li16RotCnt = 12;
-                mcUI.vSetRotCnt(li16RotCnt);
-
-                mcData.mData.u16LedAnimationIdx = lpu8PayloadRx[5] % lu8AnimCnt;
-                mcData.mData.u8CustR            = lpu8PayloadRx[6];
-                mcData.mData.u8CustG            = lpu8PayloadRx[7];
-                mcData.mData.u8CustB            = lpu8PayloadRx[8];
-                mcData.mData.i16MaxTemp         = (lpu8PayloadRx[9] << 8) + lpu8PayloadRx[10];
-
-                if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
+                if (mu8ComInhibitor == 0)
                 {
-                  mu16LedAnimationIdx = mcData.mData.u16LedAnimationIdx;
-                  mLstLedAnims[mu16LedAnimationIdx]->vInit();
-                }
-                mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.mi16RotCnt);
+                  mcData.mData.u16TurnOnState = lpu8PayloadRx[3] & 1;
 
-                //mcData.vUpdate();
+                  i16 li16RotCnt = lpu8PayloadRx[4];
+                  if (li16RotCnt > 12) li16RotCnt = 12;
+                  mcUI.vSetRotCnt(li16RotCnt);
+
+                  mcData.mData.u16LedAnimationIdx = lpu8PayloadRx[5] % lu8AnimCnt;
+                  mcData.mData.u8CustR            = lpu8PayloadRx[6];
+                  mcData.mData.u8CustG            = lpu8PayloadRx[7];
+                  mcData.mData.u8CustB            = lpu8PayloadRx[8];
+                  mcData.mData.i16MaxTemp         = (lpu8PayloadRx[9] << 8) + lpu8PayloadRx[10];
+
+                  if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
+                  {
+                    mu16LedAnimationIdx = mcData.mData.u16LedAnimationIdx;
+                    mLstLedAnims[mu16LedAnimationIdx]->vInit();
+                  }
+                  mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.mi16RotCnt);
+
+                  //mcData.vUpdate();
+                }
+                else
+                {
+                  mu8ComInhibitor--;
+                }
 
                 lbConsumed = True;
               }
@@ -1857,8 +1892,8 @@ void vSendStatus()
     lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
     // Response Message
-    // Status Nachricht alle 100ms senden     
-    //                        S                       D    MsgIdx, Data,   Size   
+    // Status Nachricht alle 100ms senden
+    //                        S                       D    MsgIdx, Data,   Size
     mcSys.mcCom.mcBn.vSendMsg(mcSys.mcCom.mcBn.mcAdr, 0x1000, 41, lu8Data, sizeof(lu8Data));
   }
 }
@@ -1988,6 +2023,7 @@ void MAIN_vTick10msLp()
   {
     mbSendRotCntUpdate = True;
     mLstLedAnims[mu16LedAnimationIdx]->vSetValue(li16RotCnt);
+    mu8ComInhibitor = 1;
     //mcData.vUpdate();
   }
 
@@ -2067,6 +2103,8 @@ void MAIN_vInitSystem(void)
 
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
+
+  mcSys.vInit2();
 
   // ------ EEP-Daten laden
   // Im Fehlerfall nochmals ein paar mal probieren, weil ...
@@ -2150,8 +2188,6 @@ void MAIN_vInitSystem(void)
 
   ////CycCall_Start(MAIN_vTick1msHp,
   ////              MAIN_vTick1msLp);
-
-  mcSys.vInit2();
 }
 
 /* Main functions ---------------------------------------------------------*/

@@ -91,6 +91,12 @@ struct cFixPti1814
     mFp.i32Fp -= lcFp.mFp.i32Fp;
   }
 
+  bool isIn(cFixPti1814 lcMinMax)
+  {
+    if ((*this >= (-lcMinMax)) && (*this <= lcMinMax)) return True;
+    return false;
+  }
+
   void vMul(cFixPti1814 lcFp) // __attribute__((optimize("-O0")))
   {
     i32 intPart1 = mFp.i32Fp >> nNumFracBits;
@@ -142,6 +148,21 @@ struct cFixPti1814
 
   operator float() { return (float)fGet(); }
   operator i32() { return (i32)i32Get(); }
+
+  u8* u8Encode(u8* lu8Data)
+  {
+    lu8Data[0] = (u8)(mFp.i32Fp >> 24);
+    lu8Data[1] = (u8)(mFp.i32Fp >> 16);
+    lu8Data[2] = (u8)(mFp.i32Fp >> 8);
+    lu8Data[3] = (u8)(mFp.i32Fp);
+    return lu8Data + 4;
+  }
+  
+  u8* u8Decode(u8* lu8Data)
+  {
+     mFp.i32Fp = (lu8Data[0] << 24) + (lu8Data[1] << 16) + (lu8Data[2] << 8) + lu8Data[3];
+     return lu8Data + 4;
+  }
 };
 
 

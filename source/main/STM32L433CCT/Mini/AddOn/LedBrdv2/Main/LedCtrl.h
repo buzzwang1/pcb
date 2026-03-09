@@ -35,6 +35,7 @@ class cWs2812
 
   u8     mu8StateProcess;
   u8     mu8TurnOnDelay;
+  u8     mu8TurnOffDelay;
 
   // raw sensor inputs
   u8* mu8GfxData; // Gfx Buffer, 3 Byte per Pxl
@@ -52,6 +53,9 @@ class cWs2812
 
     mu8BrigthnessSet = 16;  //128; // 50%
     mu8Brigthness    = 0;   // 0%
+
+    mu8TurnOnDelay = 0;
+    mu8TurnOffDelay = 0;
 
     for (u16 lu16t = 0; lu16t < LEDCTRL_RGB_MEMSIZE(mu16LedCnt); lu16t++)
     {
@@ -80,7 +84,14 @@ class cWs2812
   {
     if (mu8Brigthness < mu8BrigthnessSet) mu8Brigthness++;
     else
-    if (mu8Brigthness > mu8BrigthnessSet) mu8Brigthness--;
+      if (mu8Brigthness > mu8BrigthnessSet)
+      {
+        mu8Brigthness--;
+        if (mu8Brigthness == 0)
+        {
+          mu8TurnOffDelay = 5;
+        }
+      }
   }
 
   void vTurnOnOffCtrl(void)
@@ -141,11 +152,11 @@ class cWs2812
 
   void vTick10msLp(void)
   {
-    vBrigthnessCtrl();
-    vShow();
-    if (u8GetPwmLed1() == 100)
+    if ((u8GetPwmLed1() != 0) || (mu8BrigthnessSet > 0))
     {
+      vBrigthnessCtrl();
       vTurnOnOffCtrl();
+      vShow();
     }
 
     // Enable Delay, sonst blitz es
@@ -159,7 +170,20 @@ class cWs2812
       }
     }
 
+    if (mu8TurnOffDelay != 0)
+    {
+      mu8TurnOffDelay--;
+      if (mu8TurnOffDelay == 0)
+      {
+        TIM16->DIER &= ~(TIM_DMA_UPDATE);
+        DMA1_Channel3->CCR &= ~DMA_CCR_EN;
+        DMA1->IFCR = DMA_FLAG_TC3;
 
+        vSetPwm(1, 0);
+        TIM16->CCR1 = 0xFF;
+        mu8TurnOnDelay = 0;
+      }
+    }
   }
 
 
@@ -285,8 +309,15 @@ class cWs2812
 
   void vSetPwmLed1(u8 lu8PwmLed)
   {
-    if (lu8PwmLed > 100) lu8PwmLed = 100;
-    TIM2->CCR1 = lu8PwmLed;
+    if ((lu8PwmLed == 0) && (mu8BrigthnessSet))
+    {
+      vDisable();
+    }
+    else
+    {
+      if (lu8PwmLed > 100) lu8PwmLed = 100;
+      TIM2->CCR1 = lu8PwmLed;
+    }
   }
 
   void vSetPwmLed2(u8 lu8PwmLed)
@@ -346,13 +377,7 @@ class cWs2812
   {
     if (u8GetPwmLed1() != 0)
     {
-      TIM16->DIER &= ~(TIM_DMA_UPDATE);
-      DMA1_Channel3->CCR &= ~DMA_CCR_EN;
-      DMA1->IFCR = DMA_FLAG_TC3;
-
-      vSetPwm(1, 0);
-      TIM16->CCR1 = 0xFF;
-      mu8TurnOnDelay = 0;
+      mu8BrigthnessSet = 0;
     }
   }
 

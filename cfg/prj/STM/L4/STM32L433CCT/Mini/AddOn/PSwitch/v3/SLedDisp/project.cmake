@@ -80,6 +80,7 @@ set(PCB_ProjectPackageList
 
 
     Driver/STM32/Device/INA3221/v01.01.00
+    Driver/STM32/Device/BMP180/v01.01.00
     Driver/STM32/Device/MP8859/v01.01.00
     Driver/STM32/Device/EEP/v01.01.00:ZD24C08A
     Driver/STM32/Device/APDS9960/v01.01.00:default

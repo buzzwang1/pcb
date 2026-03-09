@@ -1313,6 +1313,133 @@ public:
 cBnMsgHandlerApp mcBnMsgHandlerApp;
 
 
+
+class cCliCmd_AppStat : public cCliCmd
+{
+public:
+  cCliCmd_AppStat() :cCliCmd((const char*)"AppStat", (const char*)"App Status") {}
+  bool bProzessCmd(cStr& lcParam, cCli* lcCli, bool lbFirstCall, void* lCallerAdr) override
+  {
+    UNUSED(lcParam);
+    UNUSED(lCallerAdr);
+    UNUSED(lbFirstCall);
+
+    cStr_Create(lszStr, 32);
+
+    if (mcSmLight.mcLightCntrl.menMode == cSmLightBrightness::enModeDay)
+    {
+      lszStr.Setf((rsz)"B Mode: Day");
+    }
+    else
+    {
+      lszStr.Setf((rsz)"B Mode: Nigth");
+    }
+    lcCli->bPrintLn(lszStr);
+
+    switch (mcSmLight.mcLightCntrl.mState)
+    {
+      case cSmLightBrightness::stOff:
+        lszStr.Setf((rsz)"B State: Off");
+        break;
+      case cSmLightBrightness::stOn:
+        lszStr.Setf((rsz)"B State: On");
+        break;
+    }
+    lcCli->bPrintLn(lszStr);
+    
+    lszStr.Setf((rsz)"220V Req: %d", mcSm220V.mu8ReqCnt); lcCli->bPrintLn(lszStr);
+
+    switch (mcSmLight.mState)
+    {
+      case cSmLight::stOff:
+        lszStr.Setf((rsz)"L State: Off");
+        break;
+      case cSmLight::stWaitPower:
+        lszStr.Setf((rsz)"L State: WaitPower");
+        break;
+      case cSmLight::stWaitPSwitch:
+        lszStr.Setf((rsz)"L State: WaitPSwitch");
+        break;
+      case cSmLight::stOn:
+        lszStr.Setf((rsz)"L State: On");
+        break;
+      case cSmLight::stOnHold:
+        lszStr.Setf((rsz)"L State: OnHold");
+        break;
+      case cSmLight::stDimOff:
+        lszStr.Setf((rsz)"L State: DimOff");;
+        break;
+    }
+    lcCli->bPrintLn(lszStr);
+
+
+    switch (mcSmCharger.mState)
+    {
+      case cSmCharger::stOff:
+        lszStr.Setf((rsz)"C State: Off");
+        break;
+      case cSmCharger::stOn:
+        lszStr.Setf((rsz)"C State: On");
+        break;
+      case cSmCharger::stWait:
+        lszStr.Setf((rsz)"C State: Wait");
+        break;
+    }
+    lcCli->bPrintLn(lszStr);
+
+    return True;
+  }
+};
+
+class cCliCmd_WupReq : public cCliCmd
+{
+public:
+  cCliCmd_WupReq() :cCliCmd((const char*)"WupReq", (const char*)"Wakeup Request") {}
+  bool bProzessCmd(cStr& lcParam, cCli* lcCli, bool lbFirstCall, void* lCallerAdr) override
+  {
+    UNUSED(lcParam);
+    UNUSED(lCallerAdr);
+    UNUSED(lbFirstCall);
+
+    cStr_Create(lszStr, 32);
+
+    mcSys.mcSMsg.mcWakeupSim.vSet(1, 0);
+
+    lszStr.Setf((rsz)"Ok");
+    lcCli->bPrintLn(lszStr);
+
+    return True;
+  }
+};
+
+class cCliCmd_ShtDwmReq : public cCliCmd
+{
+public:
+  cCliCmd_ShtDwmReq() :cCliCmd((const char*)"ShtDwmReq", (const char*)"Shutdown request") {}
+  bool bProzessCmd(cStr& lcParam, cCli* lcCli, bool lbFirstCall, void* lCallerAdr) override
+  {
+    UNUSED(lcParam);
+    UNUSED(lCallerAdr);
+    UNUSED(lbFirstCall);
+
+    cStr_Create(lszStr, 32);
+
+    mcSmLight.mu32PirCnt_ms = 200;
+
+    lszStr.Setf((rsz)"Ok");
+    lcCli->bPrintLn(lszStr);
+
+    return True;
+  }
+};
+
+cCliCmd_WupReq        mcCliCmd_WupReq;
+cCliCmd_AppStat       mcCliCmd_AppStat;
+cCliCmd_ShtDwmReq     mcCliCmd_ShtDwmReq;
+
+cCliCmdList mcCliCmdListApp((cCliCmd* []) {&mcCliCmd_AppStat, &mcCliCmd_WupReq, &mcCliCmd_ShtDwmReq}, 3);
+
+
 void MAIN_vTick1msHp(void)
 {
   mcSys.vTick1msHp();
@@ -1343,6 +1470,7 @@ void MAIN_vInitSystem(void)
   mcSys.vInit1();
 
   cBuRam::vAddLogPos(4);
+  mcSys.mcCom.mcBn.mcStreamSys.mcCmdPort.bAddCmdList(&mcCliCmdListApp);
   mcBnMsgHandlerApp.vAddMsgSys();
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
@@ -1463,6 +1591,7 @@ void MainSystemInit()
 
   //cBuRam::vEnable(); // cBuRam::vEnable() wird auch in cErr::vInit() gemacht
   cErr::vInit();
+  cBuRam::mBuRam->u32SysTime_ms = 0;
   cBuRam::vAddLogPos(1);
 
   SystemInit();
@@ -1498,7 +1627,7 @@ void MainSystemInit()
     cSysPkgPMon::vPA08_Set1();
   #endif
 
-  //cBnSpop_vStartTim15();
+  cBnSpop_vStartTim15();
 
   // 0x20007800
   //   Heap 32k

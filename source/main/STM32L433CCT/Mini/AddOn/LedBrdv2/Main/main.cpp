@@ -861,6 +861,7 @@ public:
 class cLedAnimation_LampeRgb : public cLedAnimation_Static
 {
 public:
+  i16 SetR, SetG, SetB;
   cLedAnimation_LampeRgb(cWs2812* lcWs2812)
     : cLedAnimation_Static(lcWs2812, mcData.mData.u8CustR, mcData.mData.u8CustG, mcData.mData.u8CustB, (rsz)"Lampe")
   {
@@ -875,21 +876,46 @@ public:
   {
     mi16Value = li16Value;
 
-    if      (mi16Value <  80) { R = 255; G =   0; B =   0;}
-    else if (mi16Value < 100) { R = 255; G =  64; B =  64;}
-    else if (mi16Value < 120) { R = 255; G = 128; B = 128;}
-    else if (mi16Value < 140) { R = 255; G = 192; B = 192;}
-    else                      { R = 255; G = 255; B = 255;}
+    if      (mi16Value <  80) { SetR = 255; SetG =   0; SetB =   0;}
+    else if (mi16Value < 100) { SetR = 255; SetG =  64; SetB =  64;}
+    else if (mi16Value < 120) { SetR = 255; SetG = 128; SetB = 128;}
+    else if (mi16Value < 140) { SetR = 255; SetG = 192; SetB = 192;}
+    else                      { SetR = 255; SetG = 255; SetB = 255;}
+  }
+
+  u8 u8Dim(i16 Col, i16 SetCol)
+  {
+    if (Col == SetCol)
+    {
+      return Col;
+    }
+    else
+    {
+      if (Col < SetCol)
+      {
+        Col++;
+      }
+      else
+      {
+        Col--;
+      }
+    }
+    return (u8)Col;
+  }
+
+  void vProcess10ms() override
+  {
+    for (u8 lu8t = 0; lu8t < 3; lu8t++)
+    {
+      R = u8Dim(R, SetR);
+      G = u8Dim(G, SetG);
+      B = u8Dim(B, SetB);
+    }
 
     for (u16 lu16i = 0; lu16i < mu16LedCnt; lu16i++)
     {
       mcWs2812->vSetLedPxl(lu16i, R, G, B);
     }
-  }
-
-  void vProcess10ms() override
-  {
-    cLedAnimation_Static::vProcess10ms();
   }
 };
 
@@ -1254,9 +1280,9 @@ public:
             if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               if (lpu8PayloadRx[3] <= 1) mcSys.mcBoard.mcBoardCntrl.vSetRelais(lpu8PayloadRx[3]);
-              mcWs2812.vSetPwmLed1(lpu8PayloadRx[4]);
-              mcWs2812.vSetPwmLed2(lpu8PayloadRx[5]);
-              mcWs2812.vSetPwmLed3(lpu8PayloadRx[6]);
+              if (lpu8PayloadRx[4] <= 100) mcWs2812.vSetPwmLed1(lpu8PayloadRx[4]);
+              if (lpu8PayloadRx[5] <= 100) mcWs2812.vSetPwmLed2(lpu8PayloadRx[5]);
+              if (lpu8PayloadRx[6] <= 100) mcWs2812.vSetPwmLed3(lpu8PayloadRx[6]);
 
               lbConsumed = True;
             }
@@ -1455,60 +1481,20 @@ void MAIN_vTick1msLp(void)
 
 void MAIN_vTick10msLp()
 {
-  static volatile u8 lu8BrightnessOld = 128;
-  static u16 lu16Minute     = 0;
-  static i16 li16TempAlarm  = 0;
-  static u16 lu16IsOn       = 1;
-  static u16 mu16AnimIdxOld = 255;
-
-  mcWs2812.vTick10msLp();
-
-  if (mu16LedAnimationIdx != mu16AnimIdxOld)
-  {
-    mu16AnimIdxOld = mu16LedAnimationIdx;
-    mLstLedAnims[mu16LedAnimationIdx]->vInit();
-    mcData.vUpdate();
-  }
-
   u8 lu8Brightness;
 
   lu8Brightness = mcData.mData.u16Brigthness;
 
-  lu8Brightness *= lu16IsOn;
+  mLstLedAnims[mu16LedAnimationIdx]->vProcess10ms();
+  mcWs2812.vTick10msLp();
 
-  lu16Minute++;
-  if (lu16Minute > 6000)
-  {
-    lu16Minute = 0;
-
-    // Einfache Temperatur Regelung
-    // if (mcWs2812.i16GetNtcTemp() > 70) // analog
-    if (mcTemp.i16GetTemp(0) > mcData.mData.i16MaxTemp)  // digital
-    {
-      li16TempAlarm -= 5;
-      if (li16TempAlarm < -250) li16TempAlarm -= 250;
-    }
-    else
-    {
-      li16TempAlarm += 5;
-      if (li16TempAlarm > 0) li16TempAlarm = 0;
-    }
-    if (lu8BrightnessOld != lu8Brightness) // Benutzer hat Helligkeit verändert
-    {
-      li16TempAlarm = 0;
-    }
-  }
-
-  if ((lu8BrightnessOld != lu8Brightness) || (lu16Minute == 0))
-  {
-    mcWs2812.vSetBrigthness(lu8Brightness + li16TempAlarm);
-    lu8BrightnessOld = lu8Brightness;
-  }
+  mcWs2812.vSetBrigthness(lu8Brightness);
 
   if (lu8Brightness) mcWs2812.vEnable();
                 else mcWs2812.vDisable();
-  mLstLedAnims[mu16LedAnimationIdx]->vProcess10ms();
-  mcWs2812.vShow();
+
+
+
   mcData.vTick10ms();
 }
 

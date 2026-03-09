@@ -114,8 +114,9 @@ u8 mu8MyLedBitMemory[LEDCTRL_LED_MEMSIZE(LEDMAXLEDCNT)];
 cWs2812 mcWs2812(mu8MyLedRgbMemory, mu8MyLedBitMemory, LEDMAXLEDCNT);
 
 
-cSSD1306    mcSSD1306(&mcSys.mcBoard.mcI2C3_Board, 0x78, 56); // == 3C * 2
+cSSD1306    mcSSD1306(&mcSys.mcBoard.mcI2C3_Board, 0x3C, 60); // == 3C * 2
 cAPDS9960   mcAPDS9960(&mcSys.mcBoard.mcI2C3_Board, nAPDS9960_I2C_ADDR);
+cBMP180     mcBMP180(&mcSys.mcBoard.mcI2C3_Board, nBMP180_I2C_ADDR);
 
 
 #define MAIN_nDISPLAY_X cSSD1306_WIDTH
@@ -124,11 +125,18 @@ cAPDS9960   mcAPDS9960(&mcSys.mcBoard.mcI2C3_Board, nAPDS9960_I2C_ADDR);
 uint8                    mDisplayMemory[MAIN_nDISPLAY_X * MAIN_nDISPLAY_Y / 8];
 cBitmap_Bpp1_1G          mcBm(MAIN_nDISPLAY_X, MAIN_nDISPLAY_Y, mDisplayMemory);
 cScreen_Bpp1_1G          mcScreen1(&mcBm);
+
+uint8                    mDisplayMemory2[MAIN_nDISPLAY_X * MAIN_nDISPLAY_Y / 8];
+cBitmap_Bpp1_1G          mcBm2(MAIN_nDISPLAY_X, MAIN_nDISPLAY_Y, mDisplayMemory2);
+cScreen_Bpp1_1G          mcScreen2(&mcBm2);
+
+
 cRes8b_Bpp1_1G_SpriteEngine_Bpp1_1G mcSpriteEng(Sprite_nModeOr);
 cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_5x5Ucase(SPRTMST_FontLut_RFont01_05x05U_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_05x05U_1BPP_1G_Bmp, &mcSpriteEng);
 cRFont_Res8b_Bpp1_1G     cRFont_Res8b_Bpp1_1G_Full(SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp, &mcSpriteEng);
 
 u16    mu16Data[3] = { 0xFFFF, 0xFFFF, 0xFFFF };
+u8     mu8ComInhibitor = 0;
 
 class  __attribute__((__packed__)) cData
 {
@@ -241,31 +249,20 @@ class cLedAnimation
   }
 };
 
-class cEepData: public cData
+class cEepData : public cData
 {
-  public:
-  typedef enum
-  {
-     nSize = (1 * 1024)
-  }tenCfg;
-
-
-  u16      mu16StoreTimer;
-  u16      mu16LoadTimer;
+public:
+  u16      mu16StoreTimer_ms;
+  u16      mu16LoadTimer_ms;
   cI2cEep* mcEep;
-  bool     mbLoad;
   bool     mbError;
 
   cEepData(cI2cEep* lcEep)
   {
-    mcEep   = lcEep;
-    mbLoad  = True;
-    mbError = False;
-    mu16StoreTimer = 0;
-    mu16LoadTimer  = 0;
+    mcEep = lcEep;
+    mu16StoreTimer_ms = 0;
+    vStartLoad();
   }
-
-
 
   void vLoad()
   {
@@ -281,47 +278,56 @@ class cEepData: public cData
 
   void vUpdate()
   {
-    mu16StoreTimer = mData.u16StartTimerReload;
+    mu16StoreTimer_ms = mData.u16StartTimerReload;
   }
 
   void vTick10ms()
   {
-    if (mu16StoreTimer > 0)
+    if (mu16StoreTimer_ms > 0)
     {
-      if (mu16StoreTimer > 10)
+      if (mu16StoreTimer_ms > 10)
       {
-        mu16StoreTimer -= 10;
+        mu16StoreTimer_ms -= 10;
       }
       else
       {
-        mu16StoreTimer = 0;
+        mu16StoreTimer_ms = 0;
         vStore();
       }
     }
 
     // Warten bis Daten gelesen wurden
-    if (mbLoad)
+    if (mu16LoadTimer_ms)
     {
       // Timeout zum warten auf EEPROM
-      if (mu16LoadTimer < 1000)
+      if ((mu16LoadTimer_ms > 10) &&  (!mcEep->mStatus.IsError))
       {
-        mu16LoadTimer += 10;
+        mu16LoadTimer_ms -= 10;
       }
-      else // EEPROM wurde nicht geladen
+      else // EEPROM Timeout oder Fehler
       {
         mbError = True;
-        mbLoad = False;
+        mu16LoadTimer_ms = 0;
         vCheckAndSetDefault();
       }
 
       if (mcEep->mStatus.IsInit)
       {
-        mbLoad = False;
+        mu16LoadTimer_ms = 0;
         vLoad();
         vCheckAndSetDefault();
       }
     }
   }
+
+  void vStartLoad()
+  {
+    mbError = False;
+    mcEep->vCmdSetup();
+    mu16LoadTimer_ms = mcEep->u32GetSize() / 5;
+  }
+
+  bool isLoading()   {return (mu16LoadTimer_ms > 0);}
 };
 
 cEepData mcData(&mcSys.mcBoard.mcEep);
@@ -509,6 +515,10 @@ class cUserInterface
               mu8RotDsD_State = 0;
               mu8BtnState++;
             }
+          }
+          else
+          {
+            mu8RotDsD_State = mcRotDsD.ui8Get();
           }
           break;
         case 1: // Wait for Button released
@@ -1324,11 +1334,12 @@ public:
 class cLedAnimation_Lampe : public cLedAnimation_Static
 {
 public:
+  i16 SetR, SetG, SetB;
+
   cLedAnimation_Lampe(cWs2812* lcWs2812)
     : cLedAnimation_Static(lcWs2812, mcData.mData.u8CustR, mcData.mData.u8CustG, mcData.mData.u8CustB, (rsz)"Lampe")
   {
   }
-
 
   void vInit() override
   {
@@ -1336,22 +1347,49 @@ public:
   }
 
 
+  u8 u8Dim(i16 Col, i16 SetCol)
+  {
+    if (Col == SetCol)
+    {
+      return Col;
+    }
+    else
+    {
+      if (Col < SetCol)
+      {
+        Col++;
+      }
+      else
+      {
+        Col--;
+      }
+    }
+    return (u8)Col;
+  }
+
   void vProcess10ms() override
   {
     switch(mi16Value)
     {
-      case 1:  R =  64; G =   0; B =   0; break;
-      case 2:  R = 128; G =   0; B =   0; break;
-      case 3:  R = 192; G =   0; B =   0; break;
-      case 4:  R = 255; G =  64; B =  64; break;
-      case 5:  R = 255; G = 128; B = 128; break;
-      case 6:  R = 255; G = 192; B = 192; break;
-      case 7:  R = 255; G = 255; B = 255; break;
-      case 8:  R = 255; G = 255; B = 255; break;
-      case 9:  R = 255; G = 255; B = 255; break;
-      case 10: R = 255; G = 255; B = 255; break;
-      case 11: R = 255; G = 255; B = 255; break;
-      case 12: R = 255; G = 255; B = 255; break;
+      case 1:  SetR =  64; SetG =   0; SetB =   0; break;
+      case 2:  SetR = 128; SetG =   0; SetB =   0; break;
+      case 3:  SetR = 192; SetG =   0; SetB =   0; break;
+      case 4:  SetR = 255; SetG =  64; SetB =  64; break;
+      case 5:  SetR = 255; SetG = 128; SetB = 128; break;
+      case 6:  SetR = 255; SetG = 192; SetB = 192; break;
+      case 7:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 8:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 9:  SetR = 255; SetG = 255; SetB = 255; break;
+      case 10: SetR = 255; SetG = 255; SetB = 255; break;
+      case 11: SetR = 255; SetG = 255; SetB = 255; break;
+      case 12: SetR = 255; SetG = 255; SetB = 255; break;
+    }
+
+    for (u8 lu8t = 0; lu8t < 3; lu8t++)
+    {
+      R = u8Dim(R, SetR);
+      G = u8Dim(G, SetG);
+      B = u8Dim(B, SetB);
     }
 
     cLedAnimation_Static::vProcess10ms();
@@ -1466,7 +1504,7 @@ public:
       lcCli->bPrintLn(mcSys.mszErrorInfo);
 
       lcCli->bPrintLn((rsz)"");
-      lszStr.Setf((const char8*)"Mode %s (%d)", mcSys.mcSMan.mcOpMode.ToString(), mcSys.mcSMan.mcOpMode.mCounter);
+      lszStr.Setf((const char8*)"Mode %s (%d)", mcSys.mcSMan.mcOpMode.ToString(), mcSys.mcSMan.mcOpMode.mCounter_s);
       lcCli->bPrintLn(lszStr);
       return True;
     }
@@ -1752,21 +1790,20 @@ public:
   bool bMsg(cBotNetMsg_MsgProt& lcMsg)
   {
     bool lbConsumed = False;
+    u8* lpu8PayloadRx = lcMsg.GetPayload().mpu8Data;
 
-    switch (lcMsg.mu16Idx)
+    switch (lcMsg.u16GetIdx())
     {
       // --------------------------- SLED Messages -----------------------------
       case 40: // Request message
-        switch (lcMsg.mcPayload[0])
+        switch (lpu8PayloadRx[0])
         {
           case 0: // SLED.Status
-            if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+            if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
             {
               u8 lu8Data[11];
 
               // Response Message
-              lcMsg.vPrepare(lcMsg.mcFrame.mcDAdr.Get(), lcMsg.mcFrame.mcSAdr.Get(), 41);
-
               lu8Data[0] = 0;
               lu8Data[1] = 0;
               lu8Data[2] = 0;
@@ -1779,9 +1816,7 @@ public:
               lu8Data[9] = mcTemp.i16GetTemp(0) >> 8;
               lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
-              lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-              lcMsg.vEncode();
-              mcBn->bSendMsg(&lcMsg);
+              u8PutInt(lcMsg.cGetDAdr(), lcMsg.cGetSAdr(), 41, lu8Data, sizeof(lu8Data));
 
               lbConsumed = True;
             }
@@ -1795,45 +1830,52 @@ public:
         //                                                                 //  [5] AI: Animation Index
         //                                                                 //  [6] RGB: RGB value
         //                                                                 //  [7] TH.TL: max. Temperature value (°C,  int16)
-          switch (lcMsg.mcPayload[0])
+          switch (lpu8PayloadRx[0])
           {
             case 0: // SLED.Status
-              if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+              if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
               {
                 u8 lu8AnimCnt;
                 lu8AnimCnt = ((sizeof(mLstLedAnims) / sizeof(cLedAnimation*)) - 1);
 
-                mcData.mData.u16TurnOnState = lcMsg.mcPayload[3] & 1;
-
-                i16 li16RotCnt = lcMsg.mcPayload[4];
-                if (li16RotCnt > 12) li16RotCnt = 12;
-                mcUI.vSetRotCnt(li16RotCnt);
-
-                mcData.mData.u16LedAnimationIdx = lcMsg.mcPayload[5] % lu8AnimCnt;
-                mcData.mData.u8CustR            = lcMsg.mcPayload[6];
-                mcData.mData.u8CustG            = lcMsg.mcPayload[7];
-                mcData.mData.u8CustB            = lcMsg.mcPayload[8];
-                mcData.mData.i16MaxTemp         = (lcMsg.mcPayload[9] << 8) + lcMsg.mcPayload[10];
-
-                if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
+                if (mu8ComInhibitor == 0)
                 {
-                  mu16LedAnimationIdx = mcData.mData.u16LedAnimationIdx;
-                  mLstLedAnims[mu16LedAnimationIdx]->vInit();
-                }
-                mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.mi16RotCnt);
+                  mcData.mData.u16TurnOnState = lpu8PayloadRx[3] & 1;
 
-                mcData.vUpdate();
+                  i16 li16RotCnt = lpu8PayloadRx[4];
+                  if (li16RotCnt > 12) li16RotCnt = 12;
+                  mcUI.vSetRotCnt(li16RotCnt);
+
+                  mcData.mData.u16LedAnimationIdx = lpu8PayloadRx[5] % lu8AnimCnt;
+                  mcData.mData.u8CustR            = lpu8PayloadRx[6];
+                  mcData.mData.u8CustG            = lpu8PayloadRx[7];
+                  mcData.mData.u8CustB            = lpu8PayloadRx[8];
+                  mcData.mData.i16MaxTemp         = (lpu8PayloadRx[9] << 8) + lpu8PayloadRx[10];
+
+                  if (mu16LedAnimationIdx != mcData.mData.u16LedAnimationIdx)
+                  {
+                    mu16LedAnimationIdx = mcData.mData.u16LedAnimationIdx;
+                    mLstLedAnims[mu16LedAnimationIdx]->vInit();
+                  }
+                  mLstLedAnims[mu16LedAnimationIdx]->vSetValue(mcUI.mi16RotCnt);
+
+                  //mcData.vUpdate();
+                }
+                else
+                {
+                  mu8ComInhibitor--;
+                }
 
                 lbConsumed = True;
               }
               break;
             case 1: //  Set 16Bit Values
               // RX 01 | 00 | 00 | 01.D0.D0.D1.D1.D2.D2
-              if ((lcMsg.mcPayload[1] == 0) && (lcMsg.mcPayload[2] == 0))
+              if ((lpu8PayloadRx[1] == 0) && (lpu8PayloadRx[2] == 0))
               {
-                mu16Data[0] = (lcMsg.mcPayload[4] << 8) + lcMsg.mcPayload[5];
-                mu16Data[1] = (lcMsg.mcPayload[6] << 8) + lcMsg.mcPayload[7];
-                mu16Data[2] = (lcMsg.mcPayload[8] << 8) + lcMsg.mcPayload[9];
+                mu16Data[0] = (lpu8PayloadRx[4] << 8) + lpu8PayloadRx[5];
+                mu16Data[1] = (lpu8PayloadRx[6] << 8) + lpu8PayloadRx[7];
+                mu16Data[2] = (lpu8PayloadRx[8] << 8) + lpu8PayloadRx[9];
                 lbConsumed = True;
               }
               break;
@@ -1857,10 +1899,6 @@ void vSendStatus()
 
     u8 lu8Data[11];
 
-    // Response Message
-    // Status Nachricht alle 100ms senden     Name  Size   S                             D    MsgIdx
-    cBotNetMsg_Static_MsgProt_Create_Prepare(lcMsg, 32, mcSys.mcCom.mcBn.mcAdr.Get(), 0x1000, 41);
-
     lu8Data[0] = 0;
     lu8Data[1] = 0;
     lu8Data[2] = 0;
@@ -1873,9 +1911,10 @@ void vSendStatus()
     lu8Data[9] = mcTemp.i16GetTemp(0) >> 8;
     lu8Data[10] = mcTemp.i16GetTemp(0) & 0xFF;
 
-    lcMsg.mcPayload.Set(lu8Data, sizeof(lu8Data));
-    lcMsg.vEncode();
-    mcSys.mcCom.mcBn.bSendMsg(&lcMsg);
+    // Response Message
+    // Status Nachricht alle 100ms senden
+    //                        S                       D    MsgIdx, Data,   Size
+    mcSys.mcCom.mcBn.vSendMsg(mcSys.mcCom.mcBn.mcAdr, 0x1000, 41, lu8Data, sizeof(lu8Data));
   }
 }
 
@@ -1991,17 +2030,104 @@ void MAIN_vTick1msLp(void)
 i16 mi16RotCntOld = 0;
 bool mbEditMode = False;
 u8   mu8ProxiCnt = 0;
+u8   mu8ProxiCntConfirmed = 0;
 
 void MAIN_vTick100msLp()
 {
   char lszValue[16] = "";
   cStr_Create(lszStrClock, 32);
+  static u16 lu8HoldCnt_ms;
   static u8  lu8ProxiLast;
   static u8  lu8RectsLast;
-  static u16 lu8HoldCnt_ms;
+  static u8  lu8Page = 0;
+  static u8  lu8PageCnt = 0;
+
+  mcBMP180.vCalc();
+  mcBMP180.i8Start();
 
   mcScreen1.vFill(0);
+  mcScreen2.vFill(0);
   //mcScreen1.vLine(0, 0, MAIN_nDISPLAY_X - 1, MAIN_nDISPLAY_Y - 1, 1);
+
+  switch (lu8Page)
+  {
+    case 0:
+      {
+        // Datum
+        mcSys.mcClock.mClock.toStringDate(lszStrClock);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
+
+        // Uhrzeit
+        mcSys.mcClock.mClock.toStringTime(lszStrClock);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
+
+        // ReSync Timeout
+        if (mcSys.mcClock.mu32ClockResyncTimeout_s > 0)
+        {
+          lszStrClock.Setf((rsz)"ReSync: %d", mcSys.mcClock.mu32ClockResyncTimeout_s);
+          cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 30, (char8*)lszStrClock.ToString(), &mcScreen1);
+        }
+
+        // 16Bit Value
+        if (mu16Data[0] != 0xFFFF)
+        {
+          lszStrClock.Setf("%d", mu16Data[0]);
+          if (mcSys.mcClock.mu32ClockResyncTimeout_s > 0)
+          cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(80, 30, (char8*)lszStrClock.ToString(), &mcScreen1);
+        }
+      }
+      break;
+    case 1:
+      {
+        float lfTemp = (float)mcBMP180.fGetTemperature();
+        i16   liTempL = (i16)lfTemp;
+        i16   liTempR = (i16)((lfTemp - liTempL)*10);
+
+        // Temperatur
+        lszStrClock.Setf((rsz)"T: %d.%dC", liTempL, liTempR);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
+
+        // Pressure
+        lszStrClock.Setf((rsz)"P: %dkPa", mcBMP180.u32GetPressure() / 1000);
+        cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
+      }
+      break;
+  }
+
+  lu8PageCnt++;
+  if (lu8PageCnt >= 20)
+  {
+    lu8PageCnt = 0;
+    lu8Page++;
+
+    if (lu8Page > 1)
+    {
+      lu8Page = 0;
+    }
+  }
+
+  for (u16 lu16x = 0; lu16x < MAIN_nDISPLAY_X; lu16x++)
+  {
+    for (u16 lu16y = 0; lu16y < MAIN_nDISPLAY_Y; lu16y++)
+    {
+      if ((mbEditMode) || (((mcSys.mcClock.mu32ClockResyncTimeout_s > 0) || (mu16Data[0] != 0xFFFF)) && (lu8Page == 0)))
+      {
+        if (mcScreen1.u32GpAbsRaw(lu16x / 1, lu16y / 1))
+        {
+          mcScreen2.vPpAbsRaw(lu16x, lu16y, 1);
+        }
+      }
+      else
+      {
+        if (mcScreen1.u32GpAbsRaw(lu16x / 2, lu16y / 2))
+        {
+          mcScreen2.vPpAbsRaw(lu16x, lu16y, 1);
+        }
+      }
+    }
+  }
+
+
 
   if (mcAPDS9960.isEnabledProximitySensor())
   {
@@ -2010,7 +2136,7 @@ void MAIN_vTick100msLp()
     {
       u8 lu8Proxi = mcAPDS9960.ui8GetProximitySensor();
       cStrTools::uixItoa(lu8Proxi, lszValue, 10);
-      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 55, lszValue,       &mcScreen1);
+      cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 55, lszValue, &mcScreen2);
 
       // ca. 25 bis 255
       // (255 - 25) / 12 = 19 digit
@@ -2036,11 +2162,31 @@ void MAIN_vTick100msLp()
         if (mu8ProxiCnt > 50) mu8ProxiCnt -= 50;
         else mu8ProxiCnt = 0;
         mu8ProxiCnt /= 17;
+        if (mbEditMode == False)
+        {
+          mi16RotCntOld = mcUI.i16GetRotCnt();
+          mu8ProxiCntConfirmed = 0xFF;
+        }
         mbEditMode = True;
       }
       else
       {
         mu8ProxiCnt = (u8)mi16RotCntOld;
+
+        if (mbEditMode == True)
+        {
+          if (mu8ProxiCntConfirmed == 0xFF)
+          {
+            mcUI.mi16RotCnt = mi16RotCntOld;
+            mcUI.mbRotCntChanged = True;
+          }
+          else
+          {
+            mcUI.mi16RotCnt = mu8ProxiCntConfirmed;
+            mcUI.mbRotCntChanged = True;
+          }
+        }
+
         mbEditMode = False;
       }
 
@@ -2052,57 +2198,58 @@ void MAIN_vTick100msLp()
 
       u8 lu8Rect;
 
-      for (lu8Rect = 0; lu8Rect < 12; lu8Rect++)
-      {
-        if (lu8Rect < mu8ProxiCnt)
-        {
-          cPaint::vRectFull(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
-        }
-        else
-        {
-          cPaint::vRect(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen1);
-        }
-      }
-
       if (mbEditMode)
       {
-        cPaint::vRect(28, 44, 11 * 8 + 2, 14, 1, &mcScreen1);
-        if (lu8HoldCnt_ms < 2000)
+        mcUI.mi16RotCnt = mu8ProxiCnt;
+        mcUI.mbRotCntChanged = True;
+        for (lu8Rect = 0; lu8Rect < 12; lu8Rect++)
         {
-          lu8HoldCnt_ms += 100;
-
-          if (lu8HoldCnt_ms == 2000)
+          if (lu8Rect < mu8ProxiCnt)
           {
-            mcUI.mi16RotCnt = mu8ProxiCnt;
+            cPaint::vRectFull(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen2);
+          }
+          else
+          {
+            cPaint::vRect(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen2);
           }
         }
 
-        cPaint::vRect(28, 39, 80, 4, 1, &mcScreen1);
-        cPaint::vRectFull(28, 40, lu8HoldCnt_ms / 100 * 4, 2, 1, &mcScreen1);
+        cPaint::vRect(28, 44, 11 * 8 + 2, 14, 1, &mcScreen2);
+        if (lu8HoldCnt_ms < 2000)
+        {
+          lu8HoldCnt_ms += 200;
+
+          if (lu8HoldCnt_ms == 2000)
+          {
+            mu8ProxiCntConfirmed = mu8ProxiCnt;
+          }
+        }
+
+        cPaint::vRect(28, 39, 80, 4, 1, &mcScreen2);
+        cPaint::vRectFull(28, 40, lu8HoldCnt_ms / 100 * 4, 2, 1, &mcScreen2);
+      }
+      else
+      {
+        for (lu8Rect = 0; lu8Rect < 12; lu8Rect++)
+        {
+          if (lu8Rect < mcUI.i16GetRotCnt())
+          {
+            cPaint::vRectFull(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen2);
+          }
+          else
+          {
+            cPaint::vRect(30 + lu8Rect * 7, 46, 8, 10, 1, &mcScreen2);
+          }
+        }
       }
     }
   }
-
-  mcSys.mcClock.mClock.toStringDate(lszStrClock);
-  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
-
-  if (mu16Data[0] != 0xFFFF)
+  else
   {
-    lszStrClock.Setf("%d", mu16Data[0]);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(128-30, 10, (char8*)lszStrClock.ToString(), &mcScreen1);
-  }
-  
-
-  mcSys.mcClock.mClock.toStringTime(lszStrClock);
-  cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 20, (char8*)lszStrClock.ToString(), &mcScreen1);
-
-  if (mcSys.mcClock.mu32ClockResyncTimeout_s > 0)
-  {
-    lszStrClock.Setf((rsz)"ReSync: %d", mcSys.mcClock.mu32ClockResyncTimeout_s);
-    cRFont_Res8b_Bpp1_1G_Full.i8PutStringXY(4, 30, (char8*)lszStrClock.ToString(), &mcScreen1);
+     mcAPDS9960.i8EnableProximitySensor();
   }
 
-  mcSSD1306.vShowScreen(mcScreen1.mpcBm->mpui8Data);
+  mcSSD1306.vShowScreen(mcScreen2.mpcBm->mpui8Data);
   mcSSD1306.Update();
 }
 
@@ -2132,24 +2279,26 @@ void MAIN_vTick10msLp()
   {
     mbSendRotCntUpdate = True;
     mLstLedAnims[mu16LedAnimationIdx]->vSetValue(li16RotCnt);
-    mcData.vUpdate();
+    mu8ComInhibitor = 1;
+    //mcData.vUpdate();
   }
 
   if (mcUI.isBtnSingleClicked())
   {
-
+    mbSendRotCntUpdate = True;
     if (mcData.mData.u16TurnOnState) mcData.mData.u16TurnOnState = 0;
                                 else mcData.mData.u16TurnOnState = 1;
   }
 
   if ((mcUI.isBtnDoubleClicked()) && (mcData.mData.u16TurnOnState))
   {
+    mbSendRotCntUpdate = True;
     mu16LedAnimationIdx = mu16LedAnimationIdx + 1;
     if (mLstLedAnims[mu16LedAnimationIdx] == NULL) mu16LedAnimationIdx = 0;
     mLstLedAnims[mu16LedAnimationIdx]->vSetValue(li16RotCnt);
     mLstLedAnims[mu16LedAnimationIdx]->vInit();
     mcData.mData.u16LedAnimationIdx = mu16LedAnimationIdx;
-    mcData.vUpdate();
+    //mcData.vUpdate();
   }
 
   u8 lu8Brightness;
@@ -2218,17 +2367,24 @@ void MAIN_vInitSystem(void)
   CycCall_Start(MAIN_vTick1msHp,
                 MAIN_vTick1msLp);
 
+  mcSys.vInit2();
+
   // ------ EEP-Daten laden
   // Im Fehlerfall nochmals ein paar mal probieren, weil ...
   //    Time required after VCC is stable before the device can accept commands. 100 μs
-  u8 lu8EepRetrys = 10;
-  while ((mcData.mbError) && (lu8EepRetrys > 0))
+  u8 lu8EepRetrys = 3;
+  while (lu8EepRetrys > 0)
   {
-    mcData.mbError = False;
-    while ((mcData.mbLoad) && (!mcData.mbError))
+    while (mcData.isLoading())
     {
       CycCall_vIdle();
     }
+
+    if (!mcData.mbError)
+    {
+      break;
+    }
+    mcData.vStartLoad();
     lu8EepRetrys--;
   }
 
@@ -2292,13 +2448,12 @@ void MAIN_vInitSystem(void)
   //lcMsgSLedCyc.vEncode();
   //mcSys.mcCom.mcBn.mcRRpt.bMsg(lcMsgSLedCyc);
 
-  mcAPDS9960.i8EnableProximitySensor();
-
   ////CycCall_Start(MAIN_vTick1msHp,
   ////              MAIN_vTick1msLp);
 
-  mcSys.mcBoard.mcI2C3_Board.vAddSlave(&mcSSD1306);
-  mcSys.mcBoard.mcI2C3_Board.vAddSlave(&mcAPDS9960);
+  mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcSSD1306);
+  mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcAPDS9960);
+  mcSys.mcBoard.mcI2C3_Board.vAddNode(&mcBMP180);
 
   mcSys.vInit2();
 }

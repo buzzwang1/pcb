@@ -12,6 +12,7 @@
 #include "Eep.h"
 #include "cSSD1306.h"
 #include "apds9960.h"
+#include "BMP180.h"
 
 //Graphics
 #include "screen.h"

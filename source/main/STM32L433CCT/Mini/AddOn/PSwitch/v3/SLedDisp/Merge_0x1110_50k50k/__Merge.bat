@@ -27,8 +27,8 @@ call build.bat *STM/L4/STM32L433CCT/Mini/Sys/BLU/LedBrd_I2c.RamRelease* first
 call elf2bin.bat *STM/L4/STM32L433CCT/Mini/Sys/BLU/LedBrd_I2c.RamRelease* first
 
 
-call build.bat   *STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLed.Release_App* first
-call elf2bin.bat *STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLed.Release_App* first
+call build.bat   *STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLedDisp.Release_App* first
+call elf2bin.bat *STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLedDisp.Release_App* first
 
 
 cd %mypath%
@@ -43,7 +43,7 @@ copy %pcbroot%\bin\STM\L4\STM32L433CCT\Mini\Sys\BL\Release\bin\STM32L433CCT_Mini
 copy %pcbroot%\bin\STM\L4\STM32L433CCT\Mini\Sys\BLU\LedBrd_I2c\RamRelease\bin\STM32L433CCT_Mini_Sys_BLU_LedBrd_I2c.elf.bin in\0x08002000_BLU.bin
 
 ::APP
-copy %pcbroot%\bin\STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLed\Release_App\bin\STM32L433CCT_Mini_AddOn_PSwitch_v3_SLed.elf.bin in\0x08008000_APP.bin
+copy %pcbroot%\bin\STM\L4\STM32L433CCT\Mini\AddOn\PSwitch\v3\SLedDisp\Release_App\bin\STM32L433CCT_Mini_AddOn_PSwitch_v3_SLedDisp.elf.bin in\0x08008000_APP.bin
 
 ::RomConst
 cd ..\RomConst\Bridge_50k50k

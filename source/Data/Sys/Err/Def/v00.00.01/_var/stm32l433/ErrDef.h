@@ -18,16 +18,16 @@ extern "C" {
 
 typedef struct
 {
-  u32 isHardFault  : 1;
-  u32 isMemManage  : 1;
-  u32 isBusFault   : 1;
-  u32 isUsageFault : 1;
-  u32 isSVC        : 1;
-  u32 isDebugMon   : 1;
-  u32 isPendSV     : 1;
-  u32 isInitOscCfg : 1;
-  u32 isInitClkCfg : 1;
-  u32 isInitVltScl : 1;
+  u32 isHardFault  : 1; // 01
+  u32 isMemManage  : 1; // 02
+  u32 isBusFault   : 1; // 04
+  u32 isUsageFault : 1; // 08
+  u32 isSVC        : 1; // 10
+  u32 isDebugMon   : 1; // 20
+  u32 isPendSV     : 1; // 40
+  u32 isInitOscCfg : 1; // 80
+  u32 isInitClkCfg : 1; // 00 01
+  u32 isInitVltScl : 1; // 00 02
 }tstErrSources;
 
 typedef union

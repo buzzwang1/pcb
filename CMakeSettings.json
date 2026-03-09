@@ -451,6 +451,36 @@
       ]
     },
     {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_Debug2",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug2",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug2.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug2.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\AppDebug2\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\AppDebug2\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug2"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\AppDebug2\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "GD32F1x0_UbTech_Servo1_Blu",
       "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Blu",
       "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/Blu.Release",
@@ -473,96 +503,6 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\Blu\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F1x0_UbTech_Servo1_LACRTP_App",
-      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/App",
-      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/App.Release",
-      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/App.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\App\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\App\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/App"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\App\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F1x0_UbTech_Servo1_LACRTP_Debug",
-      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/AppDebug",
-      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/AppDebug.Release",
-      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/AppDebug.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\AppDebug\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\AppDebug\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/AppDebug"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\AppDebug\\Release\\gen\\ProjectCfg.cmake"
-        },
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
-        }
-      ]
-    },
-    {
-      "ProjectName": "GD32F1x0_UbTech_Servo1_LACRTP_Blu",
-      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/Blu",
-      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/Blu.Release",
-      "name": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/Blu.Release",
-      "generator": "Ninja",
-      "configurationType": "Release",
-      "inheritEnvironments": [
-        "msvc_x86"
-      ],
-      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\Blu\\Release\\cmake",
-      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\Blu\\Release\\cmake",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "PCB_ProjectLabel",
-          "value": "STM/F1/GD32F1x0/UbTech/Servo1/LACRTP/Blu"
-        },
-        {
-          "name": "PCB_ProjectCfgFile",
-          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\LACRTP\\Blu\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",

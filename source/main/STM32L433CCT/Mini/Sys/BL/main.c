@@ -445,6 +445,10 @@ int main(void)
   // try to decompress and run the blu img(boot loader updater) to the ram
   if (lbStartBlu)
   {
+    if (lstBuRamDef->u32BluReason < 4)
+    {
+      lstBuRamDef->u32BluCnt++;
+    }
     lstBuRamDef->u32SpopMp = 0;
     run_upd(IAP_PARTITION_START_ADRESS_BLU, 1, 0);
     //This point is only reached, if BLU img is missing.
