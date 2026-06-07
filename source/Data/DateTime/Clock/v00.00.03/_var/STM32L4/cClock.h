@@ -71,7 +71,12 @@ class cClock
 
   static const uint8 nMonthTable[12];
 
-  cClock()
+  cClock(bool lbInit = True)
+  {
+    if (lbInit) vInit();
+  }
+
+  void vInit()
   {
     mu8ClockSource  = 0;
     mu8WaitForLse_s = 0;
@@ -110,7 +115,7 @@ class cClock
   void vRtcInit()
   {
     // --------------- First try LSE ---------------
-    
+
     // BURAM vor dem Löschen sichern
     u32 lu32Backup[32];
     for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)
@@ -143,7 +148,7 @@ class cClock
     }
     else
     {
-      mu8WaitForLse_s = 3;
+      mu8WaitForLse_s = 10;
     }
     vGetClockSource();
   }
@@ -179,10 +184,8 @@ class cClock
       LL_RCC_LSE_Disable();
 
       LL_RCC_LSI_Enable();
-
       while (LL_RCC_LSI_IsReady() != 1)
       {
-        __asm("nop");
       }
       LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
 
@@ -458,14 +461,22 @@ class cClock
     // Nachdem die Warte abgelaufen ist, überprüfen, ob auf LSE geschaltet werden kann.
     if (mu8WaitForLse_s)
     {
-      if (mu8WaitForLse_s > 1)
-      {
-        mu8WaitForLse_s--;
-      }
-      else
+      if (LL_RCC_LSE_IsReady())
       {
         mu8WaitForLse_s = 0;
         vRtcInit2();
+      }
+      else
+      {
+        if (mu8WaitForLse_s > 1)
+        {
+          mu8WaitForLse_s--;
+        }
+        else
+        {
+          mu8WaitForLse_s = 0;
+          vRtcInit2();
+        }
       }
     }
   }

@@ -1,0 +1,546 @@
+#ifndef __BQ25798_REGMAP_H__
+#define __BQ25798_REGMAP_H__
+
+/**
+ * Created by Gemini 3 Flash, 2026-04-02
+ * Resource: TI BQ25798 Datasheet (SLUSEN4)
+ */
+
+#include "TypeDef.h"
+
+
+// --- Hauptklasse cBQ25798 ---
+
+struct cBQ25798_RegisterMap
+{
+  // Enum für die Register-Startadressen (Offsets)
+  typedef enum 
+  {
+    nREG00_VSYS_MIN          = 0x00,
+    nREG01_VREG              = 0x01, // u16 (0x01 & 0x02)
+    nREG03_ICHG              = 0x03, // u16 (0x03 & 0x04)
+    nREG05_VINDPM            = 0x05,
+    nREG06_IINDPM            = 0x06,
+    nREG07_PRECHG_CTRL       = 0x07,
+    nREG08_TERM_CTRL         = 0x08,
+    nREG09_TREG_CTRL         = 0x09,
+    nREG0A_TIMER_CTRL        = 0x0A,
+    nREG0B_CHG_CTRL_1        = 0x0B,
+    nREG0C_CHG_CTRL_2        = 0x0C,
+    nREG0D_CHG_CTRL_3        = 0x0D,
+    nREG0E_CHG_CTRL_4        = 0x0E,
+    nREG0F_CHG_CTRL_5        = 0x0F,
+    nREG10_CHG_CTRL_0        = 0x10,
+    nREG11_SYS_CTRL_0        = 0x11,
+    nREG12_SYS_CTRL_1        = 0x12,
+    nREG13_SYS_CTRL_2        = 0x13,
+    nREG14_SYS_CTRL_3        = 0x14,
+    nREG15_CHG_CTRL_6        = 0x15,
+    nREG16_CHG_CTRL_7        = 0x16,
+    nREG17_OTG_CTRL          = 0x17,
+    nREG18_ICO_CTRL          = 0x18,
+    nREG19_MPPT_CTRL_0       = 0x19,
+    nREG1A_MPPT_CTRL_1       = 0x1A,
+    nREG1B_CHG_STAT_0        = 0x1B,
+    nREG1C_CHG_STAT_1        = 0x1C,
+    nREG1D_CHG_STAT_2        = 0x1D,
+    nREG1E_CHG_STAT_3        = 0x1E,
+    nREG1F_CHG_STAT_4        = 0x1F,
+    nREG20_CHG_FLAG_0        = 0x20,
+    nREG21_CHG_FLAG_1        = 0x21,
+    nREG22_CHG_FLAG_2        = 0x22,
+    nREG23_CHG_FLAG_3        = 0x23,
+    nREG24_CHG_MASK_0        = 0x24,
+    nREG25_CHG_MASK_1        = 0x25,
+    nREG26_CHG_MASK_2        = 0x26,
+    nREG27_CHG_MASK_3        = 0x27,
+    nREG28_FAULT_STAT_0      = 0x28,
+    nREG29_FAULT_FLAG_0      = 0x29,
+    nREG2A_FAULT_MASK_0      = 0x2A,
+    nREG2B_ADC_CTRL          = 0x2B,
+    nREG2C_ADC_FUNCTION_CTRL = 0x2C,
+    nREG2D_IBAT_ADC          = 0x2D, // u16
+    nREG2F_VBUS_ADC          = 0x2F, // u16
+    nREG31_VAC1_ADC          = 0x31, // u16
+    nREG33_VAC2_ADC          = 0x33, // u16
+    nREG35_VBAT_ADC          = 0x35, // u16
+    nREG37_VSYS_ADC          = 0x37, // u16
+    nREG39_TS_ADC            = 0x39, // u16
+    nREG3B_TDIE_ADC          = 0x3B, // u16
+    nREG3D_DPLUS_ADC         = 0x3D, // u16
+    nREG3F_DMINUS_ADC        = 0x3F, // u16
+    nREG41_DPDM_ADC          = 0x41, // u16
+    nREG43_ADC_CTRL_HIRES    = 0x43,
+    nREG44_PART_INFORMATION  = 0x44,
+    nREG45_VOTG              = 0x45, // u16
+    nREG47_IOTG_REG          = 0x47,
+    nREG48_VDIFF_END_REG     = 0x48
+  }tenRegAddr;
+
+  // Enum für die Längen der Register in Byte
+  typedef enum 
+  {
+    nLEN_DEFAULT     = 1,
+    nLEN_ADC         = 2,
+    nLEN_VREG        = 2,
+    nLEN_ICHG        = 2,
+    nLEN_VOTG        = 2
+  }tenRegLen;
+
+  /**
+   * @brief Hilfsfunktion (Beispiel), um die Länge zu einem Offset zu erhalten
+   */
+  inline u8 u8GetRegLen(tenRegAddr lenAddr)
+  {
+    switch (lenAddr)
+    {
+      case nREG01_VREG:
+      case nREG03_ICHG:
+      case nREG2D_IBAT_ADC:
+      case nREG2F_VBUS_ADC:
+      case nREG31_VAC1_ADC:
+      case nREG33_VAC2_ADC:
+      case nREG35_VBAT_ADC:
+      case nREG37_VSYS_ADC:
+      case nREG39_TS_ADC:
+      case nREG3B_TDIE_ADC:
+      case nREG3D_DPLUS_ADC:
+      case nREG3F_DMINUS_ADC:
+      case nREG41_DPDM_ADC:
+      case nREG45_VOTG:
+        return (u8)nLEN_ADC;
+    
+      default:
+        return (u8)nLEN_DEFAULT;
+    }
+  }
+
+  // --- Register Union Definitionen ---
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VSYS_MIN_0 : 1; u8 VSYS_MIN_1 : 1; u8 VSYS_MIN_2 : 1; u8 VSYS_MIN_3 : 1;
+      u8 VSYS_MIN_4 : 1; u8 VSYS_MIN_5 : 1; u8 RESERVED : 2;
+    } stBits;
+  } tunREG00_VSYS_MIN;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VREG_0 : 1; u8 VREG_1 : 1; u8 VREG_2 : 1; u8 VREG_3 : 1;
+      u8 VREG_4 : 1; u8 VREG_5 : 1; u8 VREG_6 : 1; u8 VREG_7 : 1;
+    } stBits;
+  } tunREG_VREG;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 ICHG_0 : 1; u8 ICHG_1 : 1; u8 ICHG_2 : 1; u8 ICHG_3 : 1;
+      u8 ICHG_4 : 1; u8 ICHG_5 : 1; u8 ICHG_6 : 1; u8 ICHG_7 : 1;
+    } stBits;
+  } tunREG_ICHG;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VINDPM_0 : 1; u8 VINDPM_1 : 1; u8 VINDPM_2 : 1; u8 VINDPM_3 : 1;
+      u8 VINDPM_4 : 1; u8 VINDPM_5 : 1; u8 VINDPM_6 : 1; u8 VINDPM_7 : 1;
+    } stBits;
+  } tunREG05_VINDPM;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IINDPM_0 : 1; u8 IINDPM_1 : 1; u8 IINDPM_2 : 1; u8 IINDPM_3 : 1;
+      u8 IINDPM_4 : 1; u8 IINDPM_5 : 1; u8 IINDPM_6 : 1; u8 IINDPM_7 : 1;
+    } stBits;
+  } tunREG06_IINDPM;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IPRECHG_0 : 1; u8 IPRECHG_1 : 1; u8 IPRECHG_2 : 1; u8 IPRECHG_3 : 1;
+      u8 IPRECHG_4 : 1; u8 RESERVED : 3;
+    } stBits;
+  } tunREG07_PRECHG_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 ITERM_0 : 1; u8 ITERM_1 : 1; u8 ITERM_2 : 1; u8 ITERM_3 : 1;
+      u8 ITERM_4 : 1; u8 RESERVED : 2; u8 REG_RST : 1;
+    } stBits;
+  } tunREG08_TERM_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 TREG_0 : 1; u8 TREG_1 : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG09_TREG_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 TOPOFF_TIMER_0 : 1; u8 TOPOFF_TIMER_1 : 1; u8 CHG_TIMER_0 : 1; u8 CHG_TIMER_1 : 1;
+      u8 WDT_0 : 1; u8 WDT_1 : 1; u8 EN_TOPOFF : 1; u8 EN_CHG_TIMER : 1;
+    } stBits;
+  } tunREG0A_TIMER_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VQUAL_0 : 1; u8 VQUAL_1 : 1; u8 VQUAL_2 : 1; u8 VQUAL_3 : 1;
+      u8 VQUAL_4 : 1; u8 VQUAL_5 : 1; u8 VQUAL_6 : 1; u8 VQUAL_7 : 1;
+    } stBits;
+  } tunREG0B_CHG_CTRL_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VBAT_LOWV_0 : 1; u8 VBAT_LOWV_1 : 1; u8 VBAT_LOWV_2 : 1; u8 VBAT_LOWV_3 : 1;
+      u8 VBAT_LOWV_4 : 1; u8 VBAT_LOWV_5 : 1; u8 VBAT_LOWV_6 : 1; u8 VBAT_LOWV_7 : 1;
+    } stBits;
+  } tunREG0C_CHG_CTRL_2;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VRECHG_0 : 1; u8 VRECHG_1 : 1; u8 VRECHG_2 : 1; u8 VRECHG_3 : 1;
+      u8 VRECHG_4 : 1; u8 VRECHG_5 : 1; u8 VRECHG_6 : 1; u8 VRECHG_7 : 1;
+    } stBits;
+  } tunREG0D_CHG_CTRL_3;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 PUMPX_DN : 1; u8 PUMPX_UP : 1; u8 EN_PUMPX : 1; u8 RESERVED : 5;
+    } stBits;
+  } tunREG0E_CHG_CTRL_4;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 SFET_PRESENT : 1; u8 JEITA_VSET_0 : 1; u8 JEITA_VSET_1 : 1; u8 JEITA_ISET_0 : 1;
+      u8 JEITA_ISET_1 : 1; u8 T_HYST_0 : 1; u8 T_HYST_1 : 1; u8 WATCHDOG_RST : 1;
+    } stBits;
+  } tunREG0F_CHG_CTRL_5;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 EN_AUTO_IBATDIS : 1; u8 FORCE_IBATDIS : 1; u8 EN_CHG : 1; u8 EN_ICO : 1;
+      u8 RESERVED : 1; u8 EN_HIZ : 1; u8 EN_TERM : 1; u8 EN_BOARD_FETCH : 1;
+    } stBits;
+  } tunREG10_CHG_CTRL_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 SYSMIN_ADJ_0 : 1; u8 SYSMIN_ADJ_1 : 1; u8 SYSMIN_ADJ_2 : 1; u8 SYSMIN_ADJ_3 : 1;
+      u8 SYSMIN_ADJ_4 : 1; u8 SYSMIN_ADJ_5 : 1; u8 RESERVED : 2;
+    } stBits;
+  } tunREG11_SYS_CTRL_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VAC_OVP_0 : 1; u8 VAC_OVP_1 : 1; u8 WD_RST_CHGSUSP : 1; u8 STAT_EN : 1;
+      u8 EN_OTG : 1; u8 OTG_CTRL_0 : 1; u8 OTG_CTRL_1 : 1; u8 OTG_CTRL_2 : 1;
+    } stBits;
+  } tunREG12_SYS_CTRL_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 EN_VAC2 : 1; u8 EN_VAC1 : 1; u8 DIS_ACDRV : 1; u8 EN_OTG_STC : 1;
+      u8 AUTO_INDET_EN : 1; u8 FORCE_INDET : 1; u8 EN_12V : 1; u8 EN_9V : 1;
+    } stBits;
+  } tunREG13_SYS_CTRL_2;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 B0_EN_SDRV_CTRL : 1; u8 B1_EN_SDRV_IDLE : 1; u8 B2_SDRV_DLY : 1; u8 B3_RESERVED : 5;
+    } stBits;
+  } tunREG14_SYS_CTRL_3;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 DIS_STAT : 1; u8 DIS_INT : 1; u8 DIS_LDO : 1; u8 DIS_CHG_DET : 1;
+      u8 RESERVED : 4;
+    } stBits;
+  } tunREG15_CHG_CTRL_6;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 CELL_0 : 1; u8 CELL_1 : 1; u8 TSH_TH_0 : 1; u8 TSH_TH_1 : 1;
+      u8 RESERVED : 4;
+    } stBits;
+  } tunREG16_CHG_CTRL_7;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VOTG_0 : 1; u8 VOTG_1 : 1; u8 VOTG_2 : 1; u8 VOTG_3 : 1;
+      u8 VOTG_4 : 1; u8 VOTG_5 : 1; u8 VOTG_6 : 1; u8 VOTG_7 : 1;
+    } stBits;
+  } tunREG17_OTG_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 ICO_EN : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG18_ICO_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 MPPT_EN : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG19_MPPT_CTRL_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VOC_PCT_0 : 1; u8 VOC_PCT_1 : 1; u8 VOC_PCT_2 : 1; u8 VOC_PCT_3 : 1;
+      u8 VOC_PCT_4 : 1; u8 VOC_PCT_5 : 1; u8 VOC_PCT_6 : 1; u8 VOC_PCT_7 : 1;
+    } stBits;
+  } tunREG1A_MPPT_CTRL_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IINDPM_STAT : 1; u8 VINDPM_STAT : 1; u8 TREG_STAT : 1; u8 WD_STAT : 1;
+      u8 POORSRC_STAT : 1; u8 CHG_STAT : 3;
+    } stBits;
+  } tunREG1B_CHG_STAT_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VBUS_STAT : 4; u8 BC12_STAT : 3; u8 RESERVED : 1;
+    } stBits;
+  } tunREG1C_CHG_STAT_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 TS_STAT : 3; u8 VBUS_GD : 1; u8 ICO_STAT : 2; u8 RESERVED : 2;
+    } stBits;
+  } tunREG1D_CHG_STAT_2;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VSYS_STAT : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG1E_CHG_STAT_3;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VBAT_STAT : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG1F_CHG_STAT_4;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IINDPM_FLAG : 1; u8 VINDPM_FLAG : 1; u8 TREG_FLAG : 1; u8 WD_FLAG : 1;
+      u8 POORSRC_FLAG : 1; u8 CHG_FLAG : 1; u8 RESERVED : 2;
+    } stBits;
+  } tunREG20_CHG_FLAG_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VBUS_FLAG : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG21_CHG_FLAG_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 TS_FLAG : 1; u8 ICO_FLAG : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG22_CHG_FLAG_2;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VSYS_FLAG : 1; u8 VBAT_FLAG : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG23_CHG_FLAG_3;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IINDPM_MASK : 1; u8 VINDPM_MASK : 1; u8 TREG_MASK : 1; u8 WD_MASK : 1;
+      u8 POORSRC_MASK : 1; u8 CHG_MASK : 1; u8 RESERVED : 2;
+    } stBits;
+  } tunREG24_CHG_MASK_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VBUS_MASK : 1; u8 RESERVED : 7;
+    } stBits;
+  } tunREG25_CHG_MASK_1;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 TS_MASK : 1; u8 ICO_MASK : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG26_CHG_MASK_2;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 VSYS_MASK : 1; u8 VBAT_MASK : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG27_CHG_MASK_3;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IBAT_OTG_FAULT : 1; u8 VBUS_OTG_FAULT : 1; u8 VBAT_OTG_FAULT : 1; u8 TS_OTG_FAULT : 3;
+      u8 RESERVED : 2;
+    } stBits;
+  } tunREG28_FAULT_STAT_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IBAT_OTG_FLAG : 1; u8 VBUS_OTG_FLAG : 1; u8 VBAT_OTG_FLAG : 1; u8 TS_OTG_FLAG : 1;
+      u8 RESERVED : 4;
+    } stBits;
+  } tunREG29_FAULT_FLAG_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IBAT_OTG_MASK : 1; u8 VBUS_OTG_MASK : 1; u8 VBAT_OTG_MASK : 1; u8 TS_OTG_MASK : 1;
+      u8 RESERVED : 4;
+    } stBits;
+  } tunREG2A_FAULT_MASK_0;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 ADC_RATE : 1; u8 ADC_SAMPLE : 2; u8 ADC_AVG : 1; u8 ADC_AVG_INIT : 1;
+      u8 RESERVED : 1; u8 ADC_EN : 1; u8 ADC_DONE_STAT : 1;
+    } stBits;
+  } tunREG2B_ADC_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 IBAT_ADC_EN : 1; u8 VBUS_ADC_EN : 1; u8 VAC1_ADC_EN : 1; u8 VAC2_ADC_EN : 1;
+      u8 VBAT_ADC_EN : 1; u8 VSYS_ADC_EN : 1; u8 TS_ADC_EN : 1; u8 TDIE_ADC_EN : 1;
+    } stBits;
+  } tunREG2C_ADC_FUNCTION_CTRL;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 DPLUS_ADC_EN : 1; u8 DMINUS_ADC_EN : 1; u8 RESERVED : 6;
+    } stBits;
+  } tunREG43_ADC_CTRL_HIRES;
+
+  typedef union {
+    u8 ui8Byte;
+    struct {
+      u8 DEV_ID : 3; u8 PART_NUMBER : 3; u8 REVISION : 2;
+    } stBits;
+  } tunREG44_PART_INFORMATION;
+
+
+  // --- Hilfsstruktur für 16-Bit Zugriff (analog zu Bit8_struct) ---
+  typedef struct
+  {
+    u16 HB : 8;
+    u16 LB : 8;
+  } Bit16HbLb_struct;
+
+  // --- ADC Union Definitionen ---
+  typedef union
+  {
+    u16 ui16Word;
+    Bit16HbLb_struct stBits;
+  } tun16BIT_HbLb;
+
+  // Registermap 00h bis 48h
+  // Control & Limits (00h - 1Ah)
+  tunREG00_VSYS_MIN           munREG00_VSYS_MIN;          // 0x00
+  tun16BIT_HbLb               munREG01_VREG;              // 0x01
+  tun16BIT_HbLb               munREG03_ICHG;              // 0x03
+  tunREG05_VINDPM             munREG05_VINDPM;            // 0x05
+  tunREG06_IINDPM             munREG06_IINDPM;            // 0x06
+  tunREG07_PRECHG_CTRL        munREG07_PRECHG_CTRL;       // 0x07
+  tunREG08_TERM_CTRL          munREG08_TERM_CTRL;         // 0x08
+  tunREG09_TREG_CTRL          munREG09_TREG_CTRL;         // 0x09
+  tunREG0A_TIMER_CTRL         munREG0A_TIMER_CTRL;        // 0x0A
+  tunREG0B_CHG_CTRL_1         munREG0B_CHG_CTRL_1;        // 0x0B
+  tunREG0C_CHG_CTRL_2         munREG0C_CHG_CTRL_2;        // 0x0C
+  tunREG0D_CHG_CTRL_3         munREG0D_CHG_CTRL_3;        // 0x0D
+  tunREG0E_CHG_CTRL_4         munREG0E_CHG_CTRL_4;        // 0x0E
+  tunREG0F_CHG_CTRL_5         munREG0F_CHG_CTRL_5;        // 0x0F
+  tunREG10_CHG_CTRL_0         munREG10_CHG_CTRL_0;        // 0x10
+  tunREG11_SYS_CTRL_0         munREG11_SYS_CTRL_0;        // 0x11
+  tunREG12_SYS_CTRL_1         munREG12_SYS_CTRL_1;        // 0x12
+  tunREG13_SYS_CTRL_2         munREG13_SYS_CTRL_2;        // 0x13
+  tunREG14_SYS_CTRL_3         munREG14_SYS_CTRL_3;        // 0x14
+  tunREG15_CHG_CTRL_6         munREG15_CHG_CTRL_6;        // 0x15
+  tunREG16_CHG_CTRL_7         munREG16_CHG_CTRL_7;        // 0x16
+  tunREG17_OTG_CTRL           munREG17_OTG_CTRL;          // 0x17
+  tunREG18_ICO_CTRL           munREG18_ICO_CTRL;          // 0x18
+  tunREG19_MPPT_CTRL_0        munREG19_MPPT_CTRL_0;       // 0x19
+  tunREG1A_MPPT_CTRL_1        munREG1A_MPPT_CTRL_1;       // 0x1A
+
+  // Status & Flags (1Bh - 2Ch)
+  tunREG1B_CHG_STAT_0         munREG1B_CHG_STAT_0;        // 0x1B
+  tunREG1C_CHG_STAT_1         munREG1C_CHG_STAT_1;        // 0x1C
+  tunREG1D_CHG_STAT_2         munREG1D_CHG_STAT_2;        // 0x1D
+  tunREG1E_CHG_STAT_3         munREG1E_CHG_STAT_3;        // 0x1E
+  tunREG1F_CHG_STAT_4         munREG1F_CHG_STAT_4;        // 0x1F
+  tunREG20_CHG_FLAG_0         munREG20_CHG_FLAG_0;        // 0x20
+  tunREG21_CHG_FLAG_1         munREG21_CHG_FLAG_1;        // 0x21
+  tunREG22_CHG_FLAG_2         munREG22_CHG_FLAG_2;        // 0x22
+  tunREG23_CHG_FLAG_3         munREG23_CHG_FLAG_3;        // 0x23
+  tunREG24_CHG_MASK_0         munREG24_CHG_MASK_0;        // 0x24
+  tunREG25_CHG_MASK_1         munREG25_CHG_MASK_1;        // 0x25
+  tunREG26_CHG_MASK_2         munREG26_CHG_MASK_2;        // 0x26
+  tunREG27_CHG_MASK_3         munREG27_CHG_MASK_3;        // 0x27
+  tunREG28_FAULT_STAT_0       munREG28_FAULT_STAT_0;      // 0x28
+  tunREG29_FAULT_FLAG_0       munREG29_FAULT_FLAG_0;      // 0x29
+  tunREG2A_FAULT_MASK_0       munREG2A_FAULT_MASK_0;      // 0x2A
+  tunREG2B_ADC_CTRL           munREG2B_ADC_CTRL;          // 0x2B
+  tunREG2C_ADC_FUNCTION_CTRL  munREG2C_ADC_FUNCTION_CTRL; // 0x2C
+
+  // ADC Registers (2Dh - 42h) as u16
+  tun16BIT_HbLb               munREG2D_IBAT_ADC;          // 2Dh (H) & 2Eh (L)
+  tun16BIT_HbLb               munREG2F_VBUS_ADC;          // 2Fh (H) & 30h (L)
+  tun16BIT_HbLb               munREG31_VAC1_ADC;          // 31h (H) & 32h (L)
+  tun16BIT_HbLb               munREG33_VAC2_ADC;          // 33h (H) & 34h (L)
+  tun16BIT_HbLb               munREG35_VBAT_ADC;          // 35h (H) & 36h (L)
+  tun16BIT_HbLb               munREG37_VSYS_ADC;          // 37h (H) & 38h (L)
+  tun16BIT_HbLb               munREG39_TS_ADC;            // 39h (H) & 3Ah (L)
+  tun16BIT_HbLb               munREG3B_TDIE_ADC;          // 3Bh (H) & 3Ch (L)
+  tun16BIT_HbLb               munREG3D_DPLUS_ADC;         // 3Dh (H) & 3Eh (L)
+  tun16BIT_HbLb               munREG3F_DMINUS_ADC;        // 3Fh (H) & 40h (L)
+  tun16BIT_HbLb               munREG41_DPDM_ADC;          // 41h (H) & 42h (L)
+
+  // Information & OTG (43h - 48h)
+  tunREG43_ADC_CTRL_HIRES     munREG43_ADC_CTRL_HIRES;    // 0x43
+  tunREG44_PART_INFORMATION   munREG44_PART_INFORMATION;  // 0x44
+  tun16BIT_HbLb               munREG45_VOTG;              // 0x45
+  tunBit8                     munREG47_IOTG_REG;          // 0x47
+  tunBit8                     munREG48_VDIFF_END_REG;     // 0x48
+};
+
+#endif

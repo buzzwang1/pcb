@@ -43,9 +43,13 @@ set(PCB_ProjectPackageList
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
     Driver/STM32/U5/Hal/v01.01.00/Core
     Driver/STM32/U5/Hal/v01.01.00/Device/STM32U575xx:default
-    Driver/STM32/u5/HAL/v01.01.00/HAL:lib_o3_32Mhz
+    Driver/STM32/U5/Hal/v01.01.00/HAL:lib_o3_32Mhz
     Driver/STM32/U5/Hal/GPPin/v01.00.02
+    Driver/STM32/U5/Hal/cI2C/v01.00.09|-Ofast
+    #Driver/STM32/Device/xSpi/Flash/General/v01.00.00
+    #Driver/STM32/Device/xSpi/Flash/ZD25WQ32/U5_OSPI/v01.00.00:U5Board100P
 
+    Driver/STM32/Device/INA3221/v01.00.01
 
     System/CyclicCaller/v00.00.01:stm32u5xx_TIM6
     System/STM32/ClockInfo/v00.00.01:stm32u5xx
@@ -54,7 +58,7 @@ set(PCB_ProjectPackageList
 
 
     APP/LED/v00.00.01:STM32U5_HAL
-    main/STM32U585CIT/Mini/Test/OSpi
+    main/STM32U585CIT/Mini/MBv28b2/I2C/INA3221
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32U575ZI_flash.ld")

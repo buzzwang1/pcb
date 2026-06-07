@@ -1,0 +1,2 @@
+[Common]
+PackageName=SIC45X

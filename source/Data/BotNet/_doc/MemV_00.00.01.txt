@@ -1,0 +1,33 @@
+15:49 19.12.2025
+
+Ver. 00.00.01
+
+MemV: Memory Viewer
+
+
+Interface:
+Msg.: Index 5
+
+
+5: Request messages
+
+                                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+      Message Req:         Rx   RI.S1.S2               // Payload Len:  3; Request           SI = Request Index:    0 = nothing; 
+                                                       //                                    S1 = Sub Index1:       0 = nothing
+                                                       //                                    S2 = Sub Index2:       0 = nothing
+                                                       //
+                                                       // R1 S1 S2
+                                                       // 00 EI 00:  MemView Entry Index (0..7)
+
+5: Response messages
+
+                                      0    1    2   3  4  5  6  7  8  
+      MemView: Set Entry          TX 02 | EI | 00 | OF D0 D1 D2 D3 D4 DX:    OF: Offset = OF*32Byte (0..9)
+                                                                             D0..D47: Data, max. 48 Byte
+                                                                                 
+
+5: Set Message
+      MemView: Set Entry          TX 01 | EI | 00 | AD.AD.AD.AD.LL.LL.00.00: AD: 32Bit Lese Adresse
+                                                                             LM: 16Bit Byte Count max. 480
+

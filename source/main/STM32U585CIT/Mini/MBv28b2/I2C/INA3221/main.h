@@ -16,12 +16,27 @@
   extern "C" {
 #endif
 
+
 /* Includes ------------------------------------------------------------------*/
 #include "TypeDef.h"
-#include "stm32l433xx.h"
-#include "stm32l4xx_hal.h"
+#include "stm32u5xx.h"
+#include "stm32u5xx_hal.h"
+#include "stm32u5xx_ll_dac.h"
+#include "stm32u5xx_ll_icache.h"
+#include "stm32u5xx_ll_pwr.h"
+#include "stm32u5xx_ll_crs.h"
+#include "stm32u5xx_ll_rcc.h"
+#include "stm32u5xx_ll_bus.h"
+#include "stm32u5xx_ll_system.h"
+#include "stm32u5xx_ll_exti.h"
+#include "stm32u5xx_ll_cortex.h"
+#include "stm32u5xx_ll_utils.h"
+#include "stm32u5xx_ll_dma.h"
+#include "stm32u5xx_ll_spi.h"
 
-extern void MainSystemInit();
+
+extern void SystemClock_Config();
+extern void MainSystemInit(void);
 
 extern void NMI_Handler(void);
 extern void HardFault_Handler(void);
@@ -33,15 +48,11 @@ extern void DebugMon_Handler(void);
 extern void PendSV_Handler(void);
 extern void SysTick_Handler(void);
 
-extern void USART1_IRQHandler(void);
-extern void USART2_IRQHandler(void);
-extern void USART3_IRQHandler(void);
 
 extern void I2C1_EV_IRQHandler(void);
 extern void I2C1_ER_IRQHandler(void);
 extern void I2C2_EV_IRQHandler(void);
 extern void I2C2_ER_IRQHandler(void);
-
 
 #ifdef __cplusplus
 }

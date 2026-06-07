@@ -116,6 +116,13 @@ class cClock
   {
     // --------------- First try LSE ---------------
 
+    // BURAM vor dem Löschen sichern
+    u32 lu32Backup[32];
+    for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)
+    {
+      lu32Backup[lu8Idx] = ((u32*)(RTC_BASE + 0x50))[lu8Idx];
+    }
+
     /*##-2- Configure LSE/LSI as RTC clock source ###############################*/
     // RTC_CLOCK_SOURCE_LSE
     // Löscht BuRam und RTC-Status, z.B. Wakeup
@@ -126,6 +133,12 @@ class cClock
 
     LL_RCC_LSE_Enable();
 
+    // BURAM nach dem Löschen restaurieren.
+    for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)
+    {
+      ((u32*)(RTC_BASE + 0x50))[lu8Idx] = lu32Backup[lu8Idx];
+    }
+
     // tSU(LSE)(3) Startup time VDD is stabilized: 2s
     // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
     // reached. This value is measured for a standard crystal and it can vary significantly with the crystal manufacturer
@@ -135,7 +148,7 @@ class cClock
     }
     else
     {
-      mu8WaitForLse_s = 3;
+      mu8WaitForLse_s = 10;
     }
     vGetClockSource();
   }
@@ -437,10 +450,8 @@ class cClock
     vWriteToRtc();
   }
 
-  void vAdd1s()
+  bool isInit2()
   {
-    if (mValid) vReadFromRtc();
-
     // tSU(LSE)(3) Startup time VDD is stabilized: 2s
     // t SU(LSE) is the startup time measured from the moment it is enabled (by software) to a stabilized 32.768 kHz oscillation is
     // reached. This value is measured for a standard crystal and it can vary significantly with the crystal manufacturer
@@ -448,16 +459,32 @@ class cClock
     // Nachdem die Warte abgelaufen ist, überprüfen, ob auf LSE geschaltet werden kann.
     if (mu8WaitForLse_s)
     {
-      if (mu8WaitForLse_s > 1)
-      {
-        mu8WaitForLse_s--;
-      }
-      else
+      if (LL_RCC_LSE_IsReady())
       {
         mu8WaitForLse_s = 0;
         vRtcInit2();
       }
+      else
+      {
+        if (mu8WaitForLse_s > 1)
+        {
+          mu8WaitForLse_s--;
+          return False;
+        }
+        else
+        {
+          mu8WaitForLse_s = 0;
+          vRtcInit2();
+        }
+      }
     }
+    return True;
+  }
+
+  void vAdd1s()
+  {
+    if (mValid) vReadFromRtc();
+    isInit2();
   }
 
   void vAdd(cClock &lcClock)

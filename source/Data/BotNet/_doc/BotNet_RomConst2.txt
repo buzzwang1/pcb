@@ -1,0 +1,119 @@
+// 10:10 20.09.2024: Romconst v2 1 Page  = 1Kb
+
+
+
+
+// Device Info: 64 Byte
+0000: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Device  name, Note: not 0-terminated 
+0010: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Platform name
+0020: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 32 Byte Platform_Info  0..15
+0030: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 32 Byte Platform_Info 16..32
+
+// BotNet-Info, Romconst - Info, und Partitionen-Info: 16Byte
+0040: XX XX|XX XX|XX XX XX XX|XX|XX|XX|XX|XX XX|00 02: // u16 Device-Adress,         u16 BotNet-Adress,      u32 IAP_RAM_Size
+                                                       // u8  Anzahl Romconst-Pages,  u8 Anzahl Partitionen,  u8 Anzahl LookUp-Tables, u8 Reserve
+                                                       // u16 Byte HW-Information,   u16 Romconst version 2
+
+// BotNet Configuration values, Timing values, calibration values: 16 Byte
+0050: XX|XX|XX|XX|XX XX|XX XX|XX XX|XX XX|XX XX|XX XX: // u8  DateTime sync timeout [s],      u8  DateTime Sync hour [h]
+                                                       // u8  DateTime valid timeout [d],     u8  Reserve
+                                                       // u16 Radio Ping Intervall [s],       u16 Radio Ping Timeout Session Request [ms]
+                                                       // u16 Baud UpLink,                    u16 Baud SideLink
+                                                       // u16 Baud DownLink1,                 u16 Baud DownLink2
+
+// BotNet Link Configuration: 16 Byte
+//   0: Disable
+// !=0: Enable
+0060: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // UpLink, SideLink, 14x DownLink
+
+// Reserved space for Partitions: 8 * 32 Byte = 256 Bytes
+// If more partitions are required use the 2nd page
+// Partition1
+0070: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Name
+0080: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // u16  Sort, u16  Type, u32  Start, u32  Size, u32  Block_Size
+
+// Partition2
+0090: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+00A0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition3
+00B0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+00C0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition4
+00D0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+00E0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition5
+00F0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+0100: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition6
+0110: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+0120: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition7
+0130: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+0140: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+// Partition8
+0150: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+0160: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX:
+
+0170: XX XX XX XX XX XX XX XX|XX XX XX XX|46 4C 4B 41: // 8 Byte Reserve, u32 Checksum1 (0x0000..0x007F), 4 Byte Magic Pattern
+
+
+// Reserved space for LookUp-Tables: 8 * (16 * 2) Byte = 256 Bytes
+// If more Tables are required use the 2nd page
+0180: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0190: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+01A0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+01B0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+
+01C0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+01D0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+01E0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+01E0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+
+0200: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0210: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0220: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0230: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+
+0240: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0250: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0260: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+0270: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte LookUp-Table
+
+// Application Specific: 376 Byte
+0280: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0290: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+02A0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+02B0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+02C0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+02D0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+02E0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+02F0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+0300: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0310: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0320: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0330: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+0340: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0350: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0360: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0370: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+0380: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+0390: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+03A0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+03B0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+03C0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+03D0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+03E0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX: // 16 Byte Reserve
+
+// end of RomConst page 1
+03F0: XX XX XX XX XX XX XX XX|CC CC CC CC|46 4C 4B 41: // 8 Byte Reserve, u32  Checksum2 (0x0000..0x03F7), 4 Byte Magic Pattern

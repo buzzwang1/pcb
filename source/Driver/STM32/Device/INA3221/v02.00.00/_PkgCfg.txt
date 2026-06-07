@@ -1,0 +1,2 @@
+[Common]
+PackageName=ina3221

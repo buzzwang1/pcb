@@ -1,0 +1,132 @@
+16:04 19.01.2017
+Ver. 00.01.00
+
+0    1    2    3    4    5    6    7
+0    4    8   12   16   20   24   28  
+XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+Aufbau:
+Immer 32Byte Nachrichten
+Nicht benutzte Bytes default: x = 0x55
+Aufbau der ersten 4Bytes in der Regel so.
+-> KXXX
+  K: Kommando
+
+<- KIAX
+  K:Kommando
+  I: Nachrichten Index
+  A: ACK( = 0) oder NACK( != 0)
+
+
+
+Interface Info 0 Kommando
+->0XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<-00VV VVVV VVVV VVV0 DDDD DDDD DDDD DDD0
+<-01II IIII IIII IIII IIII IIII IIII III0
+
+  V: 14 Byte Interface Name ASCII (inklusive "0")
+  D: 16 Byte Device Name ASCII (inklusive "0")
+  I: 30 Byte Info text (inklusive "0")
+
+Interface Memory Info 1 Kommando
+->1XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<-10XX XXXX XXXX CPCP 0000 WAWA 0000 WSWS  // 32Byte
+
+  CPCP: 32Bit Anzahl Partitionen. Details folgen
+  WAWA: 32Bit Work-RAM Buffer Adresse
+  WSWS: 32Bit Work-RAM Buffer Größe
+
+<-11X0 IDID MMTT SCSC 0000 AAAA 0000 SSSS  // 32Byte
+  IDID: 32Bit Index
+
+  MM:   16Bit Speicherart
+           0: RAM
+          16: Flash
+          32: EEPROM
+
+  TT:   16Bit Typ
+           0: Default
+  SCSC: 32Bit Seiten Größe, z.B. bei Flash 4kB, bei RAM = 1B
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+
+<-11X1 IDID IIII IIII IIII IIII IIII III0  // 32Byte
+
+  IDID: 32Bit Index
+  I: 24 Byte Info text (inklusive "0")
+
+
+Schreiben 16 Kommando
+Start:
+-> 16XXC XXXX AAAA XXXX SSSS XXXX XXXX XXXX  // 32Byte
+NACK <- 1610X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 1600C XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+
+Daten:
+-> XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte   
+...
+
+Acknowlede, nachdem alle Daten geschrieben wurden
+<- 1601X XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+     C: Compression
+          0: default
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+
+Lesen 32 Kommando
+Start:
+-> 32XXC XXXX AAAA XXXX SSSS XXXX XXXX XXXX  // 32Byte
+NACK <- 3210X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 3200C XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+
+Daten:
+<- XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte   
+...
+
+Acknowlede, nachdem alle Daten gesendet wurden
+<- 3201C XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+     C: Compression
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+Checksumme lesen 48 Kommando
+Start:
+-> 48XXX XXXX AAAA XXXX SSSS XXXX XXXX XXXX   // 32Byte
+NACK <- 4810X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 4800X XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+<- 4801X XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+
+Call 64 Kommando
+-> 64XXX XXXX AAAA P1P1 P2P2 P3P3 P4P4 XXXX   // 32Byte
+NACK <- 641XX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 640XX XXXX AAAA XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+  AAAA: 32Bit Zieladdresse, die aufgerufen werden soll
+  P1P1: 32Bit Parameter1
+  P2P2: 32Bit Parameter2 
+  P3P3: 32Bit Parameter3
+  P4P4: 32Bit Parameter4
+
+Call 128 Exit
+-> 128XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<- 128XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+

@@ -1,0 +1,69 @@
+14:13 26.01.2023
+Ver. 00.00.01
+
+BTR BlockTransferRam
+
+Interface:
+Msg.: Index 0
+
+BtR Info
+Anfrage: 01 00
+Antwort: 81 00 AA AA AA AA AS AS AS AS // AAAAAAAA = Größe in Bytes BTR, ASASASAS = Größe in Bytes Combuf
+
+
+ECU Info1
+Anfrage: 01 01
+Antwort: 81 01 AA AA AA AA // AAAAAAAA = Anzahl Bytes, die in den BTR kopiert wurden
+
+ECU Info2
+Anfrage: 01 02
+Antwort: 81 02 AA AA AA AA // AAAAAAAA = Anzahl Bytes, die in den BTR kopiert wurden
+
+
+BTR direkt lesen (optional)
+Anfrage: 01 08 II II II II 0A 
+// IIIIIIII = Index im BTR
+// 0A = Anzahl Bytes + 1, die gelesen weden soll, max. 0F (=16 Byte)
+Antwort: 81 08 AA AA AA AA 
+
+
+BTR Index lesen
+Anfrage: 01 10 
+Antwort: 81 10 II II II II CS CS CS CS // IIIIIIII = Lese/Schreib BTR Index auf den BTR, aktuelle Checksumme
+
+
+BTR direkt schreiben (optional)
+Anfrage: 02 08 II II II II 0A D1 ...
+// IIIIIIII = Index im BTR
+// 0A = Anzahl Bytes + 1, die geschrieben weden soll, max. 0F (=16 Byte)
+// D1 ... : Bytes die geschierben werden sollen 
+Antwort: 82 08
+
+
+BTR Index setzten
+Anfrage: 02 10 II II II II CS // IIIIIIII = Lese/Schreib BTR Index auf den BTR, CS != 0 checksumme wird reseted.
+Antwort: 82 10
+
+
+
+BTR Write:
+Msg.: Index 1
+Anfrage: PC D1 D2 ... // PC = Packet Counter 0..200=>0..; 255 = letztes Packet
+
+BTR Index wird automatisch erhöht
+Checksumme wird berechnet
+Nachdem PC=0xFF übertragen wurde, kommt eine Antwort
+Es sollten nie mehr als Anzahl an Bytes = ComBuf-Größe auf einmal übertragen werden
+Antwort entspricht BTR index lesen: 81 10 II II II II CS CS CS CS
+
+
+BTR Read:
+Msg.: Index 2
+
+AA AA AA AA
+// AAAAAAAA = Anzahl Bytes, die vom BTR gelesen werden soll.
+
+Max 48Byte per Message. Es gibt keine Antwort.
+BTR Index wird automatisch erhöht
+Checksumme wird berechnet
+

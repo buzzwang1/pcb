@@ -262,70 +262,70 @@
 #define u16GetRomConstTable6()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0220))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #define u16GetRomConstTable7()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0240))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 #define u16GetRomConstTable8()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0260))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-#define Fp1814GetRomConstInitPos_degree()    (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280))) // Defaultvalue 0:   InitPos_degree
-#define Fp1814GetRomConstInitSpeed_degree_s() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284))) // Defaultvalue 0:  InitSpeed_degree_s
-#define Fp1814GetRomConstInitLimtCurrent_mA() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288))) // Defaultvalue 1000:InitLimtCurrent_mA
-#define Fp1814GetRomConstInitLimitPower_mW() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C))) // Defaultvalue 5000:InitLimitPower_mW
-#define Fp1814GetRomConstInitLimitVolt_mV()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290))) // Defaultvalue 5500:InitLimitVolt_mV
-#define Fp1814GetRomConstInitLimitIntTemp_Degree() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294))) // Defaultvalue 1000:InitLimitIntTemp_Degree
-#define Fp1814GetRomConstInitLimitExtTemp_Degree() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0298))) // Defaultvalue 5.0:InitLimitExtTemp_Degree
-#define Fp1814GetRomConstInitPwn_percent()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029C))) // Defaultvalue 0.0: InitPwn_percent
-#define Fp1814GetRomConstLpInputPos()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A0))) // Defaultvalue 0.2: LpInputPos
-#define Fp1814GetRomConstLpInputSpeed()      (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A4))) // Defaultvalue 0.2: LpInputSpeed
-#define Fp1814GetRomConstLpInputCurrent()    (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A8))) // Defaultvalue 0.2: LpInputCurrent
-#define Fp1814GetRomConstLpInputPower()      (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02AC))) // Defaultvalue 0.2: LpInputPower
-#define Fp1814GetRomConstLpInputSupply()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B0))) // Defaultvalue 0.2: LpInputSupply
-#define Fp1814GetRomConstLpInputTemp1()      (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B4))) // Defaultvalue 0.2: LpInputTemp1
-#define Fp1814GetRomConstLpInputTemp2()      (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B8))) // Defaultvalue 0.2: LpInputTemp2
-#define Fp1814GetRomConstLpOutputMotor()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02BC))) // Defaultvalue 0.9: LpOutputMotor
-#define Fp1814GetRomConstCvrtInputPosF()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C0))) // Defaultvalue -0.068359375:CvrtInputPosF
-#define Fp1814GetRomConstCvrtInputPosO()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C4))) // Defaultvalue -140.0:CvrtInputPosO
-#define Fp1814GetRomConstCvrtInputPosC()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C8))) // Defaultvalue 140: CvrtInputPosC
-#define Fp1814GetRomConstCvrtInputSpeedF()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CC))) // Defaultvalue 1.0: CvrtInputSpeedF
-#define Fp1814GetRomConstCvrtInputSpeedO()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D0))) // Defaultvalue 0.0: CvrtInputSpeedO
-#define Fp1814GetRomConstCvrtInputSpeedC()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D4))) // Defaultvalue 1000.0:CvrtInputSpeedC
-#define Fp1814GetRomConstCvrtInputCurrentF() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D8))) // Defaultvalue 1.0: CvrtInputCurrentF
-#define Fp1814GetRomConstCvrtInputCurrentO() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02DC))) // Defaultvalue 0.0: CvrtInputCurrentO
-#define Fp1814GetRomConstCvrtInputCurrentC() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0))) // Defaultvalue 10000.0:CvrtInputCurrentC
-#define Fp1814GetRomConstCvrtInputPowerF()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E4))) // Defaultvalue 1.0: CvrtInputPowerF
-#define Fp1814GetRomConstCvrtInputPowerO()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E8))) // Defaultvalue 0.0: CvrtInputPowerO
-#define Fp1814GetRomConstCvrtInputPowerC()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02EC))) // Defaultvalue 100000.0:CvrtInputPowerC
-#define Fp1814GetRomConstCvrtInputSupplyF()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F0))) // Defaultvalue 3.544921875:CvrtInputSupplyF
-#define Fp1814GetRomConstCvrtInputSupplyO()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F4))) // Defaultvalue 0.0: CvrtInputSupplyO
-#define Fp1814GetRomConstCvrtInputSupplyC()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F8))) // Defaultvalue 20000.0:CvrtInputSupplyC
-#define Fp1814GetRomConstCvrtInputTemp1O()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02FC))) // Defaultvalue 1.0: CvrtInputTemp1O
-#define Fp1814GetRomConstCvrtInputTemp1C()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0300))) // Defaultvalue 0.0: CvrtInputTemp1C
-#define Fp1814GetRomConstCvrtInputTemp1F()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0304))) // Defaultvalue 100.0:CvrtInputTemp1F
-#define Fp1814GetRomConstCvrtInputTemp2F()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0308))) // Defaultvalue 1.0: CvrtInputTemp2F
-#define Fp1814GetRomConstCvrtInputTemp2O()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X030C))) // Defaultvalue 0.0: CvrtInputTemp2O
-#define Fp1814GetRomConstCvrtInputTemp2C()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0310))) // Defaultvalue 100.0:CvrtInputTemp2C
-#define Fp1814GetRomConstCvrtOutputMotorF()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0314))) // Defaultvalue 1.0: CvrtOutputMotorF
-#define Fp1814GetRomConstCvrtOutputMotorO()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0318))) // Defaultvalue 0.0: CvrtOutputMotorO
-#define Fp1814GetRomConstCvrtOutputMotorC()  (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X031C))) // Defaultvalue 100.0:CvrtOutputMotorC
-#define Fp1814GetRomConstMinDiffInputPos()   (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0320))) // Defaultvalue 1.0: MinDiffInputPos
-#define Fp1814GetRomConstMinDiffInputSpeed() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0324))) // Defaultvalue 1.0: MinDiffInputSpeed
-#define Fp1814GetRomConstMinDiffInputCurrent() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0328))) // Defaultvalue 5.0:MinDiffInputCurrent
-#define Fp1814GetRomConstMinDiffInputPower() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X032C))) // Defaultvalue 0.01:MinDiffInputPower
-#define Fp1814GetRomConstMinDiffInputSupply() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0330))) // Defaultvalue 5.0:MinDiffInputSupply
-#define Fp1814GetRomConstMinDiffInputTemp1() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0334))) // Defaultvalue 3.0: MinDiffInputTemp1
-#define Fp1814GetRomConstMinDiffInputTemp2() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0338))) // Defaultvalue 3.0: MinDiffInputTemp2
-#define Fp1814GetRomConstMinDiffOutputMotor() (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X033C))) // Defaultvalue 8.0:MinDiffOutputMotor
-#define Fp1814GetRomConstPidPosKp()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0340))) // Defaultvalue 25.0:PidPosKp
-#define Fp1814GetRomConstPidPosKi()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0344))) // Defaultvalue 0.03125:PidPosKi
-#define Fp1814GetRomConstPidPosKd()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0348))) // Defaultvalue 250.0:PidPosKd
-#define Fp1814GetRomConstPidPosLimit()       (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034C))) // Defaultvalue 100.0:PidPosLimit
-#define Fp1814GetRomConstPidSpeedKp()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0350))) // Defaultvalue 100.0:PidSpeedKp
-#define Fp1814GetRomConstPidSpeedKi()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0354))) // Defaultvalue 1.0: PidSpeedKi
-#define Fp1814GetRomConstPidSpeedKd()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0358))) // Defaultvalue 0.0: PidSpeedKd
-#define Fp1814GetRomConstPidSpeedLimit()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X035C))) // Defaultvalue 1000.0:PidSpeedLimit
-#define Fp1814GetRomConstPidCurKp()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360))) // Defaultvalue 100.0:PidCurKp
-#define Fp1814GetRomConstPidCurKi()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0364))) // Defaultvalue 1.0: PidCurKi
-#define Fp1814GetRomConstPidCurKd()          (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0368))) // Defaultvalue 0.0: PidCurKd
-#define Fp1814GetRomConstPidCurLimit()       (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X036C))) // Defaultvalue 1000.0:PidCurLimit
-#define Fp1814GetRomConstPidPowerKp()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0370))) // Defaultvalue 100.0:PidPowerKp
-#define Fp1814GetRomConstPidPowerKi()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0374))) // Defaultvalue 1.0: PidPowerKi
-#define Fp1814GetRomConstPidPowerKd()        (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0378))) // Defaultvalue 0.0: PidPowerKd
-#define Fp1814GetRomConstPidPowerLimit()     (*((cFixPti1814*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X037C))) // Defaultvalue 1000.0:PidPowerLimit
+#define Fp2210GetRomConstInitPos_degree()    (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280))) // Defaultvalue 0:   InitPos_degree
+#define Fp2210GetRomConstInitSpeed_degree_s() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284))) // Defaultvalue 0:  InitSpeed_degree_s
+#define Fp2210GetRomConstInitLimtCurrent_mA() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288))) // Defaultvalue 1000:InitLimtCurrent_mA
+#define Fp2210GetRomConstInitLimitPower_mW() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C))) // Defaultvalue 5000:InitLimitPower_mW
+#define Fp2210GetRomConstInitLimitVolt_mV()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290))) // Defaultvalue 5500:InitLimitVolt_mV
+#define Fp2210GetRomConstInitLimitIntTemp_Degree() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294))) // Defaultvalue 90:InitLimitIntTemp_Degree
+#define Fp2210GetRomConstInitLimitExtTemp_Degree() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0298))) // Defaultvalue 90:InitLimitExtTemp_Degree
+#define Fp2210GetRomConstInitPwn_percent()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029C))) // Defaultvalue 0.0: InitPwn_percent
+#define Fp2210GetRomConstLpInputPos()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A0))) // Defaultvalue 0.2: LpInputPos
+#define Fp2210GetRomConstLpInputSpeed()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A4))) // Defaultvalue 0.2: LpInputSpeed
+#define Fp2210GetRomConstLpInputCurrent()    (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A8))) // Defaultvalue 0.2: LpInputCurrent
+#define Fp2210GetRomConstLpInputPower()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02AC))) // Defaultvalue 0.2: LpInputPower
+#define Fp2210GetRomConstLpInputSupply()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B0))) // Defaultvalue 0.2: LpInputSupply
+#define Fp2210GetRomConstLpInputTemp1()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B4))) // Defaultvalue 0.2: LpInputTemp1
+#define Fp2210GetRomConstLpInputTemp2()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B8))) // Defaultvalue 0.2: LpInputTemp2
+#define Fp2210GetRomConstLpOutputMotor()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02BC))) // Defaultvalue 0.9: LpOutputMotor
+#define Fp2210GetRomConstCvrtInputPosF()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C0))) // Defaultvalue -0.068359375:CvrtInputPosF
+#define Fp2210GetRomConstCvrtInputPosO()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C4))) // Defaultvalue -140.0:CvrtInputPosO
+#define Fp2210GetRomConstCvrtInputPosC()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C8))) // Defaultvalue 140: CvrtInputPosC
+#define Fp2210GetRomConstCvrtInputSpeedF()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CC))) // Defaultvalue 1.0: CvrtInputSpeedF
+#define Fp2210GetRomConstCvrtInputSpeedO()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D0))) // Defaultvalue 0.0: CvrtInputSpeedO
+#define Fp2210GetRomConstCvrtInputSpeedC()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D4))) // Defaultvalue 1000.0:CvrtInputSpeedC
+#define Fp2210GetRomConstCvrtInputCurrentF() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D8))) // Defaultvalue 1.0: CvrtInputCurrentF
+#define Fp2210GetRomConstCvrtInputCurrentO() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02DC))) // Defaultvalue 0.0: CvrtInputCurrentO
+#define Fp2210GetRomConstCvrtInputCurrentC() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0))) // Defaultvalue 10000.0:CvrtInputCurrentC
+#define Fp2210GetRomConstCvrtInputPowerF()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E4))) // Defaultvalue 1.0: CvrtInputPowerF
+#define Fp2210GetRomConstCvrtInputPowerO()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E8))) // Defaultvalue 0.0: CvrtInputPowerO
+#define Fp2210GetRomConstCvrtInputPowerC()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02EC))) // Defaultvalue 65000.0:CvrtInputPowerC
+#define Fp2210GetRomConstCvrtInputSupplyF()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F0))) // Defaultvalue 3.544921875:CvrtInputSupplyF
+#define Fp2210GetRomConstCvrtInputSupplyO()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F4))) // Defaultvalue 0.0: CvrtInputSupplyO
+#define Fp2210GetRomConstCvrtInputSupplyC()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F8))) // Defaultvalue 20000.0:CvrtInputSupplyC
+#define Fp2210GetRomConstCvrtInputTemp1O()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02FC))) // Defaultvalue 1.0: CvrtInputTemp1O
+#define Fp2210GetRomConstCvrtInputTemp1C()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0300))) // Defaultvalue 0.0: CvrtInputTemp1C
+#define Fp2210GetRomConstCvrtInputTemp1F()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0304))) // Defaultvalue 115.0:CvrtInputTemp1F
+#define Fp2210GetRomConstCvrtInputTemp2F()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0308))) // Defaultvalue 1.0: CvrtInputTemp2F
+#define Fp2210GetRomConstCvrtInputTemp2O()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X030C))) // Defaultvalue 0.0: CvrtInputTemp2O
+#define Fp2210GetRomConstCvrtInputTemp2C()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0310))) // Defaultvalue 115.0:CvrtInputTemp2C
+#define Fp2210GetRomConstCvrtOutputMotorF()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0314))) // Defaultvalue 1.0: CvrtOutputMotorF
+#define Fp2210GetRomConstCvrtOutputMotorO()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0318))) // Defaultvalue 0.0: CvrtOutputMotorO
+#define Fp2210GetRomConstCvrtOutputMotorC()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X031C))) // Defaultvalue 100.0:CvrtOutputMotorC
+#define Fp2210GetRomConstMinDiffInputPos()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0320))) // Defaultvalue 1.0: MinDiffInputPos
+#define Fp2210GetRomConstMinDiffInputSpeed() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0324))) // Defaultvalue 1.0: MinDiffInputSpeed
+#define Fp2210GetRomConstMinDiffInputCurrent() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0328))) // Defaultvalue 5.0:MinDiffInputCurrent
+#define Fp2210GetRomConstMinDiffInputPower() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X032C))) // Defaultvalue 5.0: MinDiffInputPower
+#define Fp2210GetRomConstMinDiffInputSupply() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0330))) // Defaultvalue 5.0:MinDiffInputSupply
+#define Fp2210GetRomConstMinDiffInputTemp1() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0334))) // Defaultvalue 3.0: MinDiffInputTemp1
+#define Fp2210GetRomConstMinDiffInputTemp2() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0338))) // Defaultvalue 3.0: MinDiffInputTemp2
+#define Fp2210GetRomConstMinDiffOutputMotor() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X033C))) // Defaultvalue 8.0:MinDiffOutputMotor
+#define Fp2210GetRomConstPidPosKp()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0340))) // Defaultvalue 25.0:PidPosKp
+#define Fp2210GetRomConstPidPosKi()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0344))) // Defaultvalue 0.03125:PidPosKi
+#define Fp2210GetRomConstPidPosKd()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0348))) // Defaultvalue 250.0:PidPosKd
+#define Fp2210GetRomConstPidPosLimit()       (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034C))) // Defaultvalue 100.0:PidPosLimit
+#define Fp2210GetRomConstPidSpeedKp()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0350))) // Defaultvalue 25.0:PidSpeedKp
+#define Fp2210GetRomConstPidSpeedKi()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0354))) // Defaultvalue 0.2: PidSpeedKi
+#define Fp2210GetRomConstPidSpeedKd()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0358))) // Defaultvalue 0.0: PidSpeedKd
+#define Fp2210GetRomConstPidSpeedLimit()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X035C))) // Defaultvalue 1000.0:PidSpeedLimit
+#define Fp2210GetRomConstPidCurKp()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360))) // Defaultvalue 25.0:PidCurKp
+#define Fp2210GetRomConstPidCurKi()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0364))) // Defaultvalue 0.2: PidCurKi
+#define Fp2210GetRomConstPidCurKd()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0368))) // Defaultvalue 0.0: PidCurKd
+#define Fp2210GetRomConstPidCurLimit()       (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X036C))) // Defaultvalue 1000.0:PidCurLimit
+#define Fp2210GetRomConstPidPowerKp()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0370))) // Defaultvalue 10.0:PidPowerKp
+#define Fp2210GetRomConstPidPowerKi()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0374))) // Defaultvalue 0.2: PidPowerKi
+#define Fp2210GetRomConstPidPowerKd()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0378))) // Defaultvalue 0.0: PidPowerKd
+#define Fp2210GetRomConstPidPowerLimit()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X037C))) // Defaultvalue 1000.0:PidPowerLimit
 #define u8GetRomConstLedEnable()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0380)))        // Defaultvalue 15:    LedEnable
-#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 58725  
+#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 58546  
 #define rszGetRomConstMagicPattern2()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03FC))           // Defaultvalue FLKA   

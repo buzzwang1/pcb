@@ -1,0 +1,28 @@
+
+ /-----\
+ |      \----\
+ | 1 BAT      \-----\
+ |         Power 6  |
+ | 2 GND            |
+ |           GND 7  |
+ | 3 I2C Data       |
+ |        Uart_Hi 8 |   
+ | 4 I2C Clk        |
+ |        Uart_Lo 9 |
+ | 5 Wakeup   /-----/
+ |      /----/
+ \-----/
+
+ Uart_MpHd = TXUart_Hi
+
+RS232:
+
+1 DCD
+2 RXD
+3 TXD
+4 DTR
+5 GND
+6 DSR
+7 RTS
+8 CTS
+9 RI

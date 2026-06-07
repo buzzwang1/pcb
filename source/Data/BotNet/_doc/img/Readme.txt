@@ -1,0 +1,19 @@
+20191029_Sync_0_0_Nachricht.bmp
+20191029_Data_5_3_komplett.bmp
+
+20191029_Data_5_3_komplett2.bmp
+NACK(roter Balken) + STOP am Ende einer Sync-Nachricht
+
+20191029_Data_5_3_komplett3.bmp
+NACK(roter Balken) + STOP am Ende einer Data-Nachricht
+
+20191029_Data_5_0_komplett.bmp
+20191029_Data_0_3_komplett.bmp
+20191029_Sync_0_0_Nachricht.bmp
+
+20191029_Data_5_3_SyncTxChkSum_Error.bmp
+20191029_Data_5_3_DataTxChkSum_Error.bmp
+20191029_Data_5_3_DataRxChkSum_Error.bmp
+
+20191029_Data_5_3_NoSlave_Error1.bmp
+20191029_Data_5_3_NoSlave_Error2.bmp

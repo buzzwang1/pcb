@@ -1,0 +1,169 @@
+22:16 16.01.2019
+Ver. 00.02.00
+
+- Wenn 250ms nach Init keine Kommunikation, dann Watchdog starten und Sprung zur Applikation
+- Wenn 500ms nichts empfangen wurde, dann Reset der internen Statemaschine
+
+
+0    1    2    3    4    5    6    7
+0    4    8   12   16   20   24   28  
+XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+Aufbau:
+Immer 32Byte Nachrichten
+Nicht benutzte Bytes default: x = 0x55
+Aufbau der ersten 4Bytes in der Regel so.
+-> KXXX
+  K: Kommando
+
+<- KIAX
+  K:Kommando
+  I: Nachrichten Index
+  A: ACK( = 0) oder NACK( != 0)
+
+
+
+Interface Info 0 Kommando
+->0XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<-00VV VVVV VVVV VVV0 DDDD DDDD DDDD DDD0
+<-01II IIII IIII IIII IIII IIII IIII III0
+
+  V: 14 Byte Interface Name ASCII (inklusive "0")
+  D: 16 Byte Device Name ASCII (inklusive "0")
+  I: 30 Byte Info text (inklusive "0")
+
+Interface Memory Info 1 Kommando
+->1XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<-10XX XXXX XXXX CPCP 0000 WAWA 0000 WSWS  // 32Byte
+
+  CPCP: 32Bit Anzahl Partitionen. Details folgen
+  WAWA: 32Bit Work-RAM Buffer Adresse
+  WSWS: 32Bit Work-RAM Buffer Größe
+
+<-11X0 IDID MMTT SCSC 0000 AAAA 0000 SSSS  // 32Byte
+  IDID: 32Bit Index
+
+  MM:   16Bit Speicherart
+           0: RAM
+          16: Flash
+          32: EEPROM
+
+  TT:   16Bit Typ
+           0: Default
+  SCSC: 32Bit Seiten Größe, z.B. bei Flash 4kB, bei RAM = 1B
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+
+<-11X1 IDID IIII IIII IIII IIII IIII III0  // 32Byte
+
+  IDID: 32Bit Index
+  I: 24 Byte Info text (inklusive "0")
+
+
+
+Schreiben 16 Kommando
+Start:
+-> 16.128XC XXXX AAAA XXXX SSSS XXXX XXXX XXXX  // 32Byte
+NACK <- 16.1.0.X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 16.0.0.C XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+
+Daten:
+-> 16ZXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte
+...
+-> 16255XX XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte
+
+   Z:  Paket Zähler: Startet bei 128->..->254->128->...
+                     128: Start
+                     255: Letztes Paket
+
+
+Acknowlede, nachdem alle Daten geschrieben wurden
+NACK <- 16.1.1.X XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+ ACK <- 16.0.1.X XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+     C: Compression
+          0: default
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+
+Lesen 32 Kommando
+Start:
+-> 32.128.XC XXXX AAAA XXXX SSSS XXXX XXXX XXXX  // 32Byte
+NACK <- 32.1.0.X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 32.0.0.C XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+
+Daten:
+<- 32.Z.X.X XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte
+...
+<- 32.255.X.X XXXX XXXX XXXX XXXX XXXX XXXX XXXX   // 32Byte
+
+   Z:  Paket Zähler: Startet bei 128->..->254->128->...
+                     128: Start
+                     255: Letztes Paket
+
+Acknowlede, nachdem alle Daten gesendet wurden
+<- 32.0.1.C XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+     C: Compression
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+Checksumme lesen 48 Kommando
+Start:
+-> 48XXX XXXX AAAA XXXX SSSS XXXX XXXX XXXX   // 32Byte
+NACK <- 4810X XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 4800X XXXX AAAA XXXX SSSS XXXX TTTT XXXX  // 32Byte
+<- 4801X XXXX AAAA XXXX SSSS CKCK XXXX XXXX  // 32Byte
+
+  AAAA: 32Bit Startaddresse
+  SSSS: 32Bit Größe
+  CKCK: 32Bit Checksumme der übertragenen Daten
+              Byteweise aufaddiert + 1
+  TTTT: 32Bit Timeout in ms
+
+
+
+Call 64 Kommando
+-> 64XXX XXXX AAAA P1P1 P2P2 P3P3 P4P4 XXXX   // 32Byte
+NACK <- 641XX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 640XX XXXX AAAA XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+  AAAA: 32Bit Zieladdresse, die aufgerufen werden soll
+  P1P1: 32Bit Parameter1
+  P2P2: 32Bit Parameter2 
+  P3P3: 32Bit Parameter3
+  P4P4: 32Bit Parameter4
+
+
+Start der Applikation 65 Kommando
+-> 65XXX XXXX AAAA XXXX XXXX XXXX XXXX XXXX   // 32Byte
+NACK <- 651XX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 650XX XXXX AAAA XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+  AAAA: 32Bit Zieladdresse, die angesprungen werden soll
+        Adr.: 0: Reset
+
+
+
+Exit 128 Kommando
+-> 128XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+<- 128XXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+Enter 129 Kommando
+->129XXX 1234 AAAA XXXX XXXX XXXX XXXX XXXX  // 32Byte
+NACK <- 1291XX 1234 XXXX XXXX XXXX XXXX XXXX XXXX  // 32Byte
+ ACK <- 1290XX 1234 AAAA XXXX XXXX XXXX XXXX XXXX  // 32Byte
+
+  1234: Magic Pattern
+  AAAA: ID den Senders, damit die Antworten adressiert werden können
+
+

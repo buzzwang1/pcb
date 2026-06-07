@@ -1,0 +1,1 @@
+C:\E2\Projekte\SW\Code\pcb_tools\openocd\0.12.0-0\bin\openocd -f interface/stlink.cfg -f target/stm32f1x.cfg -c "program %1 0x08000000 verify reset exit"

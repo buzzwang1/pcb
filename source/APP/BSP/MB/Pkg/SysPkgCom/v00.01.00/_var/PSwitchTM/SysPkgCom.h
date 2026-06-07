@@ -1,0 +1,122 @@
+
+#ifndef __SYS_PKG_COM_H__
+#define __SYS_PKG_COM_H__
+
+
+#include "TypeDef.h"
+#include "cStrT.h"
+
+  // Driver
+#include "tGPPin.h"
+#include "cI2c.h"
+#include "cUsart_MpHd.h"
+
+
+//Data
+#include "cRingBufT.h"
+#include "cBnSpop.h"
+#include "cBnLinkI2c.h"
+#include "cBnLinkUsartMpHd.h"
+#include "cBnLinkBotCom.h"
+#include "cBnStreamSysPortBase.h"
+#include "cBnStreamSysPortCom.h"
+#include "cBnStreamSysPortCmd.h"
+#include "cBotnet.h"
+
+
+
+
+class cSysPkgCom
+{
+  public:
+
+  cBotNetCfg mcMyBotNetCfg1;
+
+  // BotNet
+  cBotNet mcBn;
+
+  // U2: SideLink
+  // Uart for developing
+  tcUart<USART2_BASE, GPIOA_BASE, 2, GPIOA_BASE, 3> mcComPortU2;
+  cBotNet_LinkBotCom         mcSideLinkBotCom;
+
+  // Usart: DownLink
+  cUartMpHdMaster  mcU3_BnMaster;
+
+  // I2C2: DownLink
+  //cGpPin      mcI2c2_SCL_BnDl;
+  //cGpPin      mcI2c2_SDA_BnDl;
+  //cI2cMaster  mcI2C2_BnMaster;
+
+
+
+
+  cBotNet_DownLinkUsartMpHd        mcDownLinks1;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks2;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks3;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks4;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks5;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks6;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks7;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks8;
+  cBotNet_DownLinkUsartMpHd        mcDownLinks9;
+  cBotNet_DownLinkUsartMpHd        mcDownLinksA;
+  cBotNet_DownLinkUsartMpHd        mcDownLinksB;
+  cBotNet_DownLinkUsartMpHd        mcDownLinksC;
+  cBotNet_DownLinkUsartMpHd        mcDownLinksD;
+  cBotNet_DownLinkUsartMpHd        mcDownLinksE;
+
+  //cBotNet_DownLinkI2c        mcDownLinks1;
+  //cBotNet_DownLinkI2c        mcDownLinks2;
+  //cBotNet_DownLinkI2c        mcDownLinks3;
+  //cBotNet_DownLinkI2c        mcDownLinks4;
+  //cBotNet_DownLinkI2c        mcDownLinks5;
+  //cBotNet_DownLinkI2c        mcDownLinks6;
+  //cBotNet_DownLinkI2c        mcDownLinks7;
+  //cBotNet_DownLinkI2c        mcDownLinks8;
+  //cBotNet_DownLinkI2c        mcDownLinks9;
+  //cBotNet_DownLinkI2c        mcDownLinksA;
+  //cBotNet_DownLinkI2c        mcDownLinksB;
+  //cBotNet_DownLinkI2c        mcDownLinksC;
+  //cBotNet_DownLinkI2c        mcDownLinksD;
+  //cBotNet_DownLinkI2c        mcDownLinksE;
+
+
+  cSysPkgCom();
+
+  void vInit1();
+  void vInit2();
+
+  bool isError(cStr& lszErrorInfo);
+  bool isReadyForSleep(cStr& lcStatus);
+
+  void vTick1msHp();
+  void vTick1msLp(void);
+  void vTick10msLp(void);
+  void vTick100msLp(void);
+  void vTick1000msLp(void);
+};
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void DMA1_Channel2_IRQHandler(void);
+extern void DMA1_Channel3_IRQHandler(void);
+extern void USART3_IRQHandler(void);
+extern void TIM1_BRK_TIM15_IRQHandler(void);
+
+//extern void I2C2_EV_IRQHandler(void);
+//extern void I2C2_ER_IRQHandler(void);
+
+// ---------------------------- U2 ---------------------------
+
+extern void USART2_IRQHandler(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif // __SYS_PKG_COM_H__

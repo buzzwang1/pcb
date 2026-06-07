@@ -611,7 +611,7 @@ void cBotNetMsgPortSpop::vProcess(u32 lu32TimeDiff_us)
       case cJobs::nJobJump:
         break;
       case cJobs::nJobReset:
-        if (cJobHandler::u32GetTime_us() > 100*1000)
+        if (cJobHandler::u16GetTime_ms() > 100)
         {
           cBnSpop_vJumpToApp(0);
         }

@@ -1,0 +1,97 @@
+
+
+
+
+
+Komponente:
+ - Eine Komponente soll Abhängihkeiten von anderen komponenten(->Masterkomponenten) haben können
+   - Wenn eine Komponente requested wird, dann werden die Masterkomponenten auch requested.
+      - Erst wenn alle Masterkomponenten 'Ready' sind, dann kann die SubKomponente initialisiert werden
+   - Eine Komponenete soll auch requested werden können von einem User oder vom System
+ - Eine Komponente kann erst Disabled werden, wenn keine Request mehr bestehent.
+ 
+ - Jede Masterkomponenten soll einen Traceback, von welcher komponete die gerade requested wird + User request (max. 16)
+ - Jede Komponenete soll eine eindeutige nummer haben, 
+
+
+Jede Komponentete hat die Hauptzustände (bitcodiert) 'NOT_READY (alle 0)', 'INITIALZED (bit0)', 'READY (bit1)', 'ERROR'(bit2)
+
+Übergang: 'NOT_READY' ->  'INITIALZED': Init1(0)->Init2(1)->Init3(2)->Init4(3)
+Übergang: 'INITIALZED' -> 'READY'     : Enable(4)
+Übergang: 'READY' -> 'INITIALZED'     : Disable(5)
+Übergang: 'INITIALZED' -> 'NOT_READY' : Deinit(6)
+
+
+
+//-------------------------------------------------------------------------------------------------
+
+15.03.2026
+
+
+
+Sequenz:
+ Data: BArry (max. 256 Einträge)
+ u8 ProcessEntry;
+
+ Zustände: Idle(0)->InWork(1)--+-->Done_Pass(2)
+                               \-->Done_Fail(3)
+
+ u8 u8GetFirst()
+ u8 u8GetNext()
+ bool isDone()
+
+Komponente:
+ - Eine Komponente soll Sub-Komponenten haben können -> MasterKomponente/SubKomponente
+   - Eine Masterkomponente kann ersten den nächsten Step erreichen, wenn all Subkomponenten ihren Step abgeschlossen haben
+   - Masterkomponenten haben einen 1ms Callback
+
+ - ??? Wenn man z.B. nur einen i2c sensor braucht. wenn man nun den I2c master requested, wurde der all sub initialisieren. Was man nicht braucht.
+   - man könnte nach reset nur den einen sensor am i2c master added.
+   - danach dann alle I2c an den master added
+
+ - Sequenzen: Init1(0)->Init2(1)->Init3(2)->Init4(3)->Enable(4)<->Disable(5)->Deinit(6)
+                 |          |        |        |                                  |
+                 |          |        |        \--------------------------------->|
+                 |          |        \------------------------------------------>|
+                 |          \--------------------------------------------------->|
+                 \<------------------------------------------------------------->/
+
+Init1: Low Level Initialisieren der Komponente: HW, DMA, peripherie, PIN
+Init2: Gegebenfalls HW/SW Reset der Komponente
+Init3: Istzustand erfassen: z.B. Read all Register bei seriellen Sensoren
+Init4: Initialisierung
+Enable: Schaltet die Komponente ein, z.B. DisplayEin, OutputOn
+Disable: Schaltet die Komponente aus, z.B. DisplayAus, OutputOff
+         Disable muss warten, bis die Komponente dafür bereit ist, keine laufenden Vorgänge, z.B. Kommunikation
+DeInit: Low Level De-Initialisieren der Komponente: HW, DMA, peripherie, PIN
+
+
+  u8 Step:5;
+  u8 State:3;
+
+  RequestedStep
+  ProcessStep
+  DoEvent(Event, Tick_ms)
+
+
+Note:
+  Req(0): kann jeder Step der über dem aktuellen Step oder aktuellem Step, wenn noch in Idle
+          Ausnahmen
+             - Enable(3) kann von Disable(4)
+             - Von jedem Initx(0..3) zu DeInit(6)
+             - DeInit(6) zu Init1(0)
+          Vor Init1(0) und nach DeInit(6) ist im prinzip der gleiche Zustand
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -150,16 +150,31 @@ public:
   u16 mui16Pin;
 
   cGpPin(u32 lu32PortBase,
+         u16 lui16Pin)
+  {
+    mu32PortBase = lu32PortBase;
+    mui16Pin = lui16Pin;
+  }
+
+  cGpPin(u32 lu32PortBase,
          u16 lui16Pin,
          u32 lenMode,
          u32 lenPuPd,
          u32 lenSpeed,
          u8  lui8InitValue)
   {
-    GPIO_InitTypeDef  gpioinitstruct = {};
-
     mu32PortBase = lu32PortBase;
-    mui16Pin     = lui16Pin;
+    mui16Pin = lui16Pin;
+
+    vInit(lenMode, lenPuPd, lenSpeed, lui8InitValue);
+  }
+
+  void vInit(u32 lenMode,
+             u32 lenPuPd,
+             u32 lenSpeed,
+             u8  lui8InitValue)
+  {
+    GPIO_InitTypeDef  gpioinitstruct = {};
 
     switch (mu32PortBase)
     {
@@ -183,6 +198,7 @@ public:
     gpioinitstruct.Alternate = 0;
     HAL_GPIO_Init(((GPIO_TypeDef*)mu32PortBase), &gpioinitstruct);
   }
+
 
   void vSetType(u32 lui8Type)
   {

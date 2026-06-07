@@ -11,14 +11,12 @@ __IO uint32_t TimingDelay = 0;
 
 LED<GPIOB_BASE, 9> mcLedRed;
 
-cGpPin lc3v3V(GPIOA_BASE, 10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 1);
-cGpPin lcSCL(GPIOB_BASE, 10, GPIO_MODE_AF_OD,     GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-cGpPin lcSDA(GPIOB_BASE, 11, GPIO_MODE_AF_OD,     GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cGpPin mcI2c2_SCL_Board(GPIOB_BASE, 13, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cGpPin mcI2c2_SDA_Board(GPIOB_BASE, 14, GPIO_MODE_ANALOG, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+cI2cMaster   mcI2C2(I2C2, &mcI2c2_SCL_Board, &mcI2c2_SDA_Board, 1, 8, 400000, False);
 
-cI2cMaster   mcI2C2(I2C2, &lcSCL, &lcSDA, 8);
-
-cINA3221      mcINA3221_A(&mcI2C2, INA3221_I2C_ADDRESS_CONF_0, 100, 100, 100);
-cINA3221      mcINA3221_B(&mcI2C2, INA3221_I2C_ADDRESS_CONF_1, 100, 100, 100);
+cINA3221      mcINA3221_A(&mcI2C2, INA3221_I2C_ADDRESS_CONF_0, 10, 10, 10);
+cINA3221      mcINA3221_B(&mcI2C2, INA3221_I2C_ADDRESS_CONF_1, 10, 10, 10);
 
 int32 mi32IShuntA = 0;
 int32 mi32VBusA   = 0;
@@ -126,13 +124,6 @@ void I2C2_ER_IRQHandler(void)
   mcI2C2.I2C_ER_IRQHandler();
 }
 
-void USART1_IRQHandler(void)
-{
-}
-
-void USART2_IRQHandler(void)
-{
-}
 
 void MAIN_vTick10msHp(void)
 {
@@ -168,13 +159,87 @@ void MAIN_vTick1000msLp(void)
   //mi32VBusA   = mcINA3221_A.i32CalcVBus_uV()   / 1000;
 }
 
+enum tenLogicPower : u8
+{
+  nP1 = 0,
+  nP2,
+  nP3
+};
 
+static tenLogicPower menLogicPower = tenLogicPower::nP1;
+
+class cDigiPower
+{
+public:
+  //Digi Power
+  static cGpPin mMX22917_S1;
+  static cGpPin mMX22917_S2;
+};
+
+cGpPin cDigiPower::mMX22917_S1(GPIOC_BASE, 5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+cGpPin cDigiPower::mMX22917_S2(GPIOC_BASE, 4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+
+cDigiPower    mcDigiPower;
+
+void vInitLevel2()
+{
+  // S2   S1     R2     VOut
+  //  0    0    620K   2V09
+  //  0    1    409k   2V75
+  //  1    0    447k   2V59
+  //  1    1    325k   3V26
+  cGpPin mTPS62125_S1(GPIOE_BASE, 7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  cGpPin mTPS62125_S2(GPIOE_BASE, 8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  cGpPin mTPS62125_PG(GPIOE_BASE, 9, GPIO_MODE_INPUT,     GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+
+  menLogicPower = nP1;
+
+  if (mTPS62125_PG.ui8Get()) // 2V09 OK ?
+  {
+    // Try to set 2V75
+    mTPS62125_S1.vSet1();
+    for (int i = 0; i < 500000; i++) { __asm("nop"); }
+    if (mTPS62125_PG.ui8Get()) // 2V75 OK ?
+    {
+      // ExtPowerReqCnt = 0
+      menLogicPower = nP2;
+
+      // Try to set 3V26
+      mTPS62125_S2.vSet1();
+      for (int i = 0; i < 500000; i++) { __asm("nop"); }
+      if (mTPS62125_PG.ui8Get()) // 3V26 OK ?
+      {
+        menLogicPower = nP3;
+      }
+    }
+  }
+
+  //if (menLogicPower == nP1)
+  //{
+    // if (ExtPowerReqCnt < 3)
+    //   ExtPowerReqCnt++
+    //   Request external power source.
+    //   Wait 100ms
+    // else
+    //  long sleep
+  //}
+
+  //if (menLogicPower != nP1)
+  {
+    mcDigiPower.mMX22917_S1.vSet1();
+    mcDigiPower.mMX22917_S2.vSet1();
+    for(int i = 0; i < 500000; i++) { __asm("nop"); }
+  }
+}
 
 
 void MAIN_vInitSystem(void)
 {
   cClockInfo::Update();
   SysTick_Config(cClockInfo::mstClocks.HCLK_Frequency / 100);
+
+  vInitLevel2();
+  mcI2C2.vInitHw();
 
   CycCall_Start(NULL /*1ms_HP*/,
                 MAIN_vTick10msHp /*10ms_HP*/,

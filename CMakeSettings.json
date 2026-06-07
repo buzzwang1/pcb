@@ -421,6 +421,36 @@
       ]
     },
     {
+      "ProjectName": "GD32F1x0_UbTech_Servo1_App2",
+      "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/App2",
+      "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/App2.Release",
+      "name": "STM/F1/GD32F1x0/UbTech/Servo1/App2.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\App2\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\App2\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/F1/GD32F1x0/UbTech/Servo1/App2"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\F1\\GD32F1x0\\UbTech\\Servo1\\App2\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "GD32F1x0_UbTech_Servo1_Debug",
       "ProjectLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug",
       "ProjectFullLabelName": "STM/F1/GD32F1x0/UbTech/Servo1/AppDebug.Release",
@@ -5101,6 +5131,36 @@
       ]
     },
     {
+      "ProjectName": "STM32L433CCT_Mini_MBv10b2_Servo_U2U",
+      "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Servo/U2U",
+      "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Servo/U2U.Release",
+      "name": "STM/L4/STM32L433CCT/Mini/MBv10b2/Servo/U2U.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Servo\\U2U\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Servo\\U2U\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/L4/STM32L433CCT/Mini/MBv10b2/Servo/U2U"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\L4\\STM32L433CCT\\Mini\\MBv10b2\\Servo\\U2U\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32L433CCT_Mini_MBv10b2_Flur_01",
       "ProjectLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01",
       "ProjectFullLabelName": "STM/L4/STM32L433CCT/Mini/MBv10b2/Lampe/Flur/01.Release",
@@ -6451,6 +6511,66 @@
       ]
     },
     {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_I2C_BQ25798",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/BQ25798",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/BQ25798.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/BQ25798.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\BQ25798\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\BQ25798\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/BQ25798"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\BQ25798\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_I2C_SIC45X",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/SIC45X",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/SIC45X.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/SIC45X.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\SIC45X\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\SIC45X\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/I2C/SIC45X"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\I2C\\SIC45X\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
       "ProjectName": "STM32U585CIT_Mini_MBv28b2_Main01",
       "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main01",
       "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main01.Release",
@@ -6533,6 +6653,36 @@
         {
           "name": "PCB_ProjectCfgFile",
           "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main03\\Release\\gen\\ProjectCfg.cmake"
+        },
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "${workspaceRoot}\\scripts\\pcb\\cmake\\ToolChainFiles\\GccArmCortex-Ninja.cmake"
+        }
+      ]
+    },
+    {
+      "ProjectName": "STM32U585CIT_Mini_MBv28b2_Main04",
+      "ProjectLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main04",
+      "ProjectFullLabelName": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main04.Release",
+      "name": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main04.Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [
+        "msvc_x86"
+      ],
+      "buildRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main04\\Release\\cmake",
+      "installRoot": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main04\\Release\\cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "PCB_ProjectLabel",
+          "value": "STM/U5/STM32U585CIT/Mini/MBv28b2/Main04"
+        },
+        {
+          "name": "PCB_ProjectCfgFile",
+          "value": "${workspaceRoot}\\bin\\STM\\U5\\STM32U585CIT\\Mini\\MBv28b2\\Main04\\Release\\gen\\ProjectCfg.cmake"
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",

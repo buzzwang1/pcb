@@ -46,9 +46,9 @@
 //
 //
 //
-//  I2C1  -> BotNet 1.0.0.0
-//    PB06  -> I2C1 SCL
-//    PB07  -> I2C1 SDA
+//  I2C2  -> BotNet 1.0.0.0
+//    PB06  -> I2C2 SCL
+//    PB07  -> I2C2 SDA
 //
 //  U1    -> BotNet 1.E.0.0
 //    PA09  -> U1 Tx/Rx

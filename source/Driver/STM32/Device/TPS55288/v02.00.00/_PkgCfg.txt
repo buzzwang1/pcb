@@ -1,0 +1,2 @@
+[Common]
+PackageName=TPS55288

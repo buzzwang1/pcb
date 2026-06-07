@@ -1,0 +1,33 @@
+
+
+Board Input
+
+
+VoltageConverterIn  aka Charger aka BoardIn
+VoltageConverterOut aka Sysout  aka BoardOut
+
+
+Versorgung den Board
+  - V_BoardIn  / I_BoardIn   => SupplyBoardIn
+  - V_Board    / I_Board     => SupplyBoard
+  - V_BoardOut / I_BoardOut  => SupplyBoardOut
+
+
+// Bei 4Cell Version
+SupplyBoardIn --> VoltageConverterIn --> SupplyBoard -+--> VoltageConverterOut --> SupplyBoardOut
+                                                      |
+                                                      \--> VoltageConverter5V -+--> SupplyBoard5V 
+                                                                               |
+                                                                               \--> VoltageConverter3V3 --> SupplyBoard3V3
+
+// Bei 2Cell Version
+SupplyBoardIn --> VoltageConverterIn --> SupplyBoard -+--> SupplyBoardOut
+                                                      |
+                                                      \--> VoltageConverter3V3 --> SupplyBoard3V3
+
+
+
+
+
+
+

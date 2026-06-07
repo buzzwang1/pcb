@@ -1,0 +1,525 @@
+#include <stdlib.h>
+#include "main.h"
+#include "cSysDPool.h"
+
+
+// STM32U5XX
+// ARM®-based Cortex®-M33 32b MCU
+// Rom 1024KB/2048KB
+// Ram 768KB
+// 160Mhz
+//
+// Phase1: Img Bereich im iFlash
+//  000000 - 001FFF:   8kb BL
+//  002000 - 007FFF:  24kb BLU Img
+//
+//  008000 - 097FFF: 576kb BLU Img
+//  098000 - 0FDFFF: 408kb BLU Img
+//
+//  0FE000 - 0FFFFF:   8kb Romconst
+
+
+//// v00.00.06/Base/Misc/Spop/_var/STM32L433U5xx
+//// UartMpHd
+
+
+//  Mainboard01. BotNetId 21 = 0x15
+//  Master:      BnAdr: 1.0.0.0 für I2C
+//
+//  PB09  -> Status Led
+//
+//  PA00  -> Wakeup In (100k Pull Down)
+//  PC09  -> Wakeup Out
+//
+//  PC08  -> reserve (auf Stecker)
+//  PC09  -> reserve (auf Stecker)
+//
+//  Board
+//    Power Control
+//      PE09 <- TPS62125 PG Power Good
+//      PE07 -> TPS62125 S1   S2   S1     R2    VOut
+//      PE08 -> TPS62125 S2    0    0    620K   2V09
+//                             0    1    409k   2V75
+//                             1    0    447k   2V59
+//                             1    1    325k   3V26
+//
+//      PC05 -> MX22917_S1: Versorgung I2C ExCom (Switch)
+//      PC04 -> MX22917_S2: Versorgung INAs und I2C Board
+//
+//      PB12 -> Pomo2 TPS55288 enable
+//
+//    I2C Board
+//      PB14 -> SDA2 Board
+//      PB13 -> SCL2 Board
+//
+//    Flash
+//      PE10 -> OSPI_P1_CLK
+//      PE11 -> OSPI_P1_NCS
+//      PE12 -> OSPI_P1_IO0
+//      PE13 -> OSPI_P1_IO1
+//      PE14 -> OSPI_P1_IO2
+//      PE15 -> OSPI_P1_IO3
+//
+//  Kommunikation
+//    ExIn
+//      PD13 -> SDA4  (Input)
+//      PD12 -> SCL4  (Input)
+//      PD08 -> U3 TX (Input)
+//
+//    ExOut
+//      PB00 -> CH1 Enable
+//      PB01 -> CH2 Enable
+//      PB02 -> CH3 Enable
+//
+//      PC01 -> SDA3  (Output)
+//      PC00 -> SCL3  (Output)
+//      PA02 -> U2 TX (Output)
+//
+//
+//            nRF905:            Display:
+//      PB03: SPI1 Clock         SPI1 Clock
+//      PB04: SPI1 MISO          SPI1 MISO
+//      PB05: SPI1 MOSI          SPI1 MOSI
+//      PE06: SPI1 Chip Select   SPI1 Display Chip Select
+//      PB08: TX or RX mode      SPI1 Touch Chip Select
+//      PE00: Standby/CSN        Display Reset
+//      PE01: Power up           Display DC
+//      PE02: CLK                ---
+//      PE03: Carrier Detected   ---
+//      PE04: Adress Match       ---
+//      PE05: Data Ready         Touch IRQ
+//
+//      INA1 Adr. 0x40
+//        CH1: ExCom CH3
+//        CH2: ExCom CH2
+//        CH3: ExCom CH1
+//
+//      INA2 Adr. 0x41
+//        CH1: SysIn
+//        CH2: PomoIn
+//        CH3: PomoOut
+//
+//      Pomo:
+//        TPS55288: I2C; TPS55288 Adr. 0x74 + Tmp102 Adr. 0x90
+//
+//
+//
+//  Timer Usage:
+//    TIM2  -> SysTick/DiffTimer
+//    TIM6  -> Stage 5: 1ms HP Timer
+//    TIM7  -> BotCom nRf905
+//    TIM16 -> BotCom MpHd
+//
+//  DMA Usage:
+//    GPDMA1:
+//      0:
+//      1: I2C2 Board
+//      2: I2C4 In
+//      3: Uart3 In
+//      4: I2C3 Out
+//      5: Uart2 Out
+//      6: Uart1 Rx Debug
+//      7: Uart1 Tx Debug
+//      8: SPI1 Rx nRf905
+//      9: SPI1 Tx nRf905
+//     10:
+//     11:
+//
+//
+//  Interrupt Usage:
+//    #TIM6_IRQHandler:          CyclicCaller:  Prio: 15.8 => 1ms SysTick
+//    #I2C1_EV_IRQHandler:       BotCom:        Prio:  8.8
+//    #I2C1_ER_IRQHandler:       BotCom:        Prio:  8.8
+//    #I2C2_EV_IRQHandler:       Board:         Prio:  8.8
+//    #I2C2_ER_IRQHandler:       Board:         Prio:  8.8
+//    #EXTI15_10_IRQHandler:     BotNet nRF905: Prio:  9.8 => NRF905
+//    #DMA1_Channel2_IRQHandler: BotNet nRF905: Prio:  9.8 => NRF905
+//    #DMA1_Channel3_IRQHandler: BotNet nRF905: Prio:  9.8 => NRF905
+//    #TIM7_IRQHandler:          BotNet nRF905: Prio:  9.8 => NRF905
+//    #DMA2_Channel6_IRQHandler: BotNet U1 Tx:  Prio:  6.8 => U1
+//    #DMA2_Channel7_IRQHandler: BotNet U1 Rx:  Prio:  6.8 => U1
+//    #USART1_IRQHandler:        BotNet U1:     Prio:  6.8 => U1
+//    #TIM1_UP_TIM16_IRQHandler: BotCom U1:     Prio:  6.8 => U1
+//    #USART2_IRQHandler:        BotCom U2:     Prio:  7.8 => U2
+//
+
+cDepTree mcSystem;
+
+
+void NMI_Handler(void)
+{
+  while (1) {} //Wait for watchdog reset
+}
+
+void HardFault_Handler(void)
+{
+  /* Go to infinite loop when Hard Fault exception occurs */
+  cSysDPool::mSys.mcErr.munErr->stErr.isHardFault = 1;
+  while (1) {} //Wait for watchdog reset
+}
+
+
+void MemManage_Handler(void)
+{
+  /* Go to infinite loop when Memory Manage exception occurs */
+  cSysDPool::mSys.mcErr.munErr->stErr.isMemManage = 1;
+  while (1) {} //Wait for watchdog reset
+}
+
+
+void BusFault_Handler(void)
+{
+  cSysDPool::mSys.mcErr.munErr->stErr.isBusFault = 1;
+  /* Go to infinite loop when Bus Fault exception occurs */
+  while (1) {} //Wait for watchdog reset
+}
+
+
+void UsageFault_Handler(void)
+{
+  cSysDPool::mSys.mcErr.munErr->stErr.isUsageFault = 1;
+  /* Go to infinite loop when Usage Fault exception occurs */
+  while (1) {} //Wait for watchdog reset
+}
+
+
+void DebugMon_Handler(void)
+{
+  cSysDPool::mSys.mcErr.munErr->stErr.isDebugMon = 1;
+  while (1) {} //Wait for watchdog reset
+}
+
+
+
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(u8 *file, uint32_t line)
+{
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+  /* Infinite loop */
+  while (1)
+  {
+  }
+}
+#endif
+
+#include "cCompBase.h"
+#include "cComp3V3.h"
+#include "cCompLed.h"
+#include "cCompBoardI2C2.h"
+#include "cCompBoardMonitor.h"
+
+#include "cCompPomoOut1Temp.h"
+#include "cCompPomoOut1.h"
+
+#include "cCompAddOn.h"
+#include "cCompAddOnBatOut.h"
+#include "cCompAddOn5V0.h"
+#include "cCompAddOn5V0Out.h"
+#include "cCompAddOnCharger.h"
+
+
+#include "cCompGfxSpi2.h"
+#include "cCompGfx.h"
+
+
+cCompBase mcCompBase;
+cComp3V3  mcComp3V3;
+cCompLed  mcCompLed;
+cCompBoardI2C2     mcCompBoardI2C2;
+cCompBoardMonitor  mcCompBoardMonitor;
+
+cCompPomoOut1Tmp   mcCompPomoOut1Tmp;
+cCompPomoOut1      mcCompPomoOut1;
+
+cCompAddOn        mcCompAddOn;
+cCompAddOnBatOut  mcCompAddOnBatOut;
+cCompAddOn5V0     mcCompAddOn5V0;
+cCompAddOn5V0Out  mcCompAddOn5V0Out;
+cCompAddOnCharger mcCompAddOnCharger;
+
+cCompGfxSpi2      mcCompGfxSpi2;
+cCompGfx          mcCompGfx;
+
+
+extern const osThreadAttr_t TaskcDepTreeBase_attributes;
+extern void  TaskcDepTreeBase(void* argument);
+static osThreadId_t mTaskMcp;
+
+const osThreadAttr_t TaskMcp_attributes = {
+  .name = "Mcp",                           ///< name of the thread
+  .attr_bits = 0,                          ///< attribute bits
+  .cb_mem = 0,                             ///< memory for control block
+  .cb_size = 0,                            ///< size of provided memory for control block
+  .stack_mem = 0,                          ///< memory for stack
+  .stack_size = (1024 * 2),                ///< size of stack
+  .priority = (osPriority_t)osPriorityLow, ///< initial thread priority (default: osPriorityNormal)
+  .tz_module = 0,                          ///< TrustZone module identifier
+  .reserved = 0                            ///< reserved (must be 0)
+};
+
+void TaskMcp(void* argument)
+{
+  UNUSED(argument);
+
+  cComponentList::macList[cDepTreeCfg::cComp::nBoardMonitor]->vRequestState(cDepTreeRequester::nMcp);
+
+
+  // 50ms nach Start überprüfen, ob die Versorgungspannung passt
+  // Wenn Ja, System weiter hoch fahren, ansonsten System runterfahren
+  vTaskDelay(pdMS_TO_TICKS(50));
+
+  if (cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)
+  {
+    cComponentList::macList[cDepTreeCfg::cComp::nLed]->vRequestState(cDepTreeRequester::nMcp);
+    //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vRequestState(cDepTreeRequester::nMcp);
+    //cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vRequestState(cDepTreeRequester::nMcp);
+    //cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vRequestState(cDepTreeRequester::nMcp);
+
+    cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vRequestState(cDepTreeRequester::nMcp);
+  }
+  else
+  {
+    cComponentList::macList[cDepTreeCfg::cComp::nBoardMonitor]->vReleaseState(cDepTreeRequester::nMcp);
+
+    // Mcp anhalten, System soll nun in den Sleep gehen.
+    vTaskSuspend(NULL);
+  }
+
+
+  while (1)
+  {
+    if (!cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)   
+    {
+      cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vReleaseState(cDepTreeRequester::nMcp);
+
+      //cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vReleaseState(cDepTreeRequester::nMcp);
+      //cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nLed]->vReleaseState(cDepTreeRequester::nMcp);
+      //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vReleaseState(cDepTreeRequester::nMcp);
+
+      cComponentList::macList[cDepTreeCfg::cComp::nBoardMonitor]->vReleaseState(cDepTreeRequester::nMcp);
+      
+      // Mcp anhalten, System soll nun in den Sleep gehen.
+      vTaskSuspend(NULL);
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+}
+
+
+void MAIN_vInitSystem(void)
+{
+  mcSystem.vInit();
+
+  cComponentList::vAdd((cComponent*)&mcCompBase);
+  cComponentList::vAdd((cComponent*)&mcComp3V3);
+  cComponentList::vAdd((cComponent*)&mcCompLed);
+  cComponentList::vAdd((cComponent*)&mcCompBoardI2C2);
+  cComponentList::vAdd((cComponent*)&mcCompBoardMonitor);
+
+  cComponentList::vAdd((cComponent*)&mcCompPomoOut1Tmp);
+  cComponentList::vAdd((cComponent*)&mcCompPomoOut1);
+
+  cComponentList::vAdd((cComponent*)&mcCompAddOn);
+  cComponentList::vAdd((cComponent*)&mcCompAddOnBatOut);
+  cComponentList::vAdd((cComponent*)&mcCompAddOn5V0);
+  cComponentList::vAdd((cComponent*)&mcCompAddOn5V0Out);
+  cComponentList::vAdd((cComponent*)&mcCompAddOnCharger);
+
+  cComponentList::vAdd((cComponent*)&mcCompGfxSpi2);
+  cComponentList::vAdd((cComponent*)&mcCompGfx);
+
+
+  mTaskMcp = osThreadNew(TaskMcp, (void*)null, &TaskMcp_attributes);
+  mcSystem.vStart();
+  /* We should never get here as control is now taken by the scheduler */
+}
+
+/* Main functions ---------------------------------------------------------*/
+int main(void)
+{
+  // Uncomment to avoid losing connection with debugger after wakeup from Standby (Consumption will be increased)
+  SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBY);
+
+  MAIN_vInitSystem();
+
+  while (1)
+  {
+  }
+}
+
+
+void SysError_Handler()
+{
+  while (1)
+  {
+    __asm("nop");
+  }
+}
+
+
+//@brief  System Clock Configuration
+//         The system Clock is configured as follows :
+//            System Clock source            = PLL (MSI)
+//            SYSCLK(Hz)                     = 160000000
+//            HCLK(Hz)                       = 160000000
+//            AHB Prescaler                  = 1
+//            APB1 Prescaler                 = 1
+//            APB2 Prescaler                 = 1
+//            MSI Frequency(Hz)              = 4000000
+//            PLL_MBOOST                     = 1
+//            PLL_M                          = 1
+//            PLL_N                          = 80
+//            PLL_Q                          = 2
+//            PLL_R                          = 2
+//            PLL_P                          = 2
+//            Flash Latency(WS)              = 4
+
+static void SystemClock_Config_160Mhz(void)
+{
+  // Enable PWR clock
+  LL_AHB3_GRP1_EnableClock(LL_AHB3_GRP1_PERIPH_PWR);
+
+  // Set the regulator supply output voltage
+  LL_PWR_SetRegulVoltageScaling(LL_PWR_REGU_VOLTAGE_SCALE1);
+  while (LL_PWR_IsActiveFlag_VOS() == 0)
+  {
+  }
+
+  // Switch to SMPS regulator instead of LDO
+  //LL_PWR_SetRegulatorSupply(LL_PWR_SMPS_SUPPLY);
+  //while (LL_PWR_IsActiveFlag_REGULATOR() != 1)
+  //{
+  //}
+
+  // Enable MSI oscillator
+  LL_RCC_MSIS_SetRange(LL_RCC_MSISRANGE_4); // => 4Mhz
+  LL_RCC_MSI_SetCalibTrimming(10, LL_RCC_MSI_OSCILLATOR_0);
+  LL_RCC_MSIS_Enable();
+  while (LL_RCC_MSIS_IsReady() != 1)
+  {
+  }
+
+  // Set FLASH latency
+  LL_FLASH_SetLatency(LL_FLASH_LATENCY_4);
+
+  // Configure PLL clock source
+  LL_RCC_PLL1_SetMainSource(LL_RCC_PLL1SOURCE_MSIS);
+
+  // Enable the EPOD to reach max frequency
+  LL_PWR_EnableEPODBooster();
+  while (LL_PWR_IsActiveFlag_BOOST() == 0)
+  {
+  }
+
+  // Main PLL configuration and activation
+  // 4Mhz (MSI)  * 80 / 2 => 160Mhz
+  LL_RCC_PLL1_EnableDomain_SYS();
+  LL_RCC_PLL1FRACN_Disable();
+  LL_RCC_PLL1_SetVCOInputRange(LL_RCC_PLLINPUTRANGE_4_8);
+  LL_RCC_SetPll1EPodPrescaler(LL_RCC_PLL1MBOOST_DIV_1);
+  LL_RCC_PLL1_SetDivider(1);
+  LL_RCC_PLL1_SetN(80);
+  LL_RCC_PLL1_SetP(2);
+  LL_RCC_PLL1_SetQ(2);
+  LL_RCC_PLL1_SetR(2);
+
+  LL_RCC_PLL1_Enable();
+  while (LL_RCC_PLL1_IsReady() != 1)
+  {
+  }
+
+  // Set AHB, APB1, APB2 and APB3 prescalers
+  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
+  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+  LL_RCC_SetAPB3Prescaler(LL_RCC_APB3_DIV_1);
+
+  // Set PLL1 as System Clock Source
+  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL1);
+  while (LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL1)
+  {
+  }
+
+  // Set systick to 1ms with frequency set to 160MHz
+  LL_Init1msTick(160000000);
+
+  // Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function)
+  LL_SetSystemCoreClock(160000000);
+
+  LL_ICACHE_SetMode(LL_ICACHE_1WAY);
+  LL_ICACHE_Enable();
+}
+
+
+/*
+static void SystemClock_Config_32MHz(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+
+
+  // EPOD booster enable wird erst ab 55Mhz benötigt
+
+  // Range is wichtig für SRAM zugriff
+  // Range1 für <160 Mhz, bei Range 1 kann man aber flash waitstates auf 0 setzen
+  // Range3 für  <55 Mhz, bei Range 3 muss man aber flash waitstates auf 1 setzen
+  LL_AHB3_GRP1_EnableClock(LL_AHB3_GRP1_PERIPH_PWR);
+  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE3);
+
+  // Initializes the CPU, AHB and APB buses clocks
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+  RCC_OscInitStruct.HSIState       = RCC_HSI_ON;
+  RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_NONE;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+  // Initializes the CPU, AHB and APB buses clocks 
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+                              | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2
+                              | RCC_CLOCKTYPE_PCLK3;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_HCLK_DIV1;
+
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0);
+
+  // Set systick to 1ms with frequency set to 160MHz
+  LL_Init1msTick(32000000);
+
+  // Update CMSIS variable (which can be updated also through SystemCoreClockUpdate function)
+  LL_SetSystemCoreClock(32000000);
+
+  LL_ICACHE_SetMode(LL_ICACHE_1WAY);
+  LL_ICACHE_Enable();
+
+  //DCACHE_HandleTypeDef hdcache1;
+  //hdcache1.Instance = DCACHE1;
+  //hdcache1.Init.ReadBurstType = DCACHE_READ_BURST_WRAP;
+  //HAL_DCACHE_Init(&hdcache1);
+}
+*/
+
+
+// This is called from the Startup Code, before the c++ contructors
+void MainSystemInit()
+{
+  SystemInit();
+  SystemClock_Config_160Mhz(); // Decomment for 16Mhz HSI
+  SystemCoreClockUpdate();
+}
