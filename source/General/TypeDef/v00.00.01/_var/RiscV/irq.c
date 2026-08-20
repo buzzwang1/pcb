@@ -1,3 +1,3 @@
 #include "Irq.h"
 
-int miNestedIrqCnt = 0;
+unsigned char miNestedIrqCnt = 0;

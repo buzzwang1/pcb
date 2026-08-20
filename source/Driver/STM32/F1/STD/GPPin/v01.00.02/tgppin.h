@@ -157,13 +157,15 @@ public:
       lu32CRL = ((GPIO_TypeDef*)mu32PortBase)->CRL;
       lu32CRL &= ~((3 << 2) << (mui16Pin * 4));
       lu32CRL |=  (lenMode << (mui16Pin * 4));
+      ((GPIO_TypeDef*)mu32PortBase)->CRL = lu32CRL;
     }
     else
     {
       u32 lu32CRH;
-      lu32CRH = ((GPIO_TypeDef*)mu32PortBase)->CRL;
+      lu32CRH = ((GPIO_TypeDef*)mu32PortBase)->CRH;
       lu32CRH &= ~((3 << 2) << ((mui16Pin - 8) * 4));
       lu32CRH |= (lenMode << ((mui16Pin - 8) * 4));
+      ((GPIO_TypeDef*)mu32PortBase)->CRH = lu32CRH;
     }
   }
 

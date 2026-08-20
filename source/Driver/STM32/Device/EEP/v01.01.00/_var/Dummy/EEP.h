@@ -10,7 +10,7 @@ class cI2cEep : public cComNode
 
   u8         mu8RamMirrow[8];
 
-  cI2cEep(void* lpcI2C, u8 lui8Adr, u16 lu16AdrEnd = 1023)
+  cI2cEep(void* lpcI2C, u8 lui8Adr, u16 lu16AdrEnd = 7)
   {
     UNUSED(lui8Adr);
     UNUSED(lpcI2C);

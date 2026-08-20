@@ -116,6 +116,7 @@ class cClock
   {
     // --------------- First try LSE ---------------
 
+    // FlKa_20260621: LL_RCC_ForceBackupDomainReset killt beim U5 auch SRAM2 !!!!
     // BURAM vor dem Löschen sichern
     u32 lu32Backup[32];
     for (u8 lu8Idx = 0; lu8Idx < 32; lu8Idx++)

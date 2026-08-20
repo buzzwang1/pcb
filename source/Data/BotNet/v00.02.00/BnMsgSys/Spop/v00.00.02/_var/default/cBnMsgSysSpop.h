@@ -141,25 +141,10 @@ class cBotNetMsgPortSpop: public cJobHandler, public cBotNet_MsgSysProcess
       return lu32Checksum;
     };
 
-    u8* u8U32toU8(u32 lu32Val, u8* lu8Array)
-    {
-      lu8Array[3] = (lu32Val & 0xFF); lu32Val >>= 8;
-      lu8Array[2] = (lu32Val & 0xFF); lu32Val >>= 8;
-      lu8Array[1] = (lu32Val & 0xFF); lu32Val >>= 8;
-      lu8Array[0] = (lu32Val & 0xFF);
-      return lu8Array;
-    }
-
-    u32 u32U8toU32(u8* lu8Array)
-    {
-      return (lu8Array[0] << 24) + (lu8Array[1] << 16) + (lu8Array[2] << 8) + (lu8Array[3]);
-    }
-
     bool isEnable()
     {
       return (mu32Exitcounter_ms > 0);
     }
-
 
     //bool isEraseActive()
     //{

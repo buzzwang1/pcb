@@ -135,8 +135,8 @@ class cBotNetMsg_Base : public cBarryPtrT<u16>
     // DA DA SA SA CC
     if (lunCtrl.Bits.AdrIntOn)
     {
-      lu8Adr  = lcDAdr.Encode(lu8Adr);
-      lu8Adr  = lcSAdr.Encode(lu8Adr);
+      lu8Adr = lcDAdr.Encode(lu8Adr);
+      lu8Adr = lcSAdr.Encode(lu8Adr);
     }
     *lu8Adr++ = lunCtrl.Byte;
     this->muLen = lu8Adr - this->mpu8Data;
@@ -244,6 +244,42 @@ class cBotNetMsg_MsgProt : public cBotNetMsg_Base
 {
   public:
 
+  struct ID
+  {
+    // MI = Message ID
+    // S1 = Sub ID
+    // S2 = Sub ID
+    enum tenType : u8
+    {
+      nRequest  = 0,
+      nSet      = 1,
+      nResponse = 2,
+    };
+  };
+
+  struct ID8 : public ID
+  {
+    u8 mu8Value;
+    constexpr ID8(tenType lenType, u8 lu8MI)  :mu8Value(((u8)lenType << 6) + (lu8MI & 0x3F)) {}
+    constexpr operator u8() const { return (static_cast<u8>(mu8Value)); }
+  };
+
+  struct ID16 : public ID
+  {
+    u16 mu16Value;
+    constexpr ID16(tenType lenType, u8 lu8MI, u8 lu8S1) : mu16Value(((u16)(((u8)lenType << 6) | (lu8MI & 0x3F)) << 8) + lu8S1) {}
+    constexpr operator u16() const { return (static_cast<u16>(mu16Value)); }
+  };
+
+  struct ID24 : public ID
+  {
+    u32 mu32Value;
+    constexpr ID24(tenType lenType, u8 lu8MI, u8 lu8S1, u8 lu8S2)
+      : mu32Value(((u32)(((u8)lenType << 6) | (lu8MI & 0x3F)) << 16) + ((u32)lu8S1 << 8) + lu8S2)
+    {}
+    constexpr operator u32() const { return (static_cast<u32>(mu32Value)); }
+  };
+
   cBarryPtrT<u16> mcPayload;
   // [Last Msg Byte Index] MI1[MI2] MD[0..DA] [Botnet Footer]
   // MI: Message Index 8Bit or 16Bit
@@ -286,6 +322,39 @@ class cBotNetMsg_MsgProt : public cBotNetMsg_Base
     tunControl lunCtrl = { .Byte = 0 };
     lunCtrl.Bits.MsgType = enMessage;
     vAddFrame(lcSAdr, lcDAdr, lunCtrl);
+  }
+
+  ID::tenType enGetType() { return (ID::tenType)((*this->mcPayload.mpu8Data) >> 6); }
+  bool isRequest()    { return (enGetType() == ID::nRequest); }
+  bool isSet()        { return (enGetType() == ID::nSet); }
+  bool isResponse()   { return (enGetType() == ID::nResponse); }
+
+  bool isId(ID8 lcID8)   { return (*this->mcPayload.mpu8Data == lcID8); }
+  bool isId(ID16 lcID16) { return cMemTools::u16U8toU16(this->mcPayload.mpu8Data) == lcID16; }
+  bool isId(ID24 lcID24) { return (cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8) == lcID24; }
+
+  u32  u32GetId() { return (cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8); }
+
+  bool isSetId(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2)
+  {
+    return ((cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8) == ID24(ID::nSet, lu8MI, lu8S1, lu8S2));
+  }
+
+  static constexpr ID24 cId24(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2)
+  {
+    return ID24(ID::nSet, lu8MI, lu8S1, lu8S2);
+  }
+
+  static void vRespId(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2, u8* lpu8Dest)
+  {
+    lpu8Dest[0] = ID8(ID::nResponse, lu8MI);
+    lpu8Dest[1] = lu8S1;
+    lpu8Dest[2] = lu8S2;
+  }
+
+  static constexpr u8 u8RespId(const u8 lu8MI)
+  {
+    return ID8(ID::nResponse, lu8MI);
   }
 };
 

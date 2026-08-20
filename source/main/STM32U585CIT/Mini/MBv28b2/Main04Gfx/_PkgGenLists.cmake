@@ -5,6 +5,7 @@ set(gen_pkg_name "main")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
+	./SysDPool/cSysDPool.cpp
 	./main.cpp
 	./syscalls.c
 )
@@ -27,6 +28,7 @@ set (gen_headers
 	./Comp/cCompBase.h
 	./Comp/cCompBoardI2C2.h
 	./Comp/cCompBoardMonitor.h
+	./Comp/cCompCom.h
 	./Comp/cCompComIn.h
 	./Comp/cCompComOut.h
 	./Comp/cCompComOutCntrl.h
@@ -35,8 +37,6 @@ set (gen_headers
 	./Comp/cCompLed.h
 	./Comp/cCompPomoOut1.h
 	./Comp/cCompPomoOut1Temp.h
-	./Comp/cCompRadioNrf905.h
-	./Comp/cCompRadioSpi1.h
 	./SysDPool/cSysDPool.h
 	./main.h
 	./stm32u5xx_hal_conf.h

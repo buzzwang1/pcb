@@ -81,7 +81,7 @@ set(PCB_ProjectPackageList
     
     Driver/STM32/Device/xSpi/Flash/General/v01.00.00
     Driver/STM32/Device/xSpi/Flash/ZD25WQ32/U5_OSPI/v01.00.00:Mini32Mhz    
-    #### Driver/STM32/U5/Hal/GPPin/v01.00.02
+    Driver/STM32/U5/Hal/GPPin/v01.00.02
     #### Driver/STM32/U5/Hal/cUart/Int/v01.00.01
     #### Driver/STM32/U5/Hal/cUart/MpHd/v01.00.03_Mini:Tim16|-Ofast
     #### Driver/STM32/U5/Hal/cI2C/v01.00.09|-Ofast

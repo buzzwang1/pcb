@@ -524,7 +524,10 @@ class cComSeqHdlSpi : public cComNode, public cComComp, public mtcRegMap
         mActiveSequence = -1;
       }
     }
-    mControl.StartRequest = isRequest();
+    if (isRequest())
+    {
+      mComNode->vStartRequest(this);
+    }
   }
 
   void vComStart(cComNode::tenEvent lenEvent) override
@@ -674,7 +677,7 @@ class cComSeqHdlSpi : public cComNode, public cComComp, public mtcRegMap
         if (mActiveSequence != -1)
         {
           mActiveSequenceToContinue = mActiveSequence;
-          mControl.StartRequest = isRequest();
+          mComNode->vStartRequest(this);
         }
       }
     }
@@ -683,27 +686,36 @@ class cComSeqHdlSpi : public cComNode, public cComComp, public mtcRegMap
   void vRequest(u8 lu8SeqIdx)
   {
     vRequestSet(lu8SeqIdx);
-    mControl.StartRequest = isRequest();
+    if (isAnySeqStartRequest())
+    {
+      mComNode->vStartRequest(this);
+    }
   }
 
   bool isAnySeqError()
   {
-    return cComComp::isError();
+    return isError();
   }
 
   bool isAnySeqProcess()
   {
-    return cComComp::isProcess();
+    return isProcess();
   }
 
   bool isAnySeqStartRequest()
   {
-    return cComComp::isRequest();
+    return isRequest();
   }
 
   bool isAnySeqPending()
   {
     return ((isAnySeqStartRequest()) || (isAnySeqProcess()));
+  }
+
+
+  bool isSeqDone(u8 lu8SeqIdx) 
+  { 
+    return isDone(lu8SeqIdx);
   }
 };
 

@@ -4,7 +4,7 @@
 
 
 
-extern int miNestedIrqCnt;
+extern unsigned char miNestedIrqCnt;
 
 // https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/TLKm-64CB-c?pli=1
 // __asm__ volatile ("csrw 0x800, %0" : : "r" (0x6000) );  // Disable interrupt (mie = 0)

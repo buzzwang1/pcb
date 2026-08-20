@@ -31,8 +31,8 @@ public:
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM4);
 
     // 3. Zeitbasis einstellen (200 Hz Grundfrequenz)
-    LL_TIM_SetPrescaler(TIM4, 159);          // Takt auf 1 MHz senken
-    LL_TIM_SetAutoReload(TIM4, 4999);        // 1 MHz / 5000 = 200 Hz
+    LL_TIM_SetPrescaler(TIM4, (cClockInfo::mstClocks.HCLK_Frequency / 1000000) - 1);          // Takt auf 1 MHz senken
+    LL_TIM_SetAutoReload(TIM4, 99);        // 1 MHz / 100 = 10 kHz
     LL_TIM_SetCounterMode(TIM4, LL_TIM_COUNTERMODE_UP);
 
     // 4. PWM Modus für Kanal 1 konfigurieren
@@ -41,8 +41,8 @@ public:
 
     // 5. Duty Cycle setzen (z.B. 50%)
     // Duty Cycle = (Compare Value / ARR) * 100
-    // 50% von 5000 = 2500
-    LL_TIM_OC_SetCompareCH1(TIM4, 2500);
+    // 50% von 100 = 50
+    LL_TIM_OC_SetCompareCH1(TIM4, 50);
 
     // 6. Preload aktivieren (damit Änderungen am Duty Cycle synchron zum Periodenende übernommen werden)
     LL_TIM_OC_EnablePreload(TIM4, LL_TIM_CHANNEL_CH1);
@@ -90,12 +90,8 @@ public:
       lu8Dim_percent = 100;
     }
 
-    // 2. Umrechnung in den passenden Registerwert
-    // (TIM4->ARR + 1) entspricht den 5000 Gesamtschritten
-    u32 ccr_value = (lu8Dim_percent * (TIM4->ARR + 1)) / 100;
-
-    // 3. Wert direkt in das Capture/Compare Register schreiben
-    LL_TIM_OC_SetCompareCH1(TIM4, ccr_value);
+    // 2. Wert direkt in das Capture/Compare Register schreiben
+    LL_TIM_OC_SetCompareCH1(TIM4, lu8Dim_percent);
   }
 };
 

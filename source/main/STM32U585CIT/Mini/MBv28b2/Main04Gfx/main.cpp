@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include "main.h"
-#include "cSysDPool.h"
-
 
 // STM32U5XX
 // ARM®-based Cortex®-M33 32b MCU
@@ -218,6 +216,8 @@ void assert_failed(u8 *file, uint32_t line)
 #include "cCompBoardI2C2.h"
 #include "cCompBoardMonitor.h"
 
+#include "cCompComOutCntrl.h"
+
 #include "cCompPomoOut1Temp.h"
 #include "cCompPomoOut1.h"
 
@@ -227,6 +227,8 @@ void assert_failed(u8 *file, uint32_t line)
 #include "cCompAddOn5V0Out.h"
 #include "cCompAddOnCharger.h"
 
+#include "cCompCom.h"
+#include "cCompComIn.h"
 
 #include "cCompGfxSpi2.h"
 #include "cCompGfx.h"
@@ -247,25 +249,13 @@ cCompAddOn5V0     mcCompAddOn5V0;
 cCompAddOn5V0Out  mcCompAddOn5V0Out;
 cCompAddOnCharger mcCompAddOnCharger;
 
+cCompCom          mcCompCom;
+cCompComIn        mcCompComIn;
+
 cCompGfxSpi2      mcCompGfxSpi2;
 cCompGfx          mcCompGfx;
 
-
-extern const osThreadAttr_t TaskcDepTreeBase_attributes;
 extern void  TaskcDepTreeBase(void* argument);
-static osThreadId_t mTaskMcp;
-
-const osThreadAttr_t TaskMcp_attributes = {
-  .name = "Mcp",                           ///< name of the thread
-  .attr_bits = 0,                          ///< attribute bits
-  .cb_mem = 0,                             ///< memory for control block
-  .cb_size = 0,                            ///< size of provided memory for control block
-  .stack_mem = 0,                          ///< memory for stack
-  .stack_size = (1024 * 2),                ///< size of stack
-  .priority = (osPriority_t)osPriorityLow, ///< initial thread priority (default: osPriorityNormal)
-  .tz_module = 0,                          ///< TrustZone module identifier
-  .reserved = 0                            ///< reserved (must be 0)
-};
 
 void TaskMcp(void* argument)
 {
@@ -281,11 +271,12 @@ void TaskMcp(void* argument)
   if (cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)
   {
     cComponentList::macList[cDepTreeCfg::cComp::nLed]->vRequestState(cDepTreeRequester::nMcp);
-    //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vRequestState(cDepTreeRequester::nMcp);
-    //cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vRequestState(cDepTreeRequester::nMcp);
-    //cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vRequestState(cDepTreeRequester::nMcp);
 
+    cComponentList::macList[cDepTreeCfg::cComp::nComIn]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vRequestState(cDepTreeRequester::nMcp);
   }
   else
@@ -299,23 +290,34 @@ void TaskMcp(void* argument)
 
   while (1)
   {
-    if (!cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)   
+    if (!cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)
     {
       cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nComIn]->vReleaseState(cDepTreeRequester::nMcp);
 
-      //cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vReleaseState(cDepTreeRequester::nMcp);
-      //cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vReleaseState(cDepTreeRequester::nMcp);
       cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vReleaseState(cDepTreeRequester::nMcp);
       cComponentList::macList[cDepTreeCfg::cComp::nLed]->vReleaseState(cDepTreeRequester::nMcp);
-      //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vReleaseState(cDepTreeRequester::nMcp);
 
       cComponentList::macList[cDepTreeCfg::cComp::nBoardMonitor]->vReleaseState(cDepTreeRequester::nMcp);
-      
+
       // Mcp anhalten, System soll nun in den Sleep gehen.
       vTaskSuspend(NULL);
     }
     vTaskDelay(pdMS_TO_TICKS(100));
   }
+}
+
+void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer,
+                                   StackType_t** ppxIdleTaskStackBuffer,
+                                   u32* pulIdleTaskStackSize)
+{
+  cSysDPool::mSys.mcTasks.Idle.vInit();
+  *ppxIdleTaskTCBBuffer   = &cSysDPool::mSys.mcTasks.Idle.Tcb;
+  *ppxIdleTaskStackBuffer = cSysDPool::mSys.mcTasks.Idle.Stack;
+  *pulIdleTaskStackSize   = cSysDPool::mSys.mcTasks.Idle.StackSize();
 }
 
 
@@ -338,11 +340,30 @@ void MAIN_vInitSystem(void)
   cComponentList::vAdd((cComponent*)&mcCompAddOn5V0Out);
   cComponentList::vAdd((cComponent*)&mcCompAddOnCharger);
 
+  cComponentList::vAdd((cComponent*)&mcCompCom);
+  cComponentList::vAdd((cComponent*)&mcCompComIn);
+
+
   cComponentList::vAdd((cComponent*)&mcCompGfxSpi2);
   cComponentList::vAdd((cComponent*)&mcCompGfx);
 
+  cSysDPool::mSys.mcTasks.Mcp.vInit();
 
-  mTaskMcp = osThreadNew(TaskMcp, (void*)null, &TaskMcp_attributes);
+  const osThreadAttr_t TaskMcp_attributes = {
+    .name       = "Mcp",                                   ///< name of the thread
+    .attr_bits  = 0,                                       ///< attribute bits
+    .cb_mem     = &cSysDPool::mSys.mcTasks.Mcp.Tcb,        ///< memory for control block
+    .cb_size    = sizeof(cSysDPool::mSys.mcTasks.Mcp.Tcb), ///< size of provided memory for control block
+    .stack_mem  = cSysDPool::mSys.mcTasks.Mcp.Stack,       ///< memory for stack
+    .stack_size = cSysDPool::mSys.mcTasks.Mcp.StackSize(), ///< size of stack
+    .priority   = (osPriority_t)osPriorityNormal,          ///< initial thread priority (default: osPriorityNormal)
+    .tz_module  = 0,                                       ///< TrustZone module identifier
+    .reserved   = 0                                        ///< reserved (must be 0)
+  };
+
+  // Thread mit den Attributen erstellen
+  cSysDPool::mSys.mcTasks.Mcp.Handle = osThreadNew(TaskMcp, NULL, &TaskMcp_attributes);
+
   mcSystem.vStart();
   /* We should never get here as control is now taken by the scheduler */
 }
@@ -487,7 +508,7 @@ static void SystemClock_Config_32MHz(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  // Initializes the CPU, AHB and APB buses clocks 
+  // Initializes the CPU, AHB and APB buses clocks
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
                               | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2
                               | RCC_CLOCKTYPE_PCLK3;

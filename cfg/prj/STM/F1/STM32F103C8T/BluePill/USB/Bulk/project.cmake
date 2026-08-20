@@ -1,0 +1,44 @@
+# Projects settings,
+#   - list list of used packages
+#   - linker file
+#   - whatever
+# To select the packages, that should be used
+#
+# Is included from the [root]/CMakeList.txt
+#
+#
+# Syntax module list: 
+#  Package only  (without variants/configurations) [Folder relative to /pkg]
+#  Package extra (with variants/configurations)    [Folder relative to /pkg]:[module variant/configuration]
+#
+#  examples:
+#  uart                     # simplest
+#  uart:B9600               # with configuration
+#  uart:B19200              # 
+#  driver/uart:var1         # with subfolder 
+
+set(PCB_ProjectPackageList
+    General/TypeDef/v00.00.01:ArmCx
+
+    Driver/ARM/Cmsis/V05.00.08/Core:CM3
+
+    Driver/STM32/F1/Hal/v01.08.05/Core
+    Driver/STM32/F1/Hal/v01.08.05/Device/STM32F103xx:default
+    Driver/STM32/F1/Hal/v01.08.05/HAL:default
+
+    #Driver/STM32/F1/STD/GPPin/v01.00.02
+
+    #APP/LED/v00.00.01:STM32F1_STD
+    #System/CyclicCaller/v00.00.01:stm32f10x_TIM3
+    #System/STM32/ClockInfo/v00.00.01:stm32f10x
+
+    ExtLibs/Com/tinyusb/20260607/src
+    ExtLibs/Com/tinyusb/20260607/hw:stm32f1:stm32f103_bluepill
+
+    main/STM32F103C8T/Usb/Bulk
+)
+
+set(LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f103c8_flash.ld")
+
+message(STATUS "Include buildoptions file: ${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm3_buildoptions.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/gnu-arm_cm3_buildoptions.cmake")

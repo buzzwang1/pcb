@@ -46,13 +46,13 @@ class cINA3221 : public cComSeqHdlI2c<cIna3221_RegisterMap>
     // Das Datenblatt besagt: 13-Bit Wert, Bit 0-2 sind 0.
     switch (lu8Chn)
     {
-      case 1: i16Value = (i16)((cIna3221_RegisterMap::unCh1Bus.stByte.Hb << 8) + cIna3221_RegisterMap::unCh1Bus.stByte.Lb); break;
-      case 2: i16Value = (i16)((cIna3221_RegisterMap::unCh2Bus.stByte.Hb << 8) + cIna3221_RegisterMap::unCh2Bus.stByte.Lb); break;
-      case 3: i16Value = (i16)((cIna3221_RegisterMap::unCh3Bus.stByte.Hb << 8) + cIna3221_RegisterMap::unCh3Bus.stByte.Lb); break;
+      case 1: i16Value = (i16)((cIna3221_RegisterMap::unCh1Shunt.stByte.Hb << 8) + cIna3221_RegisterMap::unCh1Shunt.stByte.Lb); break;
+      case 2: i16Value = (i16)((cIna3221_RegisterMap::unCh2Shunt.stByte.Hb << 8) + cIna3221_RegisterMap::unCh2Shunt.stByte.Lb); break;
+      case 3: i16Value = (i16)((cIna3221_RegisterMap::unCh3Shunt.stByte.Hb << 8) + cIna3221_RegisterMap::unCh3Shunt.stByte.Lb); break;
     }
 
     // Jedes Bit entspricht 40 µV
-    return (float)(i16Value * (0.04f / 8.0f)) / lfShunt_Ohm;
+    return (float)((float)i16Value * (0.04f / 8.0f)) / lfShunt_Ohm;
   }
 
 };

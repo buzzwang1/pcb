@@ -1,0 +1,346 @@
+#ifndef __ROM_CONSTS_DEF_H__
+#define __ROM_CONSTS_DEF_H__
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+#define u8PtrRomConstDeviceName()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0000))
+#define u8PtrRomConstPlatformName()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0010))
+#define u8PtrRomConstPlatformInfo()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0020))
+#define u8PtrRomConstBnDeviceID()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0040))
+#define u8PtrRomConstBnAdr()                 ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0042))
+#define u8PtrRomConstIapRamSize()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0044))
+#define u8PtrRomConstRomConstPageCnt()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0048))
+#define u8PtrRomConstPartitionCnt()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0049))
+#define u8PtrRomConstTablesCnt()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004A))
+#define u8PtrRomConstReserve1()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C))
+#define u8PtrRomConstHwInfo()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C))
+#define u8PtrRomConstRomConstVersion()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004E))
+#define u8PtrRomConstDateTimeSyncTimeout_s() ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0050))
+#define u8PtrRomConstDateTimeSyncHour_s()    ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0051))
+#define u8PtrRomConstDateTimeValidTimeout_d() ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0052))
+#define u8PtrRomConstReserve()               ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0053))
+#define u8PtrRomConstRadioPingIntervall_s()  ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0054))
+#define u8PtrRomConstRadioPingTimeoutSessionReq_ms() ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0056))
+#define u8PtrRomConstBaudUpLink()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0058))
+#define u8PtrRomConstBaudSideLink()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005A))
+#define u8PtrRomConstBaudDownLink1()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005C))
+#define u8PtrRomConstBaudDownLink2()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005E))
+#define u8PtrRomConstUpLink()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0060))
+#define u8PtrRomConstSideLink()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0061))
+#define u8PtrRomConstDownLink1()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0062))
+#define u8PtrRomConstDownLink2()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0063))
+#define u8PtrRomConstDownLink3()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0064))
+#define u8PtrRomConstDownLink4()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0065))
+#define u8PtrRomConstDownLink5()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0066))
+#define u8PtrRomConstDownLink6()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0067))
+#define u8PtrRomConstDownLink7()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0068))
+#define u8PtrRomConstDownLink8()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0069))
+#define u8PtrRomConstDownLink9()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006A))
+#define u8PtrRomConstDownLink10()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006B))
+#define u8PtrRomConstDownLink11()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006C))
+#define u8PtrRomConstDownLink12()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006D))
+#define u8PtrRomConstDownLink13()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006E))
+#define u8PtrRomConstDownLink14()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006F))
+#define u8PtrRomConstPartition0Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0070))
+#define u8PtrRomConstPartition0Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0080))
+#define u8PtrRomConstPartition0Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0082))
+#define u8PtrRomConstPartition0BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0084))
+#define u8PtrRomConstPartition0Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0088))
+#define u8PtrRomConstPartition0BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X008C))
+#define u8PtrRomConstPartition1Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0090))
+#define u8PtrRomConstPartition1Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A0))
+#define u8PtrRomConstPartition1Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A2))
+#define u8PtrRomConstPartition1BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A4))
+#define u8PtrRomConstPartition1Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A8))
+#define u8PtrRomConstPartition1BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00AC))
+#define u8PtrRomConstPartition2Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00B0))
+#define u8PtrRomConstPartition2Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C0))
+#define u8PtrRomConstPartition2Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C2))
+#define u8PtrRomConstPartition2BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C4))
+#define u8PtrRomConstPartition2Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C8))
+#define u8PtrRomConstPartition2BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00CC))
+#define u8PtrRomConstPartition3Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00D0))
+#define u8PtrRomConstPartition3Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E0))
+#define u8PtrRomConstPartition3Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E2))
+#define u8PtrRomConstPartition3BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E4))
+#define u8PtrRomConstPartition3Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E8))
+#define u8PtrRomConstPartition3BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00EC))
+#define u8PtrRomConstPartition4Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00F0))
+#define u8PtrRomConstPartition4Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0100))
+#define u8PtrRomConstPartition4Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0102))
+#define u8PtrRomConstPartition4BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0104))
+#define u8PtrRomConstPartition4Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0108))
+#define u8PtrRomConstPartition4BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X010C))
+#define u8PtrRomConstPartition5Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0110))
+#define u8PtrRomConstPartition5Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0120))
+#define u8PtrRomConstPartition5Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0122))
+#define u8PtrRomConstPartition5BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0124))
+#define u8PtrRomConstPartition5Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0128))
+#define u8PtrRomConstPartition5BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X012C))
+#define u8PtrRomConstPartition6Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0130))
+#define u8PtrRomConstPartition6Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0140))
+#define u8PtrRomConstPartition6Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0142))
+#define u8PtrRomConstPartition6BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0144))
+#define u8PtrRomConstPartition6Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0148))
+#define u8PtrRomConstPartition6BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X014C))
+#define u8PtrRomConstPartition7Name()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0150))
+#define u8PtrRomConstPartition7Sort()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0160))
+#define u8PtrRomConstPartition7Type()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0162))
+#define u8PtrRomConstPartition7BaseAdr()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0164))
+#define u8PtrRomConstPartition7Size()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0168))
+#define u8PtrRomConstPartition7BlockSize()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X016C))
+#define u8PtrRomConstReserve4()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178))
+#define u8PtrRomConstChecksum1()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178))
+#define u8PtrRomConstMagicPattern1()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X017C))
+#define u8PtrRomConstExtTempTab1()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0180))
+#define u8PtrRomConstExtTempTab2()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01A0))
+#define u8PtrRomConstIntTempTab1()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01C0))
+#define u8PtrRomConstIntTempTab2()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01E0))
+#define u8PtrRomConstTable5()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0200))
+#define u8PtrRomConstTable6()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0220))
+#define u8PtrRomConstTable7()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0240))
+#define u8PtrRomConstTable8()                ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0260))
+#define u8PtrRomConstInitPos_degree()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280))
+#define u8PtrRomConstInitSpeed_degree_s()    ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284))
+#define u8PtrRomConstInitLimtCurrent_mA()    ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288))
+#define u8PtrRomConstInitLimitPower_mW()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C))
+#define u8PtrRomConstInitLimitVolt_mV()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290))
+#define u8PtrRomConstInitLimitIntTemp_Degree() ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294))
+#define u8PtrRomConstInitLimitExtTemp_Degree() ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0298))
+#define u8PtrRomConstInitPwn_percent()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029C))
+#define u8PtrRomConstLpInputPos()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A0))
+#define u8PtrRomConstLpInputSpeed()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A4))
+#define u8PtrRomConstLpInputCurrent()        ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A8))
+#define u8PtrRomConstLpInputPower()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02AC))
+#define u8PtrRomConstLpInputSupply()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B0))
+#define u8PtrRomConstLpInputTemp1()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B4))
+#define u8PtrRomConstLpInputTemp2()          ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B8))
+#define u8PtrRomConstLpOutputMotor()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02BC))
+#define u8PtrRomConstCvrtInputPosF()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C0))
+#define u8PtrRomConstCvrtInputPosO()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C4))
+#define u8PtrRomConstCvrtInputPosC()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C8))
+#define u8PtrRomConstCvrtInputSpeedF()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CC))
+#define u8PtrRomConstCvrtInputSpeedO()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D0))
+#define u8PtrRomConstCvrtInputSpeedC()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D4))
+#define u8PtrRomConstCvrtInputCurrentF()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D8))
+#define u8PtrRomConstCvrtInputCurrentO()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02DC))
+#define u8PtrRomConstCvrtInputCurrentC()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0))
+#define u8PtrRomConstCvrtInputPowerF()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E4))
+#define u8PtrRomConstCvrtInputPowerO()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E8))
+#define u8PtrRomConstCvrtInputPowerC()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02EC))
+#define u8PtrRomConstCvrtInputSupplyF()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F0))
+#define u8PtrRomConstCvrtInputSupplyO()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F4))
+#define u8PtrRomConstCvrtInputSupplyC()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F8))
+#define u8PtrRomConstCvrtInputTemp1O()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02FC))
+#define u8PtrRomConstCvrtInputTemp1C()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0300))
+#define u8PtrRomConstCvrtInputTemp1F()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0304))
+#define u8PtrRomConstCvrtInputTemp2F()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0308))
+#define u8PtrRomConstCvrtInputTemp2O()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X030C))
+#define u8PtrRomConstCvrtInputTemp2C()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0310))
+#define u8PtrRomConstCvrtOutputMotorF()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0314))
+#define u8PtrRomConstCvrtOutputMotorO()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0318))
+#define u8PtrRomConstCvrtOutputMotorC()      ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X031C))
+#define u8PtrRomConstMinDiffInputPos()       ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0320))
+#define u8PtrRomConstMinDiffInputSpeed()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0324))
+#define u8PtrRomConstMinDiffInputCurrent()   ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0328))
+#define u8PtrRomConstMinDiffInputPower()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X032C))
+#define u8PtrRomConstMinDiffInputSupply()    ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0330))
+#define u8PtrRomConstMinDiffInputTemp1()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0334))
+#define u8PtrRomConstMinDiffInputTemp2()     ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0338))
+#define u8PtrRomConstMinDiffOutputMotor()    ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X033C))
+#define u8PtrRomConstPidPosKp()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0340))
+#define u8PtrRomConstPidPosKi()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0344))
+#define u8PtrRomConstPidPosKd()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0348))
+#define u8PtrRomConstPidPosLimit()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034C))
+#define u8PtrRomConstPidSpeedKp()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0350))
+#define u8PtrRomConstPidSpeedKi()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0354))
+#define u8PtrRomConstPidSpeedKd()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0358))
+#define u8PtrRomConstPidSpeedLimit()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X035C))
+#define u8PtrRomConstPidCurKp()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360))
+#define u8PtrRomConstPidCurKi()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0364))
+#define u8PtrRomConstPidCurKd()              ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0368))
+#define u8PtrRomConstPidCurLimit()           ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X036C))
+#define u8PtrRomConstPidPowerKp()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0370))
+#define u8PtrRomConstPidPowerKi()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0374))
+#define u8PtrRomConstPidPowerKd()            ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0378))
+#define u8PtrRomConstPidPowerLimit()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X037C))
+#define u8PtrRomConstLedEnable()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0380))
+#define u8PtrRomConstChecksum2()             ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8))
+#define u8PtrRomConstMagicPattern2()         ((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03FC))
+
+
+
+#define rszGetRomConstDeviceName()           ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0000))           // Defaultvalue BnTest 
+#define rszGetRomConstPlatformName()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0010))           // Defaultvalue STM32F103
+#define rszGetRomConstPlatformInfo()         ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0020))           // Defaultvalue CM3,Rom 64KB,Ram 20KB
+#define u16GetRomConstBnDeviceID()           (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0040)))       // Defaultvalue 161    
+#define u16GetRomConstBnAdr()                (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0042)))       // Defaultvalue 4096   
+#define u32GetRomConstIapRamSize()           (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0044)))       // Defaultvalue 256    
+#define u8GetRomConstRomConstPageCnt()       (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0048)))        // Defaultvalue 1      
+#define u8GetRomConstPartitionCnt()          (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0049)))        // Defaultvalue 5      
+#define u8GetRomConstTablesCnt()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004A)))        // Defaultvalue 5      
+#define u8GetRomConstReserve1()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C)))         // Defaultvalue 255    
+#define u16GetRomConstHwInfo()               (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004C)))       // Defaultvalue 1      
+#define u16GetRomConstRomConstVersion()      (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X004E)))       // Defaultvalue 2      
+#define u8GetRomConstDateTimeSyncTimeout_s() (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0050)))        // Defaultvalue 180    
+#define u8GetRomConstDateTimeSyncHour_s()    (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0051)))        // Defaultvalue 2      
+#define u8GetRomConstDateTimeValidTimeout_d() (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0052)))       // Defaultvalue 2      
+#define u8GetRomConstReserve()               (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0053)))        // Defaultvalue 0      
+#define u16GetRomConstRadioPingIntervall_s() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0054)))       // Defaultvalue 15     
+#define u16GetRomConstRadioPingTimeoutSessionReq_ms() (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0056))) // Defaultvalue 50  
+#define u16GetRomConstBaudUpLink()           (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0058)))       // Defaultvalue 200    
+#define u16GetRomConstBaudSideLink()         (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005A)))       // Defaultvalue 100    
+#define u16GetRomConstBaudDownLink1()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005C)))       // Defaultvalue 400    
+#define u16GetRomConstBaudDownLink2()        (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X005E)))       // Defaultvalue 200    
+#define u8GetRomConstUpLink()                (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0060)))        // Defaultvalue 1      
+#define u8GetRomConstSideLink()              (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0061)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink1()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0062)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink2()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0063)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink3()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0064)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink4()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0065)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink5()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0066)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink6()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0067)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink7()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0068)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink8()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0069)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink9()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006A)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink10()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006B)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink11()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006C)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink12()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006D)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink13()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006E)))        // Defaultvalue 1      
+#define u8GetRomConstDownLink14()            (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X006F)))        // Defaultvalue 1      
+#define rszGetRomConstPartition0Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0070))           // Defaultvalue Flash Bl
+#define u16GetRomConstPartition0Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0080)))       // Defaultvalue 16     
+#define u16GetRomConstPartition0Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0082)))       // Defaultvalue 0      
+#define u32GetRomConstPartition0BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0084)))       // Defaultvalue 134217728
+#define u32GetRomConstPartition0Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0088)))       // Defaultvalue 16384  
+#define u32GetRomConstPartition0BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X008C)))       // Defaultvalue 1024   
+#define rszGetRomConstPartition1Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0090))           // Defaultvalue Flash APP
+#define u16GetRomConstPartition1Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition1Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition1BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A4)))       // Defaultvalue 134234112
+#define u32GetRomConstPartition1Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00A8)))       // Defaultvalue 48128  
+#define u32GetRomConstPartition1BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00AC)))       // Defaultvalue 1024   
+#define rszGetRomConstPartition2Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00B0))           // Defaultvalue Flash IAP
+#define u16GetRomConstPartition2Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition2Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition2BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C4)))       // Defaultvalue 134234112
+#define u32GetRomConstPartition2Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00C8)))       // Defaultvalue 48128  
+#define u32GetRomConstPartition2BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00CC)))       // Defaultvalue 1024   
+#define rszGetRomConstPartition3Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00D0))           // Defaultvalue Flash EEP
+#define u16GetRomConstPartition3Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E0)))       // Defaultvalue 16     
+#define u16GetRomConstPartition3Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E2)))       // Defaultvalue 0      
+#define u32GetRomConstPartition3BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E4)))       // Defaultvalue 134282240
+#define u32GetRomConstPartition3Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00E8)))       // Defaultvalue 1024   
+#define u32GetRomConstPartition3BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00EC)))       // Defaultvalue 1024   
+#define rszGetRomConstPartition4Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X00F0))           // Defaultvalue Ram    
+#define u16GetRomConstPartition4Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0100)))       // Defaultvalue 0      
+#define u16GetRomConstPartition4Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0102)))       // Defaultvalue 0      
+#define u32GetRomConstPartition4BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0104)))       // Defaultvalue 536870912
+#define u32GetRomConstPartition4Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0108)))       // Defaultvalue 20480  
+#define u32GetRomConstPartition4BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X010C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition5Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0110))           // Defaultvalue Dummy  
+#define u16GetRomConstPartition5Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0120)))       // Defaultvalue 0      
+#define u16GetRomConstPartition5Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0122)))       // Defaultvalue 0      
+#define u32GetRomConstPartition5BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0124)))       // Defaultvalue 1073752144
+#define u32GetRomConstPartition5Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0128)))       // Defaultvalue 128    
+#define u32GetRomConstPartition5BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X012C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition6Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0130))           // Defaultvalue Dummy  
+#define u16GetRomConstPartition6Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0140)))       // Defaultvalue 0      
+#define u16GetRomConstPartition6Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0142)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0144)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0148)))       // Defaultvalue 0      
+#define u32GetRomConstPartition6BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X014C)))       // Defaultvalue 1      
+#define rszGetRomConstPartition7Name()       ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0150))           // Defaultvalue Dummy  
+#define u16GetRomConstPartition7Sort()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0160)))       // Defaultvalue 0      
+#define u16GetRomConstPartition7Type()       (*((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0162)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7BaseAdr()    (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0164)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7Size()       (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0168)))       // Defaultvalue 0      
+#define u32GetRomConstPartition7BlockSize()  (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X016C)))       // Defaultvalue 1      
+#define u8GetRomConstReserve4()              (((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178)))         // Defaultvalue 255    
+#define u32GetRomConstChecksum1()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0178)))       // Defaultvalue 12139  
+#define rszGetRomConstMagicPattern1()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X017C))           // Defaultvalue FLKA   
+#define u16GetRomConstExtTempTab1()          ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0180))          // Defaultvalue [3898, 3839, 3767, 3680, 3577, 3458, 3322, 3169, 3002, 2823, 2634, 2439, 2243, 2048, 1859, 1678]
+#define u16GetRomConstExtTempTab2()          ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01A0))          // Defaultvalue [1508, 1349, 1203, 1071, 951, 843, 748, 662, 587, 520, 462, 410, 364, 324, 289, 258]
+#define u16GetRomConstIntTempTab1()          ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01C0))          // Defaultvalue [2122, 2095, 2068, 2042, 2015, 1988, 1962, 1935, 1908, 1882, 1855, 1828, 1802, 1775, 1748, 1722]
+#define u16GetRomConstIntTempTab2()          ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X01E0))          // Defaultvalue [1695, 1668, 1642, 1615, 1588, 1561, 1535, 1508, 1481, 1455, 1428, 1401, 1375, 1348, 1321, 1295]
+#define u16GetRomConstTable5()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0200))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable6()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0220))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable7()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0240))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define u16GetRomConstTable8()               ((u16*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0260))          // Defaultvalue [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+#define Fp2210GetRomConstInitPos_degree()    (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0280))) // Defaultvalue 0:   InitPos_degree
+#define Fp2210GetRomConstInitSpeed_degree_s() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0284))) // Defaultvalue 0:  InitSpeed_degree_s
+#define Fp2210GetRomConstInitLimtCurrent_mA() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0288))) // Defaultvalue 1000:InitLimtCurrent_mA
+#define Fp2210GetRomConstInitLimitPower_mW() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X028C))) // Defaultvalue 5000:InitLimitPower_mW
+#define Fp2210GetRomConstInitLimitVolt_mV()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0290))) // Defaultvalue 5500:InitLimitVolt_mV
+#define Fp2210GetRomConstInitLimitIntTemp_Degree() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0294))) // Defaultvalue 90:InitLimitIntTemp_Degree
+#define Fp2210GetRomConstInitLimitExtTemp_Degree() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0298))) // Defaultvalue 90:InitLimitExtTemp_Degree
+#define Fp2210GetRomConstInitPwn_percent()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X029C))) // Defaultvalue 0.0: InitPwn_percent
+#define Fp2210GetRomConstLpInputPos()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A0))) // Defaultvalue 0.2: LpInputPos
+#define Fp2210GetRomConstLpInputSpeed()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A4))) // Defaultvalue 0.2: LpInputSpeed
+#define Fp2210GetRomConstLpInputCurrent()    (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02A8))) // Defaultvalue 0.2: LpInputCurrent
+#define Fp2210GetRomConstLpInputPower()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02AC))) // Defaultvalue 0.2: LpInputPower
+#define Fp2210GetRomConstLpInputSupply()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B0))) // Defaultvalue 0.2: LpInputSupply
+#define Fp2210GetRomConstLpInputTemp1()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B4))) // Defaultvalue 0.2: LpInputTemp1
+#define Fp2210GetRomConstLpInputTemp2()      (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02B8))) // Defaultvalue 0.2: LpInputTemp2
+#define Fp2210GetRomConstLpOutputMotor()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02BC))) // Defaultvalue 0.9: LpOutputMotor
+#define Fp2210GetRomConstCvrtInputPosF()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C0))) // Defaultvalue -0.068359375:CvrtInputPosF
+#define Fp2210GetRomConstCvrtInputPosO()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C4))) // Defaultvalue -140.0:CvrtInputPosO
+#define Fp2210GetRomConstCvrtInputPosC()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02C8))) // Defaultvalue 140: CvrtInputPosC
+#define Fp2210GetRomConstCvrtInputSpeedF()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02CC))) // Defaultvalue 1.0: CvrtInputSpeedF
+#define Fp2210GetRomConstCvrtInputSpeedO()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D0))) // Defaultvalue 0.0: CvrtInputSpeedO
+#define Fp2210GetRomConstCvrtInputSpeedC()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D4))) // Defaultvalue 1000.0:CvrtInputSpeedC
+#define Fp2210GetRomConstCvrtInputCurrentF() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02D8))) // Defaultvalue 1.0: CvrtInputCurrentF
+#define Fp2210GetRomConstCvrtInputCurrentO() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02DC))) // Defaultvalue 0.0: CvrtInputCurrentO
+#define Fp2210GetRomConstCvrtInputCurrentC() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E0))) // Defaultvalue 10000.0:CvrtInputCurrentC
+#define Fp2210GetRomConstCvrtInputPowerF()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E4))) // Defaultvalue 1.0: CvrtInputPowerF
+#define Fp2210GetRomConstCvrtInputPowerO()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02E8))) // Defaultvalue 0.0: CvrtInputPowerO
+#define Fp2210GetRomConstCvrtInputPowerC()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02EC))) // Defaultvalue 65000.0:CvrtInputPowerC
+#define Fp2210GetRomConstCvrtInputSupplyF()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F0))) // Defaultvalue 3.544921875:CvrtInputSupplyF
+#define Fp2210GetRomConstCvrtInputSupplyO()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F4))) // Defaultvalue 0.0: CvrtInputSupplyO
+#define Fp2210GetRomConstCvrtInputSupplyC()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02F8))) // Defaultvalue 20000.0:CvrtInputSupplyC
+#define Fp2210GetRomConstCvrtInputTemp1O()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X02FC))) // Defaultvalue 1.0: CvrtInputTemp1O
+#define Fp2210GetRomConstCvrtInputTemp1C()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0300))) // Defaultvalue 0.0: CvrtInputTemp1C
+#define Fp2210GetRomConstCvrtInputTemp1F()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0304))) // Defaultvalue 115.0:CvrtInputTemp1F
+#define Fp2210GetRomConstCvrtInputTemp2F()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0308))) // Defaultvalue 1.0: CvrtInputTemp2F
+#define Fp2210GetRomConstCvrtInputTemp2O()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X030C))) // Defaultvalue 0.0: CvrtInputTemp2O
+#define Fp2210GetRomConstCvrtInputTemp2C()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0310))) // Defaultvalue 115.0:CvrtInputTemp2C
+#define Fp2210GetRomConstCvrtOutputMotorF()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0314))) // Defaultvalue 1.0: CvrtOutputMotorF
+#define Fp2210GetRomConstCvrtOutputMotorO()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0318))) // Defaultvalue 0.0: CvrtOutputMotorO
+#define Fp2210GetRomConstCvrtOutputMotorC()  (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X031C))) // Defaultvalue 100.0:CvrtOutputMotorC
+#define Fp2210GetRomConstMinDiffInputPos()   (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0320))) // Defaultvalue 1.0: MinDiffInputPos
+#define Fp2210GetRomConstMinDiffInputSpeed() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0324))) // Defaultvalue 1.0: MinDiffInputSpeed
+#define Fp2210GetRomConstMinDiffInputCurrent() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0328))) // Defaultvalue 5.0:MinDiffInputCurrent
+#define Fp2210GetRomConstMinDiffInputPower() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X032C))) // Defaultvalue 5.0: MinDiffInputPower
+#define Fp2210GetRomConstMinDiffInputSupply() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0330))) // Defaultvalue 5.0:MinDiffInputSupply
+#define Fp2210GetRomConstMinDiffInputTemp1() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0334))) // Defaultvalue 3.0: MinDiffInputTemp1
+#define Fp2210GetRomConstMinDiffInputTemp2() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0338))) // Defaultvalue 3.0: MinDiffInputTemp2
+#define Fp2210GetRomConstMinDiffOutputMotor() (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X033C))) // Defaultvalue 8.0:MinDiffOutputMotor
+#define Fp2210GetRomConstPidPosKp()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0340))) // Defaultvalue 25.0:PidPosKp
+#define Fp2210GetRomConstPidPosKi()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0344))) // Defaultvalue 0.03125:PidPosKi
+#define Fp2210GetRomConstPidPosKd()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0348))) // Defaultvalue 250.0:PidPosKd
+#define Fp2210GetRomConstPidPosLimit()       (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X034C))) // Defaultvalue 100.0:PidPosLimit
+#define Fp2210GetRomConstPidSpeedKp()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0350))) // Defaultvalue 25.0:PidSpeedKp
+#define Fp2210GetRomConstPidSpeedKi()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0354))) // Defaultvalue 0.2: PidSpeedKi
+#define Fp2210GetRomConstPidSpeedKd()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0358))) // Defaultvalue 0.0: PidSpeedKd
+#define Fp2210GetRomConstPidSpeedLimit()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X035C))) // Defaultvalue 1000.0:PidSpeedLimit
+#define Fp2210GetRomConstPidCurKp()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0360))) // Defaultvalue 25.0:PidCurKp
+#define Fp2210GetRomConstPidCurKi()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0364))) // Defaultvalue 0.2: PidCurKi
+#define Fp2210GetRomConstPidCurKd()          (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0368))) // Defaultvalue 0.0: PidCurKd
+#define Fp2210GetRomConstPidCurLimit()       (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X036C))) // Defaultvalue 1000.0:PidCurLimit
+#define Fp2210GetRomConstPidPowerKp()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0370))) // Defaultvalue 10.0:PidPowerKp
+#define Fp2210GetRomConstPidPowerKi()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0374))) // Defaultvalue 0.2: PidPowerKi
+#define Fp2210GetRomConstPidPowerKd()        (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0378))) // Defaultvalue 0.0: PidPowerKd
+#define Fp2210GetRomConstPidPowerLimit()     (*((cFixPti2210*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X037C))) // Defaultvalue 1000.0:PidPowerLimit
+#define u8GetRomConstLedEnable()             (*((u8*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X0380)))        // Defaultvalue 15:    LedEnable
+#define u32GetRomConstChecksum2()            (*((u32*)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03F8)))       // Defaultvalue 59046  
+#define rszGetRomConstMagicPattern2()        ((rsz)(ROMCONST_PARTITION_START_ADRESS_EEP + 0X03FC))           // Defaultvalue FLKA   
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // __ROM_CONSTS_DEF_H__
+

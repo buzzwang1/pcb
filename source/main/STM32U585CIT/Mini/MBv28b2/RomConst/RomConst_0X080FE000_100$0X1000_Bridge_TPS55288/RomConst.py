@@ -234,7 +234,7 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     
     # BotNet Info
     #                                                                               Bn-DAdr   Bn-Adr   Ram    Pages  Partitions Tables  HwVer  RomConst-Ver
-    lAdr = SetHeader(lAdr, "MBv28",   "STM32U575VGT", "CM33, F: 1024KB, R: 768KB",   100,     0x1000, 4*1024,   1,       6,        8,    28,       2,        llstListElements)
+    lAdr = SetHeader(lAdr, "MBv28",   "STM32U575VGT", "CM33, F: 1024KB, R: 768KB",   100,     liBnAdr, 4*1024,   1,       6,        8,    28,       2,        llstListElements)
 
     # BotNet Config
     #                       u8DateTimeSyncTimeout_s u8DateTimeSyncHour_s u8DateTimeValidTimeout_d   u16RadioPingIntervall_s   u16RadioPingTimeoutSessionReq_ms  u16BaudUpLink  u16BaudSideLink  u16BaudDownLink1  u16BaudDownLink2

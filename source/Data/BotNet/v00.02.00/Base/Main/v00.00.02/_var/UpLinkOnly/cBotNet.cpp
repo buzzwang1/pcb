@@ -4,18 +4,11 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
  :mcAdr(lcCfg->mu16BnAdr),
   mcDeviceID(lcCfg->mu16BnDeviceID),
   mcStreamSys(this),
-  mcBtr(this),
-  mcSpop(this),
-  mcRRpt(this),
   mszName(mszBufName, 0, 16)
 {
   mcCfg = lcCfg;
 
   mcpMsgProcess   = null;
-  mcBtr.vAddMsgSys();
-  mcSpop.vAddMsgSys();
-  mcRRpt.vAddMsgSys();
-
 
   mstStatus.u32MsgCnt     = 0;
   mstStatus.u32MsgDropCnt = 0;
@@ -99,6 +92,7 @@ void cBotNet::vLinkDynSyncReset(u16 lu16Idx)
 
 void cBotNet::vLinkSync(cBotNet_LinkBase* lpcLink, bool lbForceSync)
 {
+  // Nicht interrupts getrieben Uplinks, wie USB, brauchen einen Sync
   if (lpcLink != null)
   {
     if ((lpcLink->IsInitAndOnline()) || (lbForceSync))

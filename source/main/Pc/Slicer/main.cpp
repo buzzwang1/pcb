@@ -1,488 +1,404 @@
 
-
-#include "windows.h"
-#include <time.h>
-#include <stdlib.h>
-#include <io.h>
-
 #include "main.h"
+#include "TypeDef.h"
 
-#define DISPLAY_X 320
-#define DISPLAY_Y 240
+#define NOMINMAX
+#include <windows.h>
+#include <commctrl.h>
+#include <commdlg.h>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <cmath>
+#include <algorithm>
+#include <cstdint>
 
+// IDs für die UI-Elemente
+#define IDC_BTN_SELECT_STL 1001
+#define IDC_TXT_Z_PLANE    1002
+#define IDC_BTN_START      1003
 
-#ifdef WIN32
-
-uint8 mui8Zoom = 2;
-
-UINT      Timer_10ms;
-UINT      Timer_25ms;
-int fps;
-#define ID_TIMER_10ms 1
-#define ID_TIMER_25ms 2
-
-int16  MousexPos;
-int16  MouseyPos;
-uint16 MousePressed;
-
-
-cWin32Display                      *mpcDisplay1;
-
-uint8 maui8KeyState[6];
-#else
-Screen mstDisplay;     // 120 *176 * 1Bit / Pixel
-#endif
-
-cMsgBox                             mcMsgBox(20);
-cCursor                             mcCursor(200, 800, &mcMsgBox);
-
-cBitmap_Bpp16_5R6G5B                     mc16GBm(DISPLAY_X, DISPLAY_Y);
-cScreen_Bpp16_5R6G5B                     mc16GScreen1(&mc16GBm);
-cSprite_Res8b_Bpp1_1G                    mc16GSprite;
-cRes8b_Bpp1_1G_SpriteEngine_Bpp16_5R6G5B mc16GSpriteEng(Sprite_nModeOr);
-
-cRFont_Res8b_Bpp1_1G                     cRFont_Res8b_Bpp1_1G_5x5Ucase(SPRTMST_FontLut_RFont01_05x05U_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_05x05U_1BPP_1G_Bmp, &mc16GSpriteEng);
-cRFont_Res8b_Bpp1_1G                     cRFont_Res8b_Bpp1_1G_Full(SPRTMST_FontLut_RFont01_06x08_1BPP_1G_Bmp, SPRTMST_FontData_RFont01_06x08_1BPP_1G_Bmp, &mc16GSpriteEng);
-
-
-cUiElement_Root                     mc16GuiRoot(10, 10, DISPLAY_X-20, DISPLAY_Y-20, &mcMsgBox, &mc16GScreen1, BM_BPP32_8R8G8B_RGB(0xFF,0,0));
-cUiElement                          mc16GuiBase01(&mcMsgBox, &mc16GScreen1);
-cUiElement_TextBox                  mc16GuiText01(&mcMsgBox, &mc16GScreen1, 128, &cRFont_Res8b_Bpp1_1G_5x5Ucase);
-cUiElement                          mc16GuiBase02(&mcMsgBox, &mc16GScreen1);
-
-
-
-class cStl
-{
-  public: 
-    typedef struct
-    {
-      float Norm[3];
-      float V1[3];
-      float V2[3];
-      float V3[3];
-      u16   Attribute;
-    }tstTriData;
-
-
-    char mszHead[80];
-    u32  mu32TriCnt;
-    tstTriData* mfTri;
-
-
-    cStl()
-    {
-      mu32TriCnt = 0;
-    }
-
-    cStl(char* lszFile)
-    {
-      mu32TriCnt = 0;
-      vLoad(lszFile);
-    }
-
-    void vLoad(char* lszFile)
-    {
-      if (_access(lszFile, 0) == 0)
-      {
-        unsigned char buffer[10];
-        FILE* lFilePtr;
-
-        fopen_s(&lFilePtr, lszFile, "rb");  // r for read, b for binary
-
-        fread(mszHead,     sizeof(mszHead),    1, lFilePtr);
-        fread(&mu32TriCnt, sizeof(mu32TriCnt), 1, lFilePtr);
-
-        mfTri = (tstTriData*) new tstTriData[mu32TriCnt];
-
-        fread(mfTri, sizeof(tstTriData) * mu32TriCnt, 1, lFilePtr);
-
-        fclose(lFilePtr);
-      }
-    }
-
-
+// Strukturen für 3D-Geometrie
+struct Vec3 
+{ 
+  float x, y, z; 
 };
 
-
-class cMyBox3Df : public cUiElement_Box3Df
+#pragma pack(push, 1)
+struct Triangle 
 {
-public:
+  Vec3 normal;
+  Vec3 v1, v2, v3;
+  uint16_t attr;
+};
+#pragma pack(pop)
 
-  cTexture32_Bpp16_5R6G5B               mcTextures[8];
-  cWorld_3Df                            mcWorld;
-  Simple3Df_Tex_Light_ObjTemplate_Plane mcPlaneTemplate;
-  Simple3Df_Tex_Light_ObjTemplate_Cube  mcCubeTemplate;
-
-  cSimple3Df_Obj mcFloor;
-  cSimple3Df_Obj mcSlicerPlane;
-  cSimple3Df_Obj mcCube;
-
-  cWorld_3Df_Viewer                   mcViewer;
-  cWorld_3Df_Viewer_Basic_Z           mcViewerBasicZ;
-
-
-  cMyBox3Df(cMsgBox* lcMsgBox, cScreen* lpcScreen, cRFont* lpcRFont, float* lafzBuffer)
-    : mcWorld(500, 500, 30), 
-      mcPlaneTemplate(0),
-      mcCubeTemplate(0),
-      mcFloor(   0.0f, 0.0f,    0.0f,  0.0f, 0.0f, 0.0f, (cSimple3Df_ObjTemplate*)&mcPlaneTemplate),
-      mcSlicerPlane( 0.0f, 2.0f/10.0f,-9.0f/10.0f,  0.0f, 0.0f, 0.0f, (cSimple3Df_ObjTemplate*)&mcPlaneTemplate),
-      mcCube(    0.0f, 4.0f,   -9.0f,  0.0f, 0.0f, 0.0f, (cSimple3Df_ObjTemplate*)&mcCubeTemplate),
-      mcViewerBasicZ(0.0f, 5.0f, 5.0f, 0.0f, 0.0f, 0.0f, &mcViewer, &mcWorld, lafzBuffer, lpcRFont),
-      cUiElement_Box3Df(lcMsgBox, lpcScreen, &mcWorld, (cWorld_3Df_ViewerWorld_Base*)&mcViewerBasicZ)
-  {
-    mcWorld.AddObj(&mcFloor);
-
-    u32 lit = 0;
-    for (lit = 0; lit < mcPlaneTemplate.mu16PointCnt; lit++)
-    {
-      mcWorld.macPoints[mcWorld.macObj[0]->PointIdx + lit].x *= 100;
-      mcWorld.macPoints[mcWorld.macObj[0]->PointIdx + lit].y *= 100;
-      mcWorld.macPoints[mcWorld.macObj[0]->PointIdx + lit].z *= 100;
-    }
-
-    mcWorld.AddObj(&mcSlicerPlane);
-    for (lit = 0; lit < mcPlaneTemplate.mu16PointCnt; lit++)
-    {
-      mcWorld.macPoints[mcWorld.macObj[1]->PointIdx + lit].x *= 10;
-      mcWorld.macPoints[mcWorld.macObj[1]->PointIdx + lit].y *= 10;
-      mcWorld.macPoints[mcWorld.macObj[1]->PointIdx + lit].z *= 10;
-    }
-
-    mcWorld.AddObj(&mcCube);
-  }
-
-  virtual void OnTimer(u32 lu32Timediff_ms) override
-  {
-    //---------------------------------------------------------------
-
-
-    if (GetAsyncKeyState(L'S')) mcViewer.mcPos = mcViewer.mcPos.cAdd(mcViewer.mcLookDir);
-    if (GetAsyncKeyState(L'W')) mcViewer.mcPos = mcViewer.mcPos.cSub(mcViewer.mcLookDir);
-
-    if (GetAsyncKeyState(L'A')) mcViewer.mcPos = mcViewer.mcPos.cSub(mcViewer.mcLookSideDir);
-    if (GetAsyncKeyState(L'D')) mcViewer.mcPos = mcViewer.mcPos.cAdd(mcViewer.mcLookSideDir);
-
-    if (GetAsyncKeyState(VK_DOWN))  mcViewer.mcDirA.x -= 1;
-    if (GetAsyncKeyState(VK_UP))    mcViewer.mcDirA.x += 1;
-
-    if (GetAsyncKeyState(VK_LEFT))  mcViewer.mcDirA.y += 1;
-    if (GetAsyncKeyState(VK_RIGHT)) mcViewer.mcDirA.y -= 1;
-
-
-    mcViewer.vSet(mcViewer.mcPos.x,  mcViewer.mcPos.y,  mcViewer.mcPos.z,
-                  mcViewer.mcDirA.x, mcViewer.mcDirA.y, mcViewer.mcDirA.z);
-
-    cUiElement_Box3Df::OnTimer(lu32Timediff_ms);
-  }
+// Struktur für 2D-Segmente (Linien)
+struct LineSegment2D
+{
+  float x1, y1;
+  float x2, y2;
 };
 
-
-float                       mafzBuffer[320 * 240];
-cUiElement_Window           mc16GuiWindow02_3Df(&mcMsgBox, &mc16GScreen1, 16, &cRFont_Res8b_Bpp1_1G_Full);
-cMyBox3Df                   mc16GuiBox3Df(&mcMsgBox, &mc16GScreen1, &cRFont_Res8b_Bpp1_1G_5x5Ucase, mafzBuffer);
-cStl                        mStlDach("U://E2//Projekte//SW//Code//pcb//source//main//Pc//Slicer//Dach.stl");
-
-class cMyButton: public cUiElement_Button
+// Struktur für die globale Ausdehnung des Modells
+struct BoundingBox2D
 {
-  public:
-
-    cMyButton(cMsgBox *lcMsgBox, cScreen *lpcScreen, uint32 lui32MaxCharacterCount, cRFont* lpcRFont)
-      : cUiElement_Button(lcMsgBox, lpcScreen, lui32MaxCharacterCount, lpcRFont) 
-    {
-      this->mu32BaseCol = 0x101080;
-    }
-
-    virtual void OnPressEnd() override
-    {
-      switch (mc16GuiText01.menTextFitMode)
-      {
-        case cUiElement_TextBox::nFit:         mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFitSmart;break;
-        case cUiElement_TextBox::nFitSmart:    mc16GuiText01.menTextFitMode = cUiElement_TextBox::nNoFit;break;
-        case cUiElement_TextBox::nNoFit:       mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFitRev;break;
-        case cUiElement_TextBox::nFitRev:      mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFitSmartRev;break;
-        case cUiElement_TextBox::nFitSmartRev: mc16GuiText01.menTextFitMode = cUiElement_TextBox::nNoFitRev;break;
-        case cUiElement_TextBox::nNoFitRev:    mc16GuiText01.menTextFitMode = cUiElement_TextBox::nFit;break;
-      }
-
-      mc16GuiRoot.vRepaint();
-    }
+  float minX, maxX;
+  float minY, maxY;
 };
 
+// Globale Variablen für die App-Steuerung
+std::string g_stlFilePath = "";
+HWND hEditZ, hBtnStart, hStaticStatus;
 
-cMyButton                   mc16GuiBtn01(&mcMsgBox, &mc16GScreen1, 16, &cRFont_Res8b_Bpp1_1G_5x5Ucase);
-
-
-
-
-#ifdef _WIN32
-void MAIN_vInitSystem(HWND hWnd)
-#else
-void MAIN_vInitSystem(void)
-#endif
+// 1. STL Loader (Binär)[cite: 2]
+std::vector<Triangle> loadSTL(const std::string& filename) 
 {
-  #ifdef _WIN32
-  mpcDisplay1 = new cWin32Display(0, 0,                        DISPLAY_X, DISPLAY_Y, mui8Zoom, hWnd);
-  #endif
-
-
-
-  mc16GuiRoot.bAdd(10, 10, 50, 50, &mc16GuiBase01);
-  mc16GuiBase01.bAdd(10, 10, 20, 20, &mc16GuiText01);
-
-  mc16GuiRoot.bAdd(10, 70, 50, 50, &mc16GuiBase02);
-  mc16GuiBase02.bAdd(10, 10, 30, 10, &mc16GuiBtn01);
-
-  mc16GuiText01.vSetText("Text acbfgr-tdfgd fdgdee 2134");
-
-
-  mc16GuiRoot.bAdd(80, 15, 200, 140, &mc16GuiWindow02_3Df);
-  mc16GuiWindow02_3Df.bAdd(20, 15, 60, 60, &mc16GuiBox3Df);
-  mc16GuiBox3Df.vToggleMaximize();
-  mc16GuiBox3Df.mstStatus.PaintFrame = 0;
-}
-
-void CycCall_vMain_10ms()
-{
-  mcCursor.vTick10ms(MousexPos, MouseyPos, (uint8)MousePressed);
-}
-
-void CycCall_vMain_25ms()
-{
-  cMsg lcMsg;
-
-  lcMsg.mID         =  cMsg::tenMsgIDs::nTimestamp;
-  lcMsg.mSubID      =  0;
-  lcMsg.mui8Data[7] = 25;
-  mcMsgBox.vput(&lcMsg);
-  while (!mcMsgBox.isEmpty())
+  std::ifstream file(filename, std::ios::binary);
+  if (!file) 
   {
-    mcMsgBox.vget(&lcMsg);
-    mc16GuiRoot.vMsgHdl(&lcMsg);
+    return {};
   }
 
-  mc16GuiRoot.vPaint();
+  char header[80];
+  file.read(header, 80);
+  
+  uint32_t numTriangles;
+  file.read(reinterpret_cast<char*>(&numTriangles), 4);
 
-  mc16GSpriteEng.vSetParam(Sprite_nModeOr, &mc16GSprite, &mc16GScreen1);
-  cRFont_Res8b_Bpp1_1G_5x5Ucase.mui32Col = mc16GScreen1.u32GetCol(0xFFFFFF);
-  cRFont_Res8b_Bpp1_1G_5x5Ucase.i8PutStringXY(0, 10, mcCursor.toString(), &mc16GScreen1);
-
-  cBitmapConvert_Bpp32_8R8G8B::i8FromBpp16_5R6G5B(mc16GBm, mpcDisplay1->mcBm);
-  mpcDisplay1->Show();
+  std::vector<Triangle> mesh(numTriangles);
+  file.read(reinterpret_cast<char*>(mesh.data()), numTriangles * sizeof(Triangle));
+  
+  return mesh;
 }
 
-
-/* Main functions ---------------------------------------------------------*/
-
-LRESULT CALLBACK WindowProc(HWND   hWnd, UINT   message,
-  WPARAM wParam, LPARAM lParam)
+// Funktion zur Berechnung der maximalen 2D-Ausdehnung des gesamten 3D-Körpers
+BoundingBox2D calculateMeshBoundingBox(const std::vector<Triangle>& mesh)
 {
+  BoundingBox2D box;
+  if (mesh.empty()) return { 0, 0, 0, 0 };
 
-  HDC hDC;
-  PAINTSTRUCT ps;
+  box.minX = mesh[0].v1.x; box.maxX = mesh[0].v1.x;
+  box.minY = mesh[0].v1.y; box.maxY = mesh[0].v1.y;
 
-  switch (message)
+  for (const auto& tri : mesh)
   {
-    case WM_CREATE:
-      {
-        MAIN_vInitSystem(hWnd);
+    // Untersuche alle 3 Ecken jedes Dreiecks im Modell
+    const Vec3* vertices[3] = { &tri.v1, &tri.v2, &tri.v3 };
+    for (int i = 0; i < 3; ++i)
+    {
+      if (vertices[i]->x < box.minX) box.minX = vertices[i]->x;
+      if (vertices[i]->x > box.maxX) box.maxX = vertices[i]->x;
+      if (vertices[i]->y < box.minY) box.minY = vertices[i]->y;
+      if (vertices[i]->y > box.maxY) box.maxY = vertices[i]->y;
+    }
+  }
+  return box;
+}
 
-        Timer_10ms = (UINT)SetTimer(hWnd, ID_TIMER_10ms, 10, 0); // 10ms
-        Timer_25ms = (UINT)SetTimer(hWnd, ID_TIMER_25ms, 25, 0); // 25ms
+// 2. Hilfsfunktion: Schnittpunkt einer Kante mit der Ebene z = z_plane
+bool intersectEdge(Vec3 a, Vec3 b, float z_plane, Vec3& out_point)
+{
+  // Wir prüfen jetzt auf <= und >=, um Punkte auf der Ebene zu erfassen
+  if ((a.z <= z_plane && b.z >= z_plane) || (a.z >= z_plane && b.z <= z_plane))
+  {
+    float diff = b.z - a.z;
+    if (std::abs(diff) < 0.00001f)
+    {
+      // Kante liegt komplett auf der Ebene
+      return false;
+    }
+    float t = (z_plane - a.z) / diff;
+    out_point.x = a.x + t * (b.x - a.x);
+    out_point.y = a.y + t * (b.y - a.y);
+    out_point.z = z_plane;
+    return true;
+  }
+  return false;
+}
+
+// 3. Slicing-Algorithmus: Berechnet alle Schnittsegmente auf der Z-Ebene
+std::vector<Vec3> sliceMesh(const std::vector<Triangle>& mesh, float z_plane) 
+{
+  std::vector<Vec3> slicePoints;
+  const float EPSILON = 0.0001f; // Toleranz für Flachheit
+
+  for (const auto& tri : mesh) 
+  {
+    // 1. Prüfe, ob das Dreieck flach auf der Schnittebene liegt
+    bool v1_on = std::abs(tri.v1.z - z_plane) < EPSILON;
+    bool v2_on = std::abs(tri.v2.z - z_plane) < EPSILON;
+    bool v3_on = std::abs(tri.v3.z - z_plane) < EPSILON;
+
+    if (v1_on && v2_on && v3_on)
+    {
+      // Das ganze Dreieck liegt auf der Ebene -> Punkte hinzufügen
+      slicePoints.push_back(tri.v1);
+      slicePoints.push_back(tri.v2);
+      slicePoints.push_back(tri.v2);
+      slicePoints.push_back(tri.v3);
+      slicePoints.push_back(tri.v3);
+      slicePoints.push_back(tri.v1);
+      continue; // Fertig mit diesem Dreieck
+    }
+
+    // 2. Ansonsten: Suche Schnittpunkte durch Kanten (wie bisher)
+    std::vector<Vec3> intersects;
+    Vec3 p;
+    if (intersectEdge(tri.v1, tri.v2, z_plane, p)) intersects.push_back(p);
+    if (intersectEdge(tri.v2, tri.v3, z_plane, p)) intersects.push_back(p);
+    if (intersectEdge(tri.v3, tri.v1, z_plane, p)) intersects.push_back(p);
+
+    if (intersects.size() >= 2) 
+    {
+      slicePoints.push_back(intersects[0]);
+      slicePoints.push_back(intersects[1]);
+    }
+  }
+  return slicePoints;
+}
+
+// 4. BMP Datei-Speicherfunktion (Win32 API konform)
+bool saveBitmapFile(const std::string& filename, const std::vector<uint32_t>& buffer, int width, int height) 
+{
+  std::ofstream file(filename, std::ios::binary);
+  if (!file) 
+  {
+    return false;
+  }
+
+  BITMAPFILEHEADER bfh = {};
+  bfh.bfType = 0x4D42; // "BM"
+  bfh.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (width * height * 4);
+  bfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+  BITMAPINFOHEADER bih = {};
+  bih.biSize = sizeof(BITMAPINFOHEADER);
+  bih.biWidth = width;
+  bih.biHeight = height; // Positiv für Bottom-Up (BMP-Standard)
+  bih.biPlanes = 1;
+  bih.biBitCount = 32;
+  bih.biCompression = BI_RGB;
+
+  file.write(reinterpret_cast<char*>(&bfh), sizeof(bfh));
+  file.write(reinterpret_cast<char*>(&bih), sizeof(bih));
+  file.write(reinterpret_cast<const char*>(buffer.data()), buffer.size() * 4);
+  return true;
+}
+
+// 5. Hauptprozess: Laden, Slicen, Scanline-Füllung & Speichern
+void processSlicing(HWND hwnd) 
+{
+  if (g_stlFilePath.empty()) 
+  {
+    MessageBoxA(hwnd, "Bitte zuerst eine STL-Datei auswählen!", "Fehler", MB_ICONERROR);
+    return;
+  }
+
+  char zText[32];
+  GetWindowTextA(hEditZ, zText, 32);
+  float z_plane = static_cast<float>(std::atof(zText));
+
+  SetWindowTextA(hStaticStatus, "Status: Lade STL...");
+  std::vector<Triangle> mesh = loadSTL(g_stlFilePath);
+  if (mesh.empty()) 
+  {
+    MessageBoxA(hwnd, "Fehler beim Laden oder leere STL-Datei.", "Fehler", MB_ICONERROR);
+    return;
+  }
+
+  SetWindowTextA(hStaticStatus, "Status: Berechne maximale Grundfläche...");
+  // HIER NEU: Nutze die Bounding Box des GESAMTEN Körpers, nicht nur des aktuellen Schnitts!
+  BoundingBox2D globalBox = calculateMeshBoundingBox(mesh);
+
+  // Skalierung: 1 cm STL-Einheit = 100 Pixel
+  const float SCALE_FACTOR = 10.0f; 
+
+  // Berechne feste Gesamt-Bitmap-Größe basierend auf dem kompletten 3D-Körper (+ 20px Sicherheitsrand)
+  int bitmapWidth = static_cast<int>((globalBox.maxX - globalBox.minX) * SCALE_FACTOR) + 20;
+  int bitmapHeight = static_cast<int>((globalBox.maxY - globalBox.minY) * SCALE_FACTOR) + 20;
+
+  if (bitmapWidth <= 0 || bitmapHeight <= 0 || bitmapWidth > 8000 || bitmapHeight > 8000) 
+  {
+    MessageBoxA(hwnd, "Berechnete globale Bitmap-Dimensionen sind ungültig.", "Fehler", MB_ICONERROR);
+    return;
+  }
+
+  // Weißer Hintergrund-Buffer (Alles außerhalb bleibt weiß)[cite: 2]
+  std::vector<uint32_t> buffer(bitmapWidth * bitmapHeight, 0xFFFFFFFF);
+
+  SetWindowTextA(hStaticStatus, "Status: Berechne Schnittfläche...");
+  std::vector<Vec3> slicePoints = sliceMesh(mesh, z_plane);
+  
+  // Wenn an dieser Z-Höhe nichts geschnitten wird, speichern wir einfach ein komplett weißes Bild der exakt gleichen Größe!
+  if (!slicePoints.empty()) 
+  {
+    SetWindowTextA(hStaticStatus, "Status: Transformiere Segmente...");
+    // 2D Segmente basierend auf der GLOBALEN Box ausrichten
+    std::vector<LineSegment2D> segments;
+    for (size_t i = 0; i < slicePoints.size(); i += 2) 
+    {
+      if (i + 1 >= slicePoints.size()) 
+      {
+        break;
       }
-      break;
 
-    case WM_PAINT:
-      hDC = BeginPaint(hWnd, &ps);
-      mpcDisplay1->Show();
-      EndPaint(hWnd, &ps);
-      break;
-    case WM_CLOSE:
-      KillTimer(hWnd, Timer_10ms);
-      KillTimer(hWnd, Timer_25ms);
-      delete mpcDisplay1;
-      DestroyWindow(hWnd);
-      break;
-    case WM_DESTROY:
-      PostQuitMessage(0);
-      break;
-    case WM_CHAR:
-      //Taste = (TCHAR) wParam;
-      //TasteData = lParam;    
-      break;
+      LineSegment2D seg;
+      // Wichtig: pt - globalBox.minX stellt sicher, dass der Ursprung für jeden Schnitt fest verankert bleibt
+      seg.x1 = (slicePoints[i].x - globalBox.minX) * SCALE_FACTOR + 10.0f;
+      seg.y1 = (slicePoints[i].y - globalBox.minY) * SCALE_FACTOR + 10.0f;
+      seg.x2 = (slicePoints[i + 1].x - globalBox.minX) * SCALE_FACTOR + 10.0f;
+      seg.y2 = (slicePoints[i + 1].y - globalBox.minY) * SCALE_FACTOR + 10.0f;
+      
+      segments.push_back(seg);
+    }
 
+    SetWindowTextA(hStaticStatus, "Status: Fülle innenliegende Bereiche...");
+    // Scanline-Füllalgorithmus (Even-Odd)
+    for (int y = 0; y < bitmapHeight; ++y)
+    {
+      std::vector<float> intersectionX;
 
-    case WM_KEYDOWN:
+      for (const auto& seg : segments)
       {
-        uint8 lpui8Taste[2];
-        uint8 lui8Result;
-        uint8 lpui8GetKeyboardState[256];
-
-        GetKeyboardState(lpui8GetKeyboardState);
-
-        lui8Result = ToAscii((uint8)wParam,
-          MapVirtualKey((uint8)wParam, 0),
-          lpui8GetKeyboardState,
-          (LPWORD)lpui8Taste, 0);
-
-        if (lui8Result == 1)
+        if ((seg.y1 <= y && seg.y2 > y) || (seg.y2 <= y && seg.y1 > y))
         {
-          if (lpui8Taste[0] == '1') maui8KeyState[0] = 1;
-          if (lpui8Taste[0] == '2') maui8KeyState[1] = 1;
-          if (lpui8Taste[0] == '3') maui8KeyState[2] = 1;
-          if (lpui8Taste[0] == '4') maui8KeyState[3] = 1;
-          if (lpui8Taste[0] == 'p') maui8KeyState[4] = 1;
-          if (lpui8Taste[0] == 'd') maui8KeyState[5] = 1;
+          if (std::abs(seg.y2 - seg.y1) > 0.00001f)
+          {
+            float x = seg.x1 + (y - seg.y1) * (seg.x2 - seg.x1) / (seg.y2 - seg.y1);
+            intersectionX.push_back(x);
+          }
         }
       }
-      break;
 
-    case WM_KEYUP:
+      std::sort(intersectionX.begin(), intersectionX.end());
+
+      for (size_t i = 0; i < intersectionX.size(); i += 2)
       {
-        uint8 lpui8Taste[2];
-        uint8 lui8Result;
-        uint8 lpui8GetKeyboardState[256];
-
-        GetKeyboardState(lpui8GetKeyboardState);
-
-        lui8Result = ToAscii((uint8)wParam,
-          MapVirtualKey((uint8)wParam, 0),
-          lpui8GetKeyboardState,
-          (LPWORD)lpui8Taste, 0);
-
-        if (lui8Result == 1)
+        if (i + 1 >= intersectionX.size())
         {
-          if (lpui8Taste[0] == '1') maui8KeyState[0] = 0;
-          if (lpui8Taste[0] == '2') maui8KeyState[1] = 0;
-          if (lpui8Taste[0] == '3') maui8KeyState[2] = 0;
-          if (lpui8Taste[0] == '4') maui8KeyState[3] = 0;
-          if (lpui8Taste[0] == 'p') maui8KeyState[4] = 0;
-          if (lpui8Taste[0] == 'd') maui8KeyState[5] = 0;
+          break;
+        }
+
+        int startX = static_cast<int>(std::ceil(intersectionX[i]));
+        int endX = static_cast<int>(std::floor(intersectionX[i + 1]));
+
+        startX = std::max(0, startX);
+        endX = std::min(bitmapWidth - 1, endX);
+
+        for (int x = startX; x <= endX; ++x)
+        {
+          buffer[y * bitmapWidth + x] = 0x00000000; // Innenbereich schwarz ausmalen
         }
       }
-      break;
+    }
+  }
 
-    /*
-    case WM_RBUTTONUP:
-    case WM_RBUTTONDOWN:*/
+  // Speicher-Dialog für BMP-Datei aufrufen
+  OPENFILENAMEA ofn = {};
+  char szFile[260] = "schnittflaeche_solid.bmp";
+  ofn.lStructSize = sizeof(ofn);
+  ofn.hwndOwner = hwnd;
+  ofn.lpstrFile = szFile;
+  ofn.nMaxFile = sizeof(szFile);
+  ofn.lpstrFilter = "Bitmap-Datei (*.bmp)\0*.bmp\0";
+  ofn.nFilterIndex = 1;
+  ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
 
-    case WM_LBUTTONUP:
-      MousePressed = 0;
-      break;
-    case WM_LBUTTONDOWN:
-      MousePressed = 1;
-      break;
+  if (GetSaveFileNameA(&ofn) == TRUE) 
+  {
+    if (saveBitmapFile(ofn.lpstrFile, buffer, bitmapWidth, bitmapHeight)) 
+    {
+      MessageBoxA(hwnd, "Schnittfläche erfolgreich mit einheitlicher Grundfläche gespeichert!", "Erfolg", MB_ICONINFORMATION);
+    } 
+    else 
+    {
+      MessageBoxA(hwnd, "Fehler beim Schreiben der Datei.", "Fehler", MB_ICONERROR);
+    }
+  }
+   SetWindowTextA(hStaticStatus, "Status: Bereit.");
+}
 
-    case WM_MOUSEMOVE: //Maus Position relative zum Fenster
+// 6. Win32 Windows-Procedure (Event-Handler)
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
+{
+  switch (msg) 
+  {
+  case WM_CREATE:
+    CreateWindowA("Static", "STL-Datei:", WS_VISIBLE | WS_CHILD, 20, 20, 300, 20, hwnd, NULL, NULL, NULL);
+    CreateWindowA("Button", "STL Datei wählen...", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 20, 45, 150, 30, hwnd, (HMENU)IDC_BTN_SELECT_STL, NULL, NULL);
+    
+    CreateWindowA("Static", "Z-Schnittebene (z.B. 15.5):", WS_VISIBLE | WS_CHILD, 20, 95, 200, 20, hwnd, NULL, NULL, NULL);
+    hEditZ = CreateWindowA("Edit", "0.0", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_AUTOHSCROLL, 20, 120, 150, 25, hwnd, (HMENU)IDC_TXT_Z_PLANE, NULL, NULL);
+    
+    hBtnStart = CreateWindowA("Button", "Schnitt berechnen & speichern", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 20, 165, 220, 40, hwnd, (HMENU)IDC_BTN_START, NULL, NULL);
+    hStaticStatus = CreateWindowA("Static", "Status: Bereit.", WS_VISIBLE | WS_CHILD, 20, 225, 350, 20, hwnd, NULL, NULL, NULL);
+    break;
+
+  case WM_COMMAND:
+    switch (LOWORD(wp)) 
+    {
+    case IDC_BTN_SELECT_STL: 
       {
-        uint8 fwKeys;
-        POINT lstPoint;
-        cMsg  lcMsg;
+        OPENFILENAMEA ofn = {};
+        char szFile[260] = { 0 };
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = hwnd;
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile);
+        ofn.lpstrFilter = "3D-Modelle (*.stl)\0*.stl\0";
+        ofn.nFilterIndex = 1;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-        GetCursorPos(&lstPoint);
-        ScreenToClient(hWnd, &lstPoint);
-
-        fwKeys = (uint8)wParam;    // key flags 
-        MousexPos = (int16)lstPoint.x/2;  // horizontal position of cursor 
-        MouseyPos = (int16)lstPoint.y/2;  // vertical position of cursor
-      }
-      break;
-
-    case WM_TIMER:
-      {
-        if (wParam == ID_TIMER_10ms)
+        if (GetOpenFileNameA(&ofn) == TRUE) 
         {
-          CycCall_vMain_10ms();
+          g_stlFilePath = ofn.lpstrFile;
+          std::string label = "STL-Datei geladen: " + g_stlFilePath.substr(g_stlFilePath.find_last_of("\\") + 1);
+          MessageBoxA(hwnd, label.c_str(), "Datei Geladen", MB_ICONINFORMATION);
         }
-        else
-        {
-          CycCall_vMain_25ms();
-        }
+        break;
       }
+    case IDC_BTN_START:
+      processSlicing(hwnd);
       break;
+    }
+    break;
 
-    default:
-      return DefWindowProc(hWnd, message, wParam, lParam);
+  case WM_DESTROY:
+    PostQuitMessage(0);
+    break;
+  default:
+    return DefWindowProc(hwnd, msg, wp, lp);
   }
   return 0;
 }
 
-
-// Erzeugen des Fensters und anderer Windows spezifischer
-// Initialisierungen
-BOOL MakeWindow(int nCmdShow, HINSTANCE instance, int x1,int y1,int width,int height)
+// WinMain Einstiegspunkt
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR args, int nShow) 
 {
-    HWND         hwnd;
-    // zunächst wird eine eigene Window-Klasse für 
-    // unsere Ausgabe erzeugt.
-    WNDCLASS        wc;
-    unsigned long   style;
-    unsigned long   styleex;
+  WNDCLASSA wc = {};
+  wc.lpfnWndProc = WndProc;
+  wc.hInstance = hInst;
+  wc.lpszClassName = "STL_Slicer_Class";
+  wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
-    wc.style         = CS_BYTEALIGNCLIENT;
-    wc.lpfnWndProc   = WindowProc;
-    wc.cbClsExtra    = 0;
-    wc.cbWndExtra    = 0;
-    wc.hInstance     = instance;
-    wc.hIcon         = LoadIcon (NULL, IDI_APPLICATION);
-    wc.hCursor       = LoadCursor (NULL, IDC_ARROW);
+  if (!RegisterClassA(&wc)) 
+  {
+    return -1;
+  }
 
-    wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE+1);
-    wc.lpszMenuName  = NULL;
-    wc.lpszClassName = "demo";
-    RegisterClass( &wc );
+  HWND hwnd = CreateWindowA("STL_Slicer_Class", "3D STL Slicer zu 2D BMP", 
+                            WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX, 
+                            CW_USEDEFAULT, CW_USEDEFAULT, 400, 300, NULL, NULL, hInst, NULL);
+  
+  ShowWindow(hwnd, nShow);
+  UpdateWindow(hwnd);
 
-              
-    style     = WS_OVERLAPPED | WS_SYSMENU;
-    styleex   = 0;
- 
-    hwnd       =  CreateWindowEx( styleex , "demo", "Applikation",
-                                  style   , x1, y1, x1+width + 20,
-                                  y1+height + 20, 0, 0, instance, 0);
-
-    
-    if ( !hwnd ) return 0;
-
-    ShowWindow( hwnd, nCmdShow );  // Fenster anzeigen
-    UpdateWindow(hwnd);
-
-    //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-    //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-    //SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
-    //THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST
-    return TRUE;
+  MSG msg = {};
+  while (GetMessage(&msg, NULL, 0, 0)) 
+  {
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
+  }
+  return (int)msg.wParam;
 }
-
-// Hauptprogramm
-int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst,
-                   LPSTR lpCmdLine, int nCmdShow)
-{
-    MSG         message;
-
-
-    // Erzeugt ein Fenster
-    if ( !MakeWindow( nCmdShow, hInstance,0,0,DISPLAY_X * mui8Zoom + 10, DISPLAY_Y * mui8Zoom + 30) ) return 0;
-
-    // https://stackoverflow.com/questions/33948837/win32-application-with-high-cpu-usage
-    /*
-    while (TRUE)
-    {
-        if ( PeekMessage( &message, NULL, 0, 0,PM_REMOVE ) )
-        {
-            if (message.message == WM_QUIT) return (int)message.wParam;
-            TranslateMessage( &message );
-            DispatchMessage( &message );
-        }
-    }*/
-
-    while (GetMessage(&message, NULL, 0, 0))
-    {
-      TranslateMessage(&message);
-      DispatchMessage(&message);
-    }
-    
-    return (int) message.wParam;
-}
-
-

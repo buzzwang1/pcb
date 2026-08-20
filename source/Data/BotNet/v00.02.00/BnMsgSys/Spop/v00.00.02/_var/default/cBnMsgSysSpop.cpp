@@ -46,11 +46,11 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
             u8 lu8Temp[4];
             mcTxMsgTx.Set(0x81);
             mcTxMsgTx.Add(0x00);  // Memory Index RomConst
-            mcTxMsgTx.Add(u8U32toU8((u32)ROMCONST_PARTITION_START_ADRESS_EEP, lu8Temp), 4); // Adresse RomConst.
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8((u32)ROMCONST_PARTITION_START_ADRESS_EEP, lu8Temp), 4); // Adresse RomConst.
             mcTxMsgTx.Add(0x00);  // Memory Index BTR
-            mcTxMsgTx.Add(u8U32toU8(0, lu8Temp), 4); // Adress BTR
-            mcTxMsgTx.Add(u8U32toU8(cBnMsgSysBtrCfgRamSize, lu8Temp), 4); // Btr Größe in Byte
-            mcTxMsgTx.Add(u8U32toU8(cBotNet_UpLinkComBufSize, lu8Temp), 4); // Combuf Größe in Bytes
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(0, lu8Temp), 4); // Adress BTR
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(cBnMsgSysBtrCfgRamSize, lu8Temp), 4); // Btr Größe in Byte
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(cBotNet_UpLinkComBufSize, lu8Temp), 4); // Combuf Größe in Bytes
             u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
           }
           else
@@ -92,7 +92,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
           u32    lu32Adress;
 
           mu8MemmoryIdx  = lpu8PayloadRx[1];
-          lu32Adress     = u32U8toU32((lpu8PayloadRx + 2));
+          lu32Adress     = cMemTools::u32U8toU32((lpu8PayloadRx + 2));
           mu8DataPointer = (uint8*)lu32Adress;
           switch (u16GetMemorySortByMemIdx(mu8MemmoryIdx))
           {
@@ -102,7 +102,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
 
               mcTxMsgTx.Set(0x84);
               mcTxMsgTx.Add(0x00);
-              mcTxMsgTx.Add(u8U32toU8(100, lu8Temp), 4);
+              mcTxMsgTx.Add(cMemTools::pu8U32toU8(100, lu8Temp), 4);
               u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
 
               cJobHandler::vStart((cJobHandler::cJobs)cJobs::nJobEraseIntFlash);
@@ -129,8 +129,8 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
         lbConsumed = True;
         {
           mu8MemmoryIdx  = lpu8PayloadRx[1];
-          mu8DataPointer = (u8*)u32U8toU32((lpu8PayloadRx + 2));
-          mu32DataCnt    =      u32U8toU32((lpu8PayloadRx + 2 + 4));
+          mu8DataPointer = (u8*)cMemTools::u32U8toU32((lpu8PayloadRx + 2));
+          mu32DataCnt    =      cMemTools::u32U8toU32((lpu8PayloadRx + 2 + 4));
           mu8PackageCounter = 0;
           mu32DataChecksum  = 1;
 
@@ -190,7 +190,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
 
                     mcTxMsgTx.Set(0x86);
                     mcTxMsgTx.Add(0xFC);
-                    mcTxMsgTx.Add(u8U32toU8(mu32DataChecksum, lu8Temp), 4);
+                    mcTxMsgTx.Add(cMemTools::pu8U32toU8(mu32DataChecksum, lu8Temp), 4);
 
                     u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
                   }
@@ -215,7 +215,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
 
                     mcTxMsgTx.Set(0x86);
                     mcTxMsgTx.Add(0xFC);
-                    mcTxMsgTx.Add(u8U32toU8(mu32DataChecksum, lu8Temp), 4);
+                    mcTxMsgTx.Add(cMemTools::pu8U32toU8(mu32DataChecksum, lu8Temp), 4);
                     u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
                     cJobHandler::vFinished();
                     break;
@@ -226,8 +226,8 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
           else if (lu8PackageCnt == 0xF0)
           {
             mu32DataChecksum = 1;
-            mu8DataPointer   = (u8*)u32U8toU32((lpu8PayloadRx + 3));
-            mu32DataCnt      =      u32U8toU32((lpu8PayloadRx + 3 + 4));
+            mu8DataPointer   = (u8*)cMemTools::u32U8toU32((lpu8PayloadRx + 3));
+            mu32DataCnt      =      cMemTools::u32U8toU32((lpu8PayloadRx + 3 + 4));
             mu8MemmoryIdx    = lpu8PayloadRx[2];
 
             // Die Daten werden zuerst im BTR zwischengespeichert
@@ -246,7 +246,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
                 break;
             }
             u8 lu8Temp[4];
-            mcTxMsgTx.Add(u8U32toU8(lu32Runtime_ms, lu8Temp), 4);
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(lu32Runtime_ms, lu8Temp), 4);
 
             u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
           }
@@ -256,8 +256,8 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
       case 0x08: // Checksumme erstellen
         // 08 MI AAAA AAAA SSSS SSSS
         lbConsumed = True;
-        mu8DataPointer   = (u8*)u32U8toU32((lpu8PayloadRx + 2));
-        mu32DataCnt      = u32U8toU32((lpu8PayloadRx + 2 + 4));
+        mu8DataPointer   = (u8*)cMemTools::u32U8toU32((lpu8PayloadRx + 2));
+        mu32DataCnt      = cMemTools::u32U8toU32((lpu8PayloadRx + 2 + 4));
         mu8MemmoryIdx    = lpu8PayloadRx[1];
         mu32DataChecksum = 1;
 
@@ -267,7 +267,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
 
           mcTxMsgTx.Set(0x88);
           mcTxMsgTx.Add(0x00);
-          mcTxMsgTx.Add(u8U32toU8((mu32DataCnt / (1024*16) + 1) * 10, lu8Temp), 4);
+          mcTxMsgTx.Add(cMemTools::pu8U32toU8((mu32DataCnt / (1024*16) + 1) * 10, lu8Temp), 4);
 
           u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
           vStart((cJobHandler::cJobs)cJobs::nJobCheckSum);
@@ -295,12 +295,12 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
         lbConsumed = True;
         {
           uint8* lpu8Adr;
-          lpu8Adr = (u8*)u32U8toU32((lpu8PayloadRx + 1));
+          lpu8Adr = (u8*)cMemTools::u32U8toU32((lpu8PayloadRx + 1));
           u32 lu32Param[4];
-          lu32Param[0] = u32U8toU32((lpu8PayloadRx + 1+4));
-          lu32Param[1] = u32U8toU32((lpu8PayloadRx + 1+8));
-          lu32Param[2] = u32U8toU32((lpu8PayloadRx + 1+12));
-          lu32Param[3] = u32U8toU32((lpu8PayloadRx + 1+16));
+          lu32Param[0] = cMemTools::u32U8toU32((lpu8PayloadRx + 1+4));
+          lu32Param[1] = cMemTools::u32U8toU32((lpu8PayloadRx + 1+8));
+          lu32Param[2] = cMemTools::u32U8toU32((lpu8PayloadRx + 1+12));
+          lu32Param[3] = cMemTools::u32U8toU32((lpu8PayloadRx + 1+16));
 
           mcTxMsgTx.Set(0x90);
           mcTxMsgTx.Add(0x00);
@@ -325,8 +325,8 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
         {
           uint8* lpu8Adr;
           u32    lu32Param;
-          lpu8Adr   = (u8*)u32U8toU32((lpu8PayloadRx + 1));
-          lu32Param =      u32U8toU32((lpu8PayloadRx + 1 + 4));
+          lpu8Adr   = (u8*)cMemTools::u32U8toU32((lpu8PayloadRx + 1));
+          lu32Param =      cMemTools::u32U8toU32((lpu8PayloadRx + 1 + 4));
 
           mcTxMsgTx.Set(0x91);
           mcTxMsgTx.Add(0x00);
@@ -486,7 +486,7 @@ void cBotNetMsgPortSpop::vProcess(u16 lu16TimeDiff_ms)
                 mcTxMsgTx.Add(0xFF);
                 mu32DataChecksum += vMemCopy(mu8DataPointer, lu8Temp, mu32DataCnt);
                 mcTxMsgTx.Add(lu8Temp, mu32DataCnt);
-                mcTxMsgTx.Add(u8U32toU8(mu32DataChecksum, lu8Temp), 4);
+                mcTxMsgTx.Add(cMemTools::pu8U32toU8(mu32DataChecksum, lu8Temp), 4);
                 mu32DataCnt = 0;
               }
               mu8PackageCounter++;
@@ -543,7 +543,7 @@ void cBotNetMsgPortSpop::vProcess(u16 lu16TimeDiff_ms)
             u8 lu8Temp[4];
             mcTxMsgTx.Set(0x86);
             mcTxMsgTx.Add(0xFC);
-            mcTxMsgTx.Add(u8U32toU8(mu32DataChecksum, lu8Temp), 4);
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(mu32DataChecksum, lu8Temp), 4);
 
             u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
             cJobHandler::vFinished();
@@ -582,7 +582,7 @@ void cBotNetMsgPortSpop::vProcess(u16 lu16TimeDiff_ms)
             mu32DataCnt       = 0;
             mcTxMsgTx.Set(0x88);
             mcTxMsgTx.Add(0x01);
-            mcTxMsgTx.Add(u8U32toU8(mu32DataChecksum, lu8Temp), 4);
+            mcTxMsgTx.Add(cMemTools::pu8U32toU8(mu32DataChecksum, lu8Temp), 4);
 
             u8PutInt(mcBn->mcAdr, mcTxDAdr, 3, mcTxMsgTx.mpu8Data, mcTxMsgTx.Len());
             cJobHandler::vFinished();

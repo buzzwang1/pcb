@@ -298,6 +298,7 @@ void MAIN_vTick10msLp(void)
     }
   }
 }
+
 void MAIN_vTick100msLp(void)
 {
   if (mbConnected)

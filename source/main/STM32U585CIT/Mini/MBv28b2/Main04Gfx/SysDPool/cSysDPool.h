@@ -1,5 +1,12 @@
 #pragma once
 
+
+#include "cmsis_os2.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+
+
 #include "Typedef.h"
 #include "cBuRam.h"
 #include "cWufHandler.h"
@@ -8,8 +15,47 @@
 #include "cClock.h"
 #include "cI2c.h"
 #include "cSpi.h"
+#include "cUsart_MpHd.h"
 #include "TPS55288.h"
 #include "BQ25798.h"
+#include "ili9341.h"
+#include "cNRF905.h"
+#include "cursor.h"
+#include "msg.h"
+
+
+
+//Data
+#include "cRingBufT.h"
+#include "cBnSpop.h"
+#include "cBnLinkI2c.h"
+#include "cBnLinkUsartMpHd.h"
+#include "cBnLinkNrf905.h"
+#include "cBnLinkNrf905Net.h"
+#include "cBnLinkBotCom.h"
+#include "cBnStreamSysPortBase.h"
+#include "cBnStreamSysPortCom.h"
+#include "cBnStreamSysPortCmd.h"
+#include "cBotnet.h"
+
+template <u32 tu32MemInBytes>
+struct tcTask
+{
+  constexpr u32 StackSize() { return (tu32MemInBytes / sizeof(StackType_t)); }
+
+  osThreadId_t Handle;
+  StaticTask_t Tcb;
+  StackType_t  Stack[tu32MemInBytes / sizeof(StackType_t)];
+
+  void vInit()
+  {
+    cMemTools::vMemSet((u8*)Stack, 0xAA, tu32MemInBytes);
+  }
+};
+
+typedef tcTask<2048 * 1> tcTaskSmall;
+typedef tcTask<2048 * 2> tcTaskMid;
+typedef tcTask<2048 * 8> tcTaskLarge;
 
 
 struct cDPoolSys
@@ -26,6 +72,26 @@ struct cDPoolSys
   cErr         mcErr;
   cClock*      mpcClock;
   cSleep       mcSleep;
+
+  struct cTasks
+  {
+    tcTaskSmall Idle;
+    tcTaskSmall Mcp;
+
+    struct cDepTree
+    {
+      tcTaskSmall Base;
+      tcTaskMid   Init1;
+      tcTaskMid   Init2;
+      tcTaskSmall Tick1ms;
+    };
+
+    cDepTree    DepTree;
+    tcTaskMid   Com;
+    tcTaskLarge Gfx;
+  };
+
+  cTasks mcTasks;
 };
 
 struct cDPoolBoard
@@ -90,6 +156,10 @@ struct cDPoolBoard
 
   struct
   {
+    cIli9341* mpcILI9341;
+    cMsgBox*  mpcMsgBox;
+    cCursor*  mpcCursor;
+
     u16  u16TouchRawX;
     u16  u16TouchRawY;
 
@@ -100,12 +170,16 @@ struct cDPoolBoard
 
     u16  u16TouchX;
     u16  u16TouchY;
+    
     u8   u8TouchIrq;
+    u8   u8DisplayDim_Percent;
+
+    bool bShowScreen;
   }mcGfx;
 
 
   cI2cMaster*  mcI2c;
-  cSpiMaster*  mcSpi2;
+  cSpiMasterMulti*  mcSpi2;
 
   struct
   {
@@ -117,8 +191,32 @@ struct cDPoolBoard
     }mcOut;
   }mcAddon;
 
-
   u16         mu16LedMode;
+};
+
+struct cPoolCom
+{
+  cGpPin* mpcCh1_EN;
+  cGpPin* mpcCh2_EN;
+  cGpPin* mpcCh3_EN;
+
+  cI2cMaster* mcI2c3_Out;
+  cI2cSlave*  mcI2c4_In;
+
+  cUartMpHdMaster* mcU2_Out;
+  cUartMpHdSlave*  mcU3_In;
+
+  cBotNet*                 mpcBn;
+  cNRF905BnSlave*          mpcNRF905Bn;
+  cBotNet_UpLinknRf905Net* mpcSideLink;
+
+  //cNRF905Slave*     mcNRF905BnSlave;
+};
+
+
+struct cPoolGfx
+{
+  u8* pu8GfxRam;
 };
 
 
@@ -126,12 +224,9 @@ struct cSysDPool
 {
   static cDPoolSys   mSys;
   static cDPoolBoard mBoard;
+  static cPoolCom    mCom;
+  static cPoolGfx    mGfx;
 };
-
-
-cDPoolSys   cSysDPool::mSys;
-cDPoolBoard cSysDPool::mBoard;
-
 
 
 

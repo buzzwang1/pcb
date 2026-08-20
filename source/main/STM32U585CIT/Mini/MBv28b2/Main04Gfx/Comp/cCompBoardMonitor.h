@@ -1,6 +1,5 @@
 #pragma once
 
-#include "FreeRTOS.h"
 #include "cSysDPool.h"
 #include "ina3221.h"
 
@@ -8,7 +7,6 @@ class cCompBoardMonitor : public cComponent
 {
 public:
 
-  cINA3221 mcIna0x40;
   cINA3221 mcIna0x41;
 
   u8       mu8TaskCnt;
@@ -17,7 +15,6 @@ public:
 
   cCompBoardMonitor()
     : cComponent(cDepTreeCfg::cComp::nBoardMonitor, cDepTreeCfg::cComp::nBoardI2C2),
-      mcIna0x40(cSysDPool::mBoard.mcI2c, INA3221_I2C_ADDRESS_CONF_0),
       mcIna0x41(cSysDPool::mBoard.mcI2c, INA3221_I2C_ADDRESS_CONF_1)
   {
   }
@@ -39,11 +36,9 @@ public:
        }
     };
 
-    mcIna0x40.mcSEQ02_Init2.vSetCfg(lenConfig);
     mcIna0x41.mcSEQ02_Init2.vSetCfg(lenConfig);
 
     // Mit AddNode wird auch die Init Sequenzen requested
-    cSysDPool::mBoard.mcI2c->vAddNode(&mcIna0x40);
     cSysDPool::mBoard.mcI2c->vAddNode(&mcIna0x41);
 
     vWaitCom();
@@ -66,17 +61,14 @@ public:
     cComponentList::mcList1ms.vRemove(this->mu8Idx);
     cComponentList::mcList16ms.vRemove(this->mu8Idx);
 
-    mcIna0x40.vClearAllRequest();
     mcIna0x41.vClearAllRequest();
 
     vWaitCom();
 
-    mcIna0x40.vRequest(cIna3221_RegisterMap::nSEQ05Disable);
     mcIna0x41.vRequest(cIna3221_RegisterMap::nSEQ05Disable);
 
     vWaitCom();
 
-    mcIna0x40.vRequest(cIna3221_RegisterMap::nSEQ06DeInit);
     mcIna0x41.vRequest(cIna3221_RegisterMap::nSEQ06DeInit);
 
     vWaitCom();
@@ -88,32 +80,30 @@ public:
 
   bool bRun() override
   {
-    if (mcIna0x40.isDone(cIna3221_RegisterMap::nSEQ08ReadAllCh))
-    {
-      //      INA1 Adr. 0x40
-      //        CH1: ExCom CH3
-      //        CH2: ExCom CH2
-      //        CH3: ExCom CH1
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[0] = mcIna0x40.fGetV_mv(3);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[0] = mcIna0x40.fGetI_mA(3, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[1] = mcIna0x40.fGetV_mv(2);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[1] = mcIna0x40.fGetI_mA(2, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[2] = mcIna0x40.fGetV_mv(1);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[2] = mcIna0x40.fGetI_mA(1, 0.01f);
-    }
-
     if (mcIna0x41.isDone(cIna3221_RegisterMap::nSEQ08ReadAllCh))
     {
       //      INA2 Adr. 0x41
       //        CH1: SysIn
       //        CH2: PomoIn
       //        CH3: PomoOut
-      cSysDPool::mBoard.mcMonitor.mfSysInV_mV   = mcIna0x41.fGetV_mv(1);
-      cSysDPool::mBoard.mcMonitor.mfSysInI_mA   = mcIna0x41.fGetI_mA(1, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  = mcIna0x41.fGetV_mv(2);
-      cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  = mcIna0x41.fGetI_mA(2, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV = mcIna0x41.fGetV_mv(3);
-      cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA = mcIna0x41.fGetI_mA(3, 0.01f);
+      if (!mbStartupFinished)
+      {
+        cSysDPool::mBoard.mcMonitor.mfSysInV_mV   = mcIna0x41.fGetV_mv(1);
+        cSysDPool::mBoard.mcMonitor.mfSysInI_mA   = mcIna0x41.fGetI_mA(1, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  = mcIna0x41.fGetV_mv(2);
+        cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  = mcIna0x41.fGetI_mA(2, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV = mcIna0x41.fGetV_mv(3);
+        cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA = mcIna0x41.fGetI_mA(3, 0.01f);
+      }
+      else
+      {
+        cSysDPool::mBoard.mcMonitor.mfSysInV_mV   += (0.1f * (mcIna0x41.fGetV_mv(1)        - cSysDPool::mBoard.mcMonitor.mfSysInV_mV));
+        cSysDPool::mBoard.mcMonitor.mfSysInI_mA   += (0.1f * (mcIna0x41.fGetI_mA(1, 0.01f) - cSysDPool::mBoard.mcMonitor.mfSysInI_mA));
+        cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  += (0.1f * (mcIna0x41.fGetV_mv(2)        - cSysDPool::mBoard.mcMonitor.mfPomoInV_mV));
+        cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  += (0.1f * (mcIna0x41.fGetI_mA(2, 0.01f) - cSysDPool::mBoard.mcMonitor.mfPomoInI_mA));
+        cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV += (0.1f * (mcIna0x41.fGetV_mv(3)        - cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV));
+        cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA += (0.1f * (mcIna0x41.fGetI_mA(3, 0.01f) - cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA));
+      }
 
       if (mu8SampleCnt < 250) mu8SampleCnt++;
 
@@ -127,7 +117,6 @@ public:
            cComponentList::mcList1ms.vRemove(this->mu8Idx);
         }
       }
-
     }
 
     if (mu8SampleCnt >= 4)
@@ -155,7 +144,6 @@ public:
       cSysDPool::mBoard.mcMonitor.mu8SysVoltOk = 0;
     }
 
-    mcIna0x40.vRequest(cIna3221_RegisterMap::nSEQ08ReadAllCh);
     mcIna0x41.vRequest(cIna3221_RegisterMap::nSEQ08ReadAllCh);
 
     if (mu8TaskCnt < 250) mu8TaskCnt++;
@@ -171,7 +159,7 @@ public:
       }
     }
 
-     // return True to signal finished
+    // return True to signal finished
     return cComponent::bRun();
   };
 
@@ -181,8 +169,7 @@ public:
     {
       // Warten bis Com Sequenz fertig ist
       // Bei Error wird auch Done gesetzt, von daher braucht man das hier nicht extra testen
-      if ((mcIna0x40.isAnySeqPending()) ||
-          (mcIna0x41.isAnySeqPending()))
+      if (mcIna0x41.isAnySeqPending())
       {
         vTaskDelay(pdMS_TO_TICKS(1));
       }
@@ -196,7 +183,6 @@ public:
   bool bCheckIna3221Error()
   {
     cSysDPool::mBoard.mcMonitor.mu8I2cInaErr = 0;
-    if (mcIna0x40.IsError()) cSysDPool::mBoard.mcMonitor.mu8I2cInaErr |= 1;
     if (mcIna0x41.IsError()) cSysDPool::mBoard.mcMonitor.mu8I2cInaErr |= 2;
 
     if (cSysDPool::mBoard.mcMonitor.mu8I2cInaErr) return True;

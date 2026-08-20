@@ -19,7 +19,7 @@ public:
   {
     //nSmEvFirst = 0, 
     nSmEvReset,
-    nSmEvTick10ms,
+    nSmEvTick,
     //nSmEvLast
   };
 
@@ -151,7 +151,7 @@ public:
 
       mSmState = nSmStReset;
     }
-    else if (lenEvent == nSmEvTick10ms)
+    else if (lenEvent == nSmEvTick)
     {
       switch (mSmState)
       {
@@ -229,7 +229,7 @@ public:
     }
   }
 
-  void vTick10ms(int16 li16Posx, int16 li16Posy, uint8 lu8Pressed)
+  void vTick_ms(int16 li16Posx, int16 li16Posy, uint8 lu8Pressed, u8 lu8Tick_ms = 10)
   {
     if ((mi16PosxOld != li16Posx) ||
         (mi16PosyOld != li16Posy) ||
@@ -251,15 +251,20 @@ public:
       }
       else
       {
-        mu16TimeCnt += 10;
+        mu16TimeCnt += lu8Tick_ms;
       }
 
-      vSm(nSmEvTick10ms);
+      vSm(nSmEvTick);
     }
     else
     {
-      mu16TimeCnt += 10;
+      mu16TimeCnt += lu8Tick_ms;
     }
+  }
+
+  void vTick10ms(int16 li16Posx, int16 li16Posy, uint8 lu8Pressed)
+  {
+    vTick_ms(li16Posx, li16Posy, lu8Pressed, 10);
   }
 
   /*

@@ -173,7 +173,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   // --- Register-Instanzen (Unions) ---
 
   /** @union unCMD04_ReadDisplayID (3 Bytes Payload RO) */
-  union 
+  union
   {
     u8 au8Byte[3];
     struct
@@ -185,7 +185,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD04_ReadDisplayID;
 
   /** @union unCMD09_ReadDisplayStatus (4 Bytes Payload RO) */
-  union 
+  union
   {
     u8 au8Byte[4];
     struct
@@ -198,7 +198,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD09_ReadDisplayStatus;
 
   /** @union unCMD0A_ReadDisplayPowerMode (1 Byte RO) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -214,7 +214,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD0A_ReadDisplayPowerMode;
 
   /** @union unCMD0B_ReadDisplayMADCTL (1 Byte RO) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -230,7 +230,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD0B_ReadDisplayMADCTL;
 
   /** @union unCMD0C_ReadDisplayPixelFormat (1 Byte RO) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -243,7 +243,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD0C_ReadDisplayPixelFormat;
 
   /** @union unCMD0D_ReadDisplayImageMode (1 Byte RO) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -256,7 +256,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD0D_ReadDisplayImageMode;
 
   /** @union unCMD0E_ReadDisplaySignalMode (1 Byte RO) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -271,7 +271,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union unCMD26_GammaSet */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -283,7 +283,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union unCMD2A_ColumnAddressSet (4 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[4];
     struct
@@ -296,7 +296,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD2A_ColumnAddressSet;
 
   /** @union unCMD2B_PageAddressSet (4 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[4];
     struct
@@ -310,7 +310,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union unCMD30_PartialArea (4 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[4];
     struct
@@ -323,7 +323,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD30_PartialArea;
 
   /** @union unCMD33_VerticalScrollingDef (6 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[6];
     struct
@@ -338,7 +338,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD33_VerticalScrollingDef;
 
   /** @union unCMD35_TearingEffectLineOff / Line On (1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -349,7 +349,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD35_TearingEffectLineCtrl;
 
   /** @union unCMD36_MemoryAccessControl (MADCTL) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -365,7 +365,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMD36_MemoryAccessControl;
 
   /** @union unCMD37_VerticalScrollingStart (2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -377,7 +377,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union unCMD3A_PixelFormatSet (COLMOD) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -391,7 +391,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union tunCMDB1_FrameRateControlNormal (2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -405,7 +405,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union unCMDB2_FrameRateControlIdl (2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -418,7 +418,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDB2_FrameRateControlIdle;
 
   /** @union unCMDB3_FrameRateControlPartial (2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -431,7 +431,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDB3_FrameRateControlPartial;
 
   /** @union unCMDB4_DisplayInversionControl (1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -444,7 +444,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDB4_DisplayInversionControl;
 
   /** @union unCMDB6_DisplayFunctionControl (3 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[3];
     struct
@@ -463,7 +463,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDB6_DisplayFunctionControl;
 
   /** @union unCMDC0_PowerControl1 (1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -474,7 +474,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDC0_PowerControl1;
 
   /** @union unCMDC1_PowerControl2 (1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -485,7 +485,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDC1_PowerControl2;
 
   /** @union unCMDC5_VcomControl1 (2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -498,7 +498,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDC5_VcomControl1;
 
   /** @union unCMDC7_VcomControl2 (1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -509,7 +509,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDC7_VcomControl2;
 
   /** @union unCMDCB_PowerControlA (Extended, 5 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[5];
     struct
@@ -525,7 +525,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDCB_PowerControlA;
 
   /** @union unCMDCF_PowerControlB (Extended, 3 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[3];
     struct
@@ -541,7 +541,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDCF_PowerControlB;
 
   /** @union unCMDE0_PositiveGammaCorrection (15 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[15];
     struct
@@ -551,7 +551,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDE0_PosetiveGammaCorrection;
 
   /** @union unCMDE1_NegativeGammaCorrection (15 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[15];
     struct
@@ -561,7 +561,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDE1_NegativeGammaCorrection;
 
   /** @union unCMDE8_DriverTimingControlA (Extended, 3 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[3];
     struct
@@ -575,7 +575,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDE8_DriverTimingControlA;
 
   /** @union unCMDEA_DriverTimingControlB (Extended, 2 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[2];
     struct
@@ -586,7 +586,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDEA_DriverTimingControlB;
 
   /** @union unCMDED_PowerOnSequenceControl (Extended, 4 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[4];
     struct
@@ -603,7 +603,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDED_PowerOnSequenceControl;
 
   /** @union unCMDF2_Enable3G (Extended, 1 Byte Payload) */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -614,7 +614,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   }unCMDF2_Enable3G;
 
   /** @union unCMDF6_InterfaceControl (Extended, 3 Bytes Payload) */
-  union 
+  union
   {
     u8 au8Byte[3];
     struct
@@ -633,7 +633,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
 
   /** @union tunCMDF7_PumpRatioControl */
-  union 
+  union
   {
     u8 au8Byte[1];
     struct
@@ -648,8 +648,8 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   static constexpr u16  mu16Width    = 240;
   static constexpr u16  mu16Height   = 320;
   static constexpr u32  mu32PixelCnt = mu16Width * mu16Height;
-
-  static u8 mau8GRAM[mu32PixelCnt * 2];
+  
+  static constexpr u32  mu32GramAdr  = 0x20040000;
 
   u8* pu8GetMem(u8 lu8Idx)
   {
@@ -697,12 +697,14 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   class cSEQ00_Reset : public cComSeq
   {
     public:
-
-    const cEntry macRegList[1 + 3] = { cWrite(nCMD01_SoftwareReset), cComSeqDelay(100)};
+    // It will be necessary to wait 5msec before sending new command following software reset
+    // The display module loads all display supplier factory default values to the registers during this 5msec
+    // If Software Reset is applied during Sleep Out mode, it will be necessary to wait 120msec before sending Sleep out command
+    // Software Reset Command cannot be sent during Sleep Out sequence
+    const cEntry macRegList[1 + 3] = { cWrite(nCMD01_SoftwareReset), cComSeqDelay(5)};
 
     cEntry* pacGet() override
     {
-      //cmd2(ILI9341_RESET);
       return (cEntry*) macRegList;
     }
 
@@ -732,8 +734,13 @@ struct cIli9341_RegisterMap: public cILI9341_HW
                                     cWrite(nCMD26_GammaSet),
                                     cWrite(nCMDE0_PositiveGammaCorrection),
                                     cWrite(nCMDE1_NegativeGammaCorrection),
-                                    cWrite(nCMD11_SleepOut),
-                                    cComSeqDelay(100)
+                                    cComSeqDelay(100),
+                                    cWrite(nCMD11_SleepOut), // This command turns off sleep mode.
+                                                             // In this mode e.g. the DC/DC converter is enabled, Internal oscillator is started,
+                                                             // and panel scanning is started.
+                                                             // It will be necessary to wait 5msec before sending next command
+                                                             // It will be necessary to wait 120msec after sending Sleep In command (when in Sleep Out mode)
+                                                             // before Sleep Out command can be sent.
                                   };
 
     cSEQ01_Init1(cIli9341_RegisterMap *lpcIli9341_RegisterMap)
@@ -749,7 +756,7 @@ struct cIli9341_RegisterMap: public cILI9341_HW
       mpcRegMap->unCMDCB_PowerControlA.au8Byte[2] = 0x00;
       mpcRegMap->unCMDCB_PowerControlA.au8Byte[3] = 0x34;
       mpcRegMap->unCMDCB_PowerControlA.au8Byte[4] = 0x02;
-      
+
       mpcRegMap->unCMDCF_PowerControlB.au8Byte[0] = 0x00;
       mpcRegMap->unCMDCF_PowerControlB.au8Byte[1] = 0xC1;
       mpcRegMap->unCMDCF_PowerControlB.au8Byte[2] = 0x30;
@@ -780,7 +787,11 @@ struct cIli9341_RegisterMap: public cILI9341_HW
       mpcRegMap->unCMD36_MemoryAccessControl.au8Byte[0] = 0x20; // Landscape_1
       //mpcRegMap->unCMD36_MemoryAccessControl.au8Byte[0] = 0xE0; // Landscape_2
 
-      mpcRegMap->unCMD3A_PixelFormatSet.au8Byte[0] = 0x55;
+      // 0 = RGB color filter panel
+      // 1 = BGR color filter panel
+      mpcRegMap->unCMD36_MemoryAccessControl.au8Byte[0] |= 0x08;
+
+      mpcRegMap->unCMD3A_PixelFormatSet.au8Byte[0] = 0x55; // 16Bit per Pixel
 
       mpcRegMap->unCMDB1_FrameRateControl.au8Byte[0] = 0x00;
       mpcRegMap->unCMDB1_FrameRateControl.au8Byte[1] = 0x18;
@@ -845,15 +856,52 @@ struct cIli9341_RegisterMap: public cILI9341_HW
     }
   };
 
-  class cSEQ02_Init2 : public cComSeq
+  class cSEQ04_Enable : public cComSeq
   {
   public:
 
-    const cEntry macRegList[1 + 3] = { cWrite(nCMD29_DisplayOn), cComSeqDelay(100) };
+    //                                2 frame Min (34ms)
+    const cEntry macRegList[3 + 1] = {cComSeqDelay(80), cWrite(nCMD29_DisplayOn)};
 
     cEntry* pacGet() override
     {
       //cmd2(ILI9341_RESET);
+      return (cEntry*)macRegList;
+    }
+
+    u8 u8GetLen() override
+    {
+      return sizeof(macRegList);
+    }
+  };
+
+  class cSEQ05_Disable : public cComSeq
+  {
+    public:
+    //                                                           2 frame Min (34ms)
+    const cEntry macRegList[1 + 3] = { cWrite(nCMD28_DisplayOff), cComSeqDelay(50)};
+
+    cEntry* pacGet() override
+    {
+      return (cEntry*)macRegList;
+    }
+
+    u8 u8GetLen() override
+    {
+      return sizeof(macRegList);
+    }
+  };
+
+
+  class cSEQ06_DeInit : public cComSeq
+  {
+    public:
+    const cEntry macRegList[1 + 3] = { cWrite(nCMD10_EnterSleepMode),
+                                       cComSeqDelay(120) // It takes 120msec to get into Sleep In mode after SLPIN command issued.
+                                     };
+
+    cEntry* pacGet() override
+    {
       return (cEntry*)macRegList;
     }
 
@@ -883,27 +931,21 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
   class cSEQ08_WriteGRAMData : public cComSeq
   {
-  public:
+    public:
     cIli9341_RegisterMap* mpcRegMap;
 
-    // Es wird 32Bit weise übertragen. Die Hardware kann max. 64k aufeinmal
+    // Es wird 32Bit weise übertragen. Die Hardware kann max. 64k auf einmal. Daher muss es aufgeteilt werden
+    // Weil 32Bit weise kopiert wird, müsss es durch 4 teilbar sein
     // PixelCnt ist 76800, d.h. 153600 Bytes
-    // 8Bit:  64000 + 64000 + 25600
-    const cEntry macRegList[7 * 3] = { cComSeqPtrWr(64000, (u32)(mpcRegMap->mau8GRAM +      0)),
-                                       cComSeqPtrWr(64000, (u32)(mpcRegMap->mau8GRAM +  64000)),
-                                       cComSeqPtrWr(25600, (u32)(mpcRegMap->mau8GRAM + 128000))
+    // 64000 + 64000 + 25600
+    const cEntry macRegList[7 * 3] = { cComSeqPtrWr(64000, (u32)(mpcRegMap->mu32GramAdr +      0)),
+                                       cComSeqPtrWr(64000, (u32)(mpcRegMap->mu32GramAdr +  64000)),
+                                       cComSeqPtrWr(25600, (u32)(mpcRegMap->mu32GramAdr + 128000))
                                      };
 
     cSEQ08_WriteGRAMData(cIli9341_RegisterMap* lpcRegMap)
     {
       mpcRegMap = lpcRegMap;
-      u16* lau16GRAM = (u16*)mpcRegMap->mau8GRAM;
-
-      u32 t;
-      for (t = 0; t < mpcRegMap->mu32PixelCnt; t++)
-      {
-        lau16GRAM[t] = 31;
-      }
     }
 
     cEntry* pacGet() override
@@ -919,7 +961,9 @@ struct cIli9341_RegisterMap: public cILI9341_HW
 
   cSEQ00_Reset      mcSEQ00_Reset;
   cSEQ01_Init1      mcSEQ01_Init1;
-  cSEQ02_Init2      mcSEQ02_Init2;
+  cSEQ04_Enable     mcSEQ04_Enable;
+  cSEQ05_Disable    mcSEQ05_Disable;
+  cSEQ06_DeInit     mcSEQ06_DeInit;
 
   cSEQ07_WriteGRAMCfg   mcSEQ07_WriteGRAMCfg;
   cSEQ08_WriteGRAMData  mcSEQ08_WriteGRAMData;
@@ -943,7 +987,9 @@ struct cIli9341_RegisterMap: public cILI9341_HW
     {
       case tenSequences::nSEQ00Reset:     return &mcSEQ00_Reset;
       case tenSequences::nSEQ01Init1:     return &mcSEQ01_Init1;
-      case tenSequences::nSEQ02Init2:     return &mcSEQ02_Init2;
+      case tenSequences::nSEQ04Enable:    return &mcSEQ04_Enable;
+      case tenSequences::nSEQ05Disable:   return &mcSEQ05_Disable;
+      case tenSequences::nSEQ06DeInit:    return &mcSEQ06_DeInit;
 
       case tenSequences::nSEQ07WriteGRAMCfg:  return &mcSEQ07_WriteGRAMCfg;
       case tenSequences::nSEQ08WriteGRAMData: return &mcSEQ08_WriteGRAMData;
@@ -951,11 +997,24 @@ struct cIli9341_RegisterMap: public cILI9341_HW
     }
   }
 
+  constexpr u8* pGRAM()
+  {
+    return (u8*)mu32GramAdr;
+  }
+
+  void vClearGRAM()
+  {
+    cMemTools::vMemSet(pGRAM(), 31, mu32PixelCnt * 2);
+  }
+
+  //void vSetGRAM(u8* lpau8GRAM)
+  //{
+  //  mpau8GRAM = lpau8GRAM;
+  //}
+
   cIli9341_RegisterMap()
     : mcSEQ01_Init1(this),
       mcSEQ08_WriteGRAMData(this)
-  {}
+  {
+  }
 };
-
-
-u8 cIli9341_RegisterMap::mau8GRAM[mu32PixelCnt * 2];

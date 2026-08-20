@@ -1,5 +1,4 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#pragma once
 
 
 //System
@@ -7,7 +6,7 @@
 #include "ClockInfo.h"
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
 
 
@@ -15,25 +14,21 @@
 #include "TypeDef.h"
 #include "stm32u5xx.h"
 #include "stm32u5xx_hal.h"
-#include "stm32u5xx_ll_dac.h"
 #include "stm32u5xx_ll_icache.h"
 #include "stm32u5xx_ll_pwr.h"
 #include "stm32u5xx_ll_crs.h"
 #include "stm32u5xx_ll_rcc.h"
 #include "stm32u5xx_ll_bus.h"
 #include "stm32u5xx_ll_system.h"
-#include "stm32u5xx_ll_exti.h"
 #include "stm32u5xx_ll_cortex.h"
 #include "stm32u5xx_ll_utils.h"
-#include "stm32u5xx_ll_dma.h"
-#include "stm32u5xx_ll_spi.h"
 
-
-extern const osThreadAttr_t TaskMcp_attributes;
-extern void  vTaskMcp(void* argument);
 
 extern void SystemClock_Config();
 extern void MainSystemInit(void);
+extern void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer,
+                                          StackType_t** ppxIdleTaskStackBuffer,
+                                          u32* pulIdleTaskStackSize);
 
 extern void NMI_Handler(void);
 extern void HardFault_Handler(void);
@@ -46,5 +41,3 @@ extern void DebugMon_Handler(void);
 #ifdef __cplusplus
 }
 #endif
-
-#endif  //MAIN

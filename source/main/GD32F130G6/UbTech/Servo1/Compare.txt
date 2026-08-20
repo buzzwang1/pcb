@@ -1,0 +1,43 @@
+
+GD32F1x0_UbTech_Servo1_Bn06_App.elf:         GD32F1x0_UbTech_Servo1_Bn20_App.elf:      GD32F1x0_UbTech_Servo1_CRTP_Debug.elf
+section             size        addr         section             size        addr      section             size        addr
+.text              17104   134228992         .text              19020   134228992      .text              18552   134217728
+.ARM.exidx             8   134246096         .ARM.exidx             8   134248012      .ARM.exidx             8   134236280
+.data                144   536870912         .data                156   536870912      .data                156   536870912
+.bss                2537   536871056         .bss                3012   536871068      .bss                3196   536871068
+.heap                256   536873600         .heap                 16   536874080      .heap                 16   536874264
+.stack_dummy         512   536873600         .stack_dummy         512   536874080      .stack_dummy         512   536874264
+.ARM.attributes       43           0         .ARM.attributes       43           0      .ARM.attributes       43           0
+.comment              73           0         .comment              73           0      .comment              73           0
+.debug_line       112903           0         .debug_line       112359           0      .debug_line       121007           0
+.debug_info       276994           0         .debug_info       316580           0      .debug_info       281941           0
+.debug_abbrev      21170           0         .debug_abbrev      26135           0      .debug_abbrev      24508           0
+.debug_aranges      4424           0         .debug_aranges      4632           0      .debug_aranges      4408           0
+.debug_str        230431           0         .debug_str        261591           0      .debug_str        258324           0
+.debug_loc         84906           0         .debug_loc         92708           0      .debug_loc         92960           0
+.debug_ranges      26952           0         .debug_ranges      26720           0      .debug_ranges      27376           0
+.debug_macro       40710           0         .debug_macro       42812           0      .debug_macro       44933           0
+.debug_frame       11964           0         .debug_frame       12200           0      .debug_frame       11524           0
+Total             831131                     Total             918577                  Total             889537
+                                             
+                                             
+GD32F1x0_UbTech_Servo1_Bn06_Blu.elf:         GD32F1x0_UbTech_Servo1_Bn20_Blu.elf:      GD32F1x0_UbTech_Servo1_CRTP_Blu.elf
+section             size        addr         section             size        addr      section             size        addr
+.text              10136   134217728         .text              10696   134217728      .text               9976   134217728
+.ARM.exidx             8   134227864         .ARM.exidx             8   134228424      .ARM.exidx             8   134227704
+.data                124   536870912         .data                144   536870912      .data                136   536870912
+.bss                1813   536871040         .bss                2200   536871056      .bss                2464   536871048
+.heap                256   536872856         .heap                 16   536873256      .heap                 16   536873512
+.stack_dummy         512   536872856         .stack_dummy         512   536873256      .stack_dummy         512   536873512
+.ARM.attributes       43           0         .ARM.attributes       43           0      .ARM.attributes       43           0
+.comment              73           0         .comment              73           0      .comment              73           0
+.debug_line        73365           0         .debug_line        74196           0      .debug_line        77480           0
+.debug_info       141051           0         .debug_info       169768           0      .debug_info       147912           0
+.debug_abbrev      14230           0         .debug_abbrev      17447           0      .debug_abbrev      16406           0
+.debug_aranges      3744           0         .debug_aranges      3784           0      .debug_aranges      3576           0
+.debug_str        219284           0         .debug_str        250807           0      .debug_str        246854           0
+.debug_loc         39151           0         .debug_loc         41519           0      .debug_loc         41862           0
+.debug_ranges      10056           0         .debug_ranges      10248           0      .debug_ranges      11264           0
+.debug_macro       35769           0         .debug_macro       38961           0      .debug_macro       39973           0
+.debug_frame        9820           0         .debug_frame        9524           0      .debug_frame        8300           0
+Total             559435                     Total             629946                  Total             606855

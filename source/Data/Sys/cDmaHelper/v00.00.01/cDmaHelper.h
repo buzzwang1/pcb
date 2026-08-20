@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Typedef.h"
-#include "cbArrayT.h"
+#include "cBitField.h"
 
 class cDmaHelper
 {
@@ -12,5 +12,3 @@ class cDmaHelper
     mReq.vSet(lu8Ch);
   }
 };
-
-cBitField32 cDmaHelper::mReq;

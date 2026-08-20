@@ -66,6 +66,7 @@ call python gzipHack_App.py in\0x08008000_APP.bin in\0x08008000_APP.bin.gz in\0x
 
 
 python Merge.py
+python MergeBluAppOnly.py
 copy in\0x08008000_APP.bin.gz.bin         out\0x08008000_APP.img
 copy in\0x08008000_APP.bin.gz.bin.txt     out\0x08008000_APP.img.txt
 copy in\0x08002000_BLU_Int.bin.gz.bin     out\0x08002000_BLU.img

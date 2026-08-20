@@ -29,9 +29,9 @@ void CycCallHw_vInit(CycCallTimer_Callback lptrCycCall_Callback_1ms_HP)
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
   TIM_TimeBaseStructInit(&lstTim3);
-  lstTim3.TIM_Prescaler = (lcRCC_Clocks.mstClocks.PCLK2_Frequency / 1000000) - 1;  // 1us
+  lstTim3.TIM_Prescaler = ((lcRCC_Clocks.mstClocks.PCLK1_Frequency * 2) / 1000000) - 1;  // 1us
   lstTim3.TIM_CounterMode = TIM_CounterMode_Up;
-  lstTim3.TIM_Period = 500 - 1; // 500us
+  lstTim3.TIM_Period = 1000 - 1; // 1000us
 
   lstTim3.TIM_ClockDivision = TIM_CKD_DIV1;
   lstTim3.TIM_RepetitionCounter = 0;

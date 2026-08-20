@@ -86,7 +86,7 @@ class cSpi
       case  8:
       default: LL_SPI_SetTransferSize(mSpi, BufferSize); break;
     }
-    
+
     // Auf Simplex gehen, um RX OVR Error zu vermeiden
     LL_SPI_SetTransferDirection(mSpi, LL_SPI_SIMPLEX_TX);
     LL_SPI_Enable(mSpi);
@@ -298,9 +298,9 @@ class cSpi
       return cComNode::enErDeviceInitErrorDevice;
     }
 
-    if (mSpi == SPI1) mnNVIC_IRQChannelEv = SPI2_IRQn;
+    if (mSpi == SPI1) mnNVIC_IRQChannelEv = SPI1_IRQn;
     if (mSpi == SPI2) mnNVIC_IRQChannelEv = SPI2_IRQn;
-    if (mSpi == SPI3) mnNVIC_IRQChannelEv = SPI2_IRQn;
+    if (mSpi == SPI3) mnNVIC_IRQChannelEv = SPI3_IRQn;
 
     /* Set the TIMx priority */
     HAL_NVIC_SetPriority(mnNVIC_IRQChannelEv, 8, 8);
@@ -417,12 +417,32 @@ class cSpi
     HAL_NVIC_DisableIRQ(mnNVIC_IRQChannelEv);
   }
 
-  void vWaitUntilStop()
+  // Übertragung ohne Interrupt by Polling
+  inline void vWaitEOT()
   {
+    while ((SPI1->SR & SPI_FLAG_EOT) == 0);
+    SPI1->IFCR = 0xFFFF;
+  }
+
+  void vWrite(uint8* lui8Data, u16 lu16Len)
+  {
+    vDisableIrq();
+    vStartDMATx(lui8Data, lu16Len);
+    vWaitEOT();
+    vEnableIrq();
+  }
+
+  void vRead(uint8* lui8Data, u16 lu16RxLen)
+  {
+    vDisableIrq();
+    vStartDMARx(lui8Data, lu16RxLen);
+    vWaitEOT();
+    vEnableIrq();
   }
 };
 
-class cSpiMaster : public cSpi, public cComNodeMasterMulti
+template <typename tcComNode>
+class cSpiTemplate : public cSpi, public tcComNode
 {
   public:
 
@@ -430,13 +450,13 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
   u16  mu16ComByteCnt;
   u8*  mpui8ComBuf;
 
-  cSpiMaster(SPI_TypeDef* lpstSpi, u8 lu8DmaChTx, u8 lu8DmaChRx,
-             u16 lu32Prescaler = 7, u16 luInitDelay_ms = 1)
+    cSpiTemplate(SPI_TypeDef* lpstSpi, u8 lu8DmaChTx, u8 lu8DmaChRx,
+                  u16 lu32Prescaler = 256, u16 luInitDelay_ms = 1)
     : cSpi(lpstSpi, lu8DmaChTx, lu8DmaChRx),
-      cComNodeMasterMulti(luInitDelay_ms)
+      tcComNode(luInitDelay_ms)
   {
     mu32Prescaler  = lu32Prescaler;
-    mu32Baudrate   = lu32Prescaler;
+    cSpiTemplate::mu32Baudrate   = 50000;
   }
 
   cComNode::tenError enInitHw() override
@@ -467,38 +487,24 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
     {
       vSm(cComNode::tenEvent::enEvIrq);
     }
-    vStart();
+    tcComNode::vStart();
   }
 
 
   void vResetCom()
   {
-    if (mSm != cComNode::tenState::enStIdle)
+    if (cSpiTemplate::mSm != cComNode::tenState::enStIdle)
     {
       // I2C Peripheral Disable
       vStopDMA();
       mSpi->IFCR = 0xFFFF;
-      mpcActiveMsg   = NULL;
-      mpcActiveSlave = NULL;
+      cSpiTemplate::mpcActiveMsg   = NULL;
+      cSpiTemplate::mpcActiveSlave = NULL;
 
-      mSm    = cComNode::tenState::enStIdle;
-      mError = cComNode::enNoError;
+      cSpiTemplate::mSm    = cComNode::tenState::enStIdle;
+      cSpiTemplate::mError = cComNode::enNoError;
     }
   }
-
-  // Start wird sowohl vom Interrupt wie auch von der Main benutzt
-  // Um keine Laufzeit Konflikte zu bekommen, wird solange der Interrupt gesperrt
-  void vPreStart() override
-  {
-    mSpi->IFCR = 0xFFFF;
-    vDisableIrq();
-  }
-
-  void vPostStart() override
-  {
-    vEnableIrq();
-  }
-
 
   /*
     I2Cx_ISR->NACKF: Not Acknowledge received flag: It is cleared by software by setting the OVRCF bit.:  This bit is cleared by hardware when PE=0
@@ -510,17 +516,17 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
   {
     if (cSpi::isErrorActive())
     {
-      if      (mSpi->SR & SPI_SR_UDR)   mError = cComNode::enErUnderrun;
-      else if (mSpi->SR & SPI_SR_OVR)   mError = cComNode::enErOverrun;
-      else if (mSpi->SR & SPI_SR_CRCE)  mError = cComNode::enErCrc;
-      else if (mSpi->SR & SPI_SR_TIFRE) mError = cComNode::enErFrame;
-      else if (mSpi->SR & SPI_SR_MODF)  mError = cComNode::enErMode;
-      else mError = cComNode::enErUnknown;
+      if      (mSpi->SR & SPI_SR_UDR)   cSpiTemplate::mError = cComNode::enErUnderrun;
+      else if (mSpi->SR & SPI_SR_OVR)   cSpiTemplate::mError = cComNode::enErOverrun;
+      else if (mSpi->SR & SPI_SR_CRCE)  cSpiTemplate::mError = cComNode::enErCrc;
+      else if (mSpi->SR & SPI_SR_TIFRE) cSpiTemplate::mError = cComNode::enErFrame;
+      else if (mSpi->SR & SPI_SR_MODF)  cSpiTemplate::mError = cComNode::enErMode;
+      else cSpiTemplate::mError = cComNode::enErUnknown;
     }
 
-    if (mpcActiveSlave != NULL)
+    if (cSpiTemplate::mpcActiveSlave != NULL)
     {
-      mpcActiveSlave->vComError(mError, mSm);
+      cSpiTemplate::mpcActiveSlave->vComError(cSpiTemplate::mError, cSpiTemplate::mSm);
     }
     vRestoreCfg();
     vResetCom();
@@ -528,49 +534,51 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
 
   void vSm(cComNode::tenEvent lenEvent)  // __attribute__((optimize("-O0")))
   {
-    switch (mSm)
+    switch (cSpiTemplate::mSm)
     {
       case cComNode::tenState::enStIdle:
+      case cComNode::tenState::enStIdle2:
       case cComNode::tenState::enStLock:
       case cComNode::tenState::enStError:
         switch (lenEvent)
         {
           case cComNode::tenEvent::enEvStart:
           case cComNode::tenEvent::enEvStartSkipAdr:
-            switch (mpcActiveMsg->enDir())
+            mSpi->IFCR = 0xFFFF;
+            switch (cSpiTemplate::mpcActiveMsg->enDir())
             {
               case cComNode::tenDirection::enIsTxRx:
-                mu16ComByteCnt = ((cComMsgI2c<u16>*)mpcActiveMsg)->GetLenTx();
-                mpui8ComBuf     = ((cComMsgI2c<u16>*)mpcActiveMsg)->GetDataTx();
+                mu16ComByteCnt = ((cComMsgI2c<u16>*)cSpiTemplate::mpcActiveMsg)->GetLenTx();
+                mpui8ComBuf    = ((cComMsgI2c<u16>*)cSpiTemplate::mpcActiveMsg)->GetDataTx();
                 break;
               default:
-                mu16ComByteCnt = mpcActiveMsg->Len();
-                mpui8ComBuf     = mpcActiveMsg->Data();
+                mu16ComByteCnt = cSpiTemplate::mpcActiveMsg->Len();
+                mpui8ComBuf    = cSpiTemplate::mpcActiveMsg->Data();
                 break;
             }
 
-            switch (mpcActiveMsg->enDir())
+            switch (cSpiTemplate::mpcActiveMsg->enDir())
             {
               case cComNode::tenDirection::enIsTxRx:
-                mSm = cComNode::tenState::enStTx;
+                cSpiTemplate::mSm = cComNode::tenState::enStTx;
                 vStartDMATx(mpui8ComBuf, mu16ComByteCnt);
                 break;
               case cComNode::tenDirection::enIsTx:
-                mSm = cComNode::tenState::enStTx;
+                cSpiTemplate::mSm = cComNode::tenState::enStTx;
                 vStartDMATx(mpui8ComBuf, mu16ComByteCnt);
                 break;
               case cComNode::tenDirection::enIsRx:
-                mSm = cComNode::tenState::enStRx;
+                cSpiTemplate::mSm = cComNode::tenState::enStRx;
                 cSpi::vFlushRx();
                 vStartDMARx(mpui8ComBuf, mu16ComByteCnt);
                 break;
               default:
-                mpcActiveSlave->vComDone();
+                cSpiTemplate::mpcActiveSlave->vComDone();
                 break;
             }
             break;
           case cComNode::tenEvent::enEvIrq:
-              mError = cComNode::enErUnknown;
+              cSpiTemplate::mError = cComNode::enErUnknown;
               vComError();
               mSpi->IFCR = 0xFFFF;
             break;
@@ -588,25 +596,25 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
             case cComNode::tenEvent::enEvIrq:
               if (lui32ISR & SPI_SR_EOT)
               {
-                switch (mpcActiveMsg->enDir())
+                switch (cSpiTemplate::mpcActiveMsg->enDir())
                 {
                   case cComNode::tenDirection::enIsTxRx:
-                    mSm = cComNode::enStRx;
+                    cSpiTemplate::mSm = cComNode::enStRx;
                     cSpi::vFlushRx();
-                    mu16ComByteCnt = ((cComMsgI2c<u16>*)mpcActiveMsg)->GetLenRx();
-                    mpui8ComBuf    = ((cComMsgI2c<u16>*)mpcActiveMsg)->GetDataRx();
+                    mu16ComByteCnt = ((cComMsgI2c<u16>*)cSpiTemplate::mpcActiveMsg)->GetLenRx();
+                    mpui8ComBuf    = ((cComMsgI2c<u16>*)cSpiTemplate::mpcActiveMsg)->GetDataRx();
                     vStartDMARx(mpui8ComBuf, mu16ComByteCnt);
                     break;
                   default:
                     mSpi->IFCR = 0xFFFF;
-                    mSm = cComNode::tenState::enStIdle;
-                    mpcActiveSlave->vComDone();
+                    cSpiTemplate::mSm = cComNode::tenState::enStIdle;
+                    cSpiTemplate::mpcActiveSlave->vComDone();
                     break;
                 }
               }
               else
               {
-                mError = cComNode::enErUnknown;
+                cSpiTemplate::mError = cComNode::enErUnknown;
                 vComError();
               }
               break;
@@ -624,8 +632,8 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
             {
               /* Clear STOPF flag */
               mSpi->IFCR = 0xFFFF;
-              mSm = cComNode::tenState::enStIdle;
-              mpcActiveSlave->vComDone();
+              cSpiTemplate::mSm = cComNode::tenState::enStIdle;
+              cSpiTemplate::mpcActiveSlave->vComDone();
             }
             else
             {
@@ -641,5 +649,9 @@ class cSpiMaster : public cSpi, public cComNodeMasterMulti
     }
   }
 };
+
+#define cSpiMasterMulti  cSpiTemplate<cComNodeMasterMulti>
+#define cSpiMasterSingle cSpiTemplate<cComNodeMasterSingle>
+#define cSpiSlave        cSpiTemplate<cComNodeSlave>
 
 

@@ -18,7 +18,7 @@ class cXPT2046 : public cComSeqHdlSpi<False, cXPT2046_RegisterMap>
 {
 public:
 
-  cXPT2046(cSpiMaster* lpcSpi)
+  cXPT2046(cSpiMasterMulti* lpcSpi)
          : cComSeqHdlSpi(lpcSpi, 0)
   {
   }

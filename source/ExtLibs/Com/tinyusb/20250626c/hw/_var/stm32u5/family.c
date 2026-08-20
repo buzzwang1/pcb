@@ -82,7 +82,7 @@ void board_init(void) {
   __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
-  UART_CLK_EN();
+  //UART_CLK_EN();
 
   /* Enable Instruction cache */
   HAL_ICACHE_Enable();
@@ -100,35 +100,35 @@ void board_init(void) {
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(LED_PORT, &GPIO_InitStruct);
 
-  // Button
-  GPIO_InitStruct.Pin = BUTTON_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(BUTTON_PORT, &GPIO_InitStruct);
+  //// Button
+  //GPIO_InitStruct.Pin = BUTTON_PIN;
+  //GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  //GPIO_InitStruct.Pull = GPIO_NOPULL;
+  //HAL_GPIO_Init(BUTTON_PORT, &GPIO_InitStruct);
 
   // IOSV bit MUST be set to access GPIO port G[2:15] */
   HAL_PWREx_EnableVddIO2();
 
   // Uart
-  GPIO_InitStruct.Pin = UART_TX_PIN | UART_RX_PIN;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  GPIO_InitStruct.Alternate = UART_GPIO_AF;
-  HAL_GPIO_Init(UART_GPIO_PORT, &GPIO_InitStruct);
-
-  UartHandle.Instance = UART_DEV;
-  UartHandle.Init.BaudRate = CFG_BOARD_UART_BAUDRATE;
-  UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-  UartHandle.Init.StopBits = UART_STOPBITS_1;
-  UartHandle.Init.Parity = UART_PARITY_NONE;
-  UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  UartHandle.Init.Mode = UART_MODE_TX_RX;
-  UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-  UartHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  UartHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  HAL_UART_Init(&UartHandle);
+  ////GPIO_InitStruct.Pin = UART_TX_PIN | UART_RX_PIN;
+  ////GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  ////GPIO_InitStruct.Pull = GPIO_NOPULL;
+  ////GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  ////GPIO_InitStruct.Alternate = UART_GPIO_AF;
+  ////HAL_GPIO_Init(UART_GPIO_PORT, &GPIO_InitStruct);
+  ////
+  ////UartHandle.Instance = UART_DEV;
+  ////UartHandle.Init.BaudRate = CFG_BOARD_UART_BAUDRATE;
+  ////UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
+  ////UartHandle.Init.StopBits = UART_STOPBITS_1;
+  ////UartHandle.Init.Parity = UART_PARITY_NONE;
+  ////UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  ////UartHandle.Init.Mode = UART_MODE_TX_RX;
+  ////UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+  ////UartHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  ////UartHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  ////UartHandle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  ////HAL_UART_Init(&UartHandle);
 
   /* Configure USB GPIOs */
   /* Configure DM DP Pins */
@@ -139,12 +139,12 @@ void board_init(void) {
   GPIO_InitStruct.Alternate = GPIO_AF10_USB;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* Configure ID pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Alternate = GPIO_AF10_USB;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  ///* Configure ID pin */
+  //GPIO_InitStruct.Pin = GPIO_PIN_10;
+  //GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+  //GPIO_InitStruct.Pull = GPIO_PULLUP;
+  //GPIO_InitStruct.Alternate = GPIO_AF10_USB;
+  //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 #ifdef USB_DRD_FS
   // STM32U535/STM32U545
@@ -227,7 +227,7 @@ void board_led_write(bool state) {
 }
 
 uint32_t board_button_read(void) {
-  return BUTTON_STATE_ACTIVE == HAL_GPIO_ReadPin(BUTTON_PORT, BUTTON_PIN);
+  return 0; //BUTTON_STATE_ACTIVE == HAL_GPIO_ReadPin(BUTTON_PORT, BUTTON_PIN);
 }
 
 size_t board_get_unique_id(uint8_t id[], size_t max_len) {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "FreeRTOS.h"
 #include "cSysDPool.h"
 
 class cCompBoardI2C2 : public cComponent

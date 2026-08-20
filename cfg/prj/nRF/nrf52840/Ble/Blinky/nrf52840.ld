@@ -127,4 +127,4 @@ SECTIONS
 } INSERT AFTER .text
 
 
-INCLUDE "U:/E2/Projekte/SW/Code/pcb/cfg/prj/nRF/nrf52840/Ble/Blinky/nrf52840c.ld"
+INCLUDE "C:/E2/Projekte/SW/Code/pcb/cfg/prj/nRF/nrf52840/Ble/Blinky/nrf52840c.ld"

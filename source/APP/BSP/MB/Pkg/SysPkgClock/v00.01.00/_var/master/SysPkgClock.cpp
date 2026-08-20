@@ -16,7 +16,7 @@ void cSysPkgClock::vInit1(void)
 
 void cSysPkgClock::vInit2(void)
 {
-  if (mcSys.mcCom.mcSideLink.mStatus.IsInit)  
+  if (mcSys.mcCom.mcSideLink.mStatus.IsInit)
   {
     // Funk-Empfänger vorhanden
     if (mClock.bResync())
@@ -65,7 +65,7 @@ void cSysPkgClock::vTick1000msLp(void)
 {
   mClock.vAdd1s();
 
-  if (mcSys.mcCom.mcSideLink.mStatus.IsInit)  
+  if (mcSys.mcCom.mcSideLink.mStatus.IsInit)
   {
     // Funk-Empfänger vorhanden
 

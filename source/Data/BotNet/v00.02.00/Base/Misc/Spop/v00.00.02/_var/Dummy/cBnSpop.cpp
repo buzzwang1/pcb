@@ -53,6 +53,12 @@ void cBnSpop_vFlash_ErasePage_Start(uint8* lpui8PageStartAdress)
   UNUSED(lpui8PageStartAdress);
 }
 
+bool cBnSpop_bFlash_ErasePage(uint8* lpui8PageStartAdress)
+{
+  UNUSED(lpui8PageStartAdress);
+  return True;
+}
+
 void cBnSpop_vFlash_ErasePage_Finish()
 {
 }

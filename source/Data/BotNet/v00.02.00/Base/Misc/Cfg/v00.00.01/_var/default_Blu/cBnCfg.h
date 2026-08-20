@@ -19,7 +19,7 @@
 #define cBotNet_CmdPortIdx                  0
 
 #define cBotNet_StreamSysRingBufSize       (4)
-#define cBotNet_StreamSysPortRingBufSize  (cBotNet_MsgSize)
+#define cBotNet_StreamSysPortRingBufSize   (64)
 
 #define cBotNet_UpLinkComBufSize    (cBotNet_MsgSize * 16) // 16 * 64 = 
 #define cBnMsgSysBtrCfgRamSize            (4*1024)

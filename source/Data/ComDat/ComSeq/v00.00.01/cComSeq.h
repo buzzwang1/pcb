@@ -4,7 +4,7 @@
 
 #define cComSeqDelay(u16Delay_ms)    cEntry(nDELAY), cEntry((u16Delay_ms) >> 8), cEntry((u16Delay_ms) & 0xFF)
 #define cComSeqBlockWr(u8Len, ...)   cWrite(nBLOCK), cEntry(u8Len), __VA_ARGS__
-#define cComSeqPtrWr(u16Len, pu8Ptr) cWrite(nPTR),   cEntry((u16Len) >> 8), cEntry((u16Len) & 0xFF), cEntry((pu8Ptr) >> 24), cEntry((pu8Ptr) >> 16), cEntry((pu8Ptr) >> 8), cEntry((pu8Ptr) & 0xFF)
+#define cComSeqPtrWr(u16Len, pu8Ptr) cWrite(nPTR),   cEntry((u16Len) >> 8), cEntry((u16Len) & 0xFF), cEntry((pu8Ptr) >> 24), cEntry((u8)((pu8Ptr) >> 16)), cEntry((u8)((pu8Ptr) >> 8)), cEntry((u8)(pu8Ptr))
 
 class cComSeq
 {
@@ -15,6 +15,7 @@ class cComSeq
     nSEQ00Reset = 0,
     nSEQ01Init1,  // - Read All
     nSEQ02Init2,  // - Set Init values
+    nSEQ03Init3,
     nSEQ04Enable,
     nSEQ05Disable,
     nSEQ06DeInit,

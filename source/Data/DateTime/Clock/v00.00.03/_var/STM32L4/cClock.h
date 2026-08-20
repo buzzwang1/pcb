@@ -315,42 +315,30 @@ class cClock
     return (mValid == 1);
   }
 
+  i32 i32DateToDays(tstDate* d)
+  {
+    i32 y   = d->ui16Year;
+    i32 m   = d->ui8Month;
+    i32 day = d->ui8Day;
+
+    // Januar und Februar werden als Monate 13 und 14 des Vorjahres behandelt,
+    // um die Schaltjahreslogik am Ende des Februar vereinfacht abzubilden.
+    if (m <= 2)
+    {
+      y -= 1;
+      m += 12;
+    }
+
+    // Formel berücksichtigt die 4, 100 und 400-Jahre-Schaltjahrregeln
+    return 365 * y + y / 4 - y / 100 + y / 400 + (153 * (m + 1)) / 5 + day;
+  }
 
   i32 i32DaysDiff(tstTimeDate lstFrom)
   {
-    // https://stackoverflow.com/questions/9987562/determining-the-difference-between-dates
-    static i8 increment[12] = { 1, -2, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1 };
+    i32 li32Diff = (i32DateToDays(&lstFrom.unDate.stDate) - i32DateToDays(&mDate.stDate));
 
-    i32 daysInc = 0;
-    if (((i16)mDate.stDate.ui8Day - (i16)lstFrom.unDate.stDate.ui8Day) < 0)
-    {
-      i32 month = (i16)mDate.stDate.ui8Month - 2; // -1 from zero, -1 previous month.
-      if (month < 0)
-      {
-        month = 11; // Previous month is December.
-      }
-      daysInc = increment[month];
-
-      if ((month == 1) && ((mDate.stDate.ui16Year % 4) == 0))
-      {
-        daysInc++; // Increment days for leap year.
-      }
-    }
-
-    i32 total1 = lstFrom.unDate.stDate.ui16Year * 360 + lstFrom.unDate.stDate.ui8Month * 30 + lstFrom.unDate.stDate.ui8Day;
-    i32 total2 = mDate.stDate.ui16Year * 360   + mDate.stDate.ui8Month * 30   + mDate.stDate.ui8Day;
-    i32 diff   = total2 - total1;
-    i32 years  = diff / 360;
-    i32 months = (diff - years * 360) / 30;
-    i32 days   = diff - years * 360 - months * 30 + daysInc;
-
-    // Extra calculation when we can pass one month instead of 30 days.
-    if ((lstFrom.unDate.stDate.ui8Day == 1) && (mDate.stDate.ui8Day == 31))
-    {
-      months--;
-      days = 30;
-    }
-    return days;
+    if (li32Diff < 0) return -li32Diff;
+    return li32Diff;
   }
 
   void vSetSyncAttempt()

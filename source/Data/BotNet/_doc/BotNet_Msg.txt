@@ -4,12 +4,12 @@ Idx
  2: BTR: Read
  3: SPOP: SPecial OPerations-Interface 
  4: RRpt: Request Repeater
- 5:
- 6:
- 7:
- 8: Request and Status messages
- 9: Data messages
-10:
+ 5: MemView: Memory Viewer
+ 6: 
+ 7: 
+ 8: System: Request messages
+ 9: System: Response messages
+10: System: Set Message
 11:
 12:
 13:
@@ -30,6 +30,19 @@ Idx
 28: 
 30: 
 31: 
+
+
+// Data Format
+32 Bit: 00.01.02.03|04.05.06.07
+        HB       LB|HB       LB
+         0x00010203  0x04050607
+
+16 Bit: 00.01 | 02.03 | 04.05 | 06.07
+        HB LB | HB LB | HB LB | HB LB
+       0x0001  0x0203  0x0405  0x0607 
+
+
+
 
 
 8: Request messages

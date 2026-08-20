@@ -172,7 +172,7 @@ int main(void)
     for (int i = 0; i < LEDS_NUMBER; i++)
     {
       bsp_board_led_invert(i);
-      nrf_drv_systick_delay_ms(500);
+      nrf_drv_systick_delay_ms(100);
     }
   }
 }

@@ -35,10 +35,15 @@ class cNRF905_SpiPins
       mMISO(GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
       mMOSI(GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0)
   {
+  };
+
+  void vInit()
+  {
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource5, GPIO_AF_5);  // SCK
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_5);  // MISO
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_5);  // MOSI
-  };
+
+  }
 };
 
 class cNRF905_Spi
@@ -53,12 +58,22 @@ class cNRF905_Spi
 
   uint8 mui8Dummy; // Dummy für Rx
 
-  cNRF905_Spi()
+  cNRF905_Spi(bool lbInit = True)
   : mPins()
   {
-    mSPI     = SPI1;
-    mDMA_Tx  = DMA1_Channel3;
-    mDMA_Rx  = DMA1_Channel2;
+    if (lbInit)
+    {
+      vInit();
+    }
+  }
+
+  void vInit()
+  {
+    mPins.vInit();
+
+    mSPI = SPI1;
+    mDMA_Tx = DMA1_Channel3;
+    mDMA_Rx = DMA1_Channel2;
 
     mui8Dummy = 0x55;
 
@@ -155,6 +170,18 @@ class cNRF905_Spi
     NVIC_Init(&NVIC_InitStructure);
   }
 
+  void vEnableIrq()
+  {
+    NVIC->ISER[DMA1_Channel2_IRQn >> 0x05] = (uint32_t)0x01 << (DMA1_Channel2_IRQn & (uint8_t)0x1F);	
+    NVIC->ISER[DMA1_Channel3_IRQn >> 0x05] = (uint32_t)0x01 << (DMA1_Channel3_IRQn & (uint8_t)0x1F);
+  }
+
+  void vDisableIrq()
+  {
+    NVIC->ICER[DMA1_Channel2_IRQn >> 0x05] = (uint32_t)0x01 << (DMA1_Channel2_IRQn & (uint8_t)0x1F);	
+    NVIC->ICER[DMA1_Channel3_IRQn >> 0x05] = (uint32_t)0x01 << (DMA1_Channel3_IRQn & (uint8_t)0x1F);			
+  }
+
   //Disable + All interrupts dissable
   #define cNRF905_Spi_vStopDMA() DMA1_Channel2->CCR  &= ~15; DMA1_Channel3->CCR &= ~15; DMA1->IFCR = (DMA1_FLAG_GL2 | DMA1_FLAG_HT2 | DMA1_FLAG_TC2 | DMA1_FLAG_GL3 | DMA1_FLAG_HT3 | DMA1_FLAG_TC3)
 
@@ -237,9 +264,12 @@ class cNRF905_Timer
 {
   public:
 
-  cNRF905_Timer()
+  cNRF905_Timer(bool lbInit = True)
   {
-    vInit();
+    if (lbInit)
+    {
+      vInit();
+    }
   }
 
   void vStart(u16 lui16Time_us)
@@ -252,6 +282,21 @@ class cNRF905_Timer
   {
     TIM4->SR &= ~TIM_SR_UIF; // clear UIF flag
     TIM_Cmd(TIM4, DISABLE);
+  }
+
+  void vEnableIrq()
+  {
+    NVIC->ISER[TIM4_IRQn >> 0x05] = (uint32_t)0x01 << (TIM4_IRQn & (uint8_t)0x1F);
+  }
+
+  void vDisableIrq()
+  {
+    NVIC->ICER[TIM4_IRQn >> 0x05] = (uint32_t)0x01 << (TIM4_IRQn & (uint8_t)0x1F);
+  }
+
+  bool isDone()
+  {
+    return ((TIM4->SR & TIM_SR_UIF) == TIM_SR_UIF);
   }
 
   void vInit(void)
@@ -301,7 +346,7 @@ class cNRF905_Pins
   tcGpPin<GPIOC_BASE, 13> mAM;  // Adress Match
   tcGpPin<GPIOC_BASE, 15> mDR;  // Data Ready*/
 
-  cNRF905_Pins()
+  cNRF905_Pins(bool lbInit = True)
     : mTRx_Cn(GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
       mTx_En( GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
       mPWR(   GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
@@ -310,6 +355,15 @@ class cNRF905_Pins
       mCD( GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
       mAM( GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0),
       mDR( GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_50MHz, 0)
+  {
+    if (lbInit)
+    {
+      vInit();
+    }
+  };
+
+
+  void vInit()
   {
     EXTI_InitTypeDef EXTI_InitStruct;
     NVIC_InitTypeDef NVIC_InitStruct;

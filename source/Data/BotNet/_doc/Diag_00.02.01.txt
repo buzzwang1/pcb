@@ -1,5 +1,5 @@
 22:16 16.01.2019
-Ver. 00.02.00
+Ver. 00.02.01
 
 - Wenn 250ms nach Init keine Kommunikation, dann Watchdog starten und Sprung zur Applikation
 - Wenn 500ms nichts empfangen wurde, dann Reset der internen Statemaschine

@@ -49,7 +49,7 @@ projects = {
     'nRF/nrf52840/ble/uart'                      : project('NRF52840_ble_usart',                      True,      '',   {'Release'   : 'Config_nRF5'}),
     'nRF/nrf52840/ble/blinky'                    : project('NRF52840_ble_Blinky',                     True,      '',   {'Release'   : 'Config_nRF5'}),
     'nRF/nrf52840/ble/Ls'                        : project('NRF52840_ble_Ls',                         True,      '',   {'Release'   : 'Config_nRF5'}),
-
+    'nRF/nrf52840/ble/Botnet'                    : project('NRF52840_ble_Botnet',                     True,      '',   {'Release'   : 'Config_nRF5'}),
 
     # --- SAMD10/UBTECH/Servo ------------------------------------------------
     #'ATMEL/SAMD10/XpMini/Ledblink'                : project('SAMD10_XpMini_Ledblink',                 True,      '',   {'Debug' : 'Config_SAMD10'}),
@@ -69,20 +69,25 @@ projects = {
 
     # --- GD32F130G6/UBTECH/Servo ------------------------------------------------
     'STM/F1/GD32F1x0/UbTech/Servo1/Ledblink'      : project('GD32F1x0_UbTech_Servo1_Ledblink',        True,      '',   {'Debug' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/App'           : project('GD32F1x0_UbTech_Servo1_App',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/App2'          : project('GD32F1x0_UbTech_Servo1_App2',            True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/AppDebug'      : project('GD32F1x0_UbTech_Servo1_Debug',           True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/AppDebug2'     : project('GD32F1x0_UbTech_Servo1_Debug2',          True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/Blu'           : project('GD32F1x0_UbTech_Servo1_Blu',             True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/App'     : project('GD32F1x0_UbTech_Servo1_LA8Bn7_App',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/AppDebug': project('GD32F1x0_UbTech_Servo1_LA8Bn7_Debug',    True,      '',   {'Release' : 'Config_GD32F1x0'}),
-    'STM/F1/GD32F1x0/UbTech/Servo1/LABn7/Blu'     : project('GD32F1x0_UbTech_Servo1_LA8Bn7_Blu',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
-
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn0.6/App'     : project('GD32F1x0_UbTech_Servo1_Bn06_App',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn0.6/AppDebug': project('GD32F1x0_UbTech_Servo1_Bn06_Debug',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn0.6/Blu'     : project('GD32F1x0_UbTech_Servo1_Bn06_Blu',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn2.0/App'     : project('GD32F1x0_UbTech_Servo1_Bn20_App',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn2.0/AppDebug': project('GD32F1x0_UbTech_Servo1_Bn20_Debug',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/Bn2.0/Blu'     : project('GD32F1x0_UbTech_Servo1_Bn20_Blu',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/CRTP/App'      : project('GD32F1x0_UbTech_Servo1_CRTP_App',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/CRTP/AppDebug' : project('GD32F1x0_UbTech_Servo1_CRTP_Debug',      True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/CRTP/AppDbg8'  : project('GD32F1x0_UbTech_Servo1_CRTP_Dbg8',       True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/CRTP/Test'     : project('GD32F1x0_UbTech_Servo1_CRTP_Test',       True,      '',   {'Release' : 'Config_GD32F1x0'}),
+    'STM/F1/GD32F1x0/UbTech/Servo1/CRTP/Blu'      : project('GD32F1x0_UbTech_Servo1_CRTP_Blu',        True,      '',   {'Release' : 'Config_GD32F1x0'}),
 
     # --- STM32F103RBT/BluePill ------------------------------------------------
     'STM/F1/STM32F103C8T/BluePill/LedBlink/1s'    : project('STM32F103C8T_LedBlink1s',                True,      '',   {'Debug' : 'Config_STM32F103xx'}),
     'STM/F1/STM32F103C8T/BluePill/LedBlink/100ms' : project('STM32F103C8T_LedBlink100ms',             True,      '',   {'Debug' : 'Config_STM32F103xx'}),
     'STM/F1/STM32F103C8T/BluePill/SM4PWM/Test01'  : project('STM32F103C8T_SW4PWM_Test01',             True,      '',   {'Debug' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/USB/Bulk'       : project('STM32F103C8T_USB_Bulk',                  True,      '',   {'Release' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/USB/STLink'     : project('STM32F103C8T_USB_STLink',                True,      '',   {'Release' : 'Config_STM32F103xx'}),
+    'STM/F1/STM32F103C8T/BluePill/USB/Botnet'     : project('STM32F103C8T_USB_Botnet',                True,      '',   {'Release' : 'Config_STM32F103xx'}),
 
     # --- STM32F3 ------------------------------------------------------------------
     'STM/F3/HalLib/v01.11.00'                     : project('STM32F3_HalLib',                         True,      '',   {'og' : 'Config_STM32F30x', 'o3' : 'Config_STM32F30x', 'os'  : 'Config_STM32F30x'}),
@@ -117,6 +122,7 @@ projects = {
     'STM/F3/STM32F303CCT/BluePill/LedBlink/PC13'         : project('STM32F303CCT_LedBlink_PC13',      True,     '',   {'Debug' : 'Config_STM32F303'}),
     'STM/F3/STM32F303CCT/BluePill/LedBlink/PC13_4Mhz'    : project('STM32F303CCT_LedBlink_PC13_4Mhz', True,     '',   {'Debug' : 'Config_STM32F303', 'Release' : 'Config_STM32F303'}),
 
+    'STM/F3/STM32F303CCT/BluePill/BotNet/PcIfcNet'       : project('STM32F303CCT_BotNet_PcIfcNet',    True,     '',   {'Release' : 'Config_STM32F303'}),
     #'STM/F3/STM32F303CCT/BluePill/TB01/Gfx/HX8347'       : project('STM32F303CCT_TB01_Gfx_HX8347',    True,     '',    {'Debug' : 'Config_STM32F303'}),
 
     'STM/F3/STM32F303CCT/BluePill/LP/Test01'             : project('STM32F303CCT_LP_Test01', True, '', {'Debug' : 'Config_STM32F303'}),
@@ -367,7 +373,9 @@ projects = {
     'STM/H7/STM32H7B0/WasMini/Cam/OV7725/Test01'       : project('STM32H7B0_Cam_OV7725_Test01',         True,      '', {'Debug' : 'Config_STM32H7B0'}),
     'STM/H7/STM32H7B0/WasMini/CNC/01'                  : project('STM32H7B0_CNC_01',                    True,      '', {'Release' : 'Config_STM32H7B0'}),
 
- 
+    # --- STM32WB09 ------------------------------------------------
+    'STM/WB/STM32WB09/BLE/BotNet/01'              : project('STM32WB09_BLE_BotNet01',                 True,      '',   {'Release' : 'Config_GD32F1x0'}),
+
     #--- Pc Simulation ----------------------------------------------
 
     #--- STM32F407VGT/Blackboard ----------------------------------------------
@@ -401,7 +409,7 @@ projects = {
     #'Pc/Garmin/Test02'                                    : project('Pc_Garmin_Test02',            True,     '',   {'Debug' : 'Config_PcMsWin'}),
     #'Pc/Test/OverloadOpTest01'                            : project('Pc_Test_OverloadOpTest01',    True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
     'Pc/Test/CppTests'                                     : project('Pc_Test_CppTests',            True,     '',   {'Debug' : 'Config_PcMsWinConsole'}),
-    #'Pc/Slicer'                                           : project('Pc_Slicer',                   True,     '',   {'Debug' : 'Config_PcMsWin'}),
+    'Pc/Slicer'                                            : project('Pc_Slicer',                   True,     '',   {'Debug' : 'Config_PcMsWin'}),
 }
 
 

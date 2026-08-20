@@ -944,6 +944,32 @@ class cMemTools : public cMemToolsHw
       luixSize--;
     }
   }
+
+  static u8* pu8U32toU8(u32 lu32Val, u8* lu8Array)
+  {
+    lu8Array[3] = ((u8)lu32Val); lu32Val >>= 8;
+    lu8Array[2] = ((u8)lu32Val); lu32Val >>= 8;
+    lu8Array[1] = ((u8)lu32Val); lu32Val >>= 8;
+    lu8Array[0] = ((u8)lu32Val);
+    return lu8Array;
+  }
+
+  static u32 u32U8toU32(u8* lu8Array)
+  {
+    return (lu8Array[0] << 24) + (lu8Array[1] << 16) + (lu8Array[2] << 8) + (lu8Array[3]);
+  }
+
+  static u8* pu8U16toU8(u16 lu16Val, u8* lu8Array)
+  {
+    lu8Array[1] = ((u8)lu16Val); lu16Val >>= 8;
+    lu8Array[0] = ((u8)lu16Val);
+    return lu8Array;
+  }
+
+  static u16 u16U8toU16(u8* lu8Array)
+  {
+    return (lu8Array[2] << 8) + (lu8Array[3]);
+  }
 };
 
 #endif /* _MEMTOOLS_H */

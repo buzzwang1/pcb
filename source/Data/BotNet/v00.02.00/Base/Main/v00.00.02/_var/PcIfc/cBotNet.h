@@ -9,7 +9,6 @@
 #include "cBnCfg.h"
 #include "cBnAdr.h"
 #include "cBnMsg.h"
-#include "cBnSpop.h"
 
 #include "cBnMsgSys.h"
 #include "cBnLinkBase.h"

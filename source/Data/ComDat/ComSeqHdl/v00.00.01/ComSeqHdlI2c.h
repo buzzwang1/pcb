@@ -454,7 +454,10 @@ class cComSeqHdlI2c : public cComNode, public cComComp, public mtcRegMap
         mActiveSequence = -1;
       }
     }
-    mControl.StartRequest = isRequest();
+    if (isRequest())
+    {
+      mComNode->vStartRequest(this);
+    }
   }
 
   void vComStart(cComNode::tenEvent lenEvent) override
@@ -538,7 +541,7 @@ class cComSeqHdlI2c : public cComNode, public cComComp, public mtcRegMap
         if (mActiveSequence != -1)
         {
           mActiveSequenceToContinue = mActiveSequence;
-          mControl.StartRequest = isRequest();
+          mComNode->vStartRequest(this);
         }
       }
     }
@@ -547,7 +550,10 @@ class cComSeqHdlI2c : public cComNode, public cComComp, public mtcRegMap
   void vRequest(u8 lu8SeqIdx)
   {
     vRequestSet(lu8SeqIdx);
-    mControl.StartRequest = isRequest();
+    if (isAnySeqStartRequest())
+    {
+      mComNode->vStartRequest(this);
+    }
   }
 
   bool isAnySeqError()

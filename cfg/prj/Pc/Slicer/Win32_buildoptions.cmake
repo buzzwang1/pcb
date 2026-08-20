@@ -12,8 +12,11 @@ list(APPEND PCB_ListTargetLinkOptions
 # Linker specific settings:
 # -----------------------------------------------
   #/WHOLEARCHIVE:lib\\xxx_lib.lib
+  #/subsystem:console
   /subsystem:windows
 )
 
+#message(STATUS "Config for SUBSYSTEM:CONSOLE")
 message(STATUS "Config for SUBSYSTEM:WINDOWS")
-
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)

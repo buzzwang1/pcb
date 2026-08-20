@@ -329,20 +329,6 @@ class cUartMpHdMaster : public cUartMpHd, public cComNodeMasterMulti
     }
   }
 
-  // Start wird sowohl vom Interrupt wie auch von der Main benutzt
-  // Um keine Laufzeit Konflikte zu bekommen, wird solange der Interrupt gesperrt
-  void vPreStart() override
-  {
-    mUsart->ICR = 0xFFFF;
-    cUartMpHd::vDisableIrq();
-  }
-
-  void vPostStart() override
-  {
-    cUartMpHd::vEnableIrq();
-  }
-
-
   void vComError() override
   {
     cComNode::tenState lSm = mSm;
@@ -438,12 +424,14 @@ class cUartMpHdMaster : public cUartMpHd, public cComNodeMasterMulti
     switch (mSm)
     {
       case cComNode::tenState::enStIdle:
+      case cComNode::tenState::enStIdle2:
         {
           switch (lenEvent)
           {
             case cComNode::tenEvent::enEvStart:
             case cComNode::tenEvent::enEvStartSkipAdr:
               // Rx
+              mUsart->ICR = 0xFFFF;
               if (mpcActiveMsg->isRx())
               {
                 LL_USART_RequestRxDataFlush(mUsart);

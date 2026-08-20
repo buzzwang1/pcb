@@ -341,6 +341,7 @@ def GenerateRomConst(liBaseAdr, liBnAdr):
     # 5: reserve
     # 6: MP8859 Modul: Buck/Boost: I2C 
     # 7: TP4056 Modul: 1-Cell-Lipo Charger: DAC 
+    # 8: TPS55288 Modul: Buck/Boost: I2C 
 
     # Operations Modus:
     #  0: Nichts

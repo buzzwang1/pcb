@@ -95,6 +95,10 @@ public:
     muLen = luLen;
   };
 
+  inline tyTyp Size(void)
+  {
+    return muSize;
+  };
 
   inline tyTyp Len(void)
   {
@@ -115,7 +119,7 @@ public:
   {
     if (luLen > muSize) muLen = muSize;  // Source is to big -> Clip
                    else muLen = luLen; // Source fits
-    cBarryPtrT_vMemCpy(mpu8Data, lpaArray, muLen);
+    cBarryPtrT_vMemCpy(mpu8Data, (u8*)lpaArray, muLen);
     return *this;
   };
 
@@ -140,10 +144,10 @@ public:
   {
     if (muLen < muSize)
     {
-      u8 lu8LenOld = muLen;
+      tyTyp luLenOld = muLen;
       if ((luLen + muLen) > muSize) muLen = muSize;           // Source is to big -> Clip
                                  else muLen = (luLen + muLen); // Source fits
-      cBarryPtrT_vMemCpy(mpu8Data + lu8LenOld, lpaArray, muLen - lu8LenOld);
+      cBarryPtrT_vMemCpy(mpu8Data + luLenOld, lpaArray, muLen - luLenOld);
     }
     return *this;
   };

@@ -7,9 +7,12 @@
 #include "cErr.h"
 #include "cClock.h"
 #include "cI2c.h"
+#include "cSpi.h"
 #include "TPS55288.h"
 #include "BQ25798.h"
-
+#include "ili9341.h"
+#include "cursor.h"
+#include "msg.h"
 
 struct cDPoolSys
 {
@@ -87,7 +90,32 @@ struct cDPoolBoard
     u8         mu8I2cErr;
   }mcCharger;
 
-  cI2cMaster* mcI2c;
+  struct
+  {
+    cIli9341* mpcILI9341;
+    cMsgBox*  mpcMsgBox;
+    cCursor*  mpcCursor;
+
+    u16  u16TouchRawX;
+    u16  u16TouchRawY;
+
+    u16  u16TouchRawXMax;
+    u16  u16TouchRawYMax;
+    u16  u16TouchRawXMin;
+    u16  u16TouchRawYMin;
+
+    u16  u16TouchX;
+    u16  u16TouchY;
+    
+    u8   u8TouchIrq;
+    u8   u8DisplayDim_Percent;
+
+    bool bShowScreen;
+  }mcGfx;
+
+
+  cI2cMaster*  mcI2c;
+  cSpiMaster*  mcSpi2;
 
   struct
   {

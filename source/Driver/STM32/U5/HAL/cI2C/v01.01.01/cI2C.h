@@ -486,20 +486,6 @@ class cI2cMaster : public cI2c, public cComNodeMasterMulti
     }
   }
 
-  // Start wird sowohl vom Interrupt wie auch von der Main benutzt
-  // Um keine Laufzeit Konflikte zu bekommen, wird solange der Interrupt gesperrt
-  void vPreStart() override
-  {
-    mI2C->ICR = 0xFFFF;
-    vDisableIrq();
-  }
-
-  void vPostStart() override
-  {
-    vEnableIrq();
-  }
-
-
   /*
     I2Cx_ISR->NACKF: Not Acknowledge received flag: It is cleared by software by setting the OVRCF bit.:  This bit is cleared by hardware when PE=0
     I2Cx_ISR->BERR:  Bus error:                     It is cleared by software by setting BERRCF bit.:     This bit is cleared by hardware when PE=0.
@@ -576,12 +562,14 @@ class cI2cMaster : public cI2c, public cComNodeMasterMulti
     switch (mSm)
     {
       case cComNode::tenState::enStIdle:
+      case cComNode::tenState::enStIdle2:
       case cComNode::tenState::enStLock:
       case cComNode::tenState::enStError:
         switch (lenEvent)
         {
           case cComNode::tenEvent::enEvStart:
           case cComNode::tenEvent::enEvStartSkipAdr:
+            mI2C->ICR = 0xFFFF;
             switch (mpcActiveMsg->enDir())
             {
               case cComNode::tenDirection::enIsTxRx:
@@ -840,6 +828,7 @@ class cI2cSlave : public cI2c, public cComNodeSlave
     switch (mSm)
     {
       case cComNode::tenState::enStIdle:
+      case cComNode::tenState::enStIdle2:
       {
         //if (!(lui32ISR &I2C_ISR_BUSY))
         {

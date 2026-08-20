@@ -4,7 +4,7 @@
 
 
 
-extern int miNestedIrqCnt;
+extern unsigned char miNestedIrqCnt;
 
 #ifdef PCB_PROJECTCFG_Test
   #ifdef TESTIRQLOCK

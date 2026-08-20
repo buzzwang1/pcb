@@ -12,14 +12,17 @@ public:
   {
     nBase = 0,
     nBoard3V3,
+      nCom,
+        nComOutCntrl,
+          nComOut,
+        nComIn,
+
+
       nQSpi1,
         nExtFlash,
       nLed,
       nUsart,
 
-      nComOutCntrl,
-        nComOut,
-      nComIn,
 
       nBoardI2C2,
         nBoardMonitor,
@@ -43,9 +46,7 @@ public:
       nBatOut,
     nGfxSpi2,
       nGfx,
-    nRadioSpi1,
-      nRadioNrf905,
-      nRadioNrf24L0,
+
     nLast
   };
 };

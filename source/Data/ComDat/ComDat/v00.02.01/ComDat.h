@@ -37,6 +37,7 @@ class cComNode
   typedef enum
   {
     enStIdle,
+    enStIdle2,
     enStStart,
     enStLock,
     enStAdress,
@@ -77,6 +78,7 @@ class cComNode
     enEvDmaTxEr, // Error
     enEvI2cTc,   // Transmission Complete
     enEvUsartTc, // Transmission Complete
+    enEvSpiTc,   // Transmission Complete
     enEvUsartAm, // Adress Match
     enEvUsartErOre, // Error Overrun
     enEvUsartTimer, // Timer Interrupt
@@ -613,6 +615,8 @@ class cComNodeMaster : public cComNodeBase
     cComNodeBase::vTick1ms();
   }
 
+  virtual void vStartRequest(cComNode* lpcSlave) = 0;
+
 
   void vStartMsg(cComMsg<u16> *lpcActiveMsg, bool boSkipAdr=False) override
   {
@@ -635,9 +639,6 @@ class cComNodeMaster : public cComNodeBase
       vErrorHdl();
     }
   }
-
-  virtual void vPreStart() = 0;
-  virtual void vPostStart() = 0;
 };
 
 
@@ -657,6 +658,9 @@ public:
     cComNodeMaster::vTick1ms();
     vStart();
 
+    // Max. 20 slaves pro Master
+    // Pro Durchgang wird jeder 4. Slave aufgerufen
+    // Also max. 20/4 => 5 Slaves/Durchgang
     for (u8 lu8NodeIdx = 0; lu8NodeIdx < mcSlaves.mcNodeList.mLen; lu8NodeIdx++)
     {
       if ((lu8NodeIdx & 3) == (mu16TickCounter_ms & 3))
@@ -679,20 +683,42 @@ public:
     mcSlaves.vRemove(lpcNode);
   }
 
+  void vStartRequest(cComNode* lpcSlave) override
+  {
+    lpcSlave->mControl.StartRequest = 1;
+    vStart();
+  }
+
   void vStart()  // __attribute__((optimize("-O0")))
   {
+    _dai();
     if (mSm == cComNode::tenState::enStIdle)
     {
       u8 lu8SlaveIdx = mcSlaves.uStartRequested();
 
       if (lu8SlaveIdx != (u8)-1)
       {
-        vPreStart();
+        // Presart setzen, damit keine Doppelstart passieren können
+        mSm = cComNode::tenState::enStIdle2;
+        _eai();
         mpcActiveSlave = (cComNode*)mcSlaves.mpacNodes[lu8SlaveIdx];
         mpcActiveSlave->mControl.StartRequest = 0;
         mpcActiveSlave->vComStart(cComNode::tenEvent::enEvPrepareToSendData);
-        vPostStart();
+
+        // Falls von Comstart nicht gestartet wurde, dann wieder zruück auf Idle
+        if (mSm == cComNode::tenState::enStIdle2)
+        {
+          mSm = cComNode::tenState::enStIdle;
+        }
       }
+      else
+      {
+        _eai();
+      }
+    }
+    else
+    {
+      _eai();
     }
   }
 };
@@ -735,18 +761,40 @@ public:
     lpcNode->mStatus.IsEnabled = False;
   }
 
+  void vStartRequest(cComNode* lpcSlave) override
+  {
+    lpcSlave->mControl.StartRequest = 1;
+    vStart();
+  }
 
   void vStart()  // __attribute__((optimize("-O0")))
   {
+    if (!mpcActiveSlave) return;
+    _dai();
     if (mSm == cComNode::tenState::enStIdle)
     {
       if (mpcActiveSlave->mControl.StartRequest)
       {
-        vPreStart();
+        // Presart setzen, damit keine Doppelstart passieren können
+        mSm = cComNode::tenState::enStIdle2;
+        _eai();
         mpcActiveSlave->mControl.StartRequest = 0;
         mpcActiveSlave->vComStart(cComNode::tenEvent::enEvPrepareToSendData);
-        vPostStart();
+
+        // Falls von Comstart nicht gestartet wurde, dann wieder zruück auf Idle
+        if (mSm == cComNode::tenState::enStIdle2)
+        {
+          mSm = cComNode::tenState::enStIdle;
+        }
       }
+      else
+      {
+        _eai();
+      }
+    }
+    else
+    {
+      _eai();
     }
   }
 };

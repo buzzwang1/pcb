@@ -16,10 +16,11 @@ class cCompGfxSpi2 : public cComponent
 
   cCompGfxSpi2()
     : cComponent(cDepTreeCfg::cComp::nGfxSpi2, cDepTreeCfg::cComp::n5V0),
-      mSCK(GPIOA_BASE, 9), // SPI2_SCK  AF3
-      mMISO(GPIOD_BASE, 3), // SPI2_MISO AF5
-      mMOSI(GPIOD_BASE, 4), // SPI2_MOSI AF5
-      mcSpi2(SPI2, 6, 7, 7, 0)
+      mSCK(GPIOA_BASE, 9),
+      mMISO(GPIOD_BASE, 3),
+      mMOSI(GPIOD_BASE, 4),
+      mcSpi2(SPI2, 6, 7, 128, 0) // 160Mhz / 128 = 1,25MHz
+     
   {
     cSysDPool::mBoard.mcSpi2 = &mcSpi2;
   }

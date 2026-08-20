@@ -29,6 +29,8 @@ set(PCB_ProjectPackageList
     Data/ComDat/ComRegMap/v00.00.01
     Data/ComDat/ComSeqHdl/v00.00.01
 
+    Data/Msg/v00.00.01
+
     Data/Mem/MemTools/v00.00.03:default_arm
     Data/Mem/Buffer/BArray/BArrayT/v00.01.00|-Ofast
     Data/Mem/Buffer/Ring/RingBufT/v00.01.00
@@ -57,6 +59,40 @@ set(PCB_ProjectPackageList
     Data/Sys/DepTree/cDepTree/v00.00.01
     Data/Sys/DepTree/cComponent/v00.00.01
 
+    Gfx/General/GfxDefs/v00.00.01:32Bit
+    Gfx/Bitmap/Bitmap/v00.00.01
+    Gfx/Texture/32/v00.00.01
+    Gfx/Bitmap/Convert/v00.00.01
+    Gfx/Bitmap/Tools/v00.00.01
+    Gfx/Screen/Screen/v00.00.02
+    Gfx/Screen/Tools/v00.00.01
+    Gfx/Paint/Basic/v00.00.01
+    Gfx/MemPaint/v00.00.01
+    Gfx/Paint/Triangle/Basic/v00.00.01
+    Gfx/Paint/Triangle/ZBasic/v00.00.01
+    #Gfx/Paint/Triangle/BrigthGrad/v00.00.01
+    #Gfx/Paint/Triangle/ColGrad/v00.00.01
+    #Gfx/Paint/Triangle/TextureBrigthGrad/v00.00.01
+    Gfx/Paint/Triangle/BrigthFlat/v00.00.01
+    Gfx/Paint/Triangle/ZTextureBrigthGrad/v00.00.01
+    Gfx/Sprite/Sprite/v00.00.01
+    Gfx/Sprite/SEngine/v00.00.01
+    Gfx/Font/RFont/v00.00.02
+    Gfx/Graph/XY/v00.00.02
+    Gfx/Graph/Y/v00.00.02
+    Gfx/Ui/Element/v00.00.04
+    Gfx/Ui/Cursor/v00.00.02
+
+    Resource/Base/v00.00.01
+    Resource/Gen/Gfx/Fonts/1BPP_1G/v00.00.01
+
+    Data/Math/MathTools/v00.00.01
+    Data/Math/Matrix/4x4f/v00.00.01
+    Data/Math/Vector/3f/v00.00.01
+
+    Data/Sort/q/v00.00.01
+    
+        
     #Data/BotNet/v00.02.00/Base/Main/v00.00.02:default
     #  Data/BotNet/v00.02.00/Base/Misc/Adr/v00.00.01:default
     #  Data/BotNet/v00.02.00/Base/Misc/Cfg/v00.00.01:default
@@ -88,6 +124,7 @@ set(PCB_ProjectPackageList
     #Driver/STM32/U5/Hal/cUart/Int/v01.00.01
     Driver/STM32/U5/Hal/cUart/MpHd/v01.01.00_Mini:Tim16|-Ofast
     Driver/STM32/U5/Hal/cI2C/v01.01.01|-Ofast
+    Driver/STM32/U5/Hal/cSpi/v01.01.01|-Ofast
     #Driver/STM32/Device/Com/nRF905/Int/v01.00.00:MBv28b2_STM32U5xx
     
     #Driver/STM32/Device/xSpi/Flash/General/v01.00.00
@@ -100,6 +137,9 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/Tmp102/v02.00.00:default
 
     Driver/STM32/Device/BQ25798/v02.00.00:default
+    
+    Driver/STM32/Device/Displays/ILI9341/U5xx/SPI/v01.00.04:default:Miniv28
+    Driver/STM32/Device/Displays/XPT2046/U5xx/SPI/v01.00.04:default:Miniv28
 
     #Driver/STM32/Device/xSpi/Flash/General/v01.00.00
     #Driver/STM32/Device/xSpi/Flash/ZD25WQ32/U5_OSPI/v01.00.00:Mini32Mhz

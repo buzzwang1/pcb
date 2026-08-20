@@ -869,6 +869,8 @@ public:
     } while (lbLoop);
   }
 
+
+  // Wird von der Basisklasse aufgerufen cComNode
   void vTick(u16 lu16Time_ms) override
   {
     mu16Counter_ms += lu16Time_ms;

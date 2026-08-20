@@ -5,6 +5,7 @@ set(gen_pkg_name "cDmaHelper")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
+	./cDmaHelper.cpp
 )
 
 

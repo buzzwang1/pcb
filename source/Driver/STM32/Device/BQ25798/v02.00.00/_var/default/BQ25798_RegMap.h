@@ -196,13 +196,8 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 VSYS_MIN_0 : 1; // Bit 0 (Top)
-          u8 VSYS_MIN_1 : 1;
-          u8 VSYS_MIN_2 : 1;
-          u8 VSYS_MIN_3 : 1;
-          u8 VSYS_MIN_4 : 1;
-          u8 VSYS_MIN_5 : 1;
-          u8 RESERVED   : 2; // Bit 7 (Bottom)
+          u8 VSYS_MIN : 6;
+          u8 RESERVED : 2;
       } stBits;
   } tunREG00_Minimal_System_Voltage;
 
@@ -210,10 +205,8 @@ struct cBQ25798_RegisterMap
   union {
       u16 u16Word;
       struct {
-          u16 VREG_0    : 1; u16 VREG_1    : 1; u16 VREG_2    : 1; u16 VREG_3    : 1;
-          u16 VREG_4    : 1; u16 VREG_5    : 1; u16 VREG_6    : 1; u16 VREG_7    : 1;
-          u16 VREG_8    : 1; u16 VREG_9    : 1; u16 VREG_10   : 1;
-          u16 RESERVED  : 5; // Bit 15 (Bottom)
+          u16 Hb : 8;
+          u16 Lb : 8;
       } stBits;
   } tunREG01_Charge_Voltage_Limit;
 
@@ -221,10 +214,8 @@ struct cBQ25798_RegisterMap
   union {
       u16 u16Word;
       struct {
-          u16 ICHG_0    : 1; u16 ICHG_1    : 1; u16 ICHG_2    : 1; u16 ICHG_3    : 1;
-          u16 ICHG_4    : 1; u16 ICHG_5    : 1; u16 ICHG_6    : 1; u16 ICHG_7    : 1;
-          u16 ICHG_8    : 1;
-          u16 RESERVED  : 7; // Bit 15 (Bottom)
+          u16 Hb : 8;
+          u16 Lb : 8;
       } stBits;
   } tunREG03_Charge_Current_Limit;
 
@@ -232,8 +223,7 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 VINDPM_0 : 1; u8 VINDPM_1 : 1; u8 VINDPM_2 : 1; u8 VINDPM_3 : 1;
-          u8 VINDPM_4 : 1; u8 VINDPM_5 : 1; u8 VINDPM_6 : 1; u8 VINDPM_7 : 1;
+          u8 VINDPM : 8;
       } stBits;
   } tunREG05_Input_Voltage_Limit;
 
@@ -241,10 +231,8 @@ struct cBQ25798_RegisterMap
   union {
       u16 u16Word;
       struct {
-          u16 IINDPM_0  : 1; u16 IINDPM_1  : 1; u16 IINDPM_2  : 1; u16 IINDPM_3  : 1;
-          u16 IINDPM_4  : 1; u16 IINDPM_5  : 1; u16 IINDPM_6  : 1; u16 IINDPM_7  : 1;
-          u16 IINDPM_8  : 1;
-          u16 RESERVED  : 7;
+          u16 Hb : 8;
+          u16 Lb : 8;
       } stBits;
   } tunREG06_Input_Current_Limit;
 
@@ -252,9 +240,8 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 IPRECHG_0 : 1; u8 IPRECHG_1 : 1; u8 IPRECHG_2 : 1; u8 IPRECHG_3 : 1;
-          u8 IPRECHG_4 : 1;
-          u8 RESERVED  : 3;
+          u8 IPRECHG   : 6;
+          u8 VBAT_LOWV : 2;
       } stBits;
   } tunREG08_Precharge_Control;
 
@@ -262,10 +249,10 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 ITERM_0    : 1; u8 ITERM_1 : 1; u8 ITERM_2 : 1; u8 ITERM_3 : 1; u8 ITERM_4 : 1;
+          u8 ITERM      : 5;
           u8 STOP_WD_EN : 1;
-          u8 RESERVED   : 1;
           u8 REG_RST    : 1; // Bit 7
+          u8 RESERVED   : 1;
       } stBits;
   } tunREG09_Termination_Control;
 
@@ -273,8 +260,9 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 VRECHG_0 : 1; u8 VRECHG_1 : 1;
-          u8 RESERVED : 6;
+          u8 VRECHG : 4;
+          u8 TRECHG : 4;
+          u8 CELL   : 4;
       } stBits;
   } tunREG0A_Re_charge_Control;
 
@@ -385,12 +373,13 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 SF_EN            : 1;
-          u8 SF_WAIT          : 2;
-          u8 SF_IDLE          : 2;
-          u8 EN_BACKUP        : 1;
-          u8 EN_SDRV_CTRL     : 1;
-          u8 EN_SDRV_VBDCHG   : 1;
+          u8 EN_BATOC         : 1;
+          u8 EN_EXTILIM       : 1;
+          u8 EN_IINDPM        : 1;
+          u8 IBAT_REG_1       : 2;
+          u8 EN_IBAT          : 1;
+          u8 RESERVED         : 1;
+          u8 SFET_PRESENT     : 1;
       } stBits;
   } tunREG14_Charger_Control_5;
 
@@ -398,10 +387,10 @@ struct cBQ25798_RegisterMap
   union {
       u8 u8Byte;
       struct {
-          u8 VOC_PCT          : 3;
-          u8 VOC_DLY          : 2;
           u8 EN_MPPT          : 1;
-          u8 RESERVED         : 2;
+          u8 VOC_RATE         : 2;
+          u8 VOC_DLY          : 2;
+          u8 VOC_PCT          : 3;
       } stBits;
   } tunREG15_MPPT_Control;
 
@@ -780,7 +769,9 @@ struct cBQ25798_RegisterMap
   union {
     i16 i16Word;
     struct {
-      i16 IBUS_ADC : 16; // Bit 0-15: 1 LSB = 1mA
+      // Bit 0-15: 1 LSB = 1mA
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG31_IBUS_ADC;
 
@@ -788,7 +779,9 @@ struct cBQ25798_RegisterMap
   union {
     i16 i16Word;       // Signed, da Entladestrom negativ sein kann
     struct {
-      i16 IBAT_ADC : 16; // Bit 0-15: 1 LSB = 1mA (Zweierkomplement)
+      // Bit 0-15: 1 LSB = 1mA (Zweierkomplement)
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG33_IBAT_ADC;
 
@@ -796,7 +789,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 VBUS_ADC : 16; // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG35_VBUS_ADC;
 
@@ -804,7 +799,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 VAC1_ADC : 16; // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG37_VAC1_ADC;
 
@@ -812,7 +809,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 VAC2_ADC : 16; // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG39_VAC2_ADC;
 
@@ -820,7 +819,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 VBAT_ADC : 16; // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG3B_VBAT_ADC;
 
@@ -828,7 +829,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 VSYS_ADC : 16; // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG3D_VSYS_ADC;
 
@@ -836,7 +839,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 TS_ADC : 16;   // Bit 0-15: Prozentsatz von REGN (oder mV je nach Einstellung)
+      // Bit 0-15: Prozentsatz von REGN (oder mV je nach Einstellung)
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG3F_TS_ADC;
 
@@ -844,7 +849,9 @@ struct cBQ25798_RegisterMap
   union {
     i16 i16Word;       // Signed für Temperaturen
     struct {
-      i16 TDIE_ADC : 16; // Bit 0-15: 1 LSB = 0.5°C (Offset beachten)
+      // Bit 0-15: 1 LSB = 0.5°C (Offset beachten)
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG41_TDIE_ADC;
 
@@ -852,7 +859,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 DP_ADC : 16;   // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG43_DP_ADC;
 
@@ -860,7 +869,9 @@ struct cBQ25798_RegisterMap
   union {
     u16 u16Word;
     struct {
-      u16 DM_ADC : 16;   // Bit 0-15: 1 LSB = 1mV
+      // Bit 0-15: 1 LSB = 1mV
+      u16 Hb : 8;
+      u16 Lb : 8;
     } stBits;
   } tunREG45_DM_ADC;
 
@@ -980,6 +991,22 @@ struct cBQ25798_RegisterMap
     }
   };
 
+  class cSEQ06_DeInit : public cComSeq
+  {
+    public:
+    // To deactivate ADC and EN_IBAT
+    const cEntry macRegList[2] = { cWrite(nREG2E_ADC_CONTROL), cWrite(nREG14_CHARGER_CTRL_5) };
+  
+    cEntry* pacGet() override
+    {
+       return (cEntry*) macRegList;
+    }
+  
+    u8 u8GetLen() override
+    {
+      return sizeof(macRegList);
+    }
+  };
   
   class cSEQ07_WriteControlLimits : public cComSeq
   {
@@ -1180,6 +1207,7 @@ struct cBQ25798_RegisterMap
   };
   
   cSEQ01_Init1      mcSEQ01_Init1;
+  cSEQ06_DeInit     mcSEQ06_DeInit;
 
   cSEQ07_WriteControlLimits  mcSEQ07_WriteControlLimits;
   cSEQ08_WriteControlCharge  mcSEQ08_WriteControlCharge;
@@ -1222,6 +1250,7 @@ struct cBQ25798_RegisterMap
     switch (lu8SeqIdx)
     {
       case tenSequences::nSEQ01Init1:     return &mcSEQ01_Init1;
+      case tenSequences::nSEQ06DeInit:    return &mcSEQ06_DeInit;
 
       case tenSequences::nSEQ07_WriteControlLimits:  return &mcSEQ07_WriteControlLimits;
       case tenSequences::nSEQ08_WriteControlCharge:  return &mcSEQ08_WriteControlCharge;

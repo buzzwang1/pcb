@@ -19,7 +19,7 @@ extern void SysTime_vInit(void);
 extern void SysTime_vUpdateTime(void);
 extern u32 SysTime_u32TimeGetTime_us(void);
 extern u32 SysTime_u32TimeGetTime_ms(void);
-extern u32  SysTime_u32GetDiffTime(u32& lu32TimeLast, u32 lu32TimeNew);
+extern u32 SysTime_u32GetDiffTime(u32& lu32TimeLast, u32 lu32TimeNew);
 
 
 /* Init Funktion, muss am Start einmal aufgerufen werden

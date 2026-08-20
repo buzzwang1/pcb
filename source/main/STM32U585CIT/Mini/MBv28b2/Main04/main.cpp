@@ -218,6 +218,8 @@ void assert_failed(u8 *file, uint32_t line)
 #include "cCompBoardI2C2.h"
 #include "cCompBoardMonitor.h"
 
+#include "cCompComOutCntrl.h"
+
 #include "cCompPomoOut1Temp.h"
 #include "cCompPomoOut1.h"
 
@@ -254,7 +256,7 @@ const osThreadAttr_t TaskMcp_attributes = {
   .cb_size = 0,                            ///< size of provided memory for control block
   .stack_mem = 0,                          ///< memory for stack
   .stack_size = (1024 * 2),                ///< size of stack
-  .priority = (osPriority_t)osPriorityLow, ///< initial thread priority (default: osPriorityNormal)
+  .priority = (osPriority_t)osPriorityNormal, ///< initial thread priority (default: osPriorityNormal)
   .tz_module = 0,                          ///< TrustZone module identifier
   .reserved = 0                            ///< reserved (must be 0)
 };

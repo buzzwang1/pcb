@@ -94,12 +94,24 @@ public:
       //        CH1: ExCom CH3
       //        CH2: ExCom CH2
       //        CH3: ExCom CH1
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[0] = mcIna0x40.fGetV_mv(3);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[0] = mcIna0x40.fGetI_mA(3, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[1] = mcIna0x40.fGetV_mv(2);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[1] = mcIna0x40.fGetI_mA(2, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfComV_mV[2] = mcIna0x40.fGetV_mv(1);
-      cSysDPool::mBoard.mcMonitor.mfComI_mA[2] = mcIna0x40.fGetI_mA(1, 0.01f);
+      if (!mbStartupFinished)
+      {
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[0] = mcIna0x40.fGetV_mv(3);
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[0] = mcIna0x40.fGetI_mA(3, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[1] = mcIna0x40.fGetV_mv(2);
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[1] = mcIna0x40.fGetI_mA(2, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[2] = mcIna0x40.fGetV_mv(1);
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[2] = mcIna0x40.fGetI_mA(1, 0.01f);
+      }
+      else
+      {
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[0] += (0.1f * (mcIna0x40.fGetV_mv(3)        - cSysDPool::mBoard.mcMonitor.mfComV_mV[0]));
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[0] += (0.1f * (mcIna0x40.fGetI_mA(3, 0.01f) - cSysDPool::mBoard.mcMonitor.mfComI_mA[0]));
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[1] += (0.1f * (mcIna0x40.fGetV_mv(2)        - cSysDPool::mBoard.mcMonitor.mfComV_mV[1]));
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[1] += (0.1f * (mcIna0x40.fGetI_mA(2, 0.01f) - cSysDPool::mBoard.mcMonitor.mfComI_mA[1]));
+        cSysDPool::mBoard.mcMonitor.mfComV_mV[2] += (0.1f * (mcIna0x40.fGetV_mv(1)        - cSysDPool::mBoard.mcMonitor.mfComV_mV[2]));
+        cSysDPool::mBoard.mcMonitor.mfComI_mA[2] += (0.1f * (mcIna0x40.fGetI_mA(1, 0.01f) - cSysDPool::mBoard.mcMonitor.mfComI_mA[2]));
+      }
     }
 
     if (mcIna0x41.isDone(cIna3221_RegisterMap::nSEQ08ReadAllCh))
@@ -108,12 +120,24 @@ public:
       //        CH1: SysIn
       //        CH2: PomoIn
       //        CH3: PomoOut
-      cSysDPool::mBoard.mcMonitor.mfSysInV_mV   = mcIna0x41.fGetV_mv(1);
-      cSysDPool::mBoard.mcMonitor.mfSysInI_mA   = mcIna0x41.fGetI_mA(1, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  = mcIna0x41.fGetV_mv(2);
-      cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  = mcIna0x41.fGetI_mA(2, 0.01f);
-      cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV = mcIna0x41.fGetV_mv(3);
-      cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA = mcIna0x41.fGetI_mA(3, 0.01f);
+      if (!mbStartupFinished)
+      {
+        cSysDPool::mBoard.mcMonitor.mfSysInV_mV   = mcIna0x41.fGetV_mv(1);
+        cSysDPool::mBoard.mcMonitor.mfSysInI_mA   = mcIna0x41.fGetI_mA(1, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  = mcIna0x41.fGetV_mv(2);
+        cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  = mcIna0x41.fGetI_mA(2, 0.01f);
+        cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV = mcIna0x41.fGetV_mv(3);
+        cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA = mcIna0x41.fGetI_mA(3, 0.01f);
+      }
+      else
+      {
+        cSysDPool::mBoard.mcMonitor.mfSysInV_mV   += (0.1f * (mcIna0x41.fGetV_mv(1)        - cSysDPool::mBoard.mcMonitor.mfSysInV_mV));
+        cSysDPool::mBoard.mcMonitor.mfSysInI_mA   += (0.1f * (mcIna0x41.fGetI_mA(1, 0.01f) - cSysDPool::mBoard.mcMonitor.mfSysInI_mA));
+        cSysDPool::mBoard.mcMonitor.mfPomoInV_mV  += (0.1f * (mcIna0x41.fGetV_mv(2)        - cSysDPool::mBoard.mcMonitor.mfPomoInV_mV));
+        cSysDPool::mBoard.mcMonitor.mfPomoInI_mA  += (0.1f * (mcIna0x41.fGetI_mA(2, 0.01f) - cSysDPool::mBoard.mcMonitor.mfPomoInI_mA));
+        cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV += (0.1f * (mcIna0x41.fGetV_mv(3)        - cSysDPool::mBoard.mcMonitor.mfPomoOutV_mV));
+        cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA += (0.1f * (mcIna0x41.fGetI_mA(3, 0.01f) - cSysDPool::mBoard.mcMonitor.mfPomoOutI_mA));
+      }
 
       if (mu8SampleCnt < 250) mu8SampleCnt++;
 
@@ -127,7 +151,6 @@ public:
            cComponentList::mcList1ms.vRemove(this->mu8Idx);
         }
       }
-
     }
 
     if (mu8SampleCnt >= 4)

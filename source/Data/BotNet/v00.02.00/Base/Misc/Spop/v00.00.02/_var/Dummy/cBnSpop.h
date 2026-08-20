@@ -23,6 +23,7 @@ void   cBnSpop_vFlash_Unlock();
 void   cBnSpop_vFlash_Lock();
 uint32 cBnSpop_ui32Flash_Size2Pages(uint8* lpui8Adress, uint32 lui32Size);
 void   cBnSpop_vFlash_ErasePage_Start(uint8* lpui8PageStartAdress);
+bool   cBnSpop_bFlash_ErasePage(uint8* lpui8PageStartAdress);
 void   cBnSpop_vFlash_ErasePage_Finish();
 uint32 cBnSpop_vFlash_Program_Start(uint8* lpui8Adress, uint8* lpui8Src, uint32 lui32Size);
 void   cBnSpop_vFlash_Program_Finish();

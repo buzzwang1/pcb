@@ -27,6 +27,8 @@
 #include "board_api.h"
 #include "tusb.h"
 
+#include "tGPPin.h"
+
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
@@ -83,7 +85,28 @@ void cdc_task(void);
 //volatile u32  mu32Adr = 0x90000000;
 
 /*------------- MAIN -------------*/
-int main(void) {
+int main(void) 
+{
+  cGpPin mMX22917_S1(GPIOC_BASE, 5);
+  cGpPin mMX22917_S2(GPIOC_BASE, 4);
+
+  cGpPin mTPS62125_S1(GPIOE_BASE, 7);
+  cGpPin mTPS62125_S2(GPIOE_BASE, 8);
+
+  mMX22917_S1.vInit(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  mMX22917_S2.vInit(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  mTPS62125_S1.vInit(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+  mTPS62125_S2.vInit(GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW, 0);
+
+
+  mTPS62125_S2.vSet1();
+  mTPS62125_S1.vSet1();
+
+  mMX22917_S1.vSet1();
+  mMX22917_S2.vSet1();
+
+
+
   board_init();
 
   // init device stack on configured roothub port

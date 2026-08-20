@@ -1,6 +1,5 @@
 #pragma once
 
-#include "FreeRTOS.h"
 #include "cSysDPool.h"
 
 class cCompAddOnCharger : public cComponent
@@ -34,6 +33,7 @@ class cCompAddOnCharger : public cComponent
     mcBQ25798.tunREG0F_Charger_Control_0.stBits.EN_CHG = 1;
     mcBQ25798.tunREG0F_Charger_Control_0.stBits.EN_ICO = 0;
     mcBQ25798.tunREG10_Charger_Control_1.stBits.WD_MODE = 0; // Off
+    mcBQ25798.tunREG14_Charger_Control_5.stBits.EN_IBAT = 1; // Strommessung wenn im Entlademodus
     mcBQ25798.vRequest(cBQ25798_RegisterMap::nSEQ11_WriteControlCharger);
 
 
@@ -59,6 +59,9 @@ class cCompAddOnCharger : public cComponent
     cComponentList::mcList128ms.vRemove(this->mu8Idx);
     
     mcBQ25798.vClearAllRequest();
+
+    mcBQ25798.tunREG14_Charger_Control_5.stBits.EN_IBAT = 0; // Strommessung wenn im Entlademodus
+    mcBQ25798.tunREG2E_ADC_Control.stBits.ADC_EN = 0; // enable
 
     vWaitCom();
     mcBQ25798.vRequest(cBQ25798_RegisterMap::nSEQ05Disable);
