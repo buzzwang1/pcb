@@ -10,7 +10,7 @@ class cCompAddOn5V0Out : public cComponent
   cGpPin m5VOutCh2;
 
   cCompAddOn5V0Out()
-    : cComponent(cDepTreeCfg::cComp::n5V0Out, cDepTreeCfg::cComp::n5V0),
+    : cComponent(cDepTreeCfg::cComp::n5V0Out, { cDepTreeCfg::cComp::n5V0 }),
       m5VOutCh1(GPIOA_BASE, 5),
       m5VOutCh2(GPIOA_BASE, 4)
   {

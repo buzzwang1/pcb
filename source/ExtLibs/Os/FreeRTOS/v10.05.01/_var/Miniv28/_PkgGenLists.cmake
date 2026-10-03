@@ -11,12 +11,12 @@ set (gen_files
 	./list.c
 	./portable/GCC/ARM_CM33_NTZ/non_secure/port.c
 	./portable/GCC/ARM_CM33_NTZ/non_secure/portasm.c
-	./portable/MemMang/heap_4.c
 	./queue.c
 	./stream_buffer.c
 	./tasks.c
 	./timers.c
 	# List of all source files found in Miniv28_gen_files
+	./_var/Miniv28/MemMang/heap_4.c
 )
 
 

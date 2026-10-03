@@ -4,19 +4,19 @@ Mini 1.0.0.0
   |
   |400kHz
   |
-  +--- Power 1  1.2.0.0
+  +--- Power 1  1.2.0.0 -> Spiegellampe + NetzVersorgung für 1.0.0.0 (Charger)
   |
-  \--- PSwitch  1.1.0.0
+  \--- PSwitch  1.1.0.0 
          |
          |50Khz
          |
-         +--- PSwitch SLed 1    1.1.1.0
+         +--- PSwitch SLed 1    1.1.1.0 -> Drehschalter 1
          |
          |
-         +--- PSwitch SLed 2    1.1.2.0
+         +--- PSwitch SLed 2    1.1.2.0 -> Drehschalter 2
          |
          |
-         \--- Power 2           1.1.5.0
+         \--- Power 2           1.1.5.0 -> Deckenlampe
 
 
 

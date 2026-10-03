@@ -62,6 +62,7 @@ set(PCB_ProjectPackageList
       Data/BotNet/v00.01.00/BnMsgSys/RRpt/v00.00.01:default
       Data/BotNet/v00.01.00/BnMsgSys/Btr/v00.00.02:default
       Data/BotNet/v00.01.00/BnMsgSys/Spop/v00.00.02:default
+      Data/BotNet/v00.01.00/BnMsgSys/Memview/v00.00.02:Small
     Data/BotNet/v00.01.00/BnStreamSys/Base/v00.00.01:default
       Data/BotNet/v00.01.00/BnStreamSys/Ports/Base/v00.00.01:default
       Data/BotNet/v00.01.00/BnStreamSys/Ports/Cmd/v00.00.01:default

@@ -11,7 +11,7 @@ class cCompPomoOut1 : public cComponent
   cTPS55288 mcTPS55288_0x74;
 
   cCompPomoOut1()
-    : cComponent(cDepTreeCfg::cComp::nPomoOut1, cDepTreeCfg::cComp::nPomoOut1Tmp),
+    : cComponent(cDepTreeCfg::cComp::nPomoOut1, { cDepTreeCfg::cComp::nPomoOut1Tmp }),
       mcTPS55288_En(GPIOB_BASE, 12),
       mcTPS55288_0x74(cSysDPool::mBoard.mcI2c, TPS55288_I2C_ADDRESS_CONF_0)
   {

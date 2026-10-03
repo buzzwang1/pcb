@@ -5,22 +5,22 @@ set(gen_pkg_name "tinyusb_hw")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
-	./board.c
 	# List of all source files found in stm32u5_gen_files
-	./_var/stm32u5/family.c
 	# List of all source files found in stm32u5_stm32u575nucleo_gen_files
+	./_var/stm32u5/_var/stm32u575nucleo/board.c
+	./_var/stm32u5/_var/stm32u575nucleo/family.c
 )
 
 
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
-	./ansi_escape.h
-	./board_api.h
 	# List of all source files found in stm32u5_gen_headers
 	./_var/stm32u5/FreeRTOSConfig/FreeRTOSConfig.h
 	# List of all source files found in stm32u5_stm32u575nucleo_gen_headers
+	./_var/stm32u5/_var/stm32u575nucleo/ansi_escape.h
 	./_var/stm32u5/_var/stm32u575nucleo/board.h
+	./_var/stm32u5/_var/stm32u575nucleo/board_api.h
 )
 
 
@@ -35,7 +35,6 @@ set (gen_asmfiles
 # List of all folders containing any header in files the packages filetree
 set (gen_include_directories 
 	# List of all source files found in gen_include_directories
-	.
 	# List of all source files found in stm32u5_gen_include_directories
 	./_var/stm32u5/FreeRTOSConfig
 	# List of all source files found in stm32u5_stm32u575nucleo_gen_include_directories

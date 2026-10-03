@@ -1,0 +1,45 @@
+20:15 12.09.2026
+
+Ver. 00.00.01
+
+MemV: VDisk
+
+
+Interface:
+Msg.: Index 6
+
+
+Request messages
+
+                                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+      Message Req:         Rx   RI.S1.S2               // Payload Len:  3; Request           SI = Request Index:    0 = nothing; 
+                                                       //                                    S1 = Sub Index1:       0 = nothing
+                                                       //                                    S2 = Sub Index2:       0 = nothing
+                                                       //
+                                                       // R1 S1 S2
+                                                       // 01 00 00:  Request Device Info
+  
+Response messages
+
+      Open               TX 00 | 00 | 00 | RC:                            RC: Response code: 0x00 = Fail; 0x1B = ok
+
+      Device Info        TX 01 | 00 | 00 | RC.SC.SC.SC.SC.SS.SS:          RC: Response code: 0x00 = Fail; 0x1B = ok
+                                                                          SC.SC.SC.SC: 32Bit: Sector Count
+                                                                          SS.SS: 16Bit: Sector Size
+
+
+      Read Data          TX 02 | 00 | 00 | D0.D1.D2.D3.D4.DX:             DO: Data Offset: Pos = D0 * 40 + DX
+                                                                          D0..D39: Data, max. 40 Byte
+      Write Data         TX 03 | 00 | 00 | RC:                            RC: Response code: 0x00 = Fail; 0x1B = ok
+
+                                                                        
+Set Message
+      Open               RX 00 | 00 | 00 | 01.02.03.04
+
+      Read Data          RX 02 | 00 | 00 | SA.SA.SA.SA.LL:           SA: 32Bit Sector Adresse
+                                                                     LL: Lenght (max. 40)
+
+      Write Data         RX 03 | 00 | 00 | SA.SA.SA.SA.D0.D1.D2.DX:  SA: 32Bit Sector Adresse
+
+

@@ -32,8 +32,14 @@ class cBotNet_MsgSysProcess
 
   bool IsSpace()
   {
-    return mcTxComBuf.space_left();
+    return (mcTxComBuf.space_left() > 0);
   }
+
+  bool IsSpace(u8 lu8Min, u8 lu8MsgSize)
+  {
+    return ((mcTxComBuf.space_left() > lu8Min) && (cBnMsgPool::u8SpaceLeft(lu8MsgSize) > lu8Min));
+  }
+
 
   u8 u8PutInt(cBotNetAdress lcSAdr, cBotNetAdress lcDAdr, u16 liIdx, u8* lpuData, u8 luSize);  // __attribute__((optimize("-O0")));
 

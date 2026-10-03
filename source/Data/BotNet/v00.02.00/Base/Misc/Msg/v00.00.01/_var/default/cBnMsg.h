@@ -333,6 +333,7 @@ class cBotNetMsg_MsgProt : public cBotNetMsg_Base
   bool isId(ID16 lcID16) { return cMemTools::u16U8toU16(this->mcPayload.mpu8Data) == lcID16; }
   bool isId(ID24 lcID24) { return (cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8) == lcID24; }
 
+  u8   u8GetId()  { return *this->mcPayload.mpu8Data; }
   u32  u32GetId() { return (cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8); }
 
   bool isSetId(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2)
@@ -340,9 +341,24 @@ class cBotNetMsg_MsgProt : public cBotNetMsg_Base
     return ((cMemTools::u32U8toU32(this->mcPayload.mpu8Data) >> 8) == ID24(ID::nSet, lu8MI, lu8S1, lu8S2));
   }
 
+  static constexpr ID8 cId8Set(const u8 lu8MI)
+  {
+    return ID8(ID::nSet, lu8MI);
+  }
+
   static constexpr ID24 cId24(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2)
   {
     return ID24(ID::nSet, lu8MI, lu8S1, lu8S2);
+  }
+
+  static constexpr ID8 cId8Req(const u8 lu8MI)
+  {
+    return ID8(ID::nRequest, lu8MI);
+  }
+
+  static constexpr ID24 cId24Req(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2)
+  {
+    return ID24(ID::nRequest, lu8MI, lu8S1, lu8S2);
   }
 
   static void vRespId(const u8 lu8MI, const u8 lu8S1, const u8 lu8S2, u8* lpu8Dest)

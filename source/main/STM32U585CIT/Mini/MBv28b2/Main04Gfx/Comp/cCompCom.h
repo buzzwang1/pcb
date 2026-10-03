@@ -1,7 +1,12 @@
 #pragma once
 
 #include "cSysDPool.h"
-
+#include "cBnMsgSysBtr.h"
+#include "cBnMsgSysSpop.h"
+#include "cBnMsgSysRRpt.h"
+#include "cBnMsgSysMView.h"
+#include "cBnMsgSysVDisk.h"
+#include "cBnMsgSysFatFs.h"
 
 class cCompCom : public cComponent
 {
@@ -10,17 +15,23 @@ class cCompCom : public cComponent
   cBotNetCfg mcMyBotNetCfg;
   cBotNet    mcBn;
 
-  cGpPin mSCK;
-  cGpPin mMISO;
-  cGpPin mMOSI;
+  cBotNetMsgPortBtr   mcBtr;
+  cBotNetMsgPortSpop  mcSpop;
+  cBotNetMsgPortRRpt  mcRRpt;
+  cBotNetMsgPortMView mcMView;
+  cBotNetMsgPortVDisk mcVDisk;
+  cBotNetMsgPortFatFs mcFatFs;
 
   cCompCom()
-    : cComponent(cDepTreeCfg::cComp::nCom, cDepTreeCfg::cComp::nBoardMonitor), 
-      mcMyBotNetCfg((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr),
-      mcBn(&mcMyBotNetCfg),
-      mSCK(GPIOB_BASE, 3),
-      mMISO(GPIOB_BASE, 4),
-      mMOSI(GPIOB_BASE, 5)
+    : cComponent(cDepTreeCfg::cComp::nCom, { cDepTreeCfg::cComp::nBoardI2C2 }),
+    mcMyBotNetCfg((rsz)RomConst_stDevice_Info->szDevice_Name, RomConst_stDevice_Info->u16BnDeviceId, RomConst_stDevice_Info->u16BnNodeAdr),
+    mcBn(&mcMyBotNetCfg),
+    mcBtr(&mcBn),
+    mcSpop(&mcBn, &mcBtr),
+    mcRRpt(&mcBn),
+    mcMView(&mcBn),
+    mcVDisk(&mcBn),
+    mcFatFs(&mcBn, &cSysDPool::mFs.macFsJob[0], &cSysDPool::mFs.mstFs)
   {
     cSysDPool::mCom.mpcBn = &mcBn;
   }
@@ -29,14 +40,14 @@ class cCompCom : public cComponent
   {
     cBnMsgPool::vInit();
 
-    mSCK.vInit(GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-    mMISO.vInit(GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
-    mMOSI.vInit(GPIO_MODE_AF_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_VERY_HIGH, 0);
+    // Add MsgSys
+    mcBtr.vAddMsgSys();
+    mcSpop.vAddMsgSys();
+    mcRRpt.vAddMsgSys();
+    mcMView.vAddMsgSys();
+    mcVDisk.vAddMsgSys();
+    mcFatFs.vAddMsgSys();
 
-    mSCK.vSetAF(GPIO_MODE_AF_PP, GPIO_AF5_SPI1);   // SCK
-    mMISO.vSetAF(GPIO_MODE_AF_PP, GPIO_AF5_SPI1);  // MISO
-    mMOSI.vSetAF(GPIO_MODE_AF_PP, GPIO_AF5_SPI1);  // MOSI  
- 
     mcBn.vStreamPortConnect(cBotNet_CmdPortIdx, 0xE000, cBotNet_CmdPortIdx);
 
     cComponentList::mcList1ms.Add(this->mu8Idx);
@@ -68,7 +79,7 @@ class cCompCom : public cComponent
     cStr_Create(lszStrBuf, 32);
   
     // Warten bis SPOP fertig ist
-    if (mcBn.mcSpop.isBusy())
+    if (mcSpop.isBusy())
     {
       lszStrBuf.Setf((rsz)"Spop");
       if (lcStatus.Len() > 0) lcStatus += (rsz)", ";
@@ -77,6 +88,5 @@ class cCompCom : public cComponent
   
     return lbRet;
   }
-
 };
 

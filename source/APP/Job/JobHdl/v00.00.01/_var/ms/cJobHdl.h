@@ -7,7 +7,7 @@
 class cJobHandler
 {
   public:
-  enum class cJobs: u8
+  enum struct cJobs: u8
   {
     nJobNop,
     nLast

@@ -16,6 +16,7 @@
 //  PB09  -> Status Led
 //
 //  PA00   -> Wakeup (100k Pull Down)
+//  PA01   -> PIR
 //
 //  PA08   -> reserve
 //  PA05   -> reserve
@@ -161,6 +162,30 @@
 //    13: Start von PreparePowerdown
 //    14: Start von GotoPowerDown
 //    15: vor Sleep
+
+
+// Lampe wird aktiviert, wenn
+//   - 3V3 an Wakeup at PA00, Wakeup wird abgepollt alle  10ms von SMAN
+//   - 3V3 an PIR    at PA01, PIR    wird abgepollt alle 100ms, von daher sollte PIR mit 200ms anliegen
+//
+//  Clock:
+//     - Ist das Datum invalid, dann 1x pro Tag probieren zu synchronisieren,
+//       sonst alle 3 Tage
+//     - Ein Synchronisationsversuch dauert max 3 min.
+//
+//  Charger
+//    - keine Erhaltungsladung
+//    - Laden wird erst gestartet, wenn 3600mV unterschritten werden
+//    - Laden wird beendet, sobalt Spannung 4050mV überschritten und Ladestrom 300mA unterschritten wird
+//    - Ladestrom ist begrenzt durch HW TP4056
+//
+//
+//  Wakeup Simulation
+//    - Request 0: General Wakeup Request
+//    - Request 1: PIR wakeup request.
+
+
+
 
 cClockInfo mcClockInfo;
 
@@ -483,6 +508,7 @@ class cReqSm
     stIdle,
     stReq,
     stWait,
+    stOnDelay,
     stOn,
     stError
   };
@@ -496,12 +522,15 @@ class cReqSm
 
   u16      mTimeoutCnt_ms;
   u16      mTimeout_ms;
+  u16      mOnDelayCnt_ms;
+  u16      mOnDelay_ms;
   tenState mState;
 
-  cReqSm(u16 lu16TimeoutCnt_ms = 0)
+  cReqSm(u16 lu16TimeoutCnt_ms = 0, u16 lu16OnDelay_ms = 0)
   {
     vReset();
     mTimeoutCnt_ms = lu16TimeoutCnt_ms;
+    mOnDelay_ms    = lu16OnDelay_ms;
   }
 
   void vReset()
@@ -527,6 +556,10 @@ class cReqSm
   {
   }
 
+  virtual void vOnError()
+  {
+  }
+
   void vSm(tenEvent lenEvent = evDummy)
   {
     bool lbLoop = True;
@@ -547,19 +580,49 @@ class cReqSm
           break;
         case stReq:
           mState = stWait;
-          mTimeoutCnt_ms = mTimeoutCnt_ms;
+          mTimeoutCnt_ms = mTimeoutCnt_ms; // Timeout aktivieren
           lbLoop = True;
           break;
         case stWait:
           if (isEvExitWait())
           {
             vActEntryOn();
-            mState = stOn;
-            lbLoop = True;
+            mTimeoutCnt_ms = 0; // Timeout deaktivieren
+
+            if (mOnDelay_ms == 0)
+            {
+              // wenn kein Delay nach dem EntryOn
+              // dann direkt zu On
+              mState = stOn;
+            }
+            else
+            {
+              mState = stOnDelay;
+              mOnDelayCnt_ms = mOnDelay_ms;
+            }
           }
           else
           {
             vActWait();
+          }
+          break;
+
+        case stOnDelay:
+          if (mOnDelayCnt_ms)
+          {
+            if (mOnDelayCnt_ms > 100)
+            {
+              mOnDelayCnt_ms -= 100;
+            }
+            else
+            {
+              mOnDelayCnt_ms = 0;
+              mState = stOn;
+            }
+          }
+          else
+          {
+            mState = stOn;
           }
           break;
         case stOn:
@@ -583,6 +646,7 @@ class cReqSm
       {
         mTimeout_ms = 0;
         mState = stError;
+        vOnError();
       }
     }
     vSm();
@@ -621,9 +685,22 @@ class cSm220V : public cReqSm
 
   void vActEntryOn() override
   {
-    vPwrReqMsgSetChn(0x1200, 1, 0, 0, 100);
+    //               lu16BnDstAdr, Relais, Chl1, Chl2, Chl3
+    vPwrReqMsgSetChn(   0x1200,       1,    0,     0,  100);
   }
 
+  void vOnError() override
+  {
+    cReqSm::vReset();
+    if (mu8ReqCnt)
+    {
+      cReqSm::vSm(cReqSm::tenEvent::evStart);
+    }
+    else
+    {
+      mcSys.mcBoard.mcLipoMon.mcPowerOut->vDisable();
+    }
+  }
 
 
   bool isReady()
@@ -741,7 +818,9 @@ class cSmCharger
           if (mcSmPower->isReady())
           {
             mState = stOn;
-            lbLoop = True;
+            // Nicht direkt durchloopen, damit charger 100ms Zeit hat
+            // seinen Status zu aktualisieren.
+            //lbLoop = True;
           }
           break;
         case stOn:
@@ -827,7 +906,22 @@ class cSmLightBrightness
             //               lu16BnDstAdr, lu8Enable, lu8Brigthness, lu8AnimIdx)
             vPwrReqMsgSetLed(0x1200,       0,         0,             mstLedStateSoll[0].u8AnimIdx); // Spiegellampe
             vPwrReqMsgSetLed(0x1150,       0,         0,             mstLedStateSoll[0].u8AnimIdx); // Deckenlampe
+
+            mu32ChangeTimeout_ms = 500;
           }
+
+          if (mu32ChangeTimeout_ms == 0)
+          {
+            // Switch ausschalten
+            //                  lu16BnDstAdr, lu8Chl1, lu8Chl2, lu8Chl3)
+            vPSwitchReqMsgSetChn(0x1100, 0, 0, 0); // PSwitch
+          }
+          else
+          {
+            if (mu32ChangeTimeout_ms > 100) mu32ChangeTimeout_ms -= 100;
+            else mu32ChangeTimeout_ms = 0;
+          }
+
           break;
         case stOn:
           {
@@ -844,10 +938,10 @@ class cSmLightBrightness
             {
               // Eine Einschalt-Verzögerung bis sich alles stabilisiert hat.
               // Dieser Teil wird nur die ersten 2s (mu16OnSettleTime_ms)  nachdem Einschalten gemacht
-              
+
               //                  lu16BnDstAdr, lu8Chl1, lu8Chl2, lu8Chl3)
               vPSwitchReqMsgSetChn(0x1100,      1,       1,       1); // PSwitch
-             
+
               for (u8 lu8Node = 0; lu8Node < MAIN_ROTSWITCHCNT; lu8Node++)
               {
                 //                   BnDstAdr,                lu8Enable,                         lu8RotSwtchPos,                       lu8AnimIdx
@@ -863,7 +957,8 @@ class cSmLightBrightness
               vPwrReqMsgSetChn(0x1200, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
               vPwrReqMsgSetChn(0x1150, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
               vPwrReqMsgSetLed(0x1200, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
-              vPwrReqMsgSetLed(0x1150, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
+              // Deckenlampe auf 75% um Strom zu sparen
+              vPwrReqMsgSetLed(0x1150, ((u8)mu16IstBrigthness > 0), (mu16IstBrigthness * 3) / 4, mstLedStateSoll[0].u8AnimIdx);
 
               if (mu16OnSettleTime_ms > 100) mu16OnSettleTime_ms -= 100;
               else mu16OnSettleTime_ms = 0;
@@ -880,7 +975,7 @@ class cSmLightBrightness
                   lbDoUpdate = True;
                   lu8DiffNode = lu8Node;
                   mu16SollBrigthness  = u8RotSwitchToBrigthnessDigit(mstLedStateIst[lu8Node].u8RotSwitch);
-                  mu16SollBrigthness *= mstLedStateIst[lu8Node].u8Enable;                  
+                  mu16SollBrigthness *= mstLedStateIst[lu8Node].u8Enable;
                   mbUserChange = True;
                   mu32ChangeTimeout_ms = 200;
                   break;
@@ -941,7 +1036,8 @@ class cSmLightBrightness
               vPwrReqMsgSetChn(0x1200, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
               vPwrReqMsgSetChn(0x1150, 1, lu8SLedEnable, (mu16IstBrigthness * 100) / 255, 100);
               vPwrReqMsgSetLed(0x1200, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
-              vPwrReqMsgSetLed(0x1150, ((u8)mu16IstBrigthness > 0), mu16IstBrigthness, mstLedStateSoll[0].u8AnimIdx);
+              // Deckenlampe auf 75% um Strom zu sparen
+              vPwrReqMsgSetLed(0x1150, ((u8)mu16IstBrigthness > 0), (mu16IstBrigthness * 3) / 4, mstLedStateSoll[0].u8AnimIdx);
             }
           }
           break;
@@ -1021,10 +1117,8 @@ class cSmLightBrightness
   }
 
   void vEnable()
-  {    
-    
+  {
     mbNewState = True;
-    mu32ChangeTimeout_ms = 200;
     if (mState != stOn)
     {
       vSetDayNigthMode();
@@ -1210,7 +1304,7 @@ class cSmLight
   void vTick100ms()
   {
     bool lbPIR = (mcPinPIR.ui8Get() || // High aktive
-                 (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1))); 
+                 (mcSys.mcSMsg.mcWakeupSim.isRequestAndClear(1)));
 
     if (lbPIR)
     {
@@ -1244,7 +1338,20 @@ void vDoGuiControl_100ms()
 
     if (mcSm220V.mState != cReqSm::tenState::stIdle)
     {
-      mcSys.mcSMan.mcPowerManager.vStart(1000 * 1 / 10); //  1000ms * 5 = 5sec; /10m weil Tick in 10ms
+      // System am schalfen gehen hintern, solange 220V requested ist.
+
+      // Wartezeit wird im Info Nachricht ausgegeben,
+      // damit nicht immer nur 1s ausgegeben wird
+      // mit PIR wartezeit überlegen
+      // Falls system vom Charger wachgehalten wird, dann einfach 1s ausgeben.
+      if (mcSmLight.mu32PirCnt_ms > 1000)
+      {
+        mcSys.mcSMan.mcPowerManager.vStart(mcSmLight.mu32PirCnt_ms / 10); //  1000ms * 5 = 5sec; /10m weil Tick in 10ms
+      }
+      else
+      {
+        mcSys.mcSMan.mcPowerManager.vStart(1000 * 1 / 10); //  1000ms * 5 = 5sec; /10m weil Tick in 10ms
+      }
     }
   }
 }
@@ -1346,7 +1453,7 @@ public:
         break;
     }
     lcCli->bPrintLn(lszStr);
-    
+
     lszStr.Setf((rsz)"220V Req: %d", mcSm220V.mu8ReqCnt); lcCli->bPrintLn(lszStr);
 
     switch (mcSmLight.mState)
@@ -1460,6 +1567,7 @@ void MAIN_vTick1msLp(void)
   if ((lu8Tick1msCnt % 100) == 0)
   {
     vDoGuiControl_100ms();
+    lu8Tick1msCnt = 0;
   }
 }
 

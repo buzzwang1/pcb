@@ -47,7 +47,7 @@ class cCompGfx : public cComponent
   u8   u8DisplayDim_Percent_old;
 
   cCompGfx()
-    : cComponent(cDepTreeCfg::cComp::nGfx, cDepTreeCfg::cComp::nGfxSpi2),
+    : cComponent(cDepTreeCfg::cComp::nGfx, { cDepTreeCfg::cComp::nGfxSpi2 }),
       mcILI9341(cSysDPool::mBoard.mcSpi2),
       mcXPT2046(cSysDPool::mBoard.mcSpi2),
       mcMsgBox(20),

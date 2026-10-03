@@ -22,6 +22,9 @@ public:
   // Löscht alle Bits (setzt auf 0)
   void vClearAll() { mtData = 0; }
 
+  // Gibt die Anzahl der gesetzten Bits zurück
+  u8 u8Count() { return __builtin_popcount(mtData);  }
+
   // Gibt den Index des ersten gesetzten Bits zurück (LSB zuerst)
   // Gibt -1 zurück, wenn kein Bit gesetzt ist.
   i8 i8GetFirst() const
@@ -30,6 +33,18 @@ public:
     // __builtin_ctz zählt die Nullen von rechts (Trailing Zeros)
     // Returns the number of trailing 0 - bits in x, starting at the least significant bit position.If x is 0, the result is undefined.
     if (mtData) return static_cast<i8>(__builtin_ctz(mtData));
+    return -1;
+  }
+
+  // Gibt den Index des ersten gesetzten Bits ab der übergebenen Position zurück (LSB zuerst)
+  // Gibt -1 zurück, wenn kein Bit gesetzt ist.
+  i8 i8GetNext(u8 lu8StartPos) const
+  {
+    // Nutzt Compiler-Builtin für Effizienz (GCC/Clang)
+    // __builtin_ctz zählt die Nullen von rechts (Trailing Zeros)
+    // Returns the number of trailing 0 - bits in x, starting at the least significant bit position.If x is 0, the result is undefined.
+    T ltData = mtData >> lu8StartPos;
+    if (ltData) return static_cast<i8>((__builtin_ctz(ltData) + lu8StartPos));
     return -1;
   }
 
@@ -58,14 +73,14 @@ public:
   }
 
   // Setzt ein spezifisches Bit (0-31)
-  void vSet(u8 lu8Bit) 
-  { 
+  void vSet(u8 lu8Bit)
+  {
     u8 lu8Byte = lu8Bit >> 5;
     mtcaBf[lu8Byte].vSet(lu8Bit - lu8Byte * 32);
   }
 
   // Löscht ein spezifisches Bit (0-31)
-  void vClear(u8 lu8Bit) 
+  void vClear(u8 lu8Bit)
   {
     u8 lu8Byte = lu8Bit >> 5;
     mtcaBf[lu8Byte].vClear(lu8Bit - lu8Byte * 32);
@@ -82,16 +97,28 @@ public:
   }
 
 
+  // Gibt die Anzahl der gesetzten Bits zurück
+  u8 u8Count()
+  {
+    u8 lu8BitCnt = 0;
+    for (u8 i = 0; i < mu8Cnt; i++)
+    {
+      lu8BitCnt += mtcaBf[i].u8Count();
+    }
+    return lu8BitCnt;
+  }
+
+
   // Fragt ab, ob ein spezifisches Bit gesetzt ist
-  bool isSet(u8 lu8Bit) const 
-  { 
+  bool isSet(u8 lu8Bit) const
+  {
     u8 lu8Byte = lu8Bit >> 5;
     return mtcaBf[lu8Byte].isSet(lu8Bit - lu8Byte * 32);
   }
 
   // Löscht alle Bits (setzt auf 0)
-  void vClearAll() 
-  { 
+  void vClearAll()
+  {
     for (u8 i = 0; i < mu8Cnt; i++) mtcaBf[i].vClearAll();
   }
 
@@ -107,6 +134,24 @@ public:
     return -1;
   }
 
+  // Gibt den Index des ersten gesetzten Bits ab der übergebenen Position zurück (LSB zuerst)
+  // Gibt -1 zurück, wenn kein Bit gesetzt ist.
+  i8 i8GetNext(u8 lu8StartPos) const
+  {
+    i8 li8Ret = mtcaBf[lu8StartPos >> 5].i8GetNext(lu8StartPos % 32);
+
+    if (li8Ret >= 0) return li8Ret + 32 * (lu8StartPos >> 5);
+    return -1;
+  }
+
+  void vClone(tcBitFieldArray<mu8Cnt>& ltDest)
+  {
+    for (u8 i = 0; i < mu8Cnt; i++)
+    {
+      ltDest.mtcaBf[i].mtData = mtcaBf[i].mtData;
+    }
+  }
+
   // Operator für den Schreibzugriff auf den Rohwert (Zuweisung)
   tcBitFieldArray<mu8Cnt>& operator=(tcBitFieldArray<mu8Cnt> ltData)
   {
@@ -118,7 +163,7 @@ public:
   }
 
   // Operator für den Lesezugriff auf den Rohwert (Implizite Konvertierung)
-  operator bool() const 
+  operator bool() const
   {
     for (u8 i = 0; i < mu8Cnt; i++)
     {

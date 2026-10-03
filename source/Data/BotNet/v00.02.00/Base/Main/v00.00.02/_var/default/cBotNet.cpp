@@ -4,9 +4,6 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
  :mcAdr(lcCfg->mu16BnAdr),
   mcDeviceID(lcCfg->mu16BnDeviceID),
   mcStreamSys(this),
-  mcBtr(this),
-  mcSpop(this),
-  mcRRpt(this),
   mszName(mszBufName, 0, 16)
 {
 
@@ -19,10 +16,6 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
   mu16DownLinkSyncCntReload_ms = cBotNet_DownLinkSyncAll;
 
   mcpMsgProcess   = null;
-  mcBtr.vAddMsgSys();
-  mcSpop.vAddMsgSys();
-  mcRRpt.vAddMsgSys();
-
 
   mu8DownLinkCnt = 0;
 
@@ -292,8 +285,9 @@ void cBotNet::vSendMsg(u8& lu8PoolIdx)
   else
   {
     // Ist die Destination der SideLink ?
-    if ((mcSideLink->mcAdr.isMe(lcMsg.cGetDAdr())) ||
-        (mcSideLink->mcAdr.isMasterOf(lcMsg.cGetDAdr())))
+    if ((mcSideLink) &&
+        ((mcSideLink->mcAdr.isMe(lcMsg.cGetDAdr())) ||
+         (mcSideLink->mcAdr.isMasterOf(lcMsg.cGetDAdr()))))
     {
       // Weiterleiten an SideLink
       vForwardMsgToLink(mcSideLink, lu8PoolIdx);

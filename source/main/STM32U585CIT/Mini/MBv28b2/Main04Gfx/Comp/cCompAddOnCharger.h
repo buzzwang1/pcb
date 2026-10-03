@@ -10,7 +10,7 @@ class cCompAddOnCharger : public cComponent
   cBQ25798 mcBQ25798;
 
   cCompAddOnCharger()
-    : cComponent(cDepTreeCfg::cComp::nCharger, cDepTreeCfg::cComp::nAddOn),
+    : cComponent(cDepTreeCfg::cComp::nCharger, { cDepTreeCfg::cComp::nAddOn }),
       mBQ25798_CE(GPIOA_BASE, 7),
       mcBQ25798(cSysDPool::mBoard.mcI2c, BQ25798_I2C_ADDRESS_CONF_0)
   {

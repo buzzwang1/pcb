@@ -9,6 +9,7 @@
 #include "cStrT.h"
 #include "cBnCfg.h"
 #include "cBnMsgSys.h"
+#include "cBnMsgSysBtr.h"
 #include "cBnSpop.h"
 #include "Eep.h"
 
@@ -65,10 +66,12 @@ class cBotNetMsgPortSpop: public cJobHandler, public cBotNet_MsgSysProcess
 
     u8    mu8MsgTx_Buf[cBotNet_MsgSize];
 
+    cBotNetMsgPortBtr*  mcBtr;
+
     cBarryPtrT<u16> mcTxMsgTx;
     cBotNetAdress   mcTxDAdr;
 
-    cBotNetMsgPortSpop(cBotNet* lcBotNet);
+    cBotNetMsgPortSpop(cBotNet* lcBotNet, cBotNetMsgPortBtr* lcBtr);
 
     cI2cEep* mcEep;
 

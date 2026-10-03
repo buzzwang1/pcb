@@ -13,13 +13,17 @@ public:
     nBase = 0,
     nBoard3V3,
       nCom,
-        nComOutCntrl,
-          nComOut,
-        nComIn,
+        nComDownCntrl,
+          nComDownOffline,
+            nComDownOnline,
+        nComSideOffline,
+          nComSideOnline,
+        nComUpOffline,
+          nComUpOnline,
 
 
       nQSpi1,
-        nExtFlash,
+        nQSpi1Fs,
       nLed,
       nUsart,
 

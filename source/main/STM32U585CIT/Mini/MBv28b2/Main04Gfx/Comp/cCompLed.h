@@ -22,7 +22,7 @@ class cCompLed : public cComponent
   u16 mModeSet;
 
   cCompLed()
-    : cComponent(cDepTreeCfg::cComp::nLed, cDepTreeCfg::cComp::nBoard3V3),
+    : cComponent(cDepTreeCfg::cComp::nLed, { cDepTreeCfg::cComp::nBoard3V3 }),
       mLed(GPIOB_BASE, 9)
   {
   }

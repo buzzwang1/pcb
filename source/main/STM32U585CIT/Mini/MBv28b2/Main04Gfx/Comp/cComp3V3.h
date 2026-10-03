@@ -15,7 +15,7 @@ class cComp3V3 : public cComponent
   cGpPin mTPS62125_PG;
 
   cComp3V3()
-    : cComponent(cDepTreeCfg::cComp::nBoard3V3, cDepTreeCfg::cComp::nBase),
+    : cComponent(cDepTreeCfg::cComp::nBoard3V3, { cDepTreeCfg::cComp::nBase }),
       mMX22917_S1(GPIOC_BASE,  5),
       mMX22917_S2(GPIOC_BASE,  4),
       mTPS62125_S1(GPIOE_BASE, 7),

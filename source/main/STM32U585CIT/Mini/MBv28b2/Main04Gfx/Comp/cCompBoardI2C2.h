@@ -11,7 +11,7 @@ class cCompBoardI2C2 : public cComponent
   cI2cMaster mcI2C2_Board;
 
   cCompBoardI2C2()
-    : cComponent(cDepTreeCfg::cComp::nBoardI2C2, cDepTreeCfg::cComp::nBoard3V3),
+    : cComponent(cDepTreeCfg::cComp::nBoardI2C2, { cDepTreeCfg::cComp::nBoard3V3 }),
       mcI2c2_SCL_Board(GPIOB_BASE, 13),
       mcI2c2_SDA_Board(GPIOB_BASE, 14),
       mcI2C2_Board(I2C2, &mcI2c2_SCL_Board, &mcI2c2_SDA_Board, 1, 400000, 0) // InitDelay == 0, weil in bInit manuell initialisiert wird

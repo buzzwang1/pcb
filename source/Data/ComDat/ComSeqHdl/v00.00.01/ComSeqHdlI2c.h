@@ -34,7 +34,7 @@ class cComSeqHdlI2c : public cComNode, public cComComp, public mtcRegMap
   tenCmd menCmd;
 
   u8  mEntryIdx;
-  u8  mRegIdx; 
+  u8  mRegIdx;
   i8  mActiveSequence;
   i8  mActiveSequenceToContinue;
 
@@ -338,7 +338,7 @@ class cComSeqHdlI2c : public cComNode, public cComComp, public mtcRegMap
     mStatus.IsInit = false;
     muRestart_ms = 100;
 
-    if (mActiveSequence == -1)
+    if (mActiveSequence != -1)
     {
       vDoneSet(mActiveSequence);
       vErrorSet(mActiveSequence);

@@ -9,7 +9,7 @@ class cCompAddOnBatOut : public cComponent
   cGpPin mBatOut;
 
   cCompAddOnBatOut()
-    : cComponent(cDepTreeCfg::cComp::nBatOut, cDepTreeCfg::cComp::nAddOn),
+    : cComponent(cDepTreeCfg::cComp::nBatOut, { cDepTreeCfg::cComp::nAddOn }),
       mBatOut(GPIOC_BASE, 13)
   {
   }

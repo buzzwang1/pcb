@@ -135,7 +135,23 @@ Adresse:
                                                                                                                     - 4: SpopMp
                                                                                                                   TS = Timeout [s] 
                                                                                                                   ID = Index: 1 = BLU STM32L4
-
+      APP:
+          - Ping            11 | 00 08 | 00 | KH.KL.SV.SV SI.SI.BV.BV BI.BI.SS.TS 00.00.00.ID || 00 00 SA SA 80 : KH:KL = Kanal HighByte:LowByte;
+                                                                                                                  SVH:SVL = Versorgungsspannung [mV]
+                                                                                                                  SIH:SIL = Versorgungs Strom [mA]
+                                                                                                                  BVH:BVL = Batteriespannung [mV]
+                                                                                                                  BIH:BIL = BatterieStrom [mA] >0 Laden <0 Entladen
+                                                                                                                  SS = (Schalter-)zustand bitcodiert
+                                                                                                                    - 7: Clock valid
+                                                                                                                    - 6: Wakeup Request
+                                                                                                                    - 5: Charging active
+                                                                                                                    - 4: Balancer_Lipo2
+                                                                                                                    - 3: Balancer_Lipo1
+                                                                                                                    - 2: S1_Lipo
+                                                                                                                    - 1: mcPowerOut->isEnable
+                                                                                                                    - 0: mcPowerIn->isEnable
+                                                                                                                  TS = Time to sleep [s] 
+                                                                                                                  ID = Index: 0 = Default
 
 
 

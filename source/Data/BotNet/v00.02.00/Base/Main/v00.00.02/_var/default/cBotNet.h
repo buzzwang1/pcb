@@ -11,9 +11,6 @@
 #include "cBnMsg.h"
 
 #include "cBnMsgSys.h"
-#include "cBnMsgSysBtr.h"
-#include "cBnMsgSysSpop.h"
-#include "cBnMsgSysRRpt.h"
 
 #include "cBnStreamSys.h"
 #include "cBnLinkBase.h"
@@ -66,11 +63,6 @@ class cBotNet
   u8 mu8PoolIdx;
 
   cBotNet_MsgSysProcess *mcpMsgProcess;
-
-
-  cBotNetMsgPortBtr      mcBtr;
-  cBotNetMsgPortSpop     mcSpop;
-  cBotNetMsgPortRRpt     mcRRpt;
 
   // Für Nachrichtenbehandlung
   bool mbMsgTxOk;

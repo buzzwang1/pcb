@@ -7,18 +7,21 @@ list(APPEND PCB_ListTargetDefinition
 # Compile Definitions
 # -----------------------------------------------
   -DPCB_PROJECT_${PCB_Project}
+  -DPCB_PROJECTCFG_${PCB_ProjectCfg}
   -DEMBEDDED
   
   -DSTM32U575xx
 #  -D__NO_SYSTEM_INIT
   -DUSE_FULL_LL_DRIVER
+  -DCFG_TUSB_MCU=OPT_MCU_STM32U5
+  #-DPCB_PROJECTCFG_Test
 
 #  -DUSE_HAL_DRIVER
 #  -DUSE_FULL_ASSERT
 #  -DUSE_STM32F4XX_NUCLEO
-
-  -D__STACK_SIZE=0x800 #2kb
-  -D__HEAP_SIZE=0x8000 #32kb
+  -DHSE_VALUE=32000000UL 
+  -D__STACK_SIZE=0x0800  #2kb
+  -D__HEAP_SIZE=0x0A000  #40kb
 
   #-DARM_MATH_CM4
   #-DARM_MATH_MATRIX_CHECK
@@ -60,7 +63,7 @@ list(APPEND PCB_ListTargetCompileOptionsCpp
   -fno-rtti
   -fno-use-cxa-atexit
   -fno-threadsafe-statics
-  -nostdinc++
+  #-nostdinc++
 )
 
 list(APPEND PCB_ListTargetCompileOptionsC

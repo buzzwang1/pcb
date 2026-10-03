@@ -363,7 +363,7 @@ class cClock
     cBuRam::mBuRam->u32RtcSyncAttmptTime = mLastSyncAttempt.unTime.ui32Time;
   }
 
-  bool bResync(i32 li32DiffLastSync_d = 2, i32 li32DiffLastSyncAttempt_d = 1)
+  bool bResync(i32 li32DiffLastSync_d = 3, i32 li32DiffLastSyncAttempt_d = 1)
   {
     i32 li32DiffDays;
 

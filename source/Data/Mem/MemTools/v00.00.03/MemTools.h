@@ -968,7 +968,7 @@ class cMemTools : public cMemToolsHw
 
   static u16 u16U8toU16(u8* lu8Array)
   {
-    return (lu8Array[2] << 8) + (lu8Array[3]);
+    return (lu8Array[0] << 8) + (lu8Array[1]);
   }
 };
 

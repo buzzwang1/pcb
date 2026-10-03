@@ -7,7 +7,7 @@
 class cJobHandler
 {
   public:
-  enum class cJobs: u8
+  enum struct cJobs: u8
   {
     nJobNop,
     nLast
@@ -31,7 +31,7 @@ class cJobHandler
 
   cJobs      mcJob;
   cJobStates mcState;
-  u16        mu16ExeTime_ms;
+  u32        mu32ExeTime_us;
 
   cJobHandler()
   {
@@ -56,15 +56,15 @@ class cJobHandler
     mu16ExeTime_ms = 0;
   }
 
-  void vProcess(u16 lu16TimeDiff_ms)
+  virtual void vProcess(u32 lu16TimeDiff_us)
   {
-    if ((U16MAX - mu16ExeTime_ms) > lu16TimeDiff_ms)
+    if ((U32MAX - mu32ExeTime_us) > lu32TimeDiff_us)
     {
-      mu16ExeTime_ms += lu16TimeDiff_ms;
+      mu16ExeTime_us += lu16TimeDiff_us;
     }
     else
     {
-      mu16ExeTime_ms = U16MAX;
+      mu16ExeTime_us = U32MAX;
     }
   }
 

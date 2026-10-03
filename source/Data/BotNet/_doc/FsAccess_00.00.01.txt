@@ -1,0 +1,224 @@
+09:51 01.07.2026
+
+Ver. 00.00.01
+
+FileSystem Access
+
+
+Interface:
+Msg.: Index 7
+
+
+Request messages
+
+                                 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+      Message Req:         Rx   RI.S1.S2               // Payload Len:  3; Request           SI = Request Index:    0 = nothing; 
+                                                       //                                    S1 = Sub Index1:       0 = nothing
+                                                       //                                    S2 = Sub Index2:       0 = nothing
+                                                       //
+                                                       // R1 S1 S2
+                                                       // --- keine
+
+Response messages
+
+      Open               TX 00 | 00 | 00 | RC:                         RC: Response Code: 0 = Ok
+      Service Request    TX 02 | SI | 00 | RC:                         RC: Response Code:
+                                                                        - FR_OK                  // (0) Function succeeded
+                                                                        - FR_DISK_ERR            // (1) A hard error occurred in the low level disk I/O layer
+                                                                        - FR_INT_ERR             // (2) Assertion failed
+                                                                        - FR_NOT_READY           // (3) The physical drive does not work
+                                                                        - FR_NO_FILE             // (4) Could not find the file
+                                                                        - FR_NO_PATH             // (5) Could not find the path
+                                                                        - FR_INVALID_NAME        // (6) The path name format is invalid
+                                                                        - FR_DENIED              // (7) Access denied due to a prohibited access or directory full
+                                                                        - FR_EXIST               // (8) Access denied due to a prohibited access
+                                                                        - FR_INVALID_OBJECT      // (9) The file/directory object is invalid
+                                                                        - FR_WRITE_PROTECTED     // (10) The physical drive is write protected
+                                                                        - FR_INVALID_DRIVE       // (11) The logical drive number is invalid
+                                                                        - FR_NOT_ENABLED         // (12) The volume has no work area
+                                                                        - FR_NO_FILESYSTEM       // (13) Could not find a valid FAT volume
+                                                                        - FR_MKFS_ABORTED        // (14) The f_mkfs function aborted due to some problem
+                                                                        - FR_TIMEOUT             // (15) Could not take control of the volume within defined period
+                                                                        - FR_LOCKED              // (16) The operation is rejected according to the file sharing policy
+                                                                        - FR_NOT_ENOUGH_CORE     // (17) LFN working buffer could not be allocated given buffer size is insufficient or too deep path
+                                                                        - FR_TOO_MANY_OPEN_FILES // (18) Number of open files > FF_FS_LOCK
+                                                                        - FR_INVALID_PARAMETER   // (19) Given parameter is invalid      
+
+      Read Data Block    TX 04 | FC | MI | [DC.DC] [CS.CS] D0.DX:   
+                                                                       FC: Flow Control
+                                                                          - 0000.00XX
+                                                                                   |+-- : Start of transmission SOT: First msg overall
+                                                                                   +--- : Start of block        SOB: First msg of a consecutive block
+                                                                       MI: Message index: Start from 0 with every new Block
+                                                                           0xFF means last message
+                                                                       DCDC: 16Bit: Count of all Data to be transfered: only at SOT
+                                                                       CSCS: 16Bit: Checksum of the data to be transfered: only at SOT and SOB
+                                                                       D0..DX: Data, up to 48 Byte (including [DC.DC] [00.DI] [CS.CS] [BO.BO])
+                                                                       
+      Response Write     TX 05 | 00 | 00 | RC:                         RC: Response Code: 0 = Ok
+
+
+Set Message
+      Open FsAccess      RX 00 | 00 | 00 | 01.02.03.04
+
+      Read Data Block    RX 04 | FC | 00 | [00.DI] [BO.BO]:   
+                                                                      FC: Flow Control
+                                                                         - 0000.00XX
+                                                                                  |+-- : Start of transmission SOT: First msg overall
+                                                                                  +--- : Start of block        SOB: First msg of a consecutive block
+                                                                      00DI: 16Bit: Data index: only at SOT
+                                                                        -  0: FS structure
+                                                                        -  1: File structure
+                                                                        -  2: Dir structure
+                                                                        -  3: FileInfo structure
+                                                                        -  4: CmdMem 32 Byte
+                                                                        -  5: PathMem1 256 Byte
+                                                                        -  6: PathMem2 256 Byte
+                                                                        -  7: DataMem 4096 Byte
+
+                                                                      BOBO: 16Bit: Byte Offset: only at SOB
+                                                                         - Note: This is used, when a block is needed to be retransmitted
+
+
+      Write Data Block   RX 05 | FC | MI | [DC.DC] [00.DI] [CS.CS] [BO.BO] D0.DX:   
+                                                                      FC: Flow Control
+                                                                         - 0000.00XX
+                                                                                  |+-- : Start of transmission SOT: First msg overall
+                                                                                  +--- : Start of block        SOB: First msg of a consecutive block
+                                                                      MI: Message index: Start from 0 with every new Block
+                                                                          0xFF means last message
+                                                                      DCDC: 16Bit: Count of all Data to be transfered: only at SOT
+                                                                      00DI: 16Bit: Data index: only at SOT
+                                                                        -  0: FS structure
+                                                                        -  1: File structure
+                                                                        -  2: Dir structure
+                                                                        -  3: FileInfo structure
+                                                                        -  4: CmdMem 32 Byte
+                                                                        -  5: PathMem1 256 Byte
+                                                                        -  6: PathMem2 256 Byte
+                                                                        -  7: DataMem 4096 Byte
+                                                                      CSCS: 16Bit: Checksum of the data to be transfered: only at SOT and SOB
+                                                                      BOBO: 16Bit: Byte Offset: only at SOB
+                                                                         - Note: This is used, when a block is needed to be retransmitted
+                                                                      D0..DX: Data, up to 48 Byte (including [DC.DC] [00.DI] [CS.CS] [BO.BO])
+
+      Nop:
+        Set:               RX 02 | 00 | 00 | --
+        Resp:              TX 02 | 00 | 00 | RC.MC                    RC: Response Code
+                                                                      MC: Mem changed bitcoded
+                                                                        -   1: MemFs
+                                                                        -   2: MemFile
+                                                                        -   4: MemDir
+                                                                        -   8: MemFileInfo
+                                                                        -  16: MemCmdMem
+                                                                        -  32: MemPathMem1
+                                                                        -  64: MemPathMem2
+                                                                        - 128: MemTrfMem
+      Mkfs
+        Set:               RX 02 | 01 | 00 | FT.NF.AL.AL.AL.AL.NR.NR.NR.NR.SS.SS.SS.SS.[PP] 
+                                                                      FT: Format option (FM_FAT, FM_FAT32, FM_EXFAT and FM_SFD)
+                                                                      NF: Number of FATs
+                                                                      AL: 32Bit: Data area alignment (sector)
+                                                                      NR: 32Bit: Number of root directory entries
+                                                                      SS: 32Bit: Cluster size (byte)
+                                                                      PP: Path (optional)
+        Resp:              TX 02 | 01 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+
+
+      Mount:
+        Set:               RX 02 | 02 | 00 | MO.[PP]                  MO: Mount option: 0=Do not mount (delayed mount), 1=Mount immediately
+                                                                      PP: Path (optional)
+        Resp:              TX 02 | 02 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Getfree:
+        Set:               RX 02 | 03 | 00 | [PP]                     PP: directory path (optional)
+        Resp:              TX 02 | 03 | 00 | RC.MC.FS.FS.FS.FS        RC: Response Code, MC: Mem changed
+                                                                      FS: 32Bit: free space (byte)
+      Mkdir:
+        Set:               RX 02 | 04 | 00 | [PP]                     PP: directory path (optional)
+        Resp:              TX 02 | 04 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Opendir:
+        Set:               RX 02 | 05 | 00 | [PP]                     PP: directory path (optional)
+        Resp:              TX 02 | 05 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Readdir:
+        Set:               RX 02 | 06 | 00 | --
+        Resp:              TX 02 | 06 | 00 | RC.MC.ME                 RC: Response Code, MC: Mem changed
+                                                                      ME: More entries: 0: no, 1: yes
+
+      Closedir:
+        Set:               RX 02 | 07 | 00 | --
+        Resp:              TX 02 | 07 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Stat:
+        Set:               RX 02 | 08 | 00 | [PP]                     PP: path (optional)
+        Resp:              TX 02 | 08 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Open:
+        Set:               RX 02 | 09 | 00 | MO.[PP]                  MO: Mode
+                                                                        - FA_OPEN_EXISTING  0x00
+                                                                        - FA_READ           0x01
+                                                                        - FA_WRITE          0x02
+                                                                        - FA_CREATE_NEW     0x04
+                                                                        - FA_CREATE_ALWAYS  0x08
+                                                                        - FA_OPEN_ALWAYS    0x10
+                                                                        - FA_OPEN_APPEND    0x30
+                                                                      PP: path (optional)
+        Resp:              TX 02 | 09 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Truncate:
+        Set:               RX 02 | 0A | 00 | --
+        Resp:              TX 02 | 0A | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Lseek:
+        Set:               RX 02 | 0B | 00 | PP.PP.PP.PP              PP: 32Bit: Pos
+        Resp:              TX 02 | 0B | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Write:
+        Set:               RX 02 | 0C | 00 | --
+        Resp:              TX 02 | 0C | 00 | RC.MC.BW.BW.BW.BW        RC: Response Code, MC: Mem changed
+                                                                      BW: 32Bit: Byte written
+
+      Read:
+        Set:               RX 02 | 0D | 00 | BR.BR.BR.BR              BR: 32Bit: Byte to read
+        Resp:              TX 02 | 0D | 00 | RC.MC.BR.BR.BR.BR        RC: Response Code, MC: Mem changed
+                                                                      BR: 32Bit: Byte read
+
+      Close:
+        Set:               RX 02 | 0E | 00 | --
+        Resp:              TX 02 | 0E | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Sync:
+        Set:               RX 02 | 0F | 00 | --
+        Resp:              TX 02 | 0F | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Unlink:
+        Set:               RX 02 | 10 | 00 | [PP]                     PP: path (optional)
+        Resp:              TX 02 | 10 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Chmod:
+        Set:               RX 02 | 11 | 00 | AB.MA.[PP]               AB: Attribute bits to set/clear
+                                                                         - AM_RDO  0x01  /* Read only */
+                                                                         - AM_HID  0x02  /* Hidden */
+                                                                         - AM_SYS  0x04  /* System */
+                                                                         - AM_DIR  0x10  /* Directory */
+                                                                         - AM_ARC  0x20  /* Archive */
+                                                                      MA: Attribute mask to change
+                                                                      PP: path (optional)
+        Resp:              TX 02 | 11 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Utime:
+        Set:               RX 02 | 12 | 00 | [PP]                     PP: path (optional)
+        Resp:              TX 02 | 12 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Rename:
+        Set:               RX 02 | 13 | 00 | --
+        Resp:              TX 02 | 13 | 00 | RC.MC                    RC: Response Code, MC: Mem changed
+
+      Expand:
+        Set:               RX 02 | 13 | 00 | FZ.FZ.FZ.FZ.OM           FZ: 32Bit: File size to be expanded to
+                                                                      OM: Operation mode 0:Find and prepare or 1:Find and allocate
+        Resp:              TX 02 | 13 | 00 | RC.MC                    RC: Response Code, MC: Mem changed

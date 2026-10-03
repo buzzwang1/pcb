@@ -10,7 +10,7 @@ class cCompPomoOut1Tmp : public cComponent
   cTMP102 mcTMP102_0x48;
 
   cCompPomoOut1Tmp()
-    : cComponent(cDepTreeCfg::cComp::nPomoOut1Tmp, cDepTreeCfg::cComp::nBoardMonitor),
+    : cComponent(cDepTreeCfg::cComp::nPomoOut1Tmp, { cDepTreeCfg::cComp::nBoardMonitor }),
       mcTMP102_0x48(cSysDPool::mBoard.mcI2c, TMP102_I2C_ADDRESS0)
   {
   }

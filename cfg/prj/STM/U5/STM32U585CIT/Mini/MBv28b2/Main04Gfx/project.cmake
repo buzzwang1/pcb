@@ -56,8 +56,10 @@ set(PCB_ProjectPackageList
 
     Data/Sys/cDmaHelper/v00.00.01
     Data/Sys/DepTree/cDepTreeCfg/v00.00.01:MiniAddon
-    Data/Sys/DepTree/cDepTree/v00.00.01:Static
-    Data/Sys/DepTree/cComponent/v00.00.01
+    Data/Sys/DepTree/cDepTree/v00.01.00:Static
+    Data/Sys/DepTree/cComponent/v00.01.00
+
+    Data/Fs/cFsManager/v00.00.01
 
     Gfx/General/GfxDefs/v00.00.01:32Bit
     Gfx/Bitmap/Bitmap/v00.00.01
@@ -95,7 +97,7 @@ set(PCB_ProjectPackageList
     Data/BotNet/v00.02.00/Base/Main/v00.00.02:default
       Data/BotNet/v00.02.00/Base/Misc/Adr/v00.00.01:default
       Data/BotNet/v00.02.00/Base/Misc/Cfg/v00.00.01:default
-    Data/BotNet/v00.02.00/Base/Misc/ErrCnt/v00.00.01:default
+      Data/BotNet/v00.02.00/Base/Misc/ErrCnt/v00.00.01:default
       Data/BotNet/v00.02.00/Base/Misc/Spop/v00.00.02:STM32U5xx
       Data/BotNet/v00.02.00/Base/Misc/Msg/v00.00.01:default
       Data/BotNet/v00.02.00/Base/Misc/MsgPool/v00.00.01:default
@@ -105,16 +107,24 @@ set(PCB_ProjectPackageList
       Data/BotNet/v00.02.00/BnLinks/BotCom/v00.00.03:default
       Data/BotNet/v00.02.00/BnLinks/nRf905/v00.00.04:default|-Ofast
       Data/BotNet/v00.02.00/BnLinks/nRf905Net/v00.00.04:default|-Ofast
+      Data/BotNet/v00.02.00/BnLinks/Usb/v00.00.03:TinyUsb
     Data/BotNet/v00.02.00/BnMsgSys/Base/v00.00.02:default
       Data/BotNet/v00.02.00/BnMsgSys/RRpt/v00.00.01:default
       Data/BotNet/v00.02.00/BnMsgSys/Btr/v00.00.02:default
+      Data/BotNet/v00.02.00/BnMsgSys/MemView/v00.00.02:Small
+      Data/BotNet/v00.02.00/BnMsgSys/VDisk/v00.00.01:Ram128k
       Data/BotNet/v00.02.00/BnMsgSys/Spop/v00.00.02:default
+      Data/BotNet/v00.02.00/BnMsgSys/FatFs/v00.00.01:default
     Data/BotNet/v00.02.00/BnStreamSys/Base/v00.00.01:default
       Data/BotNet/v00.02.00/BnStreamSys/Ports/Base/v00.00.01:default
       Data/BotNet/v00.02.00/BnStreamSys/Ports/Cmd/v00.00.01:default
       Data/BotNet/v00.02.00/BnStreamSys/Ports/Com/v00.00.01:default
       Data/BotNet/v00.02.00/BnStreamSys/Ports/Echo/v00.00.01:default
 
+    ExtLibs/Com/tinyusb/20260607/src
+    ExtLibs/Com/tinyusb/20260607/hw:stm32u5:MBv28b2
+
+    ExtLibs/Fs/FatFs/v00.00.16:MBv28b2
 
     Driver/ARM/Cmsis/V05.06.00/Core:CM33
     Driver/STM32/U5/Hal/v01.01.00/Core
@@ -141,6 +151,8 @@ set(PCB_ProjectPackageList
     Driver/STM32/Device/BQ25798/v02.00.00:default
     Driver/STM32/Device/Displays/ILI9341/U5xx/SPI/v01.00.04:default:Miniv28
     Driver/STM32/Device/Displays/XPT2046/U5xx/SPI/v01.00.04:default:Miniv28
+    Driver/STM32/Device/xSpi/Flash/General/v01.00.00
+    Driver/STM32/Device/xSpi/Flash/ZD25WQ32/U5_OSPI/v01.00.01:Mini160Mhz
 
     #Driver/STM32/Device/xSpi/Flash/General/v01.00.00
     #Driver/STM32/Device/xSpi/Flash/ZD25WQ32/U5_OSPI/v01.00.00:Mini32Mhz
@@ -150,7 +162,7 @@ set(PCB_ProjectPackageList
     ExtLibs/Os/FreeRTOS/v10.05.01:Miniv28Static
 
     APP/LED/v00.00.01:STM32U5_HAL
-    APP/Job/JobHdl/v00.00.01:us
+    APP/Job/JobHdl/v00.00.01:ms
 
     main/STM32U585CIT/Mini/MBv28b2/Main04Gfx
 )

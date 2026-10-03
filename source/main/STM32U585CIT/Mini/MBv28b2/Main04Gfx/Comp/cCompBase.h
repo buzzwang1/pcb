@@ -12,7 +12,7 @@ class cCompBase : public cComponent
   u8 mu8RunCnt;
 
   cCompBase()
-    : cComponent(cDepTreeCfg::cComp::nBase, cDepTreeCfg::cComp::nBase),
+    : cComponent(cDepTreeCfg::cComp::nBase, { cDepTreeCfg::cComp::nBase }),
       mcClock(False)
   {
   }

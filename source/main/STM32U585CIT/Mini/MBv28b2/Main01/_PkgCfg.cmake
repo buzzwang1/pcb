@@ -2,7 +2,31 @@
 # set(PkgCfg_3rd_party 1)
 
 # Uncomment for link libraries
-# set(PkgCfg_ListLinkLibraries MyLib1_lib MyLib2_lib)
+set(PkgCfg_ListLinkLibraries #ina3221_lib 
+                             WufDef_lib
+                             WufHandler_lib 
+
+                             #cBotNetMain_lib 
+                             #cBotNetSpopCfg_lib
+                             #cBotNetBaseMsg_lib
+                             #cBotNetLinkBase_lib
+                             #cBotNetLinkI2c_lib
+                             #cBotNetLinkUsartMpHd_lib
+                             #cBotNetLinkBotCom_lib
+                             #cBotNetLinknRf905_lib
+                             #cBotNetLinknRf905Net_lib
+                             #cBotNetLinkVLink_lib
+                             #cBotNetMsgSys_lib
+                             #cBotNetMsgSysRRpt_lib
+                             #cBotNetMsgSysBtr_lib
+                             #cBotNetMsgSysSpop_lib
+                             #cBotNetStreamSysBase_lib
+                             #cBotNetStreamSysPortBase_lib
+                             #cBotNetStreamSysPortCmd_lib
+                             #cBotNetStreamSysPortCom_lib
+                             #cBotNetStreamSysPortEcho_lib
+                             #TPS55288_lib
+                            )
 
 set(PkgCfg_ListTargetExeFiles "${CMAKE_CURRENT_LIST_DIR}/main.cpp;${CMAKE_CURRENT_LIST_DIR}/syscalls.c")
 
@@ -19,3 +43,6 @@ if (PkgCfg_3rd_party AND (NOT PCB_ShowWarnings))
     list(APPEND PkgCfg_TargetCompileOption -w)
   endif()
 endif()
+
+
+

@@ -5,8 +5,8 @@ Idx
  3: SPOP: SPecial OPerations-Interface 
  4: RRpt: Request Repeater
  5: MemView: Memory Viewer
- 6: 
- 7: 
+ 6: VDisc: Virtual Disk
+ 7: FatFs: FatFs Interface
  8: System: Request messages
  9: System: Response messages
 10: System: Set Message

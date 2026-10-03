@@ -6,7 +6,6 @@
 #include "task.h"
 
 
-
 #include "Typedef.h"
 #include "cBuRam.h"
 #include "cWufHandler.h"
@@ -23,13 +22,16 @@
 #include "cursor.h"
 #include "msg.h"
 
-
+// File system
+#include "ZD25WQ32.h"
+#include "ff.h"
 
 //Data
 #include "cRingBufT.h"
 #include "cBnSpop.h"
 #include "cBnLinkI2c.h"
 #include "cBnLinkUsartMpHd.h"
+#include "cBnLinkUsb.h"
 #include "cBnLinkNrf905.h"
 #include "cBnLinkNrf905Net.h"
 #include "cBnLinkBotCom.h"
@@ -37,6 +39,7 @@
 #include "cBnStreamSysPortCom.h"
 #include "cBnStreamSysPortCmd.h"
 #include "cBotnet.h"
+#include "cFsManager.h"
 
 template <u32 tu32MemInBytes>
 struct tcTask
@@ -54,7 +57,7 @@ struct tcTask
 };
 
 typedef tcTask<2048 * 1> tcTaskSmall;
-typedef tcTask<2048 * 2> tcTaskMid;
+typedef tcTask<2048 * 4> tcTaskMid;
 typedef tcTask<2048 * 8> tcTaskLarge;
 
 
@@ -88,6 +91,7 @@ struct cDPoolSys
 
     cDepTree    DepTree;
     tcTaskMid   Com;
+    tcTaskMid   Fs;
     tcTaskLarge Gfx;
   };
 
@@ -200,11 +204,13 @@ struct cPoolCom
   cGpPin* mpcCh2_EN;
   cGpPin* mpcCh3_EN;
 
-  cI2cMaster* mcI2c3_Out;
-  cI2cSlave*  mcI2c4_In;
+  cI2cMaster* mpcI2c3_Out;
+  cI2cSlave*  mpcI2c4_In;
 
-  cUartMpHdMaster* mcU2_Out;
-  cUartMpHdSlave*  mcU3_In;
+  cUartMpHdMaster* mpcU2_Out;
+  cUartMpHdSlave*  mpcU3_In;
+
+  cBotNet_LinkUsb* mpcUpLinkUsb;
 
   cBotNet*                 mpcBn;
   cNRF905BnSlave*          mpcNRF905Bn;
@@ -220,12 +226,27 @@ struct cPoolGfx
 };
 
 
+struct cPoolFs
+{
+  cZD25WQ32* mpcZD25WQ32;
+  FATFS      mstFs;
+
+  // 0 Com
+  // 1 Gfx
+  // 2 Sensor
+  // 3 Log
+
+  cFsJob     macFsJob[4]; 
+};
+
+
 struct cSysDPool
 {
   static cDPoolSys   mSys;
   static cDPoolBoard mBoard;
   static cPoolCom    mCom;
   static cPoolGfx    mGfx;
+  static cPoolFs     mFs;
 };
 
 

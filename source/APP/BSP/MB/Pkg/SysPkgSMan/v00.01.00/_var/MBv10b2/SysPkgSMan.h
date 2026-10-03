@@ -169,6 +169,21 @@ class cSysPkgSMan
 
   cSysPkgSMan();
 
+  u32 u32TimeToSleep_s()
+  {
+    //                            10ms auflösung                          1s auflösung
+    u32 lu32Timetosleep = (mcPowerManager.mu16DRunTimer / 100 + mcMySystemPowerDown.mu32NoSleepCounter);
+
+    if ((lu32Timetosleep == 0) && (mcPowerManager.mu16DRunTimer))
+    {
+      return 1;
+    }
+    else
+    {
+      return (lu32Timetosleep);
+    }
+  }
+
   void vInit1(void);
   void vInit2(void);
 

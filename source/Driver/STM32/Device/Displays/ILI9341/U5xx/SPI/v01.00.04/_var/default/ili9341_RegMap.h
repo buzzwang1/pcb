@@ -649,7 +649,9 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   static constexpr u16  mu16Height   = 320;
   static constexpr u32  mu32PixelCnt = mu16Width * mu16Height;
   
-  static constexpr u32  mu32GramAdr  = 0x20040000;
+  static constexpr u32  mu32GramAdr  = 0x20040000; // Adresse im linker file definiert
+
+  
 
   u8* pu8GetMem(u8 lu8Idx)
   {
@@ -1018,3 +1020,5 @@ struct cIli9341_RegisterMap: public cILI9341_HW
   {
   }
 };
+
+

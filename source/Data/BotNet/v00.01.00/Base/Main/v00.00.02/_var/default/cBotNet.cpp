@@ -7,6 +7,7 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
   mcBtr(this),
   mcSpop(this),
   mcRRpt(this),
+  mcMView(this),
   mszName(mszBufName, 0, 16)
 {
 
@@ -22,7 +23,7 @@ cBotNet::cBotNet(cBotNetCfg* lcCfg)
   mcBtr.vAddMsgSys();
   mcSpop.vAddMsgSys();
   mcRRpt.vAddMsgSys();
-
+  mcMView.vAddMsgSys();
 
   mu8DownLinkCnt = 0;
 

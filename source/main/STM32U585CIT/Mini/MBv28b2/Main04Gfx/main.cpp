@@ -140,6 +140,42 @@
 //    #TIM1_UP_TIM16_IRQHandler: BotCom U1:     Prio:  6.8 => U1
 //    #USART2_IRQHandler:        BotCom U2:     Prio:  7.8 => U2
 //
+//
+// I2C-Adressen
+// 
+// Hex(Dez)                           Hex(Dez)                           Hex(Dez)                           Hex(Dez)
+// 0x00 (0)  = ____________________ | 0x20 (32) = BAL: PCF8574(def)    | 0x40 (64) = MAIN: INA3221_COM    | 0x60 (96)  = ____________________
+// 0x01 (1)  = ____________________ | 0x21 (33) = BAL: PCF8574(opt)    | 0x41 (65) = MAIN: INA3221_BOard  | 0x61 (97)  = ____________________
+// 0x02 (2)  = ____________________ | 0x22 (34) = BAL: PCF8574(opt)    | 0x42 (66) = BAL:  INA3221        | 0x62 (98)  = ____________________
+// 0x03 (3)  = ____________________ | 0x23 (35) = BAL: PCF8574(opt)    | 0x43 (67) = ____________________ | 0x63 (99)  = ____________________
+// 0x04 (4)  = ____________________ | 0x24 (36) = BAL: PCF8574(opt)    | 0x44 (68) = ____________________ | 0x64 (100) = ____________________
+// 0x05 (5)  = ____________________ | 0x25 (37) = BAL: PCF8574(opt)    | 0x45 (69) = ____________________ | 0x65 (101) = ____________________
+// 0x06 (6)  = ____________________ | 0x26 (38) = BAL: PCF8574(opt)    | 0x46 (70) = ____________________ | 0x66 (102) = ____________________
+// 0x07 (7)  = ____________________ | 0x27 (39) = ADDON: PCF8574(def)  | 0x47 (71) = ____________________ | 0x67 (103) = ____________________
+// 0x08 (8)  = ____________________ | 0x28 (40) = ____________________ | 0x48 (72) = POMO: TMP102 (def)   | 0x68 (104) = ____________________
+// 0x09 (9)  = ____________________ | 0x29 (41) = ____________________ | 0x49 (73) = POMO: TMP102 (opt)   | 0x69 (105) = ____________________
+// 0x0A (10) = ____________________ | 0x2B (42) = ____________________ | 0x4A (74) = ____________________ | 0x6A (106) = ____________________
+// 0x0B (11) = ____________________ | 0x2B (43) = ____________________ | 0x4B (75) = ____________________ | 0x6B (107) = ADDON: BQ25798(def)
+// 0x0C (12) = ____________________ | 0x2C (44) = ____________________ | 0x4C (76) = ____________________ | 0x6C (108) = ____________________
+// 0x0D (13) = ____________________ | 0x2D (45) = ____________________ | 0x4D (77) = ____________________ | 0x6D (109) = ____________________
+// 0x0E (14) = ____________________ | 0x2E (46) = ____________________ | 0x4E (78) = ____________________ | 0x6E (110) = ____________________
+// 0x0F (15) = ____________________ | 0x2F (47) = ____________________ | 0x4F (79) = ____________________ | 0x6F (111) = ____________________
+// 0x10 (16) = ____________________ | 0x30 (48) = ____________________ | 0x50 (80) = ____________________ | 0x70 (112) = ____________________
+// 0x11 (17) = ____________________ | 0x31 (49) = ____________________ | 0x51 (81) = ____________________ | 0x71 (113) = ____________________
+// 0x12 (18) = ____________________ | 0x32 (50) = ____________________ | 0x52 (82) = ____________________ | 0x72 (114) = ____________________
+// 0x13 (19) = ____________________ | 0x33 (51) = ____________________ | 0x53 (83) = ____________________ | 0x73 (115) = ____________________
+// 0x14 (20) = ____________________ | 0x34 (52) = ____________________ | 0x54 (84) = ____________________ | 0x74 (116) = POMO: TPS55288 (def)
+// 0x15 (21) = ____________________ | 0x35 (53) = ____________________ | 0x55 (85) = ____________________ | 0x75 (117) = POMO: TPS55288 (opt)
+// 0x16 (22) = ____________________ | 0x36 (54) = ____________________ | 0x56 (86) = ____________________ | 0x76 (118) = ____________________
+// 0x17 (23) = ____________________ | 0x37 (55) = ____________________ | 0x57 (87) = ____________________ | 0x77 (119) = ____________________
+// 0x18 (24) = ____________________ | 0x38 (56) = ____________________ | 0x58 (88) = ____________________ | 0x78 (120) = ____________________
+// 0x19 (25) = ____________________ | 0x39 (57) = ____________________ | 0x59 (89) = ____________________ | 0x79 (121) = ____________________
+// 0x1A (26) = ____________________ | 0x3A (58) = ____________________ | 0x5A (90) = ____________________ | 0x7A (122) = ____________________
+// 0x1B (27) = ____________________ | 0x3B (59) = ____________________ | 0x5B (91) = ____________________ | 0x7B (123) = ____________________
+// 0x1C (28) = ____________________ | 0x3C (60) = ____________________ | 0x5C (92) = ____________________ | 0x7C (124) = ____________________
+// 0x1D (29) = ____________________ | 0x3D (61) = ____________________ | 0x5D (93) = ____________________ | 0x7D (125) = ____________________
+// 0x1E (30) = ____________________ | 0x3E (62) = ____________________ | 0x5E (94) = ____________________ | 0x7E (126) = ____________________
+// 0x1F (31) = ____________________ | 0x3F (63) = ____________________ | 0x5F (95) = ____________________ | 0x7F (127) = ____________________
 
 cDepTree mcSystem;
 
@@ -216,19 +252,28 @@ void assert_failed(u8 *file, uint32_t line)
 #include "cCompBoardI2C2.h"
 #include "cCompBoardMonitor.h"
 
-#include "cCompComOutCntrl.h"
+#include "cCompQSpi1.h"
+#include "cCompQSpi1Fs.h"
+
+#include "cCompComDownCntrl.h"
 
 #include "cCompPomoOut1Temp.h"
 #include "cCompPomoOut1.h"
 
 #include "cCompAddOn.h"
 #include "cCompAddOnBatOut.h"
+#include "cCompAddOnUsb.h"
 #include "cCompAddOn5V0.h"
+#include "cCompAddOn5V0CanFd1.h"
 #include "cCompAddOn5V0Out.h"
 #include "cCompAddOnCharger.h"
 
 #include "cCompCom.h"
-#include "cCompComIn.h"
+#include "cCompComSideCanFd1Offline.h"
+#include "cCompComSideCanFd1Online.h"
+#include "cComUpUsbOffline.h"
+#include "cComUpUsbOnline.h"
+
 
 #include "cCompGfxSpi2.h"
 #include "cCompGfx.h"
@@ -240,17 +285,26 @@ cCompLed  mcCompLed;
 cCompBoardI2C2     mcCompBoardI2C2;
 cCompBoardMonitor  mcCompBoardMonitor;
 
-cCompPomoOut1Tmp   mcCompPomoOut1Tmp;
-cCompPomoOut1      mcCompPomoOut1;
+cCompQSpi1   mcCompQSpi1;
+cCompQSpi1Fs mcCompQSpi1Fs;
 
-cCompAddOn        mcCompAddOn;
-cCompAddOnBatOut  mcCompAddOnBatOut;
-cCompAddOn5V0     mcCompAddOn5V0;
-cCompAddOn5V0Out  mcCompAddOn5V0Out;
-cCompAddOnCharger mcCompAddOnCharger;
+//cCompPomoOut1Tmp   mcCompPomoOut1Tmp;
+//cCompPomoOut1      mcCompPomoOut1;
 
-cCompCom          mcCompCom;
-cCompComIn        mcCompComIn;
+cCompAddOn          mcCompAddOn;
+cCompAddOnUsb       mcCompAddOnUsb;
+cCompAddOnBatOut    mcCompAddOnBatOut;
+cCompAddOn5V0       mcCompAddOn5V0;
+cCompAddOn5V0Out    mcCompAddOn5V0Out;
+cCompAddOn5V0CanFd1 mcCompAddOn5V0CanFd1;
+cCompAddOnCharger   mcCompAddOnCharger;
+
+cCompCom              mcCompCom;
+cCompComUpUsbOffline  mcCompComUpOffline;
+cCompComUpUsbOnline   mcCompComUpOnline;
+
+cCompComSideCanFd1Offline  mcCompComSideOffline;
+cCompComSideCanFd1Online   mcCompComSideOnline;
 
 cCompGfxSpi2      mcCompGfxSpi2;
 cCompGfx          mcCompGfx;
@@ -271,12 +325,15 @@ void TaskMcp(void* argument)
   if (cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)
   {
     cComponentList::macList[cDepTreeCfg::cComp::nLed]->vRequestState(cDepTreeRequester::nMcp);
-    cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nQSpi1Fs]->vRequestState(cDepTreeRequester::nMcp);
+
+    //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vRequestState(cDepTreeRequester::nMcp);
 
-    cComponentList::macList[cDepTreeCfg::cComp::nComIn]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nComUpOnline]->vRequestState(cDepTreeRequester::nMcp);
+    cComponentList::macList[cDepTreeCfg::cComp::nComSideOnline]->vRequestState(cDepTreeRequester::nMcp);
     cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vRequestState(cDepTreeRequester::nMcp);
   }
   else
@@ -293,12 +350,14 @@ void TaskMcp(void* argument)
     if (!cSysDPool::mBoard.mcMonitor.mu8SysVoltOk)
     {
       cComponentList::macList[cDepTreeCfg::cComp::nGfx]->vReleaseState(cDepTreeRequester::nMcp);
-      cComponentList::macList[cDepTreeCfg::cComp::nComIn]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nComUpOnline]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nComSideOnline]->vReleaseState(cDepTreeRequester::nMcp);
 
       cComponentList::macList[cDepTreeCfg::cComp::nCharger]->vReleaseState(cDepTreeRequester::nMcp);
       cComponentList::macList[cDepTreeCfg::cComp::nBatOut]->vReleaseState(cDepTreeRequester::nMcp);
       cComponentList::macList[cDepTreeCfg::cComp::n5V0Out]->vReleaseState(cDepTreeRequester::nMcp);
-      cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vReleaseState(cDepTreeRequester::nMcp);
+      //cComponentList::macList[cDepTreeCfg::cComp::nPomoOut1]->vReleaseState(cDepTreeRequester::nMcp);
+      cComponentList::macList[cDepTreeCfg::cComp::nQSpi1Fs]->vReleaseState(cDepTreeRequester::nMcp);
       cComponentList::macList[cDepTreeCfg::cComp::nLed]->vReleaseState(cDepTreeRequester::nMcp);
 
       cComponentList::macList[cDepTreeCfg::cComp::nBoardMonitor]->vReleaseState(cDepTreeRequester::nMcp);
@@ -320,32 +379,45 @@ void vApplicationGetIdleTaskMemory(StaticTask_t** ppxIdleTaskTCBBuffer,
   *pulIdleTaskStackSize   = cSysDPool::mSys.mcTasks.Idle.StackSize();
 }
 
+void MAIN_vInitComponentList()
+{
+  mcCompBase.vAdd();
+  mcComp3V3.vAdd();
+  mcCompLed.vAdd();
+  mcCompQSpi1.vAdd();
+  mcCompQSpi1Fs.vAdd();
+  mcCompBoardI2C2.vAdd();
+  mcCompBoardMonitor.vAdd();
+
+  mcCompAddOn.vAdd();
+  mcCompAddOnBatOut.vAdd();
+  mcCompAddOnUsb.vAdd();
+  mcCompAddOn5V0.vAdd();
+  mcCompAddOn5V0Out.vAdd();
+  mcCompAddOn5V0CanFd1.vAdd();
+  mcCompAddOnCharger.vAdd();
+
+
+  // Com nach Addon, weil USB und CANFD Abhängigkeit
+  mcCompCom.vAdd();
+  mcCompComUpOffline.vAdd();
+  mcCompComUpOnline.vAdd();
+  mcCompComSideOffline.vAdd();
+  mcCompComSideOnline.vAdd();
+
+  //mcCompPomoOut1Tmp.vAdd();
+  //mcCompPomoOut1.vAdd();
+
+  mcCompGfxSpi2.vAdd();
+  mcCompGfx.vAdd();
+}
+
 
 void MAIN_vInitSystem(void)
 {
   mcSystem.vInit();
 
-  cComponentList::vAdd((cComponent*)&mcCompBase);
-  cComponentList::vAdd((cComponent*)&mcComp3V3);
-  cComponentList::vAdd((cComponent*)&mcCompLed);
-  cComponentList::vAdd((cComponent*)&mcCompBoardI2C2);
-  cComponentList::vAdd((cComponent*)&mcCompBoardMonitor);
-
-  cComponentList::vAdd((cComponent*)&mcCompPomoOut1Tmp);
-  cComponentList::vAdd((cComponent*)&mcCompPomoOut1);
-
-  cComponentList::vAdd((cComponent*)&mcCompAddOn);
-  cComponentList::vAdd((cComponent*)&mcCompAddOnBatOut);
-  cComponentList::vAdd((cComponent*)&mcCompAddOn5V0);
-  cComponentList::vAdd((cComponent*)&mcCompAddOn5V0Out);
-  cComponentList::vAdd((cComponent*)&mcCompAddOnCharger);
-
-  cComponentList::vAdd((cComponent*)&mcCompCom);
-  cComponentList::vAdd((cComponent*)&mcCompComIn);
-
-
-  cComponentList::vAdd((cComponent*)&mcCompGfxSpi2);
-  cComponentList::vAdd((cComponent*)&mcCompGfx);
+  MAIN_vInitComponentList();
 
   cSysDPool::mSys.mcTasks.Mcp.vInit();
 

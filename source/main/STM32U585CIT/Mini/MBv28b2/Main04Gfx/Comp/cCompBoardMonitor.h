@@ -14,7 +14,7 @@ public:
   bool     mbStartupFinished;
 
   cCompBoardMonitor()
-    : cComponent(cDepTreeCfg::cComp::nBoardMonitor, cDepTreeCfg::cComp::nBoardI2C2),
+    : cComponent(cDepTreeCfg::cComp::nBoardMonitor, { cDepTreeCfg::cComp::nBoardI2C2 }),
       mcIna0x41(cSysDPool::mBoard.mcI2c, INA3221_I2C_ADDRESS_CONF_1)
   {
   }

@@ -2,11 +2,12 @@
 #include "cBotnet.h"
 #include "cBuRam.h"
 
-cBotNetMsgPortSpop::cBotNetMsgPortSpop(cBotNet* lcBotNet)
+cBotNetMsgPortSpop::cBotNetMsgPortSpop(cBotNet* lcBotNet, cBotNetMsgPortBtr* lcBtr)
   : cJobHandler(),
     cBotNet_MsgSysProcess(lcBotNet),
     mcTxMsgTx(mu8MsgTx_Buf, cBotNet_MsgSize)
 {
+  mcBtr = lcBtr;
   mu32Exitcounter_ms = 0;
   mu8DefaultMemorySort = RomConst_Sort_IntFlash;
   mcEep = null;
@@ -173,8 +174,8 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
             u8 lu8Size;
             lu8Size = lcMsg.mcPayload.Len() - 2;
 
-            mu32DataChecksum += vMemCopy((u8*)(&lpu8PayloadRx[2]), mcBn->mcBtr.mu8BtrIdx, lu8Size);
-            mcBn->mcBtr.mu8BtrIdx += lu8Size;
+            mu32DataChecksum += vMemCopy((u8*)(&lpu8PayloadRx[2]), mcBtr->mu8BtrIdx, lu8Size);
+            mcBtr->mu8BtrIdx += lu8Size;
 
             // letztes Packet
             if (lu8PackageCnt == 0xFF)
@@ -186,7 +187,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
                 case RomConst_Sort_Ram:
                   {
                     u8 lu8Temp[4];
-                    cMemTools::vMemCpy(mu8DataPointer, mcBn->mcBtr.mu8Btr, mcBn->mcBtr.mu8BtrIdx - mcBn->mcBtr.mu8Btr);
+                    cMemTools::vMemCpy(mu8DataPointer, mcBtr->mu8Btr, mcBtr->mu8BtrIdx - mcBtr->mu8Btr);
 
                     mcTxMsgTx.Set(0x86);
                     mcTxMsgTx.Add(0xFC);
@@ -198,7 +199,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
 
                 case RomConst_Sort_IntEep:
                 case RomConst_Sort_ExtEep:
-                  mcBn->mcBtr.mu8BtrIdx = mcBn->mcBtr.mu8Btr;
+                  mcBtr->mu8BtrIdx = mcBtr->mu8Btr;
                   cJobHandler::vStart((cJobHandler::cJobs)cJobs::nJobWriteExtEeprom);
                   break;
 
@@ -209,7 +210,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
                     u8 lu8Temp[4];
 
                     cBnSpop_vFlash_Unlock();
-                    cBnSpop_vFlash_Program_Start(mu8DataPointer, mcBn->mcBtr.mu8Btr, mcBn->mcBtr.mu8BtrIdx - mcBn->mcBtr.mu8Btr);
+                    cBnSpop_vFlash_Program_Start(mu8DataPointer, mcBtr->mu8Btr, mcBtr->mu8BtrIdx - mcBtr->mu8Btr);
                     cBnSpop_vFlash_Program_Finish();
                     cBnSpop_vFlash_Lock();
 
@@ -231,7 +232,7 @@ bool cBotNetMsgPortSpop::bMsg(cBotNetMsg_MsgProt& lcMsg)
             mu8MemmoryIdx    = lpu8PayloadRx[2];
 
             // Die Daten werden zuerst im BTR zwischengespeichert
-            mcBn->mcBtr.mu8BtrIdx = mcBn->mcBtr.mu8Btr;
+            mcBtr->mu8BtrIdx = mcBtr->mu8Btr;
 
             mcTxMsgTx.Set(0x86);
             mcTxMsgTx.Add(0x00);
@@ -530,8 +531,8 @@ void cBotNetMsgPortSpop::vProcess(u16 lu16TimeDiff_ms)
         {
           if (mcEep->isIdle())
           {
-            mcEep->vCmdWriteByte((u16)((u32)mu8DataPointer), *mcBn->mcBtr.mu8BtrIdx);
-            mcBn->mcBtr.mu8BtrIdx++;
+            mcEep->vCmdWriteByte((u16)((u32)mu8DataPointer), *mcBtr->mu8BtrIdx);
+            mcBtr->mu8BtrIdx++;
             mu8DataPointer++;
             mu32DataCnt--;
           }

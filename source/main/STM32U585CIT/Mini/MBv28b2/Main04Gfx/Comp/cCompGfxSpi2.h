@@ -14,7 +14,7 @@ class cCompGfxSpi2 : public cComponent
   cSpiMasterMulti mcSpi2;
 
   cCompGfxSpi2()
-    : cComponent(cDepTreeCfg::cComp::nGfxSpi2, cDepTreeCfg::cComp::n5V0),
+    : cComponent(cDepTreeCfg::cComp::nGfxSpi2, { cDepTreeCfg::cComp::n5V0 }),
       mSCK(GPIOA_BASE, 9),
       mMISO(GPIOD_BASE, 3),
       mMOSI(GPIOD_BASE, 4),

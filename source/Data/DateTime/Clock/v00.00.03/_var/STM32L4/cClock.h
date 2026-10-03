@@ -350,7 +350,7 @@ class cClock
     cBuRam::mBuRam->u32RtcSyncAttmptTime = mLastSyncAttempt.unTime.ui32Time;
   }
 
-  bool bResync(i32 li32DiffLastSync_d = 2, i32 li32DiffLastSyncAttempt_d = 1)
+  bool bResync(i32 li32DiffLastSync_d = 3, i32 li32DiffLastSyncAttempt_d = 1)
   {
     i32 li32DiffDays;
 
@@ -360,17 +360,18 @@ class cClock
         (mLastSyncAttempt.unTime.ui32Time == 0)) return 1;
 
     li32DiffDays = i32DaysDiff(mLastSyncAttempt);
+    if (li32DiffDays < 0) li32DiffDays = -li32DiffDays;
 
     // Letzter Synv-Versuch mind. 1 Tag her
-    if (li32DiffDays < 0) li32DiffDays = -li32DiffDays;
     if (li32DiffDays >= li32DiffLastSyncAttempt_d)
     {
+      // Ist das Datum invalid, dann 1x pro Tag probieren,
+      // sonst alle 3 Tage
       if (!IsValid()) return 1;
 
       li32DiffDays = i32DaysDiff(mLastSync);
 
-      // Letzter Synv-Versuch mind. 2 Tage her
-      if (li32DiffDays < 0) li32DiffDays = -li32DiffDays;
+      // Letzter Synv-Versuch mind. 3 Tage her
       if (li32DiffDays >= li32DiffLastSync_d) return 1;
     }
     return 0;

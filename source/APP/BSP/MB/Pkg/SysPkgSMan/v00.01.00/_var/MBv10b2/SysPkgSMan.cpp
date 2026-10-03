@@ -108,8 +108,6 @@ void cPowerManager::vUpdateSysState()
   cBuRam::vAddLogSys((u8)enSm);
 }
 
-
-
 void cPowerManager::vTick10ms()
 {
   bool lbLoop = True;

@@ -931,10 +931,11 @@ bool cBnMsgHandler::bMsg(cBotNetMsg_MsgProt& lcMsg)
           }
           else
           // Sys: Wakeup Sim
+          //  Sys: Wakeup                 RX 00 | 02 | 01 | WS.SD.SD.SD.SD              // Simulate a HW-Wakeup-Event; WS: Idx WakeUp source; SD: Some data
           if ((lpu8PayloadRx[1] == 2) && (lpu8PayloadRx[2] == 1))
           {
             u32 lu32Data = (lpu8PayloadRx[4] << 24) + (lpu8PayloadRx[5] << 16) + (lpu8PayloadRx[6] << 8) + lpu8PayloadRx[7];
-            mcSys.mcSMsg.mcWakeupSim.vSet(lpu8PayloadRx[4], lu32Data);
+            mcSys.mcSMsg.mcWakeupSim.vSet(lpu8PayloadRx[3], lu32Data);
             lbConsumed = True;
           }
           break;
@@ -1146,17 +1147,25 @@ void cSysPkgMsg::vSetPingData()
   //  - 2: S3
   //  - 1: S2
   //  - 0: S1
-  if (mcSys.mcClock.mClock.IsValid()) lszData[8] |= 128;
-  if (mcSys.mcSMan.mcMySystemPowerDown.mbWakeupRequest)  lszData[8] |= 64;
-
+  if (mcSys.mcClock.mClock.IsValid())                               lszData[8] |= 128;
+  if (mcSys.mcSMan.mcMySystemPowerDown.mbWakeupRequest)             lszData[8] |= 64;
+  if (mcSys.mcBoard.mcLipoMon.isCharging())                         lszData[8] |= 32;
   if (mcSys.mcBoard.mcLipoMon.lenSmS[cLipoMon::enS_Balancer_Lipo2]) lszData[8] |= 16;
   if (mcSys.mcBoard.mcLipoMon.lenSmS[cLipoMon::enS_Balancer_Lipo1]) lszData[8] |= 8;
-  if (mcSys.mcBoard.mcLipoMon.lenSmS[cLipoMon::enS1_Lipo]) lszData[8] |= 4;
-  if (mcSys.mcBoard.mcLipoMon.mcPowerOut->isEnable())       lszData[8] |= 2;
-  if (mcSys.mcBoard.mcLipoMon.mcPowerIn->isEnable())        lszData[8] |= 1;
+  if (mcSys.mcBoard.mcLipoMon.lenSmS[cLipoMon::enS1_Lipo])          lszData[8] |= 4;
+  if (mcSys.mcBoard.mcLipoMon.mcPowerOut->isEnable())               lszData[8] |= 2;
+  if (mcSys.mcBoard.mcLipoMon.mcPowerIn->isEnable())                lszData[8] |= 1;
 
-  if (mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter > 255) lszData[9] = 255;
-  else lszData[9] = (u8)mcSys.mcSMan.mcMySystemPowerDown.mu32NoSleepCounter;
+  if (mcSys.mcSMan.u32TimeToSleep_s() > 255)
+  {
+    // minuten
+    lszData[9]  = mcSys.mcSMan.u32TimeToSleep_s() / 60;
+  }
+  else
+  {
+    // sekunden
+    lszData[9]  = (u8)(mcSys.mcSMan.u32TimeToSleep_s() & 0xFF);
+  }
 
   lszData[13] = 0; // ID
 

@@ -9,6 +9,7 @@
 #include "stm32u5xx_hal.h"
 #include "stm32u5xx_hal_tim.h"
 #include "stm32u5xx_ll_tim.h"
+#include "stm32u5xx_ll_bus.h"
 
 class cILI9341_HW
 {

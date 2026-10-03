@@ -232,35 +232,33 @@ public:
     //GPIOA->ODR ^= (1 << 1); // Toggle PA1
     cMsgPoolBase* lcMsgPool;
 
+    lu8PoolIdx = 0;
+
     #if cBotNet_MsgPool16B > 0
       if (lu16ReqLen <= mcMsgPool16B.vMsgSize())
       {
         lcMsgPool = &mcMsgPool16B;
         lu8PoolIdx = lcMsgPool->u8GetIdx();
       }
-      else
     #endif
 
     #if cBotNet_MsgPool32B > 0
-      if (lu16ReqLen <= mcMsgPool32B.vMsgSize())
+      if ((lu8PoolIdx == 0) &&
+          (lu16ReqLen <= mcMsgPool32B.vMsgSize()))
       {
         lcMsgPool = &mcMsgPool32B;
         lu8PoolIdx = lcMsgPool->u8GetIdx();
       }
-      else
     #endif
 
     #if cBotNet_MsgPool64B > 0
-      if (lu16ReqLen <= mcMsgPool64B.vMsgSize())
+        if ((lu8PoolIdx == 0) && 
+            (lu16ReqLen <= mcMsgPool64B.vMsgSize()))
       {
         lcMsgPool = &mcMsgPool64B;
         lu8PoolIdx = lcMsgPool->u8GetIdx();
       }
-      else
     #endif
-    {
-      lu8PoolIdx = 0;
-    }
 
     if (lu8PoolIdx)
     {
@@ -344,6 +342,34 @@ public:
       //Dummy
       lcMsg.From(mu8DummyBuf, 0, sizeof(mu8DummyBuf));
     }
+  }
+
+  static u8 u8SpaceLeft(u16 lu16ReqLen)  // __attribute__((optimize("-O0")))
+  {
+    #if cBotNet_MsgPool16B > 0
+      if (lu16ReqLen <= mcMsgPool16B.vMsgSize())
+      {
+        return (mcMsgPool16B.mcMsgRingBuf.space_left() + mcMsgPool32B.mcMsgRingBuf.space_left() + mcMsgPool64B.mcMsgRingBuf.space_left());
+      }
+      else
+    #endif
+
+    #if cBotNet_MsgPool32B > 0
+      if (lu16ReqLen <= mcMsgPool32B.vMsgSize())
+      {
+        return (mcMsgPool32B.mcMsgRingBuf.space_left() + mcMsgPool64B.mcMsgRingBuf.space_left());
+      }
+      else
+    #endif
+
+    #if cBotNet_MsgPool64B > 0
+      if (lu16ReqLen <= mcMsgPool64B.vMsgSize())
+      {
+        return mcMsgPool64B.mcMsgRingBuf.space_left();
+      }
+      else
+    #endif
+    return 0;
   }
 };
 

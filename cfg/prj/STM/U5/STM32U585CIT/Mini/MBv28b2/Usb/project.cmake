@@ -23,13 +23,12 @@ string(REGEX REPLACE "_" "/" Main_Location "${PCB_Project}")
 set(PCB_ProjectPackageList
     General/TypeDef/v00.00.01:ArmCx
 
-    Data/ComDat/ComDat/v00.00.07
+    Data/ComDat/ComDat/v00.02.01
     
     Data/Mem/MemTools/v00.00.03:default_arm
-    Data/Mem/Buffer/BArray/BArrayT/v00.00.02|-Ofast
-    Data/Mem/Buffer/BArray/BArrayExtT/v00.00.01|-Ofast
-    Data/Mem/Buffer/Ring/RingBufT/v00.00.03
-    Data/Mem/Buffer/Ring/ComBuf/v00.00.03|-Ofast
+    Data/Mem/Buffer/BArray/BArrayT/v00.01.00|-Ofast
+    Data/Mem/Buffer/Ring/RingBufT/v00.01.00
+
     Data/Mem/MemPart/v00.00.01
     ###Data/Mem/RomConst/v00.00.02:STM32U5xx:Miniv28b2:default
     ###Data/Mem/BuRam/Def/v00.00.01:STM32U5xx:MB

@@ -49,6 +49,7 @@ projects = {
     'nRF/nrf52840/ble/uart'                      : project('NRF52840_ble_usart',                      True,      '',   {'Release'   : 'Config_nRF5'}),
     'nRF/nrf52840/ble/blinky'                    : project('NRF52840_ble_Blinky',                     True,      '',   {'Release'   : 'Config_nRF5'}),
     'nRF/nrf52840/ble/Ls'                        : project('NRF52840_ble_Ls',                         True,      '',   {'Release'   : 'Config_nRF5'}),
+    'nRF/nrf52840/ble/BnLs'                      : project('NRF52840_ble_Ls',                         True,      '',   {'Release'   : 'Config_nRF5'}),
     'nRF/nrf52840/ble/Botnet'                    : project('NRF52840_ble_Botnet',                     True,      '',   {'Release'   : 'Config_nRF5'}),
 
     # --- SAMD10/UBTECH/Servo ------------------------------------------------
@@ -359,6 +360,8 @@ projects = {
     'STM/U5/STM32U585CIT/Mini/MBv28b2/Test01'          : project('STM32U585CIT_Mini_MBv28b2_Test01',      True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/FreeRTOS'        : project('STM32U585CIT_Mini_MBv28b2_FreeRTOS',    True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/MBv28b2/Usb'             : project('STM32U585CIT_Mini_MBv28b2_Usb',         True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/UsbBn'           : project('STM32U585CIT_Mini_MBv28b2_UsbBn',       True,    '', {'Release' : 'Config_STM32U5xx'}),
+    'STM/U5/STM32U585CIT/Mini/MBv28b2/CanFd/Loop'      : project('STM32U585CIT_Mini_MBv28b2_CanFd_Loop',  True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BL'                  : project('STM32U585CIT_Mini_Sys_BL',              True,    '', {'Release' : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_nrf905'       : project('STM32U585CIT_Mini_Sys_BLU_MB_nrf905',   True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),
     'STM/U5/STM32U585CIT/Mini/Sys/BLU/MB_I2c'          : project('STM32U585CIT_Mini_Sys_BLU_MB_I2c',      True,    '', {'Release' : 'Config_STM32U5xx', 'RamRelease'  : 'Config_STM32U5xx'}),

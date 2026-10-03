@@ -93,6 +93,15 @@ public:
   inline void Len(tyTyp luLen)
   {
     muLen = luLen;
+    if (muLen > muSize)
+    {
+      muLen = muSize;
+    }
+  };
+
+  inline void Size(tyTyp luSize)
+  {
+    muSize = luSize;
   };
 
   inline tyTyp Size(void)
@@ -114,6 +123,56 @@ public:
   {
     muLen = 0;
   };
+
+  tyTyp SpaceLeft(void)
+  {
+    return Size() - Len();
+  };
+
+  bool isFull(void)
+  {
+    return (Len() == Size());
+  }
+
+  bool isEmpty(void)
+  {
+    return (Len() == 0);
+  }
+
+  u8* Take(u8* lau8aData, tyTyp luLen)
+  {
+    u8* lpu8Pos = Data() + Len();
+
+    if (Len() + luLen > Size())
+    {
+      luLen = Size() - Len();
+    }
+
+    cBarryPtrT_vMemCpy(lau8aData, lpu8Pos, luLen);
+    Len(Len() + luLen);
+    return lau8aData;
+  }
+
+  u8 Take()
+  {
+    u8* lpu8Pos = Data() + Len();
+    Len(Len() + 1);
+    return *lpu8Pos;
+  }
+
+  u16 Takeu16()
+  {
+    u16* lpu16Pos = (u16*)(Data() + Len());
+    Len(Len() + 2);
+    return *lpu16Pos;
+  }
+
+  u32 Takeu32()
+  {
+    u32* lpu32Pos = (u32*)(Data() + Len());
+    Len(Len() + 4);
+    return *lpu32Pos;
+  }
 
   cBarryPtrT& Set(const u8* lpaArray, tyTyp luLen)
   {
@@ -140,9 +199,23 @@ public:
     return *this;
   };
 
+  cBarryPtrT& Setu32Com(u32 lu32Val)
+  {
+    if (4 <= muSize)
+    {
+      u8* lpu8Data = (u8*)(mpu8Data);
+      *lpu8Data++ = (u8)(lu32Val >> 24);
+      *lpu8Data++ = (u8)(lu32Val >> 16);
+      *lpu8Data++ = (u8)(lu32Val >> 8);
+      *lpu8Data = (u8)(lu32Val);
+      muLen = 4;
+    }
+    return *this;
+  };
+
   cBarryPtrT& Add(u8* lpaArray, tyTyp luLen)
   {
-    if (muLen < muSize)
+    if ((muLen < muSize) && (luLen > 0))
     {
       tyTyp luLenOld = muLen;
       if ((luLen + muLen) > muSize) muLen = muSize;           // Source is to big -> Clip
@@ -168,6 +241,54 @@ public:
     {
       mpu8Data[muLen] = lu8Byte;
       muLen++;
+    }
+    return *this;
+  };
+
+  cBarryPtrT& Addu16Com(u16 lu16Val)
+  {
+    if ((muLen + 1) < muSize)
+    {
+      u8* lpu8Data = (u8*)(&(mpu8Data[muLen]));
+      *lpu8Data++ = (u8)(lu16Val >> 8);
+      *lpu8Data   = (u8)(lu16Val);
+      muLen += 2;
+    }
+    return *this;
+  };
+
+  cBarryPtrT& Addu16(u16 lu16Val)
+  {
+    if ((muLen + 1) < muSize)
+    {
+      u16* lpu16Data = (u16*)(&(mpu8Data[muLen]));
+      *lpu16Data = lu16Val;
+      muLen += 2;
+    }
+    return *this;
+  };
+
+  cBarryPtrT& Addu32(u32 lu32Val)
+  {
+    if ((muLen + 3) < muSize)
+    {
+      u32* lpu32Data = (u32*)(&(mpu8Data[muLen]));
+      *lpu32Data = lu32Val;
+      muLen += 4;
+    }
+    return *this;
+  };
+
+  cBarryPtrT& Addu32Com(u32 lu32Val)
+  {
+    if ((muLen + 3) < muSize)
+    {
+      u8* lpu8Data = (u8*)(&(mpu8Data[muLen]));
+      *lpu8Data++ = (u8)(lu32Val >> 24);
+      *lpu8Data++ = (u8)(lu32Val >> 16);
+      *lpu8Data++ = (u8)(lu32Val >>  8);
+      *lpu8Data   = (u8)(lu32Val);
+      muLen += 4;
     }
     return *this;
   };

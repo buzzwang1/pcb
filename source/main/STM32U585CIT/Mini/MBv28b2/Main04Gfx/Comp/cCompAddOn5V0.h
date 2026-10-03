@@ -9,7 +9,7 @@ class cCompAddOn5V0 : public cComponent
   cGpPin mTPS630701_EN;
 
   cCompAddOn5V0()
-    : cComponent(cDepTreeCfg::cComp::n5V0, cDepTreeCfg::cComp::nAddOn),
+    : cComponent(cDepTreeCfg::cComp::n5V0, { cDepTreeCfg::cComp::nAddOn }),
       mTPS630701_EN(GPIOA_BASE, 6)
   {
   }

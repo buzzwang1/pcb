@@ -37,12 +37,12 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  ROM  (rx) : ORIGIN = 0x08000000,   LENGTH = 2048K
-  RAM (rwx) : ORIGIN = 0x20000000,   LENGTH = 768K /* SRAM1 + SRAM2 + SRAM3 */
-  SRAM1 (rwx) : ORIGIN = 0x20000000, LENGTH = 192K  
-  SRAM2 (rwx) : ORIGIN = 0x20030000, LENGTH = 64K  
-  SRAM3 (rwx) : ORIGIN = 0x20040000, LENGTH = 512K  
-  SRAM4 (rwx) : ORIGIN = 0x28000000, LENGTH = 16K  
+  ROM  (rx) : ORIGIN = 0x08000000,   LENGTH = 1024K
+  RAM (rwx) : ORIGIN = 0x20000000,   LENGTH = 192K /* SRAM1 + SRAM2 + SRAM3 */
+  SRAM1 (rwx) : ORIGIN = 0x20000000, LENGTH = 192K /* 0x20000000..0x2002FFFF */
+  SRAM2 (rwx) : ORIGIN = 0x20030000, LENGTH = 64K  /* 0x20030000..0x2003FFFF */ /* SRAM2 kann vom RTC/Backup-System gelöscht werden ! */
+  SRAM3 (rwx) : ORIGIN = 0x20040000, LENGTH = 512K /* 0x20040000..0x20048000 */
+  SRAM4 (rwx) : ORIGIN = 0x28000000, LENGTH = 16K  /* 0x28000000..0x28003FFF */ 
 }
 
 /* Linker script to place sections and symbol values. Should be used together

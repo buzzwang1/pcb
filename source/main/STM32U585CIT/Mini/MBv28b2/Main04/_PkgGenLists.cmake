@@ -5,14 +5,26 @@ set(gen_pkg_name "main")
 # List of all source files found in the packages filetree
 set (gen_files 
 	# List of all source files found in gen_files
+	./SysDPool/cSysDPool.cpp
 	./main.cpp
 	./syscalls.c
+	./usb_descriptors.cpp
 )
 
 
 # List of all header files found in the packages filetree
 set (gen_headers 
 	# List of all source files found in gen_headers
+	./Comp/cComUpCanFd1Offline.h
+	./Comp/cComUpCanFd1Online.h
+	./Comp/cComUpI2c4Offline.h
+	./Comp/cComUpI2c4Online.h
+	./Comp/cComUpNrf905Offline.h
+	./Comp/cComUpNrf905Online.h
+	./Comp/cComUpU3Offline.h
+	./Comp/cComUpU3Online.h
+	./Comp/cComUpUsbOffline.h
+	./Comp/cComUpUsbOnline.h
 	./Comp/cComp3V3.h
 	./Comp/cCompAddOn.h
 	./Comp/cCompAddOn5V0.h
@@ -27,19 +39,21 @@ set (gen_headers
 	./Comp/cCompBase.h
 	./Comp/cCompBoardI2C2.h
 	./Comp/cCompBoardMonitor.h
-	./Comp/cCompComIn.h
-	./Comp/cCompComOut.h
-	./Comp/cCompComOutCntrl.h
+	./Comp/cCompCom.h
+	./Comp/cCompComDownCntrl.h
+	./Comp/cCompComDownI2C3Offline.h
+	./Comp/cCompComDownI2C3Online.h
+	./Comp/cCompComSideCanFd1Offline.h
+	./Comp/cCompComSideCanFd1Online.h
 	./Comp/cCompGfx.h
 	./Comp/cCompGfxSpi2.h
 	./Comp/cCompLed.h
 	./Comp/cCompPomoOut1.h
 	./Comp/cCompPomoOut1Temp.h
-	./Comp/cCompRadioNrf905.h
-	./Comp/cCompRadioSpi1.h
 	./SysDPool/cSysDPool.h
 	./main.h
 	./stm32u5xx_hal_conf.h
+	./tusb_config.h
 )
 
 

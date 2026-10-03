@@ -33,9 +33,11 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
   public:
 
   cZD25WQ32()
+      //             Sector  Page  Sector    Flash
+      //              Size   Size   Count   BaseAdr
+      //
     : cSpiFlashGeneral(4096, 256, 64 * 16, 0x90000000)
   {
-
   }
 
 
@@ -708,6 +710,8 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
     return FRET_ERR_GENERAL;
   }
 
+  u32 u32GetBaseAdr() {return mu32FlashBaseAdr;}
+
   bool isIdle()
   {
     if ((menState == StIdle) &&
@@ -716,6 +720,11 @@ class cZD25WQ32 : public cSpiFlashGeneral, public cZD25WQ32_HW
       return True;
     }
     return False;
+  }
+
+  bool isError()
+  {
+    return (menState == StError);
   }
 };
 

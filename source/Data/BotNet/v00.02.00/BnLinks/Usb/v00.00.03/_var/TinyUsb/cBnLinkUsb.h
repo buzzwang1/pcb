@@ -37,7 +37,7 @@ class cBotNet_LinkUsb : public cBotNet_LinkBase
   {
     bool lbRet = cBotNet_LinkBase::bAddedToBn(lu16Adr);
 
-    mStatus.IsOnline  = 1;
+    mStatus.IsOnline  = 0;
     mStatus.IsEnabled = 1;
 
     mbWriteBusy = False;
@@ -53,22 +53,30 @@ class cBotNet_LinkUsb : public cBotNet_LinkBase
 
   void vSync() override
   {
-    if (!mbWriteBusy)
+    if (tud_vendor_mounted())
     {
-      if (mu8PoolIdxTx == 0)
+      mStatus.IsOnline = 1;
+      if (!mbWriteBusy)
       {
-        mu8PoolIdxTx = mcTxComBuf.get();
-
-        if (mu8PoolIdxTx)
+        if (mu8PoolIdxTx == 0)
         {
-          cBotNetMsg_Base lcMsg; cBnMsgPool::vGetMsg(lcMsg, mu8PoolIdxTx);
-          mpcMsgDataT.From(lcMsg);
-          tud_vendor_write(mpcMsgDataT.Data(), mpcMsgDataT.Len());
-          mbWriteBusy = True;
-          cBnMsgPool::vReleaseMsg(mu8PoolIdxTx);
-          mu8PoolIdxTx = 0;
+          mu8PoolIdxTx = mcTxComBuf.get();
+
+          if (mu8PoolIdxTx)
+          {
+            cBotNetMsg_Base lcMsg; cBnMsgPool::vGetMsg(lcMsg, mu8PoolIdxTx);
+            mpcMsgDataT.From(lcMsg);
+            tud_vendor_write(mpcMsgDataT.Data(), mpcMsgDataT.Len());
+            mbWriteBusy = True;
+            cBnMsgPool::vReleaseMsg(mu8PoolIdxTx);
+            mu8PoolIdxTx = 0;
+          }
         }
       }
+    }
+    else
+    {
+      mStatus.IsOnline = 0;
     }
   }
 

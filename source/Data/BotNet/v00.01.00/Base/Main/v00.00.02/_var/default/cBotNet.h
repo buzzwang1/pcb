@@ -14,6 +14,7 @@
 #include "cBnMsgSysBtr.h"
 #include "cBnMsgSysSpop.h"
 #include "cBnMsgSysRRpt.h"
+#include "cBnMsgSysMView.h"
 
 #include "cBnStreamSys.h"
 #include "cBnLinkBase.h"
@@ -71,6 +72,7 @@ class cBotNet
   cBotNetMsgPortBtr      mcBtr;
   cBotNetMsgPortSpop     mcSpop;
   cBotNetMsgPortRRpt     mcRRpt;
+  cBotNetMsgPortMView    mcMView;
 
   // Für Nachrichtenbehandlung
   bool mbMsgTxOk;

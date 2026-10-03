@@ -14,7 +14,7 @@ bool cBotNetMsgPortMView::bMsg(cBotNetMsg_MsgProt& lcMsg)
   {
     switch (lcMsg.u32GetId())
     {
-      case lcMsg.cId24(0x04, 0x00, 0x00): // MemRead
+      case lcMsg.cId24Set(0x04, 0x00, 0x00): // MemRead
       {
         u32 lu32Adr = cMemTools::u32U8toU32((u8*)(lpu8PayloadRx + 3));
         u8  lu8Size = lpu8PayloadRx[10];
@@ -28,7 +28,7 @@ bool cBotNetMsgPortMView::bMsg(cBotNetMsg_MsgProt& lcMsg)
       }
       break;
 
-      case lcMsg.cId24(0x05, 0x00, 0x00): // MemWrite
+      case lcMsg.cId24Set(0x05, 0x00, 0x00): // MemWrite
       {
         u32 lu32Adr = cMemTools::u32U8toU32((u8*)(lpu8PayloadRx + 3));
         u8  lu8Size = lcMsg.Len() - 7;

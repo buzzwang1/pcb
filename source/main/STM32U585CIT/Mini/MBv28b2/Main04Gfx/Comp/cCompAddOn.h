@@ -7,7 +7,7 @@ class cCompAddOn : public cComponent
   public:
 
   cCompAddOn()
-    : cComponent(cDepTreeCfg::cComp::nAddOn, cDepTreeCfg::cComp::nBoardMonitor)
+    : cComponent(cDepTreeCfg::cComp::nAddOn, { cDepTreeCfg::cComp::nBoardMonitor })
   {
   }
 
